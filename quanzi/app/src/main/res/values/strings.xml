@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">圈子</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="phoneNumber">手机号</string>
+    <string name="password">密码</string>
+    <string name="login">登入</string>
+</resources>

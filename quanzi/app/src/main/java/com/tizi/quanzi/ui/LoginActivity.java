@@ -1,4 +1,4 @@
-package com.tizi.quanzi;
+package com.tizi.quanzi.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.tizi.quanzi.R;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetPassword;
 

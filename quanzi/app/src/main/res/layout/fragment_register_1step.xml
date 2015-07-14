@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.tizi.quanzi.RegisterActivityFragment">
+    tools:context="com.tizi.quanzi.fragment.Register1stepFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
                 android:id="@+id/phoneNumberEditText"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:hint="@string/password"
+                android:hint="@string/phoneNumber"
                 android:inputType="number"
                 android:textSize="@dimen/normal_edit_text_size" />
         </android.support.design.widget.TextInputLayout>
@@ -34,20 +34,35 @@
             android:textSize="@dimen/normal_edit_text_size" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/signInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/signInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/signEditText"
-            android:layout_width="220dp"
+            <EditText
+                android:id="@+id/signEditText"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/signCode"
+                android:inputType="number"
+                android:textSize="@dimen/normal_edit_text_size" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/get_voice_sign_button"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="number"
+            android:layout_marginLeft="20dp"
+            android:text="获取语音验证码"
             android:textSize="@dimen/normal_edit_text_size" />
-    </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/next_button"

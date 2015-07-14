@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tizi.quanzi.GroupChat">
+    tools:context="com.tizi.quanzi.fragment.GroupChat">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

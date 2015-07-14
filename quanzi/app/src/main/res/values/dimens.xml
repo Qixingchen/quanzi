@@ -3,5 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="normal_edit_text_size">16sp</dimen>
-    <dimen name="tool_bar_top_padding">0dp</dimen>
+    <dimen name="statue_bar_top_padding">0dp</dimen>
 </resources>

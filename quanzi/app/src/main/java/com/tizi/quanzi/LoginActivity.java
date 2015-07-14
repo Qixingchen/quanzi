@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
         this.passwordInputLayout = (TextInputLayout) findViewById(R.id.passwordInputLayout);
         this.phoneNumberInputLayout = (TextInputLayout) findViewById(R.id.phoneNumberInputLayout);
-        phoneNumberInputLayout.setError("长度为11位");
+        phoneNumberInputLayout.setError(getString(R.string.phone_number_error));
         this.LoginButton = (Button) findViewById(R.id.LoginButton);
         this.passwordEditText = (EditText) findViewById(R.id.passwordEditText);
         this.phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
@@ -103,25 +103,4 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

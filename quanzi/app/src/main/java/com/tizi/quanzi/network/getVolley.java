@@ -41,6 +41,7 @@ public class GetVolley {
                 }
             }
         }
+        mErrorListener = makeErrorListener();
         return mInstance;
     }
 

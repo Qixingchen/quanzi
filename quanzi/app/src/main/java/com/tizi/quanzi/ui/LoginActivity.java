@@ -2,6 +2,7 @@ package com.tizi.quanzi.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -17,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetPassword;
 
@@ -34,7 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private android.support.design.widget.TextInputLayout passwordInputLayout;
     private TextView newaccount;
 
-    @Override
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -102,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean checkPhoneNumber() {
         String phoneNumber = phoneNumberEditText.getText().toString();
+
         if (phoneNumber.length() != 11) {
             phoneNumberInputLayout.setErrorEnabled(true);
             return false;
@@ -111,4 +115,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    public void test(View view) {
+        Map<String, String> loginPara = new TreeMap<>();
+        loginPara.put("ts", "2323re");
+        Response.Listener listener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.e(TAG, response.toString());
+            }
+        };
+        GetVolley.getmInstance(this, listener).addRequestNoSign(Request.Method.GET,
+                "http://192.168.3.4:8080/applogin/regF", loginPara);
+
+    }
 }

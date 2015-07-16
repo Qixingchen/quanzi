@@ -51,4 +51,9 @@
         android:text="注册新账号"
         android:textColor="@color/md_blue_700"
         android:textSize="@dimen/normal_edit_text_size" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="test"/>
 </LinearLayout>

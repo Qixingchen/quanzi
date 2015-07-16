@@ -2,7 +2,6 @@ package com.tizi.quanzi.fragment.register;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.ui.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +20,11 @@ import com.tizi.quanzi.ui.MainActivity;
 public class Register2stepFragment extends Fragment {
 
     private Activity mActivity;
+    private NextStep nextStep;
+
+    public void setNextStep(NextStep nextStep) {
+        this.nextStep = nextStep;
+    }
 
     public Register2stepFragment() {
     }
@@ -76,11 +79,13 @@ public class Register2stepFragment extends Fragment {
             public void onClick(View v) {
                 if (password1Layout.getEditText().getText().toString().
                         compareTo(password2Layout.getEditText().getText().toString()) == 0) {
-                    //todo 注册用户
-                    Intent mainAct = new Intent(mActivity, MainActivity.class);
-                    startActivity(mainAct);
+                    nextStep.regi2StepOK(password1Layout.getEditText().getText().toString());
                 }
             }
         });
+    }
+
+    public interface NextStep {
+        void regi2StepOK(String password);
     }
 }

@@ -3,22 +3,32 @@ package com.tizi.quanzi.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.adapter.GroupListAdapter;
+import com.tizi.quanzi.gson.Group;
 
 
-public class GroupChat extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class GroupChatList extends Fragment {
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Group[] groups;
+
+    private RecyclerView mGroupListRecyclerView;
+    private GroupListAdapter groupListAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    private Activity mActivity;
 
     /**
      * Use this factory method to create a new instance of
@@ -26,11 +36,11 @@ public class GroupChat extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment GroupChat.
+     * @return A new instance of fragment GroupChatList.
      */
     // TODO: Rename and change types and number of parameters
-    public static GroupChat newInstance(String param1, String param2) {
-        GroupChat fragment = new GroupChat();
+    public static GroupChatList newInstance(String param1, String param2) {
+        GroupChatList fragment = new GroupChatList();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -38,8 +48,23 @@ public class GroupChat extends Fragment {
         return fragment;
     }
 
-    public GroupChat() {
+    public GroupChatList() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        groups = new Group[20];
+        for (int i = 0; i < 20; i++) {
+            groups[i] = Group.getGroups();
+        }
+        mGroupListRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
+        groupListAdapter = new GroupListAdapter(groups, mActivity);
+        mGroupListRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(mActivity);
+        mGroupListRecyclerView.setLayoutManager(mLayoutManager);
+        mGroupListRecyclerView.setAdapter(groupListAdapter);
     }
 
     @Override
@@ -61,6 +86,7 @@ public class GroupChat extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        mActivity = activity;
     }
 
     @Override

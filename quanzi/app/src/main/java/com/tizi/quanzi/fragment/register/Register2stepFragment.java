@@ -1,4 +1,4 @@
-package com.tizi.quanzi.fragment;
+package com.tizi.quanzi.fragment.register;
 
 
 import android.app.Activity;

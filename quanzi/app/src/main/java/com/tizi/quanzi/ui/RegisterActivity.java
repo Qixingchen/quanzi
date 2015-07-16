@@ -6,8 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.fragment.Register1stepFragment;
-import com.tizi.quanzi.fragment.Register2stepFragment;
+import com.tizi.quanzi.fragment.register.Register1stepFragment;
+import com.tizi.quanzi.fragment.register.Register2stepFragment;
 
 
 public class RegisterActivity extends AppCompatActivity implements Register1stepFragment.NextStep {

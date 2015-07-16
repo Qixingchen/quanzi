@@ -33,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
     private android.support.design.widget.TextInputLayout phoneNumberInputLayout;
     private android.support.design.widget.TextInputLayout passwordInputLayout;
     private TextView newaccount;
-    private android.widget.LinearLayout LoginLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginPara.put("password", password);
                 GetVolley.getmInstance(mActivity).setOKListener(mOKListener).
                         setErrorListener(mErrorListener)
-                        .addRequestNoSign(Request.Method.GET, "http://123", loginPara);
+                        .addRequestNoSign(Request.Method.GET, "http://url.com", loginPara);
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {

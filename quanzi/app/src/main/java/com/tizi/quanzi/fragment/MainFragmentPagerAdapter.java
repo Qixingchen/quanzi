@@ -5,8 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.tizi.quanzi.fragment.GroupChat;
-
 /**
  * Created by qixingchen on 15/7/13.
  */
@@ -27,7 +25,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return GroupChat.newInstance("1", "2");
+        return GroupChatList.newInstance("1", "2");
     }
 
     @Override

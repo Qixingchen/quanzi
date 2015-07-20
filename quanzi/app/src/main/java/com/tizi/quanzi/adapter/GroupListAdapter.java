@@ -1,6 +1,7 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.RippleDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.ui.ChatActivity;
 
 /**
  * Created by qixingchen on 15/7/16.
@@ -43,6 +45,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
         myViewHolder.lastCommitTextview.setText("2015-05-12 12:12");
         myViewHolder.groupFaceImageView.setImageUrl(groups[position].groupFace.toString(),
                 GetVolley.getmInstance(context).getImageLoader());
+        myViewHolder.groupFaceImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent chatmess = new Intent(context, ChatActivity.class);
+            }
+        });
     }
 
     @Override

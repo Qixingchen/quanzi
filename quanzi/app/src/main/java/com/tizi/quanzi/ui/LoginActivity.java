@@ -82,7 +82,8 @@ public class LoginActivity extends AppCompatActivity {
                 loginPara.put("password", password);
                 GetVolley.getmInstance(mActivity).setOKListener(mOKListener).
                         setErrorListener(mErrorListener)
-                        .addRequestNoSign(Request.Method.GET, "http://url.com", loginPara);
+                        .addRequestNoSign(Request.Method.GET, getString(R.string.testbaseuri) + "/applogin/loginF",
+                                loginPara);
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
@@ -113,19 +114,5 @@ public class LoginActivity extends AppCompatActivity {
             phoneNumberInputLayout.setErrorEnabled(false);
             return true;
         }
-    }
-
-    public void test(View view) {
-        Map<String, String> loginPara = new TreeMap<>();
-        loginPara.put("ts", "2323re");
-        Response.Listener listener = new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                Log.e(TAG, response.toString());
-            }
-        };
-        GetVolley.getmInstance(this, listener).addRequestNoSign(Request.Method.GET,
-                "http://192.168.3.4:8080/applogin/regF", loginPara);
-
     }
 }

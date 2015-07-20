@@ -1,4 +1,4 @@
-package com.tizi.quanzi.fragment;
+package com.tizi.quanzi.fragment.main;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -55,6 +55,9 @@ public class GroupChatList extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        if (mParam1.compareTo("1") != 0) {
+            return;
+        }
         groups = new Group[20];
         for (int i = 0; i < 20; i++) {
             groups[i] = Group.getGroups();

@@ -9,17 +9,17 @@
         android:id="@+id/group_face_image_view"
         android:layout_width="@dimen/group_face"
         android:layout_height="@dimen/group_face"
-        tools:background="@color/md_red_300"
-        tools:src="@drawable/abc_ic_clear_mtrl_alpha" />
+        tools:background="@color/md_red_300" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
             <TextView
@@ -32,13 +32,13 @@
                 android:id="@+id/time_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="end"
+                android:layout_gravity="end"
                 tools:text="time:time" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp">
 
@@ -52,6 +52,8 @@
                 android:id="@+id/unread_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:gravity="end"
                 tools:text="unread" />
 

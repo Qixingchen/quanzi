@@ -7,6 +7,7 @@ package com.tizi.quanzi.app;
 import android.app.Application;
 import android.content.Intent;
 
+import com.avos.avoscloud.AVCloud;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -44,6 +45,7 @@ public class App extends Application {
         AVOSCloud.initialize(this, "iz9otzx11p733n25vd54r6uho3rq1f5adfkcva1ttmsoecof",
                 "q1r5y5f5mr6dhbdacphcrd9w2vnh8whgta1d91b8d9v39jxz");
         AVIMClient imClient = AVIMClient.getInstance(UserID);
+        AVCloud.setProductionMode(false); //调用测试环境云代码
         imClient.open(new AVIMClientCallback() {
             @Override
             public void done(AVIMClient client, AVException e) {

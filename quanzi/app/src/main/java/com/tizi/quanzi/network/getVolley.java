@@ -37,7 +37,7 @@ public class GetVolley {
         if (mInstance == null) {
             synchronized (GetVolley.class) {
                 if (mInstance == null) {
-                    mInstance = new GetVolley(context);
+                    mInstance = new GetVolley(context.getApplicationContext());
                 }
             }
         }
@@ -49,7 +49,7 @@ public class GetVolley {
         if (mInstance == null) {
             synchronized (GetVolley.class) {
                 if (mInstance == null) {
-                    mInstance = new GetVolley(context);
+                    mInstance = new GetVolley(context.getApplicationContext());
                 }
             }
         }
@@ -182,6 +182,41 @@ public class GetVolley {
             }
         };
         return errorListener;
+    }
+
+    public GetVolley addPostRequestWithSign(int method, String baseuri, final Map<String, String> para) {
+
+        StringRequest stringRequest = new StringRequest(method, baseuri,
+                mOKListener, mErrorListener) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map paraAdded = addPostSignPara(para);
+                return paraAdded;
+            }
+        };
+        addToRequestQueue(stringRequest);
+        return mInstance;
+    }
+
+    public GetVolley addPostRequestWithNoSign(int method, String baseuri, final Map<String, String> para) {
+
+        StringRequest stringRequest = new StringRequest(method, baseuri,
+                mOKListener, mErrorListener) {
+            @Override
+            protected Map<String, String> getParams() {
+                return para;
+            }
+        };
+        addToRequestQueue(stringRequest);
+        return mInstance;
+    }
+
+    private Map addPostSignPara(Map para) {
+        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
+        para.put("ts", ts);
+        para.put("userid", App.getUserID());
+        para.put("sign", getSign(ts, App.getUserID()));
+        return para;
     }
 
 }

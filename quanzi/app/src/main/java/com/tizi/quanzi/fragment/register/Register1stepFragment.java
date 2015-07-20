@@ -15,6 +15,7 @@ import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.tool.Statue;
 
 
 /**
@@ -61,10 +62,10 @@ public class Register1stepFragment extends Fragment {
                             @Override
                             public void done(AVException e) {
                                 if (e == null) {
-                                    Snackbar.make(mActivity.findViewById(R.id.fragment),
+                                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
                                             "验证码发送成功", Snackbar.LENGTH_SHORT).show();
                                 } else {
-                                    Snackbar.make(getActivity().findViewById(R.id.fragment),
+                                    Snackbar.make(getActivity().findViewById(R.id.register_fragment),
                                             e.getCode() + e.getMessage(), Snackbar.LENGTH_SHORT).show();
 
                                 }
@@ -83,10 +84,10 @@ public class Register1stepFragment extends Fragment {
                             @Override
                             public void done(AVException e) {
                                 if (e == null) {
-                                    Snackbar.make(mActivity.findViewById(R.id.fragment),
+                                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
                                             "请等待接听电话", Snackbar.LENGTH_SHORT).show();
                                 } else {
-                                    Snackbar.make(getActivity().findViewById(R.id.fragment),
+                                    Snackbar.make(getActivity().findViewById(R.id.register_fragment),
                                             e.getCode() + e.getMessage(), Snackbar.LENGTH_SHORT).show();
 
                                 }
@@ -100,16 +101,20 @@ public class Register1stepFragment extends Fragment {
             public void onClick(View v) {
                 String sign = signInputLayout.getEditText().getText().toString();
                 final String phoneNumber = phoneNumberInputLayout.getEditText().getText().toString();
+                if (Statue.IsDev.now == Statue.IsDev.dev) {
+                    nextStep.register1stepOK(phoneNumber);
+                    return;
+                }
                 AVOSCloud.verifySMSCodeInBackground(sign, phoneNumber, new AVMobilePhoneVerifyCallback() {
 
                     @Override
                     public void done(AVException e) {
                         if (e != null) {
-                            Snackbar.make(mActivity.findViewById(R.id.fragment),
+                            Snackbar.make(mActivity.findViewById(R.id.register_fragment),
                                     e.getCode() + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                             return;
                         }
-                        Snackbar.make(mActivity.findViewById(R.id.fragment),
+                        Snackbar.make(mActivity.findViewById(R.id.register_fragment),
                                 "验证成功", Snackbar.LENGTH_SHORT).show();
                         nextStep.register1stepOK(phoneNumber);
                     }

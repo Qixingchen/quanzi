@@ -1,4 +1,4 @@
-package com.tizi.quanzi.fragment;
+package com.tizi.quanzi.fragment.main;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -25,7 +25,17 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return GroupChatList.newInstance("1", "2");
+        switch (position) {
+            case 0:
+                return GroupChatList.newInstance("1", "2");
+            case 1:
+                return LockLock.newInstance();
+            case 2:
+                return BigWorld.newInstance("1", "2");
+            default:
+                return BigWorld.newInstance("3", "2");
+        }
+
     }
 
     @Override

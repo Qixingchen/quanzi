@@ -10,40 +10,44 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
+import com.android.volley.toolbox.NetworkImageView;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.SaveCallback;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.tool.GetFilePath;
 
 import java.io.File;
+import java.io.IOException;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class CompleteUesrInfo extends Fragment {
 
     private Activity mActivity;
 
     private TextInputLayout nickNameInputLayout;
-    private ImageView UserPhotoImageView;
+    private NetworkImageView UserPhotoImageView;
     private RadioGroup sexGroup;
-    private String UserfaceUri;
 
     /* 请求码 */
     private static final int IMAGE_REQUEST_CODE = 0;
     private static final int CAMERA_REQUEST_CODE = 1;
     private static final int RESULT_REQUEST_CODE = 2;
     private String[] items = new String[]{"选择本地图片", "拍照"};
-    private static final String IMAGE_FILE_NAME = "faceImage.jpg";
+    private static final String IMAGE_FILE_NAME = "faceImage";
+    private String photoTakenUri;
+    private String photoOnlineUri;
 
     private AllDone allDone;
 
@@ -73,26 +77,33 @@ public class CompleteUesrInfo extends Fragment {
     public void onStart() {
         super.onStart();
         nickNameInputLayout = (TextInputLayout) mActivity.findViewById(R.id.nickNameInputLayout);
-        UserPhotoImageView = (ImageView) mActivity.findViewById(R.id.UserPhotoImageView);
+        UserPhotoImageView = (NetworkImageView) mActivity.findViewById(R.id.UserPhotoImageView);
+        UserPhotoImageView.setImageResource(R.drawable.face);
         sexGroup = (RadioGroup) mActivity.findViewById(R.id.sexGroup);
         Button submitButton = (Button) mActivity.findViewById(R.id.submit_button);
+
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 allDone.CompUserInfoOK(nickNameInputLayout.getEditText().getText().toString(),
-                        sexGroup.getCheckedRadioButtonId(), UserfaceUri);
+                        sexGroup.getCheckedRadioButtonId(), photoOnlineUri);
             }
         });
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showDialog();
             }
         });
+
     }
 
+    /**
+     * 本界面完成回调借口
+     */
     public interface AllDone {
-        void CompUserInfoOK(String userNane, int sex, String faceUri);
+        void CompUserInfoOK(String userName, int sex, String faceUri);
     }
 
     /**
@@ -108,25 +119,25 @@ public class CompleteUesrInfo extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                Intent intentFromGallery = new Intent();
+                                Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
                                 intentFromGallery.setType("image/*"); // 设置文件类型
-                                intentFromGallery
-                                        .setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(intentFromGallery,
+                                mActivity.startActivityForResult(intentFromGallery,
                                         IMAGE_REQUEST_CODE);
                                 break;
                             case 1:
-
-                                Intent intentFromCapture = new Intent(
-                                        MediaStore.ACTION_IMAGE_CAPTURE);
-
-                                startActivityForResult(intentFromCapture,
-                                        CAMERA_REQUEST_CODE);
-                                intentFromCapture.putExtra(
-                                        MediaStore.EXTRA_OUTPUT,
-                                        Uri.fromFile(new File(
-                                                mActivity.getCacheDir(), IMAGE_FILE_NAME
-                                        )));
+                                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                // Ensure that there's a camera activity to handle the intent
+                                if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
+                                    // Create the File where the photo should go
+                                    File photoFile = null;
+                                    photoFile = createImageFile();
+                                    // Continue only if the File was successfully created
+                                    if (photoFile != null) {
+                                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                                Uri.fromFile(photoFile));
+                                        mActivity.startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+                                    }
+                                }
                                 break;
                         }
                     }
@@ -141,21 +152,14 @@ public class CompleteUesrInfo extends Fragment {
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onIntentResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == mActivity.RESULT_OK) {
             switch (requestCode) {
                 case IMAGE_REQUEST_CODE:
-                    startPhotoZoom(data.getData());
+                    savePhoto(GetFilePath.getPath(mActivity, data.getData()));
                     break;
                 case CAMERA_REQUEST_CODE:
-                    if (Tool.hasSdcard()) {
-                        File tempFile = new File(
-                                mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                                IMAGE_FILE_NAME);
-                        startPhotoZoom(Uri.fromFile(tempFile));
-                    }
-
+                    savePhoto(photoTakenUri);
                     break;
                 case RESULT_REQUEST_CODE:
                     if (data != null) {
@@ -163,55 +167,88 @@ public class CompleteUesrInfo extends Fragment {
                     }
                     break;
             }
-            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     /**
      * 裁剪图片方法实现
-     *
-     * @param uri
      */
     public void startPhotoZoom(Uri uri) {
 
         Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
+        String path = GetFilePath.getPath(mActivity, uri);
+        intent.setDataAndType(Uri.parse(path), "image/*");
         // 设置裁剪
         intent.putExtra("crop", "true");
         // aspectX aspectY 是宽高的比例
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
         // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 320);
-        intent.putExtra("outputY", 320);
-        intent.putExtra("return-data", true);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(context
-                .getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                UserPhoneNumber)));
-        startActivityForResult(intent, 2);
+        intent.putExtra("outputX", 500);
+        intent.putExtra("outputY", 500);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", false);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", true); // no face detection
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mActivity
+                .getExternalCacheDir(), IMAGE_FILE_NAME + "123333")));
+        mActivity.startActivityForResult(intent, RESULT_REQUEST_CODE);
+
     }
 
     /**
      * 保存裁剪之后的图片数据
-     *
-     * @param
      */
     private void getImageToView(Intent data) {
         Bundle extras = data.getExtras();
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(photo);
-            fbm = drawable;
-            faceImage.setImageURI(Uri.fromFile(new File(context
-                    .getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                    UserPhoneNumber)));
-            File oldphoto = new File(
-                    context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                    IMAGE_FILE_NAME);
-            if (oldphoto.exists()) {
-                oldphoto.deleteOnExit();
-            }
+            //todo 提交图像
+            Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                    "照片处理完成", Snackbar.LENGTH_LONG).show();
         }
     }
 
+    private File createImageFile() {
+        // Create an image file name
+        String imageFileName = "JPEG_" + "123";
+        File storageDir = mActivity.getCacheDir();
+        File image = null;
+        try {
+            image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        photoTakenUri = image.getAbsolutePath();
+        return image;
+    }
+
+    private void savePhoto(String filepath) {
+        AVFile file = null;
+        try {
+            file = AVFile.withAbsoluteLocalPath(App.getUserID() + "face.jpg",
+                    filepath);
+            final AVFile finalFile = file;
+            file.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e != null) {
+                        //上传失败
+                    } else {
+                        String photoUri = finalFile.getThumbnailUrl(false, 200, 200);
+                        UserPhotoImageView.setImageUrl(photoUri,
+                                GetVolley.getmInstance(mActivity).getImageLoader());
+
+                    }
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -14,4 +14,5 @@
     <string name="next_step">下一步</string>
     <string name="phone_number_error">长度为11位</string>
     <string name="signCode">验证码</string>
+    <string name="title_activity_chat">chat</string>
 </resources>

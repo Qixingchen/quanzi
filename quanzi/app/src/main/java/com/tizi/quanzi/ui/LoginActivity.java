@@ -17,7 +17,12 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.fragment.main.LockLock;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetPassword;
@@ -62,7 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         final Response.Listener<String> mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //todo 成功
+                Gson gson = new Gson();
+                Login login = gson.fromJson(response, Login.class);
+                App.setUserTken(login.getUser().getToken());
+                App.setUserID(login.getUser().getId());
+                StartMainActivity.startByLoginGroup(login.getGroup(), mActivity);
             }
         };
         final Response.ErrorListener mErrorListener = new Response.ErrorListener() {
@@ -78,12 +87,12 @@ public class LoginActivity extends AppCompatActivity {
                 String phonenumber = phoneNumberEditText.getText().toString();
                 String password = GetPassword.hashans(passwordEditText.getText().toString());
                 Map<String, String> loginPara = new TreeMap<>();
-                loginPara.put("phonenumber", phonenumber);
+                loginPara.put("account", phonenumber);
                 loginPara.put("password", password);
                 GetVolley.getmInstance(mActivity).setOKListener(mOKListener).
                         setErrorListener(mErrorListener)
-                        .addRequestNoSign(Request.Method.GET, getString(R.string.testbaseuri) + "/applogin/loginF",
-                                loginPara);
+                        .addRequestWithSign(Request.Method.GET,
+                                getString(R.string.testbaseuri) + "/applogin/loginF", loginPara);
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
@@ -114,5 +123,9 @@ public class LoginActivity extends AppCompatActivity {
             phoneNumberInputLayout.setErrorEnabled(false);
             return true;
         }
+    }
+
+    public void toMainActivity(View view) {
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

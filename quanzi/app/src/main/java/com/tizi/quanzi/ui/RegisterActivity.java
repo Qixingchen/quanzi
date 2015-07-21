@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.AndroidCharacter;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -109,7 +110,8 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
         //todo 判断性别
         para.put("sex", "0");
         para.put("icon", faceUri);
-        GetVolley.getmInstance(this, listener).addPostRequestWithNoSign(Request.Method.POST, baseuri, para);
+        App.setUserTken(App.getUserID());
+        GetVolley.getmInstance(this, listener).addPostRequestWithSign(Request.Method.POST, baseuri, para);
     }
 
     @Override

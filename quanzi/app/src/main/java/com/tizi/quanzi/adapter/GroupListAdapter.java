@@ -45,10 +45,11 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
         myViewHolder.lastCommitTextview.setText("2015-05-12 12:12");
         myViewHolder.groupFaceImageView.setImageUrl(groups[position].groupFace.toString(),
                 GetVolley.getmInstance(context).getImageLoader());
-        myViewHolder.groupFaceImageView.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent chatmess = new Intent(context, ChatActivity.class);
+                context.startActivity(chatmess);
             }
         });
     }
@@ -62,9 +63,11 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
 
         public NetworkImageView groupFaceImageView;
         public TextView groupNameTextview, lastCommitTextview, unreadTextview, lastTimeTextview;
+        public View itemView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             groupFaceImageView = (NetworkImageView) itemView.findViewById(R.id.group_face_image_view);
             groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
             lastCommitTextview = (TextView) itemView.findViewById(R.id.last_commit_text_view);

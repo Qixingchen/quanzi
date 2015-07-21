@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.ChatActivity">
 
-    <RecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/chat_message_recyclerView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

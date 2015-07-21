@@ -109,28 +109,24 @@ public class GetVolley {
         return mImageLoader;
     }
 
-    public GetVolley addRequestNoSign(int method, String baseuri, Map<String, String> para) {
+    public GetVolley addRequestWithSign(int method, String baseuri, Map<String, String> para) {
         String uri = baseuri + "?";
+        para = addSignMap(para);
         String paraUri = getParaUriNoSigned(para);
+        paraUri += "&sign=" + getSignString(para.get("ts"), para.get("userid"));
         uri += paraUri;
         StringRequest stringRequest = new StringRequest(method, uri, mOKListener, mErrorListener);
         addToRequestQueue(stringRequest);
         return mInstance;
     }
 
-    public GetVolley addRequestWithSign(int method, String baseuri, Map<String, String> para) {
-        String uri = baseuri + "?";
-        String paraUri = getParaUriNoSigned(para);
+    private Map<String, String> addSignMap(Map<String, String> para) {
+        para.put("ts", String.valueOf(System.currentTimeMillis() / 1000L));
         para.put("userid", App.getUserID());
-        paraUri += "&sign=" + getSign(para.get("ts"), para.get("userid"));
-        uri += paraUri;
-        StringRequest stringRequest = new StringRequest(method, uri, mOKListener, mErrorListener);
-        addToRequestQueue(stringRequest);
-        return mInstance;
+        return para;
     }
 
     private String getParaUriNoSigned(Map<String, String> para) {
-        para.put("ts", String.valueOf(System.currentTimeMillis() / 1000L));
         String paraUri = "";
         for (Map.Entry<String, String> entry : para.entrySet()) {
             paraUri += entry.getKey() + "=" + entry.getValue() + "&";
@@ -139,7 +135,7 @@ public class GetVolley {
         return paraUri;
     }
 
-    private String getSign(String ts, String userid) {
+    private String getSignString(String ts, String userid) {
 
         String para = "ts=" + ts + "userid=" + userid;
         para += App.getUserTken();
@@ -198,24 +194,9 @@ public class GetVolley {
         return mInstance;
     }
 
-    public GetVolley addPostRequestWithNoSign(int method, String baseuri, final Map<String, String> para) {
-
-        StringRequest stringRequest = new StringRequest(method, baseuri,
-                mOKListener, mErrorListener) {
-            @Override
-            protected Map<String, String> getParams() {
-                return para;
-            }
-        };
-        addToRequestQueue(stringRequest);
-        return mInstance;
-    }
-
-    private Map addPostSignPara(Map para) {
-        String ts = String.valueOf(System.currentTimeMillis() / 1000L);
-        para.put("ts", ts);
-        para.put("userid", App.getUserID());
-        para.put("sign", getSign(ts, App.getUserID()));
+    private Map addPostSignPara(Map<String, String> para) {
+        para = addSignMap(para);
+        para.put("sign", getSignString(para.get("ts"), App.getUserID()));
         return para;
     }
 

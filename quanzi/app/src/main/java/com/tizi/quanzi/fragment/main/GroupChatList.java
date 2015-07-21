@@ -1,6 +1,8 @@
 package com.tizi.quanzi.fragment.main;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -58,10 +60,25 @@ public class GroupChatList extends Fragment {
         if (mParam1.compareTo("1") != 0) {
             return;
         }
-        groups = new Group[20];
-        for (int i = 0; i < 20; i++) {
-            groups[i] = Group.getGroups();
+
+
+        Intent intent = mActivity.getIntent();
+
+        String[] ids, icons, groupNames, types;
+        ids = intent.getStringArrayExtra("groupids");
+        icons = intent.getStringArrayExtra("groupicons");
+        groupNames = intent.getStringArrayExtra("groupgroupNames");
+        types = intent.getStringArrayExtra("grouptypes");
+        int length = ids.length;
+        groups = new Group[length];
+        for (int i = 0; i < length; i++) {
+            //groups[i] = new Group();
+            groups[i].groupID = ids[i];
+            groups[i].groupName = groupNames[i];
+            groups[i].groupFace = Uri.parse(icons[i]);
+            groups[i].groupType = types[i];
         }
+
         mGroupListRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
         groupListAdapter = new GroupListAdapter(groups, mActivity);
         mGroupListRecyclerView.setHasFixedSize(true);

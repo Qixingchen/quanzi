@@ -243,6 +243,7 @@ public class CompleteUesrInfo extends Fragment {
                         String photoUri = finalFile.getThumbnailUrl(false, 200, 200);
                         UserPhotoImageView.setImageUrl(photoUri,
                                 GetVolley.getmInstance(mActivity).getImageLoader());
+                        photoOnlineUri = photoUri;
 
                     }
                 }

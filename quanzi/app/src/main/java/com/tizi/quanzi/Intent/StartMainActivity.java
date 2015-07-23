@@ -16,7 +16,7 @@ public class StartMainActivity {
 
     public static void startByLoginGroup(List<Login.GroupEntity> groupEntityList, Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        Bundle bundle = new Bundle();
+        //todo use getGroupByEntity
 
         int length = groupEntityList.size();
 

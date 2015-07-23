@@ -33,8 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
+            android:maxWidth="@dimen/max_chat_width"
             android:textSize="@dimen/normal_edit_text_size"
-            tools:text="聊天内容" />
+            tools:text="聊天内容sssssssssssssssssss" />
 
         <TextView
             android:id="@+id/chat_message_time"

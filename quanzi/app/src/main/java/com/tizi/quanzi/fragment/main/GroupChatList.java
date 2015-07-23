@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
-import com.tizi.quanzi.gson.Group;
+import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.ui.ChatActivity;
 
 
 public class GroupChatList extends Fragment {
@@ -24,7 +25,7 @@ public class GroupChatList extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Group[] groups;
+    private GroupClass[] groupClasses;
 
     private RecyclerView mGroupListRecyclerView;
     private GroupListAdapter groupListAdapter;
@@ -64,23 +65,23 @@ public class GroupChatList extends Fragment {
 
         Intent intent = mActivity.getIntent();
 
-        String[] ids, icons, groupNames, types;
+        final String[] ids, icons, groupNames, types;
         ids = intent.getStringArrayExtra("groupids");
         icons = intent.getStringArrayExtra("groupicons");
         groupNames = intent.getStringArrayExtra("groupgroupNames");
         types = intent.getStringArrayExtra("grouptypes");
-        int length = ids.length;
-        groups = new Group[length];
-        for (int i = 0; i < length; i++) {
-            //groups[i] = new Group();
-            groups[i].groupID = ids[i];
-            groups[i].groupName = groupNames[i];
-            groups[i].groupFace = Uri.parse(icons[i]);
-            groups[i].groupType = types[i];
-        }
+        //todo use getGroupByEntity
+        groupClasses = GroupClass.getGroupByInent(ids, icons, groupNames, types);
 
         mGroupListRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
-        groupListAdapter = new GroupListAdapter(groups, mActivity);
+        GroupListAdapter.Onclick onclick = new GroupListAdapter.Onclick() {
+            @Override
+            public void itemClick(int position) {
+                Intent chatmess = new Intent(mActivity, ChatActivity.class);
+                startActivity(chatmess);
+            }
+        };
+        groupListAdapter = new GroupListAdapter(groupClasses, mActivity, onclick);
         mGroupListRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(mActivity);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end"
+    android:gravity="end"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/chat_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:maxWidth="@dimen/max_chat_width"
+            android:textSize="@dimen/normal_edit_text_size"
+            tools:text="聊天内容ssssssssssss
+            ssssssssssssssssssss
+            ssssssssss" />
+
+        <TextView
+            android:id="@+id/chat_message_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/md_grey_800"
+            android:textSize="@dimen/normal_edit_text_size"
+            tools:text="time:time" />
+
+    </LinearLayout>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/chat_user_face"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        tools:background="@drawable/face" />
+
+
+</LinearLayout>

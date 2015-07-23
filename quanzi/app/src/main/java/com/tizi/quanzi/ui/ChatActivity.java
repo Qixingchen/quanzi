@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
-import com.tizi.quanzi.gson.ChatMessage;
+import com.tizi.quanzi.model.ChatMessage;
 
 public class ChatActivity extends AppCompatActivity {
 

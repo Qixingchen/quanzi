@@ -1,8 +1,6 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.RippleDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,21 +9,22 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.gson.Group;
+import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GetVolley;
-import com.tizi.quanzi.ui.ChatActivity;
 
 /**
  * Created by qixingchen on 15/7/16.
  */
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyViewHolder> {
 
-    private Group[] groups;
+    private GroupClass[] groupClasses;
     private Context context;
+    private Onclick onclick;
 
-    public GroupListAdapter(Group[] groups, Context context) {
-        this.groups = groups;
+    public GroupListAdapter(GroupClass[] groupClasses, Context context, Onclick onclick) {
+        this.groupClasses = groupClasses;
         this.context = context;
+        this.onclick = onclick;
     }
 
     @Override
@@ -39,24 +38,28 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder myViewHolder, int position) {
+    public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
         myViewHolder.unreadTextview.setText("unread commit");
-        myViewHolder.groupNameTextview.setText(groups[position].groupName);
+        myViewHolder.groupNameTextview.setText(groupClasses[position].groupName);
         myViewHolder.lastCommitTextview.setText("2015-05-12 12:12");
-        myViewHolder.groupFaceImageView.setImageUrl(groups[position].groupFace.toString(),
+        myViewHolder.groupFaceImageView.setImageUrl(
+                groupClasses[position].groupFace.toString(),
                 GetVolley.getmInstance(context).getImageLoader());
         myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent chatmess = new Intent(context, ChatActivity.class);
-                context.startActivity(chatmess);
+                onclick.itemClick(position);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return groups == null ? 0 : groups.length;
+        return groupClasses == null ? 0 : groupClasses.length;
+    }
+
+    public interface Onclick {
+        void itemClick(int position);
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

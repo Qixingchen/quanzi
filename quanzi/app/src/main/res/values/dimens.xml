@@ -5,4 +5,5 @@
     <dimen name="normal_edit_text_size">16sp</dimen>
     <dimen name="statue_bar_top_padding">0dp</dimen>
     <dimen name="group_face">48dp</dimen>
+    <dimen name="max_chat_width">260dp</dimen>
 </resources>

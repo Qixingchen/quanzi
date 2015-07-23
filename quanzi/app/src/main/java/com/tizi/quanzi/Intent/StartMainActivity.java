@@ -35,6 +35,7 @@ public class StartMainActivity {
         intent.putExtra("groupicons", icons);
         intent.putExtra("groupgroupNames", groupNames);
         intent.putExtra("grouptypes", types);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 

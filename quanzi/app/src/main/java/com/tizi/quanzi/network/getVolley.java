@@ -138,7 +138,7 @@ public class GetVolley {
     private String getSignString(String ts, String userid) {
 
         String para = "ts=" + ts + "userid=" + userid;
-        para += App.getUserTken();
+        para += App.getUserToken();
 
         MessageDigest md = null;
         try {

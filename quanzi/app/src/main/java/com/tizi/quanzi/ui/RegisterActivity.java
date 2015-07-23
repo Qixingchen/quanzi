@@ -1,11 +1,8 @@
 package com.tizi.quanzi.ui;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.text.AndroidCharacter;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,9 +16,7 @@ import com.tizi.quanzi.fragment.register.Register2stepFragment;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetPassword;
-import com.tizi.quanzi.tool.Tool;
 
-import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -105,12 +100,12 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
         String baseuri = getString(R.string.testbaseuri) + "/applogin/regF";
         Map<String, String> para = new TreeMap();
         para.put("account", phoneNumber);
-        para.put("password", GetPassword.hashans(password));
+        para.put("password", GetPassword.fullHash(password));
         para.put("username", userName);
         //todo 判断性别
         para.put("sex", "0");
         para.put("icon", faceUri);
-        App.setUserTken(App.getUserID());
+        App.setUserToken(App.getUserID());
         GetVolley.getmInstance(this, listener).addPostRequestWithSign(Request.Method.POST, baseuri, para);
     }
 

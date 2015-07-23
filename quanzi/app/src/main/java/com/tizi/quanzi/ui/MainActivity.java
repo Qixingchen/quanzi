@@ -1,5 +1,6 @@
 package com.tizi.quanzi.ui;
 
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -8,6 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.tizi.quanzi.fragment.main.MainFragmentPagerAdapter;
 import com.tizi.quanzi.R;
 
@@ -33,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager(), this));
         tabLayout.setupWithViewPager(mViewPager);
+        AVIMClient imClient = AVIMClient.getInstance("Tom");
+        imClient.open(new AVIMClientCallback() {
+            @Override
+            public void done(AVIMClient client, AVException e) {
+                if (null != e) {
+                    Snackbar.make(mViewPager, "网络故障", Snackbar.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 

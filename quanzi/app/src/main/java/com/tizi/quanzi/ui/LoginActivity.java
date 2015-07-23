@@ -2,7 +2,7 @@ package com.tizi.quanzi.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.nfc.Tag;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -21,11 +21,11 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.fragment.main.LockLock;
 import com.tizi.quanzi.gson.Login;
-import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetPassword;
+import com.tizi.quanzi.tool.StaticField;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -69,8 +69,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 Login login = gson.fromJson(response, Login.class);
-                App.setUserTken(login.getUser().getToken());
+                App.setUserToken(login.getUser().getToken());
                 App.setUserID(login.getUser().getId());
+                SharedPreferences preferences = getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
+                        MODE_PRIVATE);
+                preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,
+                        GetPassword.preHASH(passwordEditText.getText().toString())).apply();
+                App.setUserPhone(phoneNumberEditText.getText().toString());
                 StartMainActivity.startByLoginGroup(login.getGroup(), mActivity);
             }
         };
@@ -84,15 +89,11 @@ public class LoginActivity extends AppCompatActivity {
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phonenumber = phoneNumberEditText.getText().toString();
-                String password = GetPassword.hashans(passwordEditText.getText().toString());
-                Map<String, String> loginPara = new TreeMap<>();
-                loginPara.put("account", phonenumber);
-                loginPara.put("password", password);
-                GetVolley.getmInstance(mActivity).setOKListener(mOKListener).
-                        setErrorListener(mErrorListener)
-                        .addRequestWithSign(Request.Method.GET,
-                                getString(R.string.testbaseuri) + "/applogin/loginF", loginPara);
+                App.setUserPhone(phoneNumberEditText.getText().toString());
+                String password = passwordEditText.getText().toString();
+                AutoLogin.getInstance(mActivity).setmOKListener(mOKListener).
+                        setmErrorListener(mErrorListener).
+                        login(GetPassword.preHASH(password));
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {

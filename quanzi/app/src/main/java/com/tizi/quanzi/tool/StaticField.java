@@ -11,4 +11,12 @@ public class StaticField {
         public final static int OTHER = 2;
     }
 
+    public static class TokenPreferences {
+        public final static String USERID = "USERID";
+        public final static String USERTOKEN = "USERTOKEN";
+        public final static String TOKENFILE = "TOKENFILE";
+        public final static String PASSWORD = "PASSWORD";
+        public final static String USERPHONE = "USERPHONE";
+    }
+
 }

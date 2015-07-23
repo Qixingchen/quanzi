@@ -7,14 +7,28 @@ import java.security.NoSuchAlgorithmException;
  * Created by qixingchen on 15/7/13.
  */
 public class GetPassword {
-    public static String hashans(String pwd) {
-        String salt = Hash("quanzi");
+    public static String fullHash(String pwd) {
+        pwd = preHASH(pwd);
+        pwd = LaterHASH(pwd);
+        return pwd;
+    }
+
+    private static String GetSalt() {
+        return Hash("quanzi");
+    }
+
+    public static String preHASH(String pwd) {
+        String salt = GetSalt();
         pwd = Hash(pwd);
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 2; i++) {
             pwd += salt;
             pwd = Hash(pwd);
         }
-        return Hash(pwd);
+        return pwd;
+    }
+
+    public static String LaterHASH(String pwd) {
+        return preHASH(pwd);
     }
 
     private static String Hash(String need) {

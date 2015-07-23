@@ -11,10 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.ui.ChatActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class GroupChatList extends Fragment {
@@ -95,6 +105,29 @@ public class GroupChatList extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //leancloud
+        List<String> clientIds = new ArrayList<String>();
+        clientIds.add(App.getUserID());
+        clientIds.add("Bob");
+
+// 我们给对话增加一个自定义属性 type，表示单聊还是群聊
+// 常量定义：
+// int ConversationType_OneOne = 0; // 两个人之间的单聊
+// int ConversationType_Group = 1;  // 多人之间的群聊
+        Map<String, Object> attr = new HashMap<>();
+        attr.put("type", "1");
+        App.getImClient().createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
+            @Override
+            public void done(AVIMConversation conversation, AVException e) {
+                if (null != conversation) {
+                    // 成功了，这时候可以显示对话的 Activity 页面（假定为 ChatActivity）了。
+                    Intent chatmess = new Intent(mActivity, ChatActivity.class);
+                    chatmess.putExtra("conversation", conversation.getConversationId());
+                    startActivity(chatmess);
+                }
+            }
+        });
     }
 
     @Override

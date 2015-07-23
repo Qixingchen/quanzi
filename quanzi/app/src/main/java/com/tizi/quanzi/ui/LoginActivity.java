@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                 Login login = gson.fromJson(response, Login.class);
                 App.setUserToken(login.getUser().getToken());
                 App.setUserID(login.getUser().getId());
+                App.getImClient();
                 SharedPreferences preferences = getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
                         MODE_PRIVATE);
                 preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,

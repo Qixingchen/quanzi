@@ -8,8 +8,11 @@ import android.app.Application;
 import android.content.SharedPreferences;
 
 import com.avos.avoscloud.AVCloud;
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -18,7 +21,7 @@ public class App extends Application {
     private static Application application;
     static SharedPreferences preferences;
 
-    AVIMClient imClient;
+    static AVIMClient imClient;
 
     private static String UserToken = "";
     //todo 本地储存 UserAccount
@@ -63,23 +66,33 @@ public class App extends Application {
         application = this;
         AVOSCloud.initialize(this, "iz9otzx11p733n25vd54r6uho3rq1f5adfkcva1ttmsoecof",
                 "q1r5y5f5mr6dhbdacphcrd9w2vnh8whgta1d91b8d9v39jxz");
-        AVCloud.setProductionMode(false); //调用测试环境云代码
         AutoLogin.getInstance(application).makeOKListener().makeErrorListener().login();
     }
 
-    public AVIMClient getImClient() {
+    public static AVIMClient getImClient() {
         if (imClient == null) {
             imClient = AVIMClient.getInstance(UserID);
+            imClient.open(new AVIMClientCallback() {
+                @Override
+                public void done(AVIMClient avimClient, AVException e) {
+                    if (null != e) {
+                        Log.e(TAG,"链接失败");
+                        e.printStackTrace();
+                    }else {
+                        Log.w(TAG,"链接成功");
+                    }
+                }
+            });
         }
         return imClient;
     }
 
-    public void setImClient(String userID) {
-        this.imClient = AVIMClient.getInstance(userID);
+    public static void setImClient(String userID) {
+        App.imClient = AVIMClient.getInstance(userID);
     }
 
-    public void setImClient() {
-        this.imClient = AVIMClient.getInstance(UserID);
+    public static void setImClient() {
+        App.imClient = AVIMClient.getInstance(UserID);
     }
 
     public static Application getApplication() {

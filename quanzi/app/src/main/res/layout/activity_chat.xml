@@ -8,7 +8,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/ChatSwipeToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_message_recyclerView"
@@ -29,12 +30,14 @@
             android:src="@drawable/ic_mood_black_36dp" />
 
         <EditText
+            android:id="@+id/InputMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:maxLines="4" />
 
         <ImageButton
+            android:id="@+id/SendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_send_black_36dp" />

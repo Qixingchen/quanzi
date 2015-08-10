@@ -12,6 +12,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.squareup.leakcanary.LeakCanary;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.tool.StaticField;
@@ -58,6 +59,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        LeakCanary.install(this);
         preferences = this.getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
                 MODE_PRIVATE);
         UserID = preferences.getString(StaticField.TokenPreferences.USERID, "");
@@ -66,7 +68,6 @@ public class App extends Application {
         application = this;
         AVOSCloud.initialize(this, "iz9otzx11p733n25vd54r6uho3rq1f5adfkcva1ttmsoecof",
                 "q1r5y5f5mr6dhbdacphcrd9w2vnh8whgta1d91b8d9v39jxz");
-        AutoLogin.getInstance(application).makeOKListener().makeErrorListener().login();
     }
 
     public static AVIMClient getImClient() {

@@ -122,7 +122,7 @@ public class GetVolley {
 
     private Map<String, String> addSignMap(Map<String, String> para) {
         para.put("ts", String.valueOf(System.currentTimeMillis() / 1000L));
-        para.put("userid", App.getUserID());
+        para.put("uid", App.getUserID());
         return para;
     }
 
@@ -137,7 +137,7 @@ public class GetVolley {
 
     private String getSignString(String ts, String userid) {
 
-        String para = "ts=" + ts + "userid=" + userid;
+        String para = "ts=" + ts + "uid=" + userid;
         para += App.getUserToken();
 
         MessageDigest md = null;

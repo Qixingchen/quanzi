@@ -27,16 +27,33 @@ android {
     }
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.2.0'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+apply plugin: 'me.tatarka.retrolambda'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:design:22.2.1'
+    compile 'com.android.support:support-annotations:22.2.1'
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.13'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'cn.leancloud.android:avoscloud-sdk:v3.4.6'
     compile 'cn.leancloud.android:avoscloud-push:v3.4.6@aar'
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
     compile 'com.google.android.gms:play-services:7.5.0'
-
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 }

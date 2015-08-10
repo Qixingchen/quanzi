@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        AutoLogin.getInstance(this).makeOKListener().makeErrorListener().login();
         this.newaccount = (TextView) findViewById(R.id.new_account);
         this.passwordInputLayout = (TextInputLayout) findViewById(R.id.passwordInputLayout);
         this.phoneNumberInputLayout = (TextInputLayout) findViewById(R.id.phoneNumberInputLayout);

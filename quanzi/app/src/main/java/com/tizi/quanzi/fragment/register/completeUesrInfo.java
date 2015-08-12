@@ -244,7 +244,6 @@ public class CompleteUesrInfo extends Fragment {
                         UserPhotoImageView.setImageUrl(photoUri,
                                 GetVolley.getmInstance(mActivity).getImageLoader());
                         photoOnlineUri = photoUri;
-
                     }
                 }
             });

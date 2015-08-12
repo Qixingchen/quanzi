@@ -9,25 +9,29 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.gson.ChatMessage;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
+
+import java.util.List;
 
 /**
  * Created by qixingchen on 15/7/20.
  */
 public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
-    ChatMessage[] chatMessages;
+    List<ChatMessage> chatMessageList;
     Context mContext;
 
     @Override
     public int getItemViewType(int position) {
-        return chatMessages[position].chatFrom;
+        //todo 多媒体支持
+        return chatMessageList.get(position).From;
     }
 
-    public ChatMessageAdapter(ChatMessage[] chatMessages, Context context) {
-        this.chatMessages = chatMessages;
+    public ChatMessageAdapter(List<ChatMessage> chatMessageList, Context context) {
+        this.chatMessageList = chatMessageList;
         this.mContext = context;
     }
 
@@ -38,12 +42,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         View v;
         BaseViewHolder vh;
         switch (viewType) {
-            case StaticField.ChatType.OTHER:
+            case StaticField.ChatFrom.OTHER:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.ohter_chat_item, parent, false);
                 vh = new OtherMessViewHolder(v);
                 break;
-            case StaticField.ChatType.ME:
+            case StaticField.ChatFrom.ME:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.my_chat_item, parent, false);
                 vh = new MyMessViewHolder(v);
@@ -59,18 +63,19 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.userFaceImageView.setImageUrl(chatMessages[position].chatImage,
+        holder.userFaceImageView.setImageUrl(chatMessageList.get(position).chatImage,
                 GetVolley.getmInstance(mContext).getImageLoader());
-        holder.chatMessTextView.setText(chatMessages[position].chatMessage);
-        holder.chatTime.setText(chatMessages[position].chatTime);
+        holder.chatMessTextView.setText(chatMessageList.get(position).text);
+        String time = Tool.timeStringFromUNIX(chatMessageList.get(position).create_time);
+        holder.chatTime.setText(time);
         if (holder.chatUserName != null) {
-            holder.chatUserName.setText(chatMessages[position].chatUserName);
+            holder.chatUserName.setText(chatMessageList.get(position).sender);
         }
     }
 
     @Override
     public int getItemCount() {
-        return chatMessages == null ? 0 : chatMessages.length;
+        return chatMessageList == null ? 0 : chatMessageList.size();
     }
 
     public static class OtherMessViewHolder extends BaseViewHolder {

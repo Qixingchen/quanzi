@@ -6,28 +6,48 @@ package com.tizi.quanzi.app;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 
-import com.avos.avoscloud.AVCloud;
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.squareup.leakcanary.LeakCanary;
+import com.tizi.quanzi.chat.AVMessageHandler;
+import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
+import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
+import com.tizi.quanzi.database.DataBaseHelper;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.tool.StaticField;
 
 public class App extends Application {
     private static final String TAG = "App";
     private static Application application;
-    static SharedPreferences preferences;
 
-    static AVIMClient imClient;
+    private static AVIMClient imClient = null;
 
+    //偏好储存
+    private static SharedPreferences preferences;
     private static String UserToken = "";
     //todo 本地储存 UserAccount
     private static String UserID = "";
     private static String UserPhone = "";
+
+    public static void setDataBaseHelper(String userID) {
+        db = new DataBaseHelper(application, userID, null, 1);
+        db1 = db.getWritableDatabase();
+    }
+
+    //数据库
+    private static DataBaseHelper db;
+
+    public static SQLiteDatabase getDatabase() {
+        return db1;
+    }
+
+    private static SQLiteDatabase db1;
 
     public static String getUserPhone() {
         return UserPhone;
@@ -66,8 +86,13 @@ public class App extends Application {
         UserToken = preferences.getString(StaticField.TokenPreferences.USERTOKEN, "");
         UserPhone = preferences.getString(StaticField.TokenPreferences.USERPHONE, "");
         application = this;
-        AVOSCloud.initialize(this, "iz9otzx11p733n25vd54r6uho3rq1f5adfkcva1ttmsoecof",
-                "q1r5y5f5mr6dhbdacphcrd9w2vnh8whgta1d91b8d9v39jxz");
+        AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
+                "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
+        AVAnalytics.enableCrashReport(this, true);
+        AVIMMessageManager.registerDefaultMessageHandler(new AVMessageHandler());
+        AVIMClient.setClientEventHandler(new MyAVIMClientEventHandler());
+        AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
+
     }
 
     public static AVIMClient getImClient() {
@@ -77,10 +102,10 @@ public class App extends Application {
                 @Override
                 public void done(AVIMClient avimClient, AVException e) {
                     if (null != e) {
-                        Log.e(TAG,"链接失败");
+                        Log.e(TAG, "链接失败");
                         e.printStackTrace();
-                    }else {
-                        Log.w(TAG,"链接成功");
+                    } else {
+                        Log.w(TAG, "链接成功");
                     }
                 }
             });

@@ -16,7 +16,10 @@ public class ChatMessage {
             "http://ac-iz9otzx1.clouddn.com/j0OtVC4rkrAIL7h2mgwCylofS3bEqsrOEGdNEqVm.jpg",
             "http://ac-iz9otzx1.clouddn.com/lo73gXLe1hsXP93fGs0m4TMibivViSLY6qN4Pt3A.jpg"};
 
-    public static ChatMessage[] getChatMess() {
+    private ChatMessage() {
+    }
+
+    private static ChatMessage[] getChatMess() {
         ChatMessage chatMessages[] = new ChatMessage[20000];
         Random random = new Random(System.currentTimeMillis());
         for (int i = 0; i < 20000; i++) {
@@ -26,10 +29,10 @@ public class ChatMessage {
             chatMessages[i].chatFrom = random.nextInt(3);
             switch (chatMessages[i].chatFrom) {
 
-                case StaticField.ChatType.OTHER:
+                case StaticField.ChatFrom.OTHER:
                     chatMessages[i].chatImage = photoUri[random.nextInt(photoUri.length)];
                     break;
-                case StaticField.ChatType.ME:
+                case StaticField.ChatFrom.ME:
                     chatMessages[i].chatImage = "http://www.gravatar.com/avatar/6727fb208dd4a54b0eac56f8f6142cda?s=500";
                     break;
                 default:

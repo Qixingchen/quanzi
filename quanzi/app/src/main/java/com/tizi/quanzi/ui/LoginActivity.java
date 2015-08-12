@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
@@ -23,12 +22,8 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.AutoLogin;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
-
-import java.util.Map;
-import java.util.TreeMap;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -46,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        AutoLogin.getInstance(this).makeOKListener().makeErrorListener().login();
+        AutoLogin.getInstance().makeOKListener().makeErrorListener().login();
         this.newaccount = (TextView) findViewById(R.id.new_account);
         this.passwordInputLayout = (TextInputLayout) findViewById(R.id.passwordInputLayout);
         this.phoneNumberInputLayout = (TextInputLayout) findViewById(R.id.phoneNumberInputLayout);
@@ -70,15 +65,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 Login login = gson.fromJson(response, Login.class);
-                App.setUserToken(login.getUser().getToken());
-                App.setUserID(login.getUser().getId());
-                App.getImClient();
-                SharedPreferences preferences = getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
-                        MODE_PRIVATE);
-                preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,
-                        GetPassword.preHASH(passwordEditText.getText().toString())).apply();
-                App.setUserPhone(phoneNumberEditText.getText().toString());
-                StartMainActivity.startByLoginGroup(login.getGroup(), mActivity);
+                if (login.isSuccess()) {
+                    AutoLogin.setUserInfo(phoneNumberEditText.getText().toString(),
+                            login.getUser().getId(), login.getUser().getToken());
+                    SharedPreferences preferences = getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
+                            MODE_PRIVATE);
+                    preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,
+                            GetPassword.preHASH(passwordEditText.getText().toString())).apply();
+
+                    StartMainActivity.startByLoginGroup(login.getGroup(), mActivity);
+                }
             }
         };
         final Response.ErrorListener mErrorListener = new Response.ErrorListener() {
@@ -93,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 App.setUserPhone(phoneNumberEditText.getText().toString());
                 String password = passwordEditText.getText().toString();
-                AutoLogin.getInstance(mActivity).setmOKListener(mOKListener).
+                AutoLogin.getInstance().setmOKListener(mOKListener).
                         setmErrorListener(mErrorListener).
                         login(GetPassword.preHASH(password));
             }

@@ -1,6 +1,5 @@
 package com.tizi.quanzi.network;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -30,10 +29,10 @@ public class AutoLogin {
     private static Response.Listener<String> mOKListener;
     private static Response.ErrorListener mErrorListener;
 
-    public static AutoLogin getInstance(Context mContext) {
+    public static AutoLogin getInstance() {
         if (mInstance == null) {
             synchronized (AutoLogin.class) {
-                mInstance = new AutoLogin(mContext);
+                mInstance = new AutoLogin(App.getApplication());
             }
         }
         return mInstance;
@@ -58,7 +57,13 @@ public class AutoLogin {
     public void login(String password) {
         Map<String, String> loginPara = new TreeMap<>();
         loginPara.put("account", App.getUserPhone());
-        loginPara.put("password", GetPassword.LaterHASH(password));
+        if (App.getUserPhone().compareTo("1") == 0) {
+            loginPara.put("password", "96e79218965eb72c92a549dd5a330112");
+        } else if (App.getUserPhone().compareTo("2") == 0) {
+            loginPara.put("password", "e3ceb5881a0a1fdaad01296d7554868d");
+        } else {
+            loginPara.put("password", GetPassword.LaterHASH(password));
+        }
         preferences.edit().putString(StaticField.TokenPreferences.PASSWORD, password).apply();
         GetVolley.getmInstance(mContext).setOKListener(mOKListener).
                 setErrorListener(mErrorListener)
@@ -82,11 +87,22 @@ public class AutoLogin {
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 Login login = gson.fromJson(response, Login.class);
-                App.setUserToken(login.getUser().getToken());
-                App.setUserID(login.getUser().getId());
-                StartMainActivity.startByLoginGroup(login.getGroup(), mContext);
+                // TODO: 15/8/12 登录失败操作
+                if (login.isSuccess()) {
+                    setUserInfo(App.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
+                    StartMainActivity.startByLoginGroup(login.getGroup(), mContext);
+                }
             }
         };
+        return mInstance;
+    }
+
+    public static AutoLogin setUserInfo(String phone, String ID, String Token) {
+        App.setUserToken(Token);
+        App.setUserID(ID);
+        App.setUserPhone(phone);
+        App.setDataBaseHelper(ID);
+        App.getImClient();
         return mInstance;
     }
 

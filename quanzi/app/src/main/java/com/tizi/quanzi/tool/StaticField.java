@@ -5,10 +5,18 @@ package com.tizi.quanzi.tool;
  */
 public class StaticField {
 
-    public static class ChatType {
+    public static class ChatFrom {
         public final static int ME = 0;
         public final static int GROUP = 1;
         public final static int OTHER = 2;
+    }
+
+    public static class chatType {
+        public final static int TEXT = -1;
+        public final static int IMAGE = -2;
+        public final static int VOICE = -3;
+        public final static int VEDIO = -4;
+
     }
 
     public static class TokenPreferences {

@@ -18,8 +18,12 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.gson.ChatMessage;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.tool.Tool;
+
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -30,6 +34,7 @@ public class ChatActivity extends AppCompatActivity {
     private android.widget.EditText InputMessage;
     private android.widget.ImageButton SendButton;
     private String CONVERSATION_ID = "";
+    AVIMConversation conversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +50,6 @@ public class ChatActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         chatmessagerecyclerView.setLayoutManager(mLayoutManager);
 
-        //adapt
-        chatMessageAdapter = new ChatMessageAdapter(ChatMessage.getChatMess(), this);
-        chatmessagerecyclerView.setAdapter(chatMessageAdapter);
-
-
         //send
         SendButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -60,9 +60,6 @@ public class ChatActivity extends AppCompatActivity {
                         }
                         final AVIMMessage message = new AVIMMessage();
                         message.setContent(InputMessage.getText().toString());
-                        AVIMConversation conversation =
-                                App.getImClient().getConversation(CONVERSATION_ID);
-
 
                         conversation.sendMessage(message, new
 
@@ -70,10 +67,14 @@ public class ChatActivity extends AppCompatActivity {
                                             @Override
                                             public void done(AVException e) {
                                                 if (null != e) {
-                                                    // 出错了。。。
+                                                    // todo 出错了。。。
                                                     e.printStackTrace();
                                                 } else {
-                                                    Log.d("发送成功，msgId=", message.getMessageId());
+                                                    com.tizi.quanzi.gson.ChatMessage chatMessage =
+                                                            Tool.chatMessageFromAVMessage(message);
+                                                    Log.d("发送成功", chatMessage.toString());
+                                                    InputMessage.setText("");
+                                                    DBAct.getInstance().addChatMessage(chatMessage);
                                                 }
                                             }
                                         }
@@ -111,5 +112,14 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         CONVERSATION_ID = getIntent().getStringExtra("conversation");
+        // TODO: 15/8/12 testID
+        CONVERSATION_ID = "55caba1840ac41014f7e78ce";
+        conversation = App.getImClient().getConversation(CONVERSATION_ID);
+        //adapt
+        // TODO: 15/8/12 获取聊天记录
+        List<ChatMessage> chatMessageList =
+                DBAct.getInstance().queryMessage(CONVERSATION_ID);
+        chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);
+        chatmessagerecyclerView.setAdapter(chatMessageAdapter);
     }
 }

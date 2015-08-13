@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/8/12.
+ * 成员变化
  */
 public class MyAVIMConversationEventHandler extends AVIMConversationEventHandler {
     // TODO: 15/8/12

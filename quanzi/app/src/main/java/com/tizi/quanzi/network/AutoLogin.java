@@ -102,7 +102,7 @@ public class AutoLogin {
         App.setUserID(ID);
         App.setUserPhone(phone);
         App.setDataBaseHelper(ID);
-        App.getImClient();
+        App.getNewImClient(ID);
         return mInstance;
     }
 

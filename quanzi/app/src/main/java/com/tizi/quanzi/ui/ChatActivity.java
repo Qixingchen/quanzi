@@ -15,9 +15,11 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.chat.AVMessageHandler;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.ChatMessage;
 import com.tizi.quanzi.log.Log;
@@ -36,13 +38,24 @@ public class ChatActivity extends AppCompatActivity {
     private String CONVERSATION_ID = "";
     AVIMConversation conversation;
 
-    @Override
+    private static final String TAG = ChatActivity.class.getSimpleName();
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         this.SendButton = (ImageButton) findViewById(R.id.SendButton);
         this.InputMessage = (EditText) findViewById(R.id.InputMessage);
         this.ChatSwipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.ChatSwipeToRefresh);
+
+        //SwipeRefresh
+        ChatSwipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // TODO: 15/8/13 下拉刷新获取数据
+                ChatSwipeToRefresh.setRefreshing(false);
+            }
+        });
 
         //RecyclerView
         this.chatmessagerecyclerView = (RecyclerView) findViewById(R.id.chat_message_recyclerView);
@@ -74,7 +87,9 @@ public class ChatActivity extends AppCompatActivity {
                                                             Tool.chatMessageFromAVMessage(message);
                                                     Log.d("发送成功", chatMessage.toString());
                                                     InputMessage.setText("");
-                                                    DBAct.getInstance().addChatMessage(chatMessage);
+                                                    DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+                                                    chatMessageAdapter.addOrUpdateMessage(chatMessage);
+                                                    chatmessagerecyclerView.smoothScrollToPosition(chatMessageAdapter.chatMessageList.size());
                                                 }
                                             }
                                         }
@@ -113,13 +128,64 @@ public class ChatActivity extends AppCompatActivity {
         super.onResume();
         CONVERSATION_ID = getIntent().getStringExtra("conversation");
         // TODO: 15/8/12 testID
-        CONVERSATION_ID = "55caba1840ac41014f7e78ce";
+        //CONVERSATION_ID = "55caba1840ac41014f7e78ce";//安静的账号
+        CONVERSATION_ID = "55c1b77b00b0cb9ca0a4d664";//喧闹的
+        AVMessageHandler.getInstance().UI_CONVERSATION_ID = CONVERSATION_ID;
         conversation = App.getImClient().getConversation(CONVERSATION_ID);
+
+        //聊天消息回调接口
+        AVMessageHandler.getInstance().setOnMessage(new AVMessageHandler.OnMessage() {
+            @Override
+            public void OnMessageGet(ChatMessage chatMessage) {
+                chatMessageAdapter.addOrUpdateMessage(chatMessage);
+                int LastVisibleItemPosition = ((LinearLayoutManager) mLayoutManager)
+                        .findLastVisibleItemPosition();
+                int chatSize = chatMessageAdapter.chatMessageList.size();
+                Log.w(TAG, "lastPos=" + LastVisibleItemPosition + ",chatsize=" + chatSize);
+                if (LastVisibleItemPosition - chatSize <= 2) {
+                    Log.w(TAG, "聊天末尾");
+
+                    chatmessagerecyclerView.smoothScrollToPosition(chatMessageAdapter.chatMessageList.size());
+                }
+
+            }
+
+            @Override
+            public void OnMyMessageSent(ChatMessage chatMessage) {
+                chatMessageAdapter.addOrUpdateMessage(chatMessage);
+            }
+        });
+
         //adapt
         // TODO: 15/8/12 获取聊天记录
+        conversation.queryMessages(30, new AVIMMessagesQueryCallback() {
+            @Override
+            public void done(List<AVIMMessage> list, AVException e) {
+                if (e != null) {
+                    e.printStackTrace();
+                    return;
+                }
+                for (AVIMMessage avimMessage : list) {
+                    ChatMessage chatMessage = Tool.chatMessageFromAVMessage(avimMessage);
+                    DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+                    chatMessageAdapter.addOrUpdateMessage(chatMessage);
+
+                }
+            }
+        });
         List<ChatMessage> chatMessageList =
                 DBAct.getInstance().queryMessage(CONVERSATION_ID);
         chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);
         chatmessagerecyclerView.setAdapter(chatMessageAdapter);
+        chatmessagerecyclerView.scrollToPosition(chatMessageAdapter.lastReadPosition());
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVMessageHandler.getInstance().UI_CONVERSATION_ID = "";
+        AVMessageHandler.getInstance().setOnMessage(null);
+    }
+
+
 }

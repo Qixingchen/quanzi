@@ -35,12 +35,16 @@ public class App extends Application {
     private static String UserID = "";
     private static String UserPhone = "";
 
+    //当前聊天窗口ID
+    public static String CONVERSATION_ID = "";
+
+
+    //数据库
     public static void setDataBaseHelper(String userID) {
         db = new DataBaseHelper(application, userID, null, 1);
         db1 = db.getWritableDatabase();
     }
 
-    //数据库
     private static DataBaseHelper db;
 
     public static SQLiteDatabase getDatabase() {
@@ -89,7 +93,7 @@ public class App extends Application {
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
         AVAnalytics.enableCrashReport(this, true);
-        AVIMMessageManager.registerDefaultMessageHandler(new AVMessageHandler());
+        AVIMMessageManager.registerDefaultMessageHandler(AVMessageHandler.getInstance());
         AVIMClient.setClientEventHandler(new MyAVIMClientEventHandler());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
 
@@ -102,14 +106,30 @@ public class App extends Application {
                 @Override
                 public void done(AVIMClient avimClient, AVException e) {
                     if (null != e) {
-                        Log.e(TAG, "链接失败");
+                        Log.e(TAG, "AVIMClient链接失败");
                         e.printStackTrace();
                     } else {
-                        Log.w(TAG, "链接成功");
+                        Log.w(TAG, "AVIMClient链接成功");
                     }
                 }
             });
         }
+        return imClient;
+    }
+
+    public static AVIMClient getNewImClient(String userID) {
+        imClient = AVIMClient.getInstance(userID);
+        imClient.open(new AVIMClientCallback() {
+            @Override
+            public void done(AVIMClient avimClient, AVException e) {
+                if (null != e) {
+                    Log.e(TAG, "AVIMClient链接失败");
+                    e.printStackTrace();
+                } else {
+                    Log.w(TAG, "AVIMClient链接成功");
+                }
+            }
+        });
         return imClient;
     }
 

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.ChatMessage;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.StaticField;
@@ -21,8 +22,8 @@ import java.util.List;
  */
 public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
-    List<ChatMessage> chatMessageList;
-    Context mContext;
+    public List<ChatMessage> chatMessageList;
+    private Context mContext;
 
     @Override
     public int getItemViewType(int position) {
@@ -71,6 +72,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         if (holder.chatUserName != null) {
             holder.chatUserName.setText(chatMessageList.get(position).sender);
         }
+        if (!chatMessageList.get(position).isread) {
+            chatMessageList.get(position).isread = true;
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessageList.get(position));
+        }
     }
 
     @Override
@@ -102,4 +107,36 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     }
 
+    public void addOrUpdateMessage(ChatMessage chatMessage) {
+        // TODO: 15/8/13 更好的方式查找消息
+        int length = chatMessageList.size();
+        long time = chatMessage.create_time;
+        int insertposition = length;
+        for (int i = length - 1; i >= 0; i--) {
+            ChatMessage tempchatMessage = chatMessageList.get(i);
+            if (tempchatMessage.messID.compareTo(chatMessage.messID) == 0) {
+                chatMessageList.remove(i);
+                chatMessageList.add(i, chatMessage);
+                return;
+            }
+            if (tempchatMessage.create_time > time) {
+                insertposition = i;
+            }
+        }
+        //todo 确认加载位置
+        chatMessageList.add(insertposition, chatMessage);
+        notifyDataSetChanged();
+    }
+
+    public int lastReadPosition() {
+        int length = chatMessageList.size();
+        int position = 0;
+        for (int i = length - 1; i >= 0; i--) {
+            if (chatMessageList.get(i).isread) {
+                position = i;
+                break;
+            }
+        }
+        return position;
+    }
 }

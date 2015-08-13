@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * Created by qixingchen on 15/8/12.
  * 数据库操作汇总
+ * todo 使用workThread操作
  */
 public class DBAct {
     private SQLiteDatabase db;
@@ -107,8 +108,8 @@ public class DBAct {
     //判断
 
 
-    //增加
-    public void addChatMessage(ChatMessage chatMessage) {
+    //增加或更新
+    public void addOrReplaceChatMessage(ChatMessage chatMessage) {
         ContentValues content = new ContentValues();
         content.put(DataBaseHelper.chatHistorySQLName.messID, chatMessage.messID);
         content.put(DataBaseHelper.chatHistorySQLName.ConversationId, chatMessage.ConversationId);

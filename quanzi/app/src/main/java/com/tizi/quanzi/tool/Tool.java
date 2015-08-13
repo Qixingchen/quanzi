@@ -42,9 +42,14 @@ public class Tool {
         // TODO: 15/8/12 chatMessage.chatImage
         chatMessage.chatImage =
                 "http://www.gravatar.com/avatar/6727fb208dd4a54b0eac56f8f6142cda?s=500";
-        chatMessage.isSelfSend =
-                (message.getMessageIOType() == AVIMMessage.AVIMMessageIOType.AVIMMessageIOTypeOut);
+        // TODO: 15/8/13  getMessageIOType不可用 为什么？
+        chatMessage.isSelfSend = (message.getFrom().compareTo(App.getUserID()) == 0);
         chatMessage.isread = chatMessage.isSelfSend;
+        if (chatMessage.isSelfSend){
+            chatMessage.From = StaticField.ChatFrom.ME;
+        }else {
+            chatMessage.From = StaticField.ChatFrom.OTHER;
+        }
         return chatMessage;
     }
 

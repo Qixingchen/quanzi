@@ -1,48 +1,34 @@
 package com.tizi.quanzi.model;
 
-import com.tizi.quanzi.tool.StaticField;
-
-import java.util.Random;
-
 /**
- * Created by qixingchen on 15/7/20.
+ * Created by qixingchen on 15/8/12.
+ * 聊天信息
  */
 public class ChatMessage {
-    public String chatUserName = "", chatTime = "", chatMessage = "", chatImage = "";
-    public int chatFrom;//消息来源，分为 自己，群内，对方
 
-    private static String[] photoUri = {"http://cdn.marketplaceimages.windowsphone.com/v8/images/f5f28d0a-bef3-4bed-99ef-d2f21d624e3b?imageType=ws_icon_large",
-            "http://ac-iz9otzx1.clouddn.com/l482ke5VNLyVQplRAmfoknrRc7azPWch3B8AstWw.jpg",
-            "http://ac-iz9otzx1.clouddn.com/j0OtVC4rkrAIL7h2mgwCylofS3bEqsrOEGdNEqVm.jpg",
-            "http://ac-iz9otzx1.clouddn.com/lo73gXLe1hsXP93fGs0m4TMibivViSLY6qN4Pt3A.jpg"};
+    public int type, status, From;
+    public String text, ConversationId, uid, sender, local_path, url, voice_duration, messID, chatImage;
+    public long create_time, receiptTimestamp;
+    public boolean isread, isSelfSend;
 
-    private ChatMessage() {
-    }
-
-    private static ChatMessage[] getChatMess() {
-        ChatMessage chatMessages[] = new ChatMessage[20000];
-        Random random = new Random(System.currentTimeMillis());
-        for (int i = 0; i < 20000; i++) {
-            chatMessages[i] = new ChatMessage();
-            chatMessages[i].chatMessage = "消息测试，这是第几条消息" + i
-                    + photoUri[random.nextInt(photoUri.length)];
-            chatMessages[i].chatFrom = random.nextInt(3);
-            switch (chatMessages[i].chatFrom) {
-
-                case StaticField.ChatFrom.OTHER:
-                    chatMessages[i].chatImage = photoUri[random.nextInt(photoUri.length)];
-                    break;
-                case StaticField.ChatFrom.ME:
-                    chatMessages[i].chatImage = "http://www.gravatar.com/avatar/6727fb208dd4a54b0eac56f8f6142cda?s=500";
-                    break;
-                default:
-                    chatMessages[i].chatImage = photoUri[random.nextInt(photoUri.length)];
-            }
-
-            chatMessages[i].chatUserName = "发行者" + i;
-            chatMessages[i].chatTime = "08:" + i;
-        }
-
-        return chatMessages;
+    @Override
+    public String toString() {
+        return "ChatsMessage{" +
+                "type=" + type +
+                ", status=" + status +
+                ", From=" + From +
+                ", text='" + text + '\'' +
+                ", ConversationId='" + ConversationId + '\'' +
+                ", uid='" + uid + '\'' +
+                ", sender='" + sender + '\'' +
+                ", local_path='" + local_path + '\'' +
+                ", url='" + url + '\'' +
+                ", voice_duration='" + voice_duration + '\'' +
+                ", messID='" + messID + '\'' +
+                ", create_time=" + create_time +
+                ", receiptTimestamp=" + receiptTimestamp +
+                ", isread=" + isread +
+                ", isSelfSend=" + isSelfSend +
+                '}';
     }
 }

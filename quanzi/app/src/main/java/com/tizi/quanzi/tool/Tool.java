@@ -4,7 +4,7 @@ import android.os.Environment;
 
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.gson.ChatMessage;
+import com.tizi.quanzi.model.ChatMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

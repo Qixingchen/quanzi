@@ -21,7 +21,7 @@ import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.chat.AVMessageHandler;
 import com.tizi.quanzi.database.DBAct;
-import com.tizi.quanzi.gson.ChatMessage;
+import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.Tool;
 
@@ -36,8 +36,10 @@ public class ChatActivity extends AppCompatActivity {
     private android.widget.EditText InputMessage;
     private android.widget.ImageButton SendButton;
     private String CONVERSATION_ID = "";
-    AVIMConversation conversation;
+    private AVIMConversation conversation;
+    private AVIMMessagesQueryCallback avimMessagesQueryCallback;
 
+    private static final int QueryLimit = 10;
     private static final String TAG = ChatActivity.class.getSimpleName();
 
 
@@ -48,12 +50,36 @@ public class ChatActivity extends AppCompatActivity {
         this.InputMessage = (EditText) findViewById(R.id.InputMessage);
         this.ChatSwipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.ChatSwipeToRefresh);
 
+        //聊天消息获取
+        avimMessagesQueryCallback = new AVIMMessagesQueryCallback() {
+            @Override
+            public void done(List<AVIMMessage> list, AVException e) {
+                if (e != null) {
+                    e.printStackTrace();
+                    ChatSwipeToRefresh.setRefreshing(false);
+                    return;
+                }
+                for (AVIMMessage avimMessage : list) {
+                    ChatMessage chatMessage = Tool.chatMessageFromAVMessage(avimMessage);
+                    DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+                    chatMessageAdapter.addOrUpdateMessage(chatMessage);
+                }
+                ChatSwipeToRefresh.setRefreshing(false);
+            }
+        };
+
         //SwipeRefresh
         ChatSwipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // TODO: 15/8/13 下拉刷新获取数据
-                ChatSwipeToRefresh.setRefreshing(false);
+                ChatMessage oldestChatMess = DBAct.getInstance().queryOldestMessage(CONVERSATION_ID);
+                if (oldestChatMess != null) {
+                    conversation.queryMessages(oldestChatMess.messID, oldestChatMess.create_time,
+                            QueryLimit, avimMessagesQueryCallback);
+                } else {
+                    conversation.queryMessages(QueryLimit, avimMessagesQueryCallback);
+                }
             }
         });
 
@@ -83,7 +109,7 @@ public class ChatActivity extends AppCompatActivity {
                                                     // todo 出错了。。。
                                                     e.printStackTrace();
                                                 } else {
-                                                    com.tizi.quanzi.gson.ChatMessage chatMessage =
+                                                    ChatMessage chatMessage =
                                                             Tool.chatMessageFromAVMessage(message);
                                                     Log.d("发送成功", chatMessage.toString());
                                                     InputMessage.setText("");
@@ -158,21 +184,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //adapt
         // TODO: 15/8/12 获取聊天记录
-        conversation.queryMessages(30, new AVIMMessagesQueryCallback() {
-            @Override
-            public void done(List<AVIMMessage> list, AVException e) {
-                if (e != null) {
-                    e.printStackTrace();
-                    return;
-                }
-                for (AVIMMessage avimMessage : list) {
-                    ChatMessage chatMessage = Tool.chatMessageFromAVMessage(avimMessage);
-                    DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-                    chatMessageAdapter.addOrUpdateMessage(chatMessage);
-
-                }
-            }
-        });
+        conversation.queryMessages(QueryLimit, avimMessagesQueryCallback);
         List<ChatMessage> chatMessageList =
                 DBAct.getInstance().queryMessage(CONVERSATION_ID);
         chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.database.DBAct;
-import com.tizi.quanzi.gson.ChatMessage;
+import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;

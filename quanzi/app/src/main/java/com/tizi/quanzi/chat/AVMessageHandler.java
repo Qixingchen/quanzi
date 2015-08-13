@@ -7,7 +7,7 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
 import com.tizi.quanzi.database.DBAct;
-import com.tizi.quanzi.gson.ChatMessage;
+import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.Tool;
 

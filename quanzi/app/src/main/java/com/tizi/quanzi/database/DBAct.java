@@ -4,13 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
-import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.gson.ChatMessage;
+import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.tool.StaticField;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +23,7 @@ public class DBAct {
     private SQLiteDatabase db;
     private static DBAct mInstance;
     private static Context mContext;
+    private static final String TAG = "数据库操作";
 
     public static DBAct getInstance() {
         if (mInstance == null) {
@@ -102,6 +103,27 @@ public class DBAct {
         }
 
         return chatMessage;
+    }
+
+    @Nullable
+    public ChatMessage queryOldestMessage(String ConversationId) {
+        Cursor chatMessageCursor = db.query(
+                DataBaseHelper.chatHistorySQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
+                new String[]{ConversationId},//条件的参数
+                null,//groupBy
+                null,//having
+                DataBaseHelper.chatHistorySQLName.create_time, //+ " DESC"//orderBy
+                "1" //limit
+        );
+        chatMessageCursor.moveToFirst();
+        if (chatMessageCursor.getCount() == 1) {
+            ChatMessage chatMessage = chatMessageFromCursor(chatMessageCursor);
+            Log.w(TAG, "最旧的消息是：" + chatMessage.toString());
+            return chatMessage;
+        }
+        return null;
     }
 
 

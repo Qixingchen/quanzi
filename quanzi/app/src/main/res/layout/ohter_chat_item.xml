@@ -35,22 +35,30 @@
             android:layout_marginStart="4dp"
             android:maxWidth="@dimen/max_chat_width"
             android:textSize="@dimen/normal_edit_text_size"
-            tools:text="聊天内容sssssssssssssssssss" />
+            android:visibility="gone"
+            tools:text="聊天内容sssssssssssssssssss"
+            tools:visibility="visible" />
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/contactImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="300dp"
+            android:maxWidth="260dp"
+            android:maxHeight="600dp"
+            android:visibility="gone"
             tools:background="@drawable/face"
             tools:layout_height="120dp"
-            tools:layout_width="120dp" />
+            tools:layout_width="120dp"
+            tools:visibility="visible" />
 
         <ImageButton
+            android:id="@+id/vedio_play_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?selectableItemBackground"
-            android:src="@drawable/ic_play_arrow_black_48dp" />
+            android:src="@drawable/ic_play_arrow_black_48dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/chat_message_time"

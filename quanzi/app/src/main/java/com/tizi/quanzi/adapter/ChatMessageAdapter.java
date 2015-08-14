@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -65,17 +66,39 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         //todo 赋值在这里
-        holder.userFaceImageView.setImageUrl(chatMessageList.get(position).chatImage,
+        ChatMessage chatMessage = chatMessageList.get(position);
+        holder.userFaceImageView.setImageUrl(chatMessage.chatImage,
                 GetVolley.getmInstance(mContext).getImageLoader());
-        holder.chatMessTextView.setText(chatMessageList.get(position).text);
-        String time = Tool.timeStringFromUNIX(chatMessageList.get(position).create_time);
+
+        String time = Tool.timeStringFromUNIX(chatMessage.create_time);
         holder.chatTime.setText(time);
         if (holder.chatUserName != null) {
-            holder.chatUserName.setText(chatMessageList.get(position).userName);
+            holder.chatUserName.setText(chatMessage.userName);
         }
-        if (!chatMessageList.get(position).isread) {
-            chatMessageList.get(position).isread = true;
-            DBAct.getInstance().addOrReplaceChatMessage(chatMessageList.get(position));
+        if (!chatMessage.isread) {
+            chatMessage.isread = true;
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        }
+        switch (chatMessage.type) {
+            case StaticField.ChatContantType.TEXT:
+                holder.chatMessTextView.setText(chatMessage.text);
+                holder.chatMessTextView.setVisibility(View.VISIBLE);
+                break;
+            case StaticField.ChatContantType.IMAGE:
+                holder.contantImageView.setImageUrl(chatMessage.url,
+                        GetVolley.getmInstance(mContext).getImageLoader());
+                holder.contantImageView.setVisibility(View.VISIBLE);
+                break;
+            case StaticField.ChatContantType.VOICE:
+                holder.videoPlayButton.setVisibility(View.VISIBLE);
+                break;
+            case StaticField.ChatContantType.VEDIO:
+                holder.videoPlayButton.setVisibility(View.VISIBLE);
+                break;
+            default:
+                holder.chatMessTextView.setText(chatMessage.text);
+                holder.chatMessTextView.setVisibility(View.VISIBLE);
+                break;
         }
     }
 
@@ -91,6 +114,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             chatMessTextView = (TextView) v.findViewById(R.id.chat_message);
             chatUserName = (TextView) v.findViewById(R.id.chat_user_name);
             chatTime = (TextView) v.findViewById(R.id.chat_message_time);
+            contantImageView = (NetworkImageView) v.findViewById(R.id.contactImageView);
+            videoPlayButton = (ImageButton) v.findViewById(R.id.vedio_play_button);
             //todo:可在这里添加部件的按键监听
         }
 
@@ -103,6 +128,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             chatMessTextView = (TextView) v.findViewById(R.id.chat_message);
             chatUserName = null;
             chatTime = (TextView) v.findViewById(R.id.chat_message_time);
+            contantImageView = (NetworkImageView) v.findViewById(R.id.contactImageView);
+            videoPlayButton = (ImageButton) v.findViewById(R.id.vedio_play_button);
             //todo:可在这里添加部件的按键监听
         }
 

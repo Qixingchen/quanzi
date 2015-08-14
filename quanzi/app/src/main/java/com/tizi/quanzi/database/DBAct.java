@@ -50,7 +50,7 @@ public class DBAct {
                 new String[]{ConversationId},//条件的参数
                 null,//groupBy
                 null,//having
-                DataBaseHelper.chatHistorySQLName.create_time //+ " DESC"//orderBy
+                DataBaseHelper.chatHistorySQLName.send_time //+ " DESC"//orderBy
         );
 
         List<ChatMessage> chatMessages = new ArrayList<>();
@@ -70,7 +70,7 @@ public class DBAct {
         chatMessage.messID =
                 cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.messID));
         chatMessage.create_time =
-                cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.create_time));
+                cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.send_time));
         chatMessage.type =
                 cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.type));
         chatMessage.receiptTimestamp =
@@ -95,12 +95,19 @@ public class DBAct {
                 DataBaseHelper.chatHistorySQLName.isSelfSend_ioType)) > 0;
         chatMessage.isread =
                 cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.isread)) > 0;
+        chatMessage.ChatBothUserType =
+                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.ChatBothUserType));
+        chatMessage.groupID =
+                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.Group_id));
         if (chatMessage.isSelfSend) {
             chatMessage.From = StaticField.ChatFrom.ME;
         }//todo 判断是本群还是临时群
         else {
-            chatMessage.From = StaticField.ChatFrom.OTHER;
+            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.GROUP)
+                chatMessage.From = StaticField.ChatFrom.OTHER;
         }
+        chatMessage.userName =
+                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.userName));
 
         return chatMessage;
     }
@@ -114,7 +121,7 @@ public class DBAct {
                 new String[]{ConversationId},//条件的参数
                 null,//groupBy
                 null,//having
-                DataBaseHelper.chatHistorySQLName.create_time, //+ " DESC"//orderBy
+                DataBaseHelper.chatHistorySQLName.send_time, //+ " DESC"//orderBy
                 "1" //limit
         );
         chatMessageCursor.moveToFirst();
@@ -137,7 +144,7 @@ public class DBAct {
         content.put(DataBaseHelper.chatHistorySQLName.ConversationId, chatMessage.ConversationId);
         content.put(DataBaseHelper.chatHistorySQLName.uid, chatMessage.uid);
         content.put(DataBaseHelper.chatHistorySQLName.sender, chatMessage.sender);
-        content.put(DataBaseHelper.chatHistorySQLName.create_time, chatMessage.create_time);
+        content.put(DataBaseHelper.chatHistorySQLName.send_time, chatMessage.create_time);
         content.put(DataBaseHelper.chatHistorySQLName.text, chatMessage.text);
         content.put(DataBaseHelper.chatHistorySQLName.type, chatMessage.type);
         content.put(DataBaseHelper.chatHistorySQLName.local_path, chatMessage.local_path);
@@ -147,6 +154,8 @@ public class DBAct {
         content.put(DataBaseHelper.chatHistorySQLName.status, chatMessage.status);
         content.put(DataBaseHelper.chatHistorySQLName.receiptTimestamp, chatMessage.receiptTimestamp);
         content.put(DataBaseHelper.chatHistorySQLName.isSelfSend_ioType, chatMessage.isSelfSend);
+        content.put(DataBaseHelper.chatHistorySQLName.userName, chatMessage.userName);
+        content.put(DataBaseHelper.chatHistorySQLName.Group_id, chatMessage.groupID);
 
         db.replace(DataBaseHelper.chatHistorySQLName.TableName, null, content);
     }

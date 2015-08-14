@@ -17,10 +17,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static class chatHistorySQLName {
         public static final String TableName = "chat_history";
         public static final String messID = "id";
-        public static final String ConversationId = "group_id";
-        public static final String uid = "uid";
+        public static final String ConversationId = "convID";
+        public static final String Group_id = "group_id";
+        public static final String uid = "account";
         public static final String sender = "sender";
-        public static final String create_time = "create_time";
+        public static final String send_time = "send_time";
         public static final String text = "text";
         public static final String type = "type";
         public static final String local_path = "local_path";
@@ -31,6 +32,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         public static final String status = "status";
         public static final String isSelfSend_ioType = "isSelfSend_ioType";
         public static final String userName = "userName";
+        public static final String ChatBothUserType = "ChatBothUserType";
 
     }
 
@@ -38,9 +40,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // 创建数据库后，对数据库的操作
 
-        db.execSQL("create table singlechat_list(id varchar(40) primary key not null , uid varchar(40),uname varchar(40), text varchar(50), icon varchar(200),type Integer,create_user varchar(40), create_time integer, convid varchar(50), unread_count integer)");
+//        db.execSQL("create table singlechat_list(id varchar(40) primary key not null , uid varchar(40),uname varchar(40), text varchar(50), icon varchar(200),type Integer,create_user varchar(40), send_time integer, convid varchar(50), unread_count integer)");
+//
+//        db.execSQL("create table chat_history(id varchar(40) PRIMARY KEY not null , group_id varchar(40),uid varchar(40), sender varchar(40),send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration DOUBLE, isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),ChatContantType char(40))");
 
-        db.execSQL("create table chat_history(id varchar(40) PRIMARY KEY not null , group_id varchar(40),uid varchar(40), sender varchar(40),create_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration DOUBLE, isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40))");
+        db.execSQL("create table chat_history(id varchar(40)PRIMARY KEY not null, group_id varchar(40),convID varchar(50), account varchar(40), sender varchar(40), send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration varchar(50), isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),ChatBothUserType char(40))");
+
+        db.execSQL("create table singlechat_list(id varchar(40) primary key not null, account varchar(40),uname varchar(40), text varchar(50), icon varchar(200), type Integer, create_user varchar(40), send_time integer, convid varchar(50), unread_count integer)");
 
     }
 

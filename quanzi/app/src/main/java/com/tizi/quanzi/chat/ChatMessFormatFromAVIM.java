@@ -43,7 +43,14 @@ public class ChatMessFormatFromAVIM {
 
     private static ChatMessage textChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
-        chatMessage.type = StaticField.chatType.TEXT;
+        chatMessage.type = StaticField.ChatContantType.TEXT;
+        chatMessage.text = ((AVIMTextMessage) message).getText();
+        chatMessage.chatImage = (String)
+                ((AVIMTextMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
+        chatMessage.userName = (String)
+                ((AVIMTextMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
+        chatMessage.groupID = (String)
+                ((AVIMTextMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
         // todo chatMessage.local_path
         // todo chatMessage.url
         // todo chatMessage.voice_duration
@@ -52,24 +59,42 @@ public class ChatMessFormatFromAVIM {
 
     private static ChatMessage imageChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
-        chatMessage.type = StaticField.chatType.IMAGE;
+        chatMessage.type = StaticField.ChatContantType.IMAGE;
         chatMessage.url = ((AVIMImageMessage) message).getFileUrl();
+        chatMessage.chatImage = (String)
+                ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
+        chatMessage.chatImage = (String)
+                ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
+        chatMessage.groupID = (String)
+                ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
         return chatMessage;
     }
 
     private static ChatMessage voiceChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
-        chatMessage.type = StaticField.chatType.VOICE;
+        chatMessage.type = StaticField.ChatContantType.VOICE;
         chatMessage.url = ((AVIMAudioMessage) message).getFileUrl();
         chatMessage.voice_duration = ((AVIMAudioMessage) message).getDuration();
+        chatMessage.chatImage = (String)
+                ((AVIMAudioMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
+        chatMessage.userName = (String)
+                ((AVIMAudioMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
+        chatMessage.groupID = (String)
+                ((AVIMAudioMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
         return chatMessage;
     }
 
     private static ChatMessage vedioChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
-        chatMessage.type = StaticField.chatType.VEDIO;
+        chatMessage.type = StaticField.ChatContantType.VEDIO;
         chatMessage.url = ((AVIMVideoMessage) message).getFileUrl();
         chatMessage.voice_duration = ((AVIMVideoMessage) message).getDuration();
+        chatMessage.chatImage = (String)
+                ((AVIMVideoMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
+        chatMessage.userName = (String)
+                ((AVIMVideoMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
+        chatMessage.groupID = (String)
+                ((AVIMVideoMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
         return chatMessage;
     }
 
@@ -83,10 +108,6 @@ public class ChatMessFormatFromAVIM {
         chatMessage.ConversationId = message.getConversationId();
         chatMessage.uid = App.getUserID();
         chatMessage.sender = message.getFrom();
-        chatMessage.chatImage = (String)
-                ((AVIMTextMessage) message).getAttrs().get("userIcon");
-        chatMessage.userName = (String)
-                ((AVIMTextMessage) message).getAttrs().get("userName");
         // TODO: 15/8/13  getMessageIOType不可用 为什么？
         chatMessage.isSelfSend = (message.getFrom().compareTo(App.getUserID()) == 0);
         chatMessage.isread = chatMessage.isSelfSend;

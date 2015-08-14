@@ -6,8 +6,9 @@ package com.tizi.quanzi.model;
  */
 public class ChatMessage {
 
-    public int type, status, From;
-    public String text, ConversationId, uid, sender, local_path, url, messID, chatImage, userName;
+    public int type, status, From, ChatBothUserType;
+    public String text, ConversationId, uid, sender,
+            local_path, url, messID, chatImage, userName, groupID;
     public long create_time, receiptTimestamp;
     public boolean isread, isSelfSend;
     public double voice_duration;
@@ -26,7 +27,7 @@ public class ChatMessage {
                 ", messID='" + messID + '\'' +
                 ", chatImage='" + chatImage + '\'' +
                 ", userName='" + userName + '\'' +
-                ", create_time=" + create_time +
+                ", send_time=" + create_time +
                 ", receiptTimestamp=" + receiptTimestamp +
                 ", isread=" + isread +
                 ", isSelfSend=" + isSelfSend +

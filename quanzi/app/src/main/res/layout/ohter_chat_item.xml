@@ -37,6 +37,21 @@
             android:textSize="@dimen/normal_edit_text_size"
             tools:text="聊天内容sssssssssssssssssss" />
 
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/contactImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="300dp"
+            tools:background="@drawable/face"
+            tools:layout_height="120dp"
+            tools:layout_width="120dp" />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?selectableItemBackground"
+            android:src="@drawable/ic_play_arrow_black_48dp" />
+
         <TextView
             android:id="@+id/chat_message_time"
             android:layout_width="wrap_content"

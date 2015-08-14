@@ -89,8 +89,8 @@ public class DBAct {
                 cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.local_path));
         chatMessage.url =
                 cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.url));
-        chatMessage.voice_duration =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.voice_duration));
+        chatMessage.voice_duration = cursor.getDouble(
+                cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.voice_duration));
         chatMessage.isSelfSend = cursor.getInt(cursor.getColumnIndex(
                 DataBaseHelper.chatHistorySQLName.isSelfSend_ioType)) > 0;
         chatMessage.isread =

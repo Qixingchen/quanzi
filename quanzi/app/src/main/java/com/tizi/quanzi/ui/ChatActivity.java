@@ -14,16 +14,18 @@ import android.widget.ImageButton;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.chat.AVMessageHandler;
+import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
+import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.tool.Tool;
 
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class ChatActivity extends AppCompatActivity {
                     return;
                 }
                 for (AVIMMessage avimMessage : list) {
-                    ChatMessage chatMessage = Tool.chatMessageFromAVMessage(avimMessage);
+                    ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage((AVIMTypedMessage) avimMessage);
                     DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
                     chatMessageAdapter.addOrUpdateMessage(chatMessage);
                 }
@@ -110,7 +112,7 @@ public class ChatActivity extends AppCompatActivity {
                                                     e.printStackTrace();
                                                 } else {
                                                     ChatMessage chatMessage =
-                                                            Tool.chatMessageFromAVMessage(message);
+                                                            ChatMessFormatFromAVIM.ChatMessageFromAVMessage((AVIMTypedMessage) message);
                                                     Log.d("发送成功", chatMessage.toString());
                                                     InputMessage.setText("");
                                                     DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
@@ -152,15 +154,38 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // TODO: 15/8/14 内存低销毁时保存
         CONVERSATION_ID = getIntent().getStringExtra("conversation");
         // TODO: 15/8/12 testID
         //CONVERSATION_ID = "55caba1840ac41014f7e78ce";//安静的账号
         CONVERSATION_ID = "55c1b77b00b0cb9ca0a4d664";//喧闹的
-        AVMessageHandler.getInstance().UI_CONVERSATION_ID = CONVERSATION_ID;
+        App.UI_CONVERSATION_ID = CONVERSATION_ID;
         conversation = App.getImClient().getConversation(CONVERSATION_ID);
 
         //聊天消息回调接口
         AVMessageHandler.getInstance().setOnMessage(new AVMessageHandler.OnMessage() {
+            @Override
+            public void OnMessageGet(ChatMessage chatMessage) {
+                chatMessageAdapter.addOrUpdateMessage(chatMessage);
+                int LastVisibleItemPosition = ((LinearLayoutManager) mLayoutManager)
+                        .findLastVisibleItemPosition();
+                int chatSize = chatMessageAdapter.chatMessageList.size();
+                Log.w(TAG, "lastPos=" + LastVisibleItemPosition + ",chatsize=" + chatSize);
+                if (LastVisibleItemPosition - chatSize <= 2) {
+                    Log.w(TAG, "聊天末尾");
+
+                    chatmessagerecyclerView.smoothScrollToPosition(chatMessageAdapter.chatMessageList.size());
+                }
+
+            }
+
+            @Override
+            public void OnMyMessageSent(ChatMessage chatMessage) {
+                chatMessageAdapter.addOrUpdateMessage(chatMessage);
+            }
+        });
+        //复制一遍
+        MutiTypeMsgHandler.getInstance().setOnMessage(new MutiTypeMsgHandler.OnMessage() {
             @Override
             public void OnMessageGet(ChatMessage chatMessage) {
                 chatMessageAdapter.addOrUpdateMessage(chatMessage);
@@ -195,8 +220,9 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        AVMessageHandler.getInstance().UI_CONVERSATION_ID = "";
+        App.UI_CONVERSATION_ID = "";
         AVMessageHandler.getInstance().setOnMessage(null);
+        MutiTypeMsgHandler.getInstance().setOnMessage(null);
     }
 
 

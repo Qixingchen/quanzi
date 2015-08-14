@@ -7,13 +7,14 @@ package com.tizi.quanzi.model;
 public class ChatMessage {
 
     public int type, status, From;
-    public String text, ConversationId, uid, sender, local_path, url, voice_duration, messID, chatImage;
+    public String text, ConversationId, uid, sender, local_path, url, messID, chatImage, userName;
     public long create_time, receiptTimestamp;
     public boolean isread, isSelfSend;
+    public double voice_duration;
 
     @Override
     public String toString() {
-        return "ChatsMessage{" +
+        return "ChatMessage{" +
                 "type=" + type +
                 ", status=" + status +
                 ", From=" + From +
@@ -21,14 +22,15 @@ public class ChatMessage {
                 ", ConversationId='" + ConversationId + '\'' +
                 ", uid='" + uid + '\'' +
                 ", sender='" + sender + '\'' +
-                ", local_path='" + local_path + '\'' +
                 ", url='" + url + '\'' +
-                ", voice_duration='" + voice_duration + '\'' +
                 ", messID='" + messID + '\'' +
+                ", chatImage='" + chatImage + '\'' +
+                ", userName='" + userName + '\'' +
                 ", create_time=" + create_time +
                 ", receiptTimestamp=" + receiptTimestamp +
                 ", isread=" + isread +
                 ", isSelfSend=" + isSelfSend +
+                ", voice_duration=" + voice_duration +
                 '}';
     }
 }

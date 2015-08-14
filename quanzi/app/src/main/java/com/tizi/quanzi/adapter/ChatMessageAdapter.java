@@ -64,13 +64,14 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
+        //todo 赋值在这里
         holder.userFaceImageView.setImageUrl(chatMessageList.get(position).chatImage,
                 GetVolley.getmInstance(mContext).getImageLoader());
         holder.chatMessTextView.setText(chatMessageList.get(position).text);
         String time = Tool.timeStringFromUNIX(chatMessageList.get(position).create_time);
         holder.chatTime.setText(time);
         if (holder.chatUserName != null) {
-            holder.chatUserName.setText(chatMessageList.get(position).sender);
+            holder.chatUserName.setText(chatMessageList.get(position).userName);
         }
         if (!chatMessageList.get(position).isread) {
             chatMessageList.get(position).isread = true;

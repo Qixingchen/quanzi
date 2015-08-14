@@ -13,9 +13,10 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.squareup.leakcanary.LeakCanary;
-import com.tizi.quanzi.chat.AVMessageHandler;
+import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.database.DataBaseHelper;
@@ -36,7 +37,7 @@ public class App extends Application {
     private static String UserPhone = "";
 
     //当前聊天窗口ID
-    public static String CONVERSATION_ID = "";
+    public static String UI_CONVERSATION_ID = "";
 
 
     //数据库
@@ -93,9 +94,13 @@ public class App extends Application {
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
         AVAnalytics.enableCrashReport(this, true);
-        AVIMMessageManager.registerDefaultMessageHandler(AVMessageHandler.getInstance());
+
         AVIMClient.setClientEventHandler(new MyAVIMClientEventHandler());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
+
+        AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
+        // TODO: 15/8/14 等待删除通用接收器
+        //AVIMMessageManager.registerDefaultMessageHandler(AVMessageHandler.getInstance());
 
     }
 

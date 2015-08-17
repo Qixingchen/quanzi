@@ -20,7 +20,7 @@ public class ChatMessFormatFromAVIM {
 
     public static ChatMessage ChatMessageFromAVMessage(AVIMTypedMessage message) {
         String TAG = "Tool类 消息类型转换";
-        ChatMessage chatMessage = null;
+        ChatMessage chatMessage;
         if (message.getMessageType() == AVIMReservedMessageType.TextMessageType.getType()) {
             chatMessage = textChatMessageFromAVMessage(message);
             Log.w(TAG, "文本消息:");
@@ -63,10 +63,12 @@ public class ChatMessFormatFromAVIM {
         chatMessage.url = ((AVIMImageMessage) message).getFileUrl();
         chatMessage.chatImage = (String)
                 ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
-        chatMessage.chatImage = (String)
+        chatMessage.userName = (String)
                 ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
         chatMessage.groupID = (String)
                 ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
+        chatMessage.imageWeight = ((AVIMImageMessage) message).getWidth();
+        chatMessage.imageHeight = ((AVIMImageMessage) message).getHeight();
         return chatMessage;
     }
 

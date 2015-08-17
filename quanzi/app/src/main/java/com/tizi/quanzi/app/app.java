@@ -84,7 +84,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LeakCanary.install(this);
+        //泄露监视器
+        //LeakCanary.install(this);
         preferences = this.getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
                 MODE_PRIVATE);
         UserID = preferences.getString(StaticField.TokenPreferences.USERID, "");

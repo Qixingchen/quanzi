@@ -28,7 +28,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        //todo 多媒体支持
         return chatMessageList.get(position).From;
     }
 
@@ -40,7 +39,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        //todo switch View Holder By data Mess
         View v;
         BaseViewHolder vh;
         switch (viewType) {
@@ -79,12 +77,19 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             chatMessage.isread = true;
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
         }
+        holder.contantImageView.setVisibility(View.GONE);
+        holder.chatMessTextView.setVisibility(View.GONE);
+        holder.videoPlayButton.setVisibility(View.GONE);
         switch (chatMessage.type) {
             case StaticField.ChatContantType.TEXT:
                 holder.chatMessTextView.setText(chatMessage.text);
                 holder.chatMessTextView.setVisibility(View.VISIBLE);
                 break;
             case StaticField.ChatContantType.IMAGE:
+                int[] imagePix = Tool.getImagePixel(mContext,
+                        chatMessage.imageHeight, chatMessage.imageWeight);
+                holder.contantImageView.getLayoutParams().height = imagePix[0];
+                holder.contantImageView.getLayoutParams().height = imagePix[1];
                 holder.contantImageView.setImageUrl(chatMessage.url,
                         GetVolley.getmInstance(mContext).getImageLoader());
                 holder.contantImageView.setVisibility(View.VISIBLE);

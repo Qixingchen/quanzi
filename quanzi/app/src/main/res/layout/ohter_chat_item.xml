@@ -15,7 +15,14 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@drawable/msg_in"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="10dp"
+        android:paddingStart="40dp"
+        android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/chat_user_name"
@@ -43,8 +50,8 @@
             android:id="@+id/contactImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="260dp"
             android:maxHeight="600dp"
+            android:maxWidth="260dp"
             android:visibility="gone"
             tools:background="@drawable/face"
             tools:layout_height="120dp"

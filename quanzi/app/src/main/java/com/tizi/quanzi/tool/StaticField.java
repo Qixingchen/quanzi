@@ -38,6 +38,7 @@ public class StaticField {
         public final static String userName = "userName";
         public final static String groupID = "groupID";
         public final static String userID = "userID";
+        public final static String type = "type";
     }
 
     public static class ImageRequreCode {

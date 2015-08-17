@@ -2,6 +2,7 @@ package com.tizi.quanzi.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -87,10 +88,11 @@ public class AutoLogin {
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 Login login = gson.fromJson(response, Login.class);
-                // TODO: 15/8/12 登录失败操作
                 if (login.isSuccess()) {
                     setUserInfo(App.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     StartMainActivity.startByLoginGroup(login.getGroup(), mContext);
+                } else {
+                    Toast.makeText(mContext, login.getMsg(), Toast.LENGTH_LONG).show();
                 }
             }
         };

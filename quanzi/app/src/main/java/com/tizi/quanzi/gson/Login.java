@@ -1,5 +1,6 @@
 package com.tizi.quanzi.gson;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -18,22 +19,6 @@ public class Login {
     private UserEntity user;
     private boolean success;
     private String msg;
-
-    public void setGroup(List<GroupEntity> group) {
-        this.group = group;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 
     public List<GroupEntity> getGroup() {
         return group;
@@ -76,50 +61,6 @@ public class Login {
         private String bg;
         private String type;
         private String notice;
-
-        public void setAllowMatch(String allowMatch) {
-            this.allowMatch = allowMatch;
-        }
-
-        public void setGroupNo(String groupNo) {
-            this.groupNo = groupNo;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public void setCreateUser(String createUser) {
-            this.createUser = createUser;
-        }
-
-        public void setGroupName(String groupName) {
-            this.groupName = groupName;
-        }
-
-        public void setValidation(String validation) {
-            this.validation = validation;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
-
-        public void setBg(String bg) {
-            this.bg = bg;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public void setNotice(String notice) {
-            this.notice = notice;
-        }
 
         public String getAllowMatch() {
             return allowMatch;
@@ -191,50 +132,6 @@ public class Login {
         private String groupNum;
         private String signature;
         private String mobile;
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public void setSex(String sex) {
-            this.sex = sex;
-        }
-
-        public void setArea(String area) {
-            this.area = area;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public void setAccount(String account) {
-            this.account = account;
-        }
-
-        public void setUserName(String userName) {
-            this.userName = userName;
-        }
-
-        public void setBg(String bg) {
-            this.bg = bg;
-        }
-
-        public void setGroupNum(String groupNum) {
-            this.groupNum = groupNum;
-        }
-
-        public void setSignature(String signature) {
-            this.signature = signature;
-        }
-
-        public void setMobile(String mobile) {
-            this.mobile = mobile;
-        }
 
         public String getId() {
             return id;

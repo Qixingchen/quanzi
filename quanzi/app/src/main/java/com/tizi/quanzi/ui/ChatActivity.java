@@ -65,8 +65,9 @@ public class ChatActivity extends AppCompatActivity {
         this.InputMessage = (EditText) findViewById(R.id.InputMessage);
         this.ChatSwipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.ChatSwipeToRefresh);
         final ImageButton insertImageButton = (ImageButton) findViewById(R.id.insertImageButton);
+        final ImageButton insertVoiceButton = (ImageButton) findViewById(R.id.insertVoiceButton);
 
-        //键入时隐藏发图按钮
+        //键入时隐藏显示按钮
         InputMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -82,8 +83,12 @@ public class ChatActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 0) {
                     insertImageButton.setVisibility(View.VISIBLE);
+                    insertVoiceButton.setVisibility(View.VISIBLE);
+                    SendButton.setVisibility(View.GONE);
                 } else {
                     insertImageButton.setVisibility(View.GONE);
+                    insertVoiceButton.setVisibility(View.GONE);
+                    SendButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -199,7 +204,6 @@ public class ChatActivity extends AppCompatActivity {
 
 
         //adapt
-        // TODO: 15/8/12 获取聊天记录
         conversation.queryMessages(QueryLimit, avimMessagesQueryCallback);
         List<ChatMessage> chatMessageList =
                 DBAct.getInstance().queryMessage(CONVERSATION_ID);
@@ -337,6 +341,7 @@ public class ChatActivity extends AppCompatActivity {
         attr.put(StaticField.ChatMessAttrName.userIcon, "http://ac-iz9otzx1.clouddn.com/lo73gXLe1hsXP93fGs0m4TMibivViSLY6qN4Pt3A.jpg");
         attr.put(StaticField.ChatMessAttrName.userID, App.getUserID());
         attr.put(StaticField.ChatMessAttrName.groupID, CONVERSATION_ID);
+        attr.put(StaticField.ChatMessAttrName.type, StaticField.ChatBothUserType.twoPerson);
         return attr;
     }
 }

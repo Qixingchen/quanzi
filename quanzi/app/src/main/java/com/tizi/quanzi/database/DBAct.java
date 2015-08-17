@@ -67,20 +67,25 @@ public class DBAct {
     private ChatMessage chatMessageFromCursor(Cursor cursor) {
         ChatMessage chatMessage = new ChatMessage();
 
-        chatMessage.messID =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.messID));
-        chatMessage.create_time =
-                cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.send_time));
+        //int
         chatMessage.type =
                 cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.type));
-        chatMessage.receiptTimestamp =
-                cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.receiptTimestamp));
         chatMessage.status =
                 cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.status));
+        //from需要在isSelfSend后判断
+        chatMessage.ChatBothUserType =
+                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.ChatBothUserType));
+        chatMessage.imageHeight =
+                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageHeight));
+        chatMessage.imageWeight =
+                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageWeight));
+
+        //string
         chatMessage.text =
                 cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.text));
         chatMessage.ConversationId =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.ConversationId));
+                cursor.getString(cursor.getColumnIndex(
+                        DataBaseHelper.chatHistorySQLName.ConversationId));
         chatMessage.uid =
                 cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.uid));
         chatMessage.sender =
@@ -89,16 +94,35 @@ public class DBAct {
                 cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.local_path));
         chatMessage.url =
                 cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.url));
-        chatMessage.voice_duration = cursor.getDouble(
-                cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.voice_duration));
+        chatMessage.messID =
+                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.messID));
+        chatMessage.chatImage =
+                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.chatImage));
+        chatMessage.userName =
+                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.userName));
+        chatMessage.groupID =
+                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.Group_id));
+
+
+        //boolean
         chatMessage.isSelfSend = cursor.getInt(cursor.getColumnIndex(
                 DataBaseHelper.chatHistorySQLName.isSelfSend_ioType)) > 0;
         chatMessage.isread =
                 cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.isread)) > 0;
-        chatMessage.ChatBothUserType =
-                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.ChatBothUserType));
-        chatMessage.groupID =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.Group_id));
+
+
+        //long
+        chatMessage.create_time =
+                cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.send_time));
+
+        chatMessage.receiptTimestamp =
+                cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.receiptTimestamp));
+
+        //double
+        chatMessage.voice_duration = cursor.getDouble(
+                cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.voice_duration));
+
+        //etc
         if (chatMessage.isSelfSend) {
             chatMessage.From = StaticField.ChatFrom.ME;
         }//todo 判断是本群还是临时群
@@ -106,8 +130,7 @@ public class DBAct {
             if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.GROUP)
                 chatMessage.From = StaticField.ChatFrom.OTHER;
         }
-        chatMessage.userName =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.userName));
+
 
         return chatMessage;
     }
@@ -156,6 +179,11 @@ public class DBAct {
         content.put(DataBaseHelper.chatHistorySQLName.isSelfSend_ioType, chatMessage.isSelfSend);
         content.put(DataBaseHelper.chatHistorySQLName.userName, chatMessage.userName);
         content.put(DataBaseHelper.chatHistorySQLName.Group_id, chatMessage.groupID);
+        content.put(DataBaseHelper.chatHistorySQLName.imageHeight, chatMessage.imageHeight);
+        content.put(DataBaseHelper.chatHistorySQLName.imageWeight, chatMessage.imageWeight);
+        content.put(DataBaseHelper.chatHistorySQLName.ChatBothUserType, chatMessage.ChatBothUserType);
+        content.put(DataBaseHelper.chatHistorySQLName.chatImage, chatMessage.chatImage);
+
 
         db.replace(DataBaseHelper.chatHistorySQLName.TableName, null, content);
     }

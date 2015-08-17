@@ -1,19 +1,19 @@
 package com.tizi.quanzi.ui;
 
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.tizi.quanzi.fragment.main.MainFragmentPagerAdapter;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.fragment.main.GroupChatList;
+import com.tizi.quanzi.fragment.main.MainFragmentPagerAdapter;
+import com.tizi.quanzi.network.NewGroup;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    private ViewPager mViewPager;
+    private MainFragmentPagerAdapter mainFragmentPagerAdapter;
 
     //toolbar
     private Toolbar toolbar;
@@ -35,18 +36,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager(), this));
+        mainFragmentPagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
+        mViewPager.setAdapter(mainFragmentPagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
-        AVIMClient imClient = AVIMClient.getInstance("Tom");
-        imClient.open(new AVIMClientCallback() {
-            @Override
-            public void done(AVIMClient client, AVException e) {
-                if (null != e) {
-                    Snackbar.make(mViewPager, "网络故障", Snackbar.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-            }
-        });
+
+        //Snackbar.make(mViewPager, "网络故障", Snackbar.LENGTH_LONG).show();
+
     }
 
 
@@ -72,4 +67,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void newAGroupButton(MenuItem item) {
+        Fragment fragment = mainFragmentPagerAdapter.fragments[0];
+        if (fragment != null) {
+            ((GroupChatList) fragment).newAGroup();
+        }
+    }
 }

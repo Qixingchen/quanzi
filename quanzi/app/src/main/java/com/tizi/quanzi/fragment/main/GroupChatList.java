@@ -17,7 +17,9 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.network.NewGroup;
 import com.tizi.quanzi.ui.ChatActivity;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ public class GroupChatList extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private GroupClass[] groupClasses;
+    private List<GroupClass> groupClasses;
 
     private RecyclerView mGroupListRecyclerView;
     private GroupListAdapter groupListAdapter;
@@ -74,21 +76,14 @@ public class GroupChatList extends Fragment {
 
 
         Intent intent = mActivity.getIntent();
-
-        final String[] ids, icons, groupNames, types;
-        ids = intent.getStringArrayExtra("groupids");
-        icons = intent.getStringArrayExtra("groupicons");
-        groupNames = intent.getStringArrayExtra("groupgroupNames");
-        types = intent.getStringArrayExtra("grouptypes");
-        //todo use getGroupByEntity
-        groupClasses = GroupClass.getGroupByInent(ids, icons, groupNames, types);
+        groupClasses = intent.getExtras().getParcelableArrayList("group");
 
         mGroupListRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
         GroupListAdapter.Onclick onclick = new GroupListAdapter.Onclick() {
             @Override
             public void itemClick(int position) {
                 Intent chatmess = new Intent(mActivity, ChatActivity.class);
-                chatmess.putExtra("conversation", ids[position]);
+                chatmess.putExtra("conversation", groupClasses.get(position).groupID);
                 startActivity(chatmess);
             }
         };
@@ -124,6 +119,22 @@ public class GroupChatList extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void newAGroup() {
+        String GroupName = "xingchen test2", icon = "http://ac-hy5srahi.clouddn.com/2j5dU2E1dvXcVD1TKPmgNBC.jpeg";
+        String notice = "公告", userID = App.getUserID(), tag = "[{tagid:\"1\",tagname:\"1name\"},{tagid:\"2\",tagName:\"2name\"}]";
+        NewGroup.getInstance().setNewGroupListener(new NewGroup.NewGroupListener() {
+            @Override
+            public void onOK(GroupClass groupClass) {
+                groupListAdapter.addAGroup(groupClass);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        }).NewGroup(GroupName, icon, notice, userID, tag);
     }
 
 }

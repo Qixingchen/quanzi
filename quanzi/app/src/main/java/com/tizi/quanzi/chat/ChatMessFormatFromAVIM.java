@@ -112,6 +112,7 @@ public class ChatMessFormatFromAVIM {
         chatMessage.sender = message.getFrom();
         // TODO: 15/8/13  getMessageIOType不可用 为什么？
         chatMessage.isSelfSend = (message.getFrom().compareTo(App.getUserID()) == 0);
+        // TODO: 15/8/17 isread
         chatMessage.isread = chatMessage.isSelfSend;
         if (chatMessage.isSelfSend) {
             chatMessage.From = StaticField.ChatFrom.ME;
@@ -119,6 +120,9 @@ public class ChatMessFormatFromAVIM {
             chatMessage.From = StaticField.ChatFrom.OTHER;
         }
         return chatMessage;
+// TODO: 15/8/17  ChatBothUserType
+        // ChatBothUserType,;
+
     }
 
 }

@@ -12,16 +12,18 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GetVolley;
 
+import java.util.List;
+
 /**
  * Created by qixingchen on 15/7/16.
  */
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyViewHolder> {
 
-    private GroupClass[] groupClasses;
+    private List<GroupClass> groupClasses;
     private Context context;
     private Onclick onclick;
 
-    public GroupListAdapter(GroupClass[] groupClasses, Context context, Onclick onclick) {
+    public GroupListAdapter(List<GroupClass> groupClasses, Context context, Onclick onclick) {
         this.groupClasses = groupClasses;
         this.context = context;
         this.onclick = onclick;
@@ -40,10 +42,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
         myViewHolder.unreadTextview.setText("unread commit");
-        myViewHolder.groupNameTextview.setText(groupClasses[position].groupName);
+        myViewHolder.groupNameTextview.setText(groupClasses.get(position).groupName);
         myViewHolder.lastCommitTextview.setText("2015-05-12 12:12");
         myViewHolder.groupFaceImageView.setImageUrl(
-                groupClasses[position].groupFace.toString(),
+                groupClasses.get(position).groupFace.toString(),
                 GetVolley.getmInstance(context).getImageLoader());
         myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +57,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
 
     @Override
     public int getItemCount() {
-        return groupClasses == null ? 0 : groupClasses.length;
+        return groupClasses == null ? 0 : groupClasses.size();
     }
 
     public interface Onclick {
@@ -77,5 +79,10 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
             unreadTextview = (TextView) itemView.findViewById(R.id.unread_text_view);
             lastTimeTextview = (TextView) itemView.findViewById(R.id.last_commit_text_view);
         }
+    }
+
+    public void addAGroup(GroupClass group) {
+        groupClasses.add(group);
+        notifyDataSetChanged();
     }
 }

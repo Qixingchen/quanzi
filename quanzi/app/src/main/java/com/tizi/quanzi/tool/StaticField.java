@@ -36,8 +36,8 @@ public class StaticField {
     public static class ChatMessAttrName {
         public final static String userIcon = "userIcon";
         public final static String userName = "userName";
-        public final static String groupID = "groupID";
-        public final static String userID = "userID";
+        public final static String groupID = "groupId";
+        public final static String userID = "userId";
         public final static String type = "type";
     }
 

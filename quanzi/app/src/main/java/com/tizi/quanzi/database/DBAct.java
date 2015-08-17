@@ -127,8 +127,11 @@ public class DBAct {
             chatMessage.From = StaticField.ChatFrom.ME;
         }//todo 判断是本群还是临时群
         else {
-            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.GROUP)
+            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.GROUP) {
                 chatMessage.From = StaticField.ChatFrom.OTHER;
+            }else {
+                chatMessage.From = StaticField.ChatFrom.OTHER;
+            }
         }
 
 

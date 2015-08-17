@@ -48,16 +48,24 @@
             tools:layout_height="120dp"
             tools:layout_width="120dp"
             tools:visibility="visible" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            
 
-        <ImageButton
-            android:id="@+id/vedio_play_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:background="?selectableItemBackground"
-            android:src="@drawable/ic_play_arrow_black_48dp"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            <ImageButton
+                android:id="@+id/vedio_play_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:background="?selectableItemBackground"
+                android:src="@drawable/ic_play_arrow_black_48dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+
 
         <TextView
             android:id="@+id/chat_message_time"
@@ -76,6 +84,8 @@
         android:id="@+id/chat_user_face"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
         tools:background="@drawable/face" />
 
 

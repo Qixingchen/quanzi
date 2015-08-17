@@ -15,6 +15,10 @@
     <!-- 用于获取客户端crash log -->
     <!-- 通过将crash log汇报到服务器上，您可以了解您的应用crash的原因以及次数。 -->
     <uses-permission android:name="android.permission.READ_LOGS" />
+    <!-- 用于录音-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 写入文件-->
+    <uses-permission android:name="android.permission.STORAGE" />
 
 
     <application

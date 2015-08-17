@@ -1,5 +1,6 @@
 package com.tizi.quanzi.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,9 +11,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -31,6 +34,7 @@ import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -41,6 +45,7 @@ import java.util.TreeMap;
 
 public class ChatActivity extends AppCompatActivity {
 
+    private Context context;
     private RecyclerView chatmessagerecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private ChatMessageAdapter chatMessageAdapter;
@@ -51,6 +56,7 @@ public class ChatActivity extends AppCompatActivity {
     private AVIMConversation conversation;
     private AVIMMessagesQueryCallback avimMessagesQueryCallback;
     private RequreForImage requreForImage;
+    private RecodeAudio recodeAudio;
 
     private int LastPosition = -1;
 
@@ -61,11 +67,33 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        context = this;
         this.SendButton = (ImageButton) findViewById(R.id.SendButton);
         this.InputMessage = (EditText) findViewById(R.id.InputMessage);
         this.ChatSwipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.ChatSwipeToRefresh);
         final ImageButton insertImageButton = (ImageButton) findViewById(R.id.insertImageButton);
         final ImageButton insertVoiceButton = (ImageButton) findViewById(R.id.insertVoiceButton);
+        recodeAudio = new RecodeAudio(this);
+
+        insertVoiceButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (recodeAudio.start()) {
+                            Toast.makeText(context, "录音中", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        recodeAudio.stop();
+                        Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
+                        // TODO: 15/8/17 upload
+                }
+                return false;
+            }
+        });
 
         //键入时隐藏显示按钮
         InputMessage.addTextChangedListener(new TextWatcher() {
@@ -133,12 +161,7 @@ public class ChatActivity extends AppCompatActivity {
                         }
                         final AVIMTextMessage message = new AVIMTextMessage();
                         message.setText(InputMessage.getText().toString());
-                        Map<String, Object> attr = new TreeMap<>();
-                        // TODO: 15/8/14 add username userIcon
-                        attr.put("userName", "todo Name");
-                        attr.put("userIcon", "http://ac-iz9otzx1.clouddn.com/lo73gXLe1hsXP93fGs0m4TMibivViSLY6qN4Pt3A.jpg");
-                        attr.put("userID", App.getUserID());
-                        message.setAttrs(attr);
+                        message.setAttrs(getMessAttr());
 
                         conversation.sendMessage(message, new
 
@@ -197,8 +220,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onResume();
         CONVERSATION_ID = getIntent().getStringExtra("conversation");
         // TODO: 15/8/12 testID
-        //CONVERSATION_ID = "55caba1840ac41014f7e78ce";//安静的账号
-        CONVERSATION_ID = "55c1b77b00b0cb9ca0a4d664";//喧闹的
+        CONVERSATION_ID = "55d163f860b24927fc93795e";
         App.UI_CONVERSATION_ID = CONVERSATION_ID;
         conversation = App.getImClient().getConversation(CONVERSATION_ID);
 
@@ -229,6 +251,7 @@ public class ChatActivity extends AppCompatActivity {
         App.UI_CONVERSATION_ID = "";
         AVMessageHandler.getInstance().setOnMessage(null);
         MutiTypeMsgHandler.getInstance().setOnMessage(null);
+        recodeAudio.release();
     }
 
     @Override
@@ -340,7 +363,8 @@ public class ChatActivity extends AppCompatActivity {
         attr.put(StaticField.ChatMessAttrName.userName, "todo Name");
         attr.put(StaticField.ChatMessAttrName.userIcon, "http://ac-iz9otzx1.clouddn.com/lo73gXLe1hsXP93fGs0m4TMibivViSLY6qN4Pt3A.jpg");
         attr.put(StaticField.ChatMessAttrName.userID, App.getUserID());
-        attr.put(StaticField.ChatMessAttrName.groupID, CONVERSATION_ID);
+        // TODO: 15/8/17 groupID
+        attr.put(StaticField.ChatMessAttrName.groupID, "");
         attr.put(StaticField.ChatMessAttrName.type, StaticField.ChatBothUserType.twoPerson);
         return attr;
     }

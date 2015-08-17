@@ -2,4 +2,5 @@
 <resources>
     <string name="alibaseuri"></string>
     <string name="testbaseuri">http://120.25.232.240:8080</string>
+    <!--<string name="testbaseuri">http://192.168.3.3:8080</string>-->
 </resources>

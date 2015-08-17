@@ -33,7 +33,9 @@ public class AutoLogin {
     public static AutoLogin getInstance() {
         if (mInstance == null) {
             synchronized (AutoLogin.class) {
-                mInstance = new AutoLogin(App.getApplication());
+                if (mInstance == null) {
+                    mInstance = new AutoLogin(App.getApplication());
+                }
             }
         }
         return mInstance;

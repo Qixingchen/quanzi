@@ -1,5 +1,8 @@
 package com.tizi.quanzi.gson;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class Login {
         return msg;
     }
 
-    public static class GroupEntity {
+    public static class GroupEntity implements Parcelable {
         /**
          * allowMatch : Y
          * groupNo :
@@ -61,6 +64,7 @@ public class Login {
         private String bg;
         private String type;
         private String notice;
+
 
         public String getAllowMatch() {
             return allowMatch;
@@ -105,6 +109,53 @@ public class Login {
         public String getNotice() {
             return notice;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.allowMatch);
+            dest.writeString(this.groupNo);
+            dest.writeString(this.id);
+            dest.writeString(this.icon);
+            dest.writeString(this.createUser);
+            dest.writeString(this.groupName);
+            dest.writeString(this.validation);
+            dest.writeString(this.remark);
+            dest.writeString(this.bg);
+            dest.writeString(this.type);
+            dest.writeString(this.notice);
+        }
+
+        public GroupEntity() {
+        }
+
+        protected GroupEntity(Parcel in) {
+            this.allowMatch = in.readString();
+            this.groupNo = in.readString();
+            this.id = in.readString();
+            this.icon = in.readString();
+            this.createUser = in.readString();
+            this.groupName = in.readString();
+            this.validation = in.readString();
+            this.remark = in.readString();
+            this.bg = in.readString();
+            this.type = in.readString();
+            this.notice = in.readString();
+        }
+
+        public static final Parcelable.Creator<GroupEntity> CREATOR = new Parcelable.Creator<GroupEntity>() {
+            public GroupEntity createFromParcel(Parcel source) {
+                return new GroupEntity(source);
+            }
+
+            public GroupEntity[] newArray(int size) {
+                return new GroupEntity[size];
+            }
+        };
     }
 
     public static class UserEntity {

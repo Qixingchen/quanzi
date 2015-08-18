@@ -4,10 +4,23 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.fragment.main.LockLock">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="LockLock" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/statue_bar_top_padding">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LockLock" />
+
+        <Button
+            android:id="@+id/getDyn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="get动态" />
+
+    </LinearLayout>
+
 
 </FrameLayout>

@@ -15,7 +15,6 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.squareup.leakcanary.LeakCanary;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
@@ -101,8 +100,6 @@ public class App extends Application {
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
 
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
-        // TODO: 15/8/14 等待删除通用接收器
-        //AVIMMessageManager.registerDefaultMessageHandler(AVMessageHandler.getInstance());
 
     }
 

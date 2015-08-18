@@ -17,6 +17,7 @@ import com.tizi.quanzi.chat.VoicePlayAsync;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 
@@ -33,6 +34,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     protected static final int STOP = 0x10000;
     protected static final int NEXT = 0x10001;
     private int iCount = 0;
+    private VoicePlayAsync voicePlayAsync;
 
     @Override
     public int getItemViewType(int position) {
@@ -73,7 +75,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void onBindViewHolder(final BaseViewHolder holder, int position) {
         //todo 赋值在这里
         final ChatMessage chatMessage = chatMessageList.get(position);
-        holder.userFaceImageView.setImageUrl(chatMessage.chatImage,
+        holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
+                        chatMessage.chatImage, 48 * 3, 48 * 3),
                 GetVolley.getmInstance(mContext).getImageLoader());
 
         String time = Tool.timeStringFromUNIX(chatMessage.create_time);
@@ -101,7 +104,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         chatMessage.imageHeight, chatMessage.imageWeight);
                 holder.contantImageView.getLayoutParams().height = imagePix[0];
                 holder.contantImageView.getLayoutParams().height = imagePix[1];
-                holder.contantImageView.setImageUrl(chatMessage.url,
+                holder.contantImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
+                                chatMessage.url, 800 * 3, 300 * 3),
                         GetVolley.getmInstance(mContext).getImageLoader());
                 holder.contantImageView.setVisibility(View.VISIBLE);
                 break;
@@ -123,7 +127,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         holder.videoPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VoicePlayAsync voicePlayAsync = new VoicePlayAsync();
+                if (voicePlayAsync == null) {
+                    voicePlayAsync = new VoicePlayAsync();
+                } else {
+                    voicePlayAsync.cancel(false);
+                }
+
                 voicePlayAsync.setContext(mContext)
                         .setChatMessage(chatMessage)
                         .setHolder(holder)

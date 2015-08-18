@@ -136,12 +136,8 @@ public class RequreForImage {
         return image;
     }
 
-    @Nullable
-    public String FilePathFromIntent(int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            return GetFilePath.getPath(mActivity, data.getData());
-        }
-        return null;
+    public String FilePathFromIntent(Intent data) {
+        return GetFilePath.getPath(mActivity, data.getData());
     }
 
 }

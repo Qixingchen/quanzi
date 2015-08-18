@@ -97,9 +97,11 @@ public class CompleteUesrInfo extends Fragment {
     }
 
     public void onIntentResult(int requestCode, int resultCode, Intent data) {
-        String filePath = requreForImage.FilePathFromIntent(resultCode, data);
-        if (filePath != null) {
-            savePhoto(filePath);
+        if (resultCode == Activity.RESULT_OK) {
+            String filePath = requreForImage.FilePathFromIntent(data);
+            if (filePath != null) {
+                savePhoto(filePath);
+            }
         }
     }
 

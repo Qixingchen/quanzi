@@ -113,7 +113,7 @@ public class GetVolley {
         String uri = baseuri + "?";
         para = addSignMap(para);
         String paraUri = getParaUriNoSigned(para);
-        paraUri += "&sign=" + getSignString(para.get("ts"), para.get("userid"));
+        paraUri += "&sign=" + getSignString(para.get("ts"), para.get("uid"));
         uri += paraUri;
         StringRequest stringRequest = new StringRequest(method, uri, mOKListener, mErrorListener);
         addToRequestQueue(stringRequest);

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="statue_bar_top_padding">24dp</dimen>s
+    <!--<dimen name="statue_bar_top_padding">24dp</dimen>-->
+    <dimen name="statue_bar_top_padding">0dp</dimen>
 </resources>

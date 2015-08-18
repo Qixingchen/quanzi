@@ -1,12 +1,16 @@
 package com.tizi.quanzi.tool;
 
 import android.app.Activity;
+import android.media.MediaCodec;
 import android.media.MediaRecorder;
+import android.support.annotation.Nullable;
 
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.log.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by qixingchen on 15/8/17.
@@ -17,6 +21,9 @@ public class RecodeAudio {
 
     private Activity mContext;
 
+    private String FileName;
+    private File file;
+
     public RecodeAudio(Activity context) {
         mContext = context;
         recorder = new MediaRecorder();
@@ -26,9 +33,10 @@ public class RecodeAudio {
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        new File(mContext.getCacheDir(), "audio/");
+        FileName = String.valueOf(new Date().getTime() / 1000) + ".aac";
 
-        File file = new File(mContext.getCacheDir().getAbsolutePath() + "/audio", "3.aac");
+        file = new File(mContext.getCacheDir().getAbsolutePath() + "/audio/" + App.getUserID(),
+                FileName);
         Log.d("录音", file.getAbsolutePath());
         try {
             if (!file.getParentFile().exists()) {
@@ -44,18 +52,22 @@ public class RecodeAudio {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // 开始录音
         return false;
     }
 
-    public void stop() {
+    @Nullable
+    public String stopAndReturnFilePath() {
         try {
             recorder.stop();
             recorder.reset();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // You can reuse the object by going back to setAudioSource() step
+        if (file.exists()) {
+            return file.getAbsolutePath();
+        } else {
+            return null;
+        }
     }
 
     public void release() {

@@ -1,5 +1,6 @@
 package com.tizi.quanzi.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -23,12 +25,12 @@ import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.chat.AVMessageHandler;
 import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.database.DBAct;
@@ -67,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         context = this;
         this.SendButton = (ImageButton) findViewById(R.id.SendButton);
         this.InputMessage = (EditText) findViewById(R.id.InputMessage);
@@ -82,14 +85,16 @@ public class ChatActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         if (recodeAudio.start()) {
                             Toast.makeText(context, "录音中", Toast.LENGTH_SHORT).show();
-                        }else {
+                        } else {
                             Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
-                        recodeAudio.stop();
-                        Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
-                        // TODO: 15/8/17 upload
+                        String Filepath = recodeAudio.stopAndReturnFilePath();
+                        if (Filepath != null) {
+                            Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
+                            sendAudioMessage(Filepath);
+                        }
                 }
                 return false;
             }
@@ -156,37 +161,13 @@ public class ChatActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (InputMessage.getText().toString().compareTo("") == 0) {
+                        String text = InputMessage.getText().toString();
+                        if (text.compareTo("") == 0) {
                             return;
                         }
-                        final AVIMTextMessage message = new AVIMTextMessage();
-                        message.setText(InputMessage.getText().toString());
-                        message.setAttrs(getMessAttr());
-
-                        conversation.sendMessage(message, new
-
-                                        AVIMConversationCallback() {
-                                            @Override
-                                            public void done(AVException e) {
-                                                if (null != e) {
-                                                    // todo 出错了。。。
-                                                    e.printStackTrace();
-                                                } else {
-                                                    ChatMessage chatMessage =
-                                                            ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
-                                                    Log.d("发送成功", chatMessage.toString());
-                                                    InputMessage.setText("");
-                                                    DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-                                                    chatMessageAdapter.addOrUpdateMessage(chatMessage);
-                                                    chatmessagerecyclerView.smoothScrollToPosition(chatMessageAdapter.chatMessageList.size());
-                                                }
-                                            }
-                                        }
-
-                        );
+                        sendTextMessage(text);
                     }
                 }
-
         );
 
 
@@ -249,7 +230,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         App.UI_CONVERSATION_ID = "";
-        AVMessageHandler.getInstance().setOnMessage(null);
         MutiTypeMsgHandler.getInstance().setOnMessage(null);
         recodeAudio.release();
     }
@@ -257,65 +237,14 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        AVIMImageMessage message = null;
-        try {
-            message = new AVIMImageMessage(requreForImage.FilePathFromIntent(resultCode, data));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+        if (resultCode == Activity.RESULT_OK) {
+            sendImageMesage(requreForImage.FilePathFromIntent(data));
         }
-
-        message.setAttrs(getMessAttr());
-
-        final AVIMImageMessage finalMessage = message;
-        conversation.sendMessage(message, new
-
-                        AVIMConversationCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (null != e) {
-                                    // todo 出错了。。。
-                                    e.printStackTrace();
-                                } else {
-                                    ChatMessage chatMessage =
-                                            ChatMessFormatFromAVIM.ChatMessageFromAVMessage(finalMessage);
-                                    Log.d("发送成功", chatMessage.toString());
-                                    DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-                                    chatMessageAdapter.addOrUpdateMessage(chatMessage);
-                                    chatmessagerecyclerView.smoothScrollToPosition(chatMessageAdapter.chatMessageList.size());
-                                }
-                            }
-                        }
-
-        );
 
     }
 
     private void setMessageCallback() {
         //聊天消息回调接口
-        AVMessageHandler.getInstance().setOnMessage(new AVMessageHandler.OnMessage() {
-            @Override
-            public void OnMessageGet(ChatMessage chatMessage) {
-                chatMessageAdapter.addOrUpdateMessage(chatMessage);
-                int LastVisibleItemPosition = ((LinearLayoutManager) mLayoutManager)
-                        .findLastVisibleItemPosition();
-                int chatSize = chatMessageAdapter.chatMessageList.size();
-                Log.w(TAG, "lastPos=" + LastVisibleItemPosition + ",chatsize=" + chatSize);
-                if (LastVisibleItemPosition - chatSize <= 2) {
-                    Log.w(TAG, "聊天末尾");
-
-                    chatmessagerecyclerView.smoothScrollToPosition(chatMessageAdapter.chatMessageList.size());
-                }
-
-            }
-
-            @Override
-            public void OnMyMessageSent(ChatMessage chatMessage) {
-                chatMessageAdapter.addOrUpdateMessage(chatMessage);
-            }
-        });
-        //复制一遍
         MutiTypeMsgHandler.getInstance().setOnMessage(new MutiTypeMsgHandler.OnMessage() {
             @Override
             public void OnMessageGet(ChatMessage chatMessage) {
@@ -367,5 +296,86 @@ public class ChatActivity extends AppCompatActivity {
         attr.put(StaticField.ChatMessAttrName.groupID, "");
         attr.put(StaticField.ChatMessAttrName.type, StaticField.ChatBothUserType.twoPerson);
         return attr;
+    }
+
+    private void sendImageMesage(String Filepath) {
+        AVIMImageMessage message;
+        try {
+            message = new AVIMImageMessage(Filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        message.setAttrs(getMessAttr());
+
+        final AVIMImageMessage finalMessage = message;
+        conversation.sendMessage(message,
+                new AVIMConversationCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (null != e) {
+                            // todo 出错了。。。
+                            e.printStackTrace();
+                        } else {
+                            onMessageSendOK(finalMessage);
+                        }
+                    }
+                }
+
+        );
+    }
+
+    private void sendAudioMessage(String Filepath) {
+        try {
+            AVIMAudioMessage message = new AVIMAudioMessage(Filepath);
+            message.setAttrs(getMessAttr());
+            final AVIMAudioMessage finalMessage = message;
+            conversation.sendMessage(message, new AVIMConversationCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e != null) {
+                        e.printStackTrace();
+                    } else {
+                        onMessageSendOK(finalMessage);
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void sendTextMessage(String text) {
+        final AVIMTextMessage message = new AVIMTextMessage();
+        message.setText(text);
+        message.setAttrs(getMessAttr());
+
+        conversation.sendMessage(message,
+                new AVIMConversationCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (null != e) {
+                            // todo 出错了。。。
+                            e.printStackTrace();
+                        } else {
+                            onMessageSendOK(message);
+                            InputMessage.getText().clear();
+                        }
+                    }
+                }
+
+        );
+    }
+
+    private void onMessageSendOK(AVIMTypedMessage Message) {
+        ChatMessage chatMessage =
+                ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
+        Log.d("发送成功", chatMessage.toString());
+        DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        chatMessageAdapter.addOrUpdateMessage(chatMessage);
+        chatmessagerecyclerView.smoothScrollToPosition(
+                chatMessageAdapter.chatMessageList.size());
+
     }
 }

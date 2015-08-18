@@ -1,10 +1,12 @@
 package com.tizi.quanzi.chat;
 
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMVideoMessage;
 import com.tizi.quanzi.app.App;
@@ -33,11 +35,31 @@ public class ChatMessFormatFromAVIM {
         } else if (message.getMessageType() == AVIMReservedMessageType.VideoMessageType.getType()) {
             chatMessage = vedioChatMessageFromAVMessage(message);
             Log.w(TAG, "视频消息");
+        } else if (message.getMessageType() == AVIMReservedMessageType.LocationMessageType.getType()) {
+            chatMessage = locationChatMessageFromAVMessage(message);
+            Log.w(TAG, "地理消息");
         } else {
             chatMessage = textChatMessageFromAVMessage(message);
             Log.e(TAG, "未知类型消息");
         }
         Log.w(TAG, chatMessage.toString());
+        return chatMessage;
+    }
+
+    private static ChatMessage locationChatMessageFromAVMessage(AVIMMessage message) {
+        ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
+        chatMessage.type = StaticField.ChatContantType.TEXT;
+        AVGeoPoint avGeoPoint = ((AVIMLocationMessage) message).getLocation();
+        chatMessage.text = ((AVIMLocationMessage) message).getText();
+        chatMessage.chatImage = (String)
+                ((AVIMLocationMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
+        chatMessage.userName = (String)
+                ((AVIMLocationMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
+        chatMessage.groupID = (String)
+                ((AVIMLocationMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
+        // todo chatMessage.local_path
+        // todo chatMessage.url
+        // todo chatMessage.voice_duration
         return chatMessage;
     }
 

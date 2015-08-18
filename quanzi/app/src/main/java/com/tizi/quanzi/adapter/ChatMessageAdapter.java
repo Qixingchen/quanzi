@@ -1,15 +1,19 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.chat.VoicePlayAsync;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.GetVolley;
@@ -25,6 +29,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public List<ChatMessage> chatMessageList;
     private Context mContext;
+
+    protected static final int STOP = 0x10000;
+    protected static final int NEXT = 0x10001;
+    private int iCount = 0;
 
     @Override
     public int getItemViewType(int position) {
@@ -62,9 +70,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
+    public void onBindViewHolder(final BaseViewHolder holder, int position) {
         //todo 赋值在这里
-        ChatMessage chatMessage = chatMessageList.get(position);
+        final ChatMessage chatMessage = chatMessageList.get(position);
         holder.userFaceImageView.setImageUrl(chatMessage.chatImage,
                 GetVolley.getmInstance(mContext).getImageLoader());
 
@@ -77,9 +85,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             chatMessage.isread = true;
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
         }
+        holder.voiceDuration.setText(String.valueOf((int) chatMessage.voice_duration) + " s");
         holder.contantImageView.setVisibility(View.GONE);
         holder.chatMessTextView.setVisibility(View.GONE);
         holder.videoPlayButton.setVisibility(View.GONE);
+        holder.audioProgressBar.setVisibility(View.GONE);
+        holder.voiceDuration.setVisibility(View.GONE);
         switch (chatMessage.type) {
             case StaticField.ChatContantType.TEXT:
                 holder.chatMessTextView.setText(chatMessage.text);
@@ -96,15 +107,29 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 break;
             case StaticField.ChatContantType.VOICE:
                 holder.videoPlayButton.setVisibility(View.VISIBLE);
+                holder.audioProgressBar.setVisibility(View.VISIBLE);
+                holder.voiceDuration.setVisibility(View.VISIBLE);
                 break;
             case StaticField.ChatContantType.VEDIO:
                 holder.videoPlayButton.setVisibility(View.VISIBLE);
+                holder.audioProgressBar.setVisibility(View.VISIBLE);
+                holder.voiceDuration.setVisibility(View.VISIBLE);
                 break;
             default:
                 holder.chatMessTextView.setText(chatMessage.text);
                 holder.chatMessTextView.setVisibility(View.VISIBLE);
                 break;
         }
+        holder.videoPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VoicePlayAsync voicePlayAsync = new VoicePlayAsync();
+                voicePlayAsync.setContext(mContext)
+                        .setChatMessage(chatMessage)
+                        .setHolder(holder)
+                        .execute(0);
+            }
+        });
     }
 
     @Override
@@ -121,7 +146,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             chatTime = (TextView) v.findViewById(R.id.chat_message_time);
             contantImageView = (NetworkImageView) v.findViewById(R.id.contactImageView);
             videoPlayButton = (ImageButton) v.findViewById(R.id.vedio_play_button);
-            //todo:可在这里添加部件的按键监听
+            audioProgressBar = (ProgressBar) v.findViewById(R.id.audio_progressBar);
+            audioProgressBar.setIndeterminate(false);
+            audioProgressBar.setProgress(0);
+            voiceDuration = (TextView) v.findViewById(R.id.audio_duration);
+
         }
 
     }
@@ -135,7 +164,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             chatTime = (TextView) v.findViewById(R.id.chat_message_time);
             contantImageView = (NetworkImageView) v.findViewById(R.id.contactImageView);
             videoPlayButton = (ImageButton) v.findViewById(R.id.vedio_play_button);
-            //todo:可在这里添加部件的按键监听
+            audioProgressBar = (ProgressBar) v.findViewById(R.id.audio_progressBar);
+            audioProgressBar.setIndeterminate(false);
+            audioProgressBar.setProgress(0);
+            voiceDuration = (TextView) v.findViewById(R.id.audio_duration);
         }
 
     }

@@ -94,7 +94,8 @@ public class App extends Application {
         application = this;
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
-        AVAnalytics.enableCrashReport(this, true);
+        //AVAnalytics.enableCrashReport(this, true);
+        AVAnalytics.setAnalyticsEnabled(false);
 
         AVIMClient.setClientEventHandler(new MyAVIMClientEventHandler());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());

@@ -20,6 +20,11 @@
     <!-- 写入文件-->
     <uses-permission android:name="android.permission.STORAGE" />
 
+    <!-- 需要相机来照相，但不是必须的-->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
 
     <application
         android:name=".app.App"

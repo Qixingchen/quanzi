@@ -83,7 +83,7 @@ public class CompleteUesrInfo extends Fragment {
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requreForImage.showDialogAndCallIntent();
+                requreForImage.showDialogAndCallIntent("设置头像");
             }
         });
 

@@ -1,5 +1,6 @@
 package com.tizi.quanzi.tool;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,11 +10,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
+
+import com.tizi.quanzi.app.App;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by qixingchen on 15/8/14.
@@ -23,7 +29,6 @@ public class RequreForImage {
     private String[] items = new String[]{"选择本地图片", "拍照"};
     private static final String IMAGE_FILE_NAME = "faceImage";
     private String photoTakenUri;
-    private String photoOnlineUri;
 
     public RequreForImage(Activity mActivity) {
         this.mActivity = mActivity;
@@ -35,54 +40,58 @@ public class RequreForImage {
     /**
      * 显示选择对话框
      */
-    public void showDialogAndCallIntent() {
+    public void showDialogAndCallIntent(String Title) {
 
         new AlertDialog.Builder(mActivity)
-                .setTitle("设置头像")
+                .setTitle(Title)
                 .setItems(items, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
-                                intentFromGallery.setType("image/*"); // 设置文件类型
-                                mActivity.startActivityForResult(intentFromGallery,
-                                        StaticField.ImageRequreCode.IMAGE_REQUEST_CODE);
-                                break;
-                            case 1:
-                                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                // Ensure that there's a camera activity to handle the intent
-                                if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
-                                    // Create the File where the photo should go
-                                    File photoFile = null;
-                                    photoFile = createImageFile();
-                                    // Continue only if the File was successfully created
-                                    if (photoFile != null) {
-                                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                                Uri.fromFile(photoFile));
-                                        mActivity.startActivityForResult(takePictureIntent,
-                                                StaticField.ImageRequreCode.CAMERA_REQUEST_CODE);
-                                    }
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
+                                        intentFromGallery.setType("image/*"); // 设置文件类型
+                                        mActivity.startActivityForResult(intentFromGallery,
+                                                StaticField.ImageRequreCode.IMAGE_REQUEST_CODE);
+                                        break;
+                                    case 1:
+                                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        // Ensure that there's a camera activity to handle the intent
+                                        if (takePictureIntent.resolveActivity(
+                                                mActivity.getPackageManager()) != null) {
+                                            // Create the File where the photo should go
+                                            File photoFile = createImageFile();
+
+                                            // Continue only if the File was successfully created
+                                            if (photoFile != null) {
+                                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                                        Uri.fromFile(photoFile));
+                                                mActivity.startActivityForResult(takePictureIntent,
+                                                        StaticField.ImageRequreCode.CAMERA_REQUEST_CODE);
+                                            }
+                                        }
+                                        break;
                                 }
-                                break;
+                            }
                         }
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                ).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                }).show();
+                }
 
+        ).show();
     }
 
 
     /**
      * todo 裁剪图片方法实现
      */
+
     public void startPhotoZoom(Uri uri) {
 
         Intent intent = new Intent("com.android.camera.action.CROP");
@@ -118,10 +127,24 @@ public class RequreForImage {
         }
     }
 
+    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private File createImageFile() {
         // Create an image file name
-        String imageFileName = "JPEG_" + "123";
-        File storageDir = mActivity.getCacheDir();
+        String imageFileName = String.valueOf(new Date().getTime() / 1000) + ".jpg";
+
+        File file = new File(mActivity.getExternalCacheDir().getAbsolutePath()
+                + "/image/" + App.getUserID(), imageFileName);
+
+
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+
+
+        photoTakenUri = file.getAbsolutePath();
+
+
+        File storageDir = mActivity.getExternalCacheDir();
         File image = null;
         try {
             image = File.createTempFile(
@@ -137,6 +160,9 @@ public class RequreForImage {
     }
 
     public String FilePathFromIntent(Intent data) {
+        if (data.getData() == null) {
+            return photoTakenUri;
+        }
         return GetFilePath.getPath(mActivity, data.getData());
     }
 

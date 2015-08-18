@@ -16,7 +16,7 @@ public class GetThumbnailsUri {
     }
 
     public static String maxHeiAndWei(String imageSourceUri, int MaxHei, int MaxWei) {
-        String ans = imageSourceUri + addUri + "/1/w/" + MaxWei;
+        String ans = imageSourceUri + addUri + "/2/w/" + MaxWei;
 
         ans += "/h/" + MaxHei;
 

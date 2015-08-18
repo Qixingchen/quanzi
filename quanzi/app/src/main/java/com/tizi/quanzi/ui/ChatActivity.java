@@ -152,7 +152,7 @@ public class ChatActivity extends AppCompatActivity {
         insertImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requreForImage.showDialogAndCallIntent();
+                requreForImage.showDialogAndCallIntent("选择图片");
             }
         });
 

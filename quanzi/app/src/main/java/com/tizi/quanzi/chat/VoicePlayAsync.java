@@ -2,7 +2,6 @@ package com.tizi.quanzi.chat;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;

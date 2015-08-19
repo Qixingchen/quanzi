@@ -9,8 +9,8 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.model.GroupClass;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,7 +31,7 @@ public class QuaryDynamic {
     private static Response.Listener<String> mOKListener;
     private static Response.ErrorListener mErrorListener;
 
-    public QuaryDynamic setNewGroupListener(QuaryDynamicListener quaryDynamicListener) {
+    public QuaryDynamic setQuaryDynamicListener(QuaryDynamicListener quaryDynamicListener) {
         this.quaryDynamicListener = quaryDynamicListener;
         return mInstance;
     }
@@ -53,7 +53,16 @@ public class QuaryDynamic {
         mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.e(TAG, response);
+                Dyns dyns = gson.fromJson(response, Dyns.class);
+                if (dyns.success) {
+                    if (quaryDynamicListener != null) {
+                        quaryDynamicListener.onOK(dyns);
+                    }
+                } else {
+                    Log.e(TAG, dyns.msg);
+                    Toast.makeText(mContext, dyns.msg, Toast.LENGTH_LONG).show();
+                    quaryDynamicListener.onError();
+                }
             }
         };
         mErrorListener = new Response.ErrorListener()
@@ -72,7 +81,7 @@ public class QuaryDynamic {
         ;
     }
 
-    public QuaryDynamic getDynamic() {
+    public QuaryDynamic getQuanZiDynamic() {
 
         Map<String, String> quaryDynmicPara = new TreeMap<>();
         quaryDynmicPara.put("userid", App.getUserID());
@@ -85,7 +94,7 @@ public class QuaryDynamic {
     }
 
     public interface QuaryDynamicListener {
-        void onOK(GroupClass groupClass);
+        void onOK(Dyns dyns);
 
         void onError();
     }

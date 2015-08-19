@@ -132,6 +132,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 ChatMessage oldestChatMess = DBAct.getInstance().queryOldestMessage(CONVERSATION_ID);
+                // TODO: 15/8/19 保持位置或者自动加在旧消息
                 if (oldestChatMess != null) {
                     conversation.queryMessages(oldestChatMess.messID, oldestChatMess.create_time,
                             QueryLimit, avimMessagesQueryCallback);
@@ -254,10 +255,10 @@ public class ChatActivity extends AppCompatActivity {
                         .findLastVisibleItemPosition();
                 int chatSize = chatMessageAdapter.chatMessageList.size();
                 Log.w(TAG, "lastPos=" + LastVisibleItemPosition + ",chatsize=" + chatSize);
-                if (LastVisibleItemPosition - chatSize <= 2) {
+                if (chatSize - LastVisibleItemPosition <= 2) {
                     Log.w(TAG, "聊天末尾");
-
-                    chatmessagerecyclerView.smoothScrollToPosition(chatMessageAdapter.chatMessageList.size());
+                    chatmessagerecyclerView.smoothScrollToPosition(
+                            chatMessageAdapter.chatMessageList.size());
                 }
 
             }
@@ -375,8 +376,8 @@ public class ChatActivity extends AppCompatActivity {
         Log.d("发送成功", chatMessage.toString());
         DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
         chatMessageAdapter.addOrUpdateMessage(chatMessage);
-        chatmessagerecyclerView.smoothScrollToPosition(
-                chatMessageAdapter.chatMessageList.size());
+        chatmessagerecyclerView.scrollToPosition(
+                chatMessageAdapter.chatMessageList.size() - 1);
 
     }
 }

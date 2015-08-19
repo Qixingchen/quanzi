@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/7/16.
+ * 群组列表Adapter
  */
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyViewHolder> {
 

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/weibo_user"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/weibo_avatar"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            tools:src="@drawable/face"/>
+
+        <TextView
+            android:id="@+id/weibo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/weibo_avatar"
+            android:layout_toRightOf="@id/weibo_avatar"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="@dimen/normal_edit_text_size"
+            tools:text="Author Name"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/weibo_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weibo_user"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:lineSpacingExtra="4dp"
+        android:paddingBottom="15dp"
+        android:textColorLink="?attr/colorAccent"
+        android:textSize="16sp"
+        tools:text="Content"/>
+
+    <TextView
+        android:id="@+id/weibo_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weibo_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="2dp"
+        android:paddingBottom="10dp"
+        android:textSize="12sp"
+        tools:text="Date"/>
+
+    <TextView
+        android:id="@+id/weibo_from_divide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weibo_content"
+        android:layout_toRightOf="@id/weibo_date"
+        android:textSize="12sp"
+        tools:text="|"/>
+
+    <TextView
+        android:id="@+id/weibo_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weibo_content"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/weibo_from_divide"
+        android:textSize="12sp"
+        tools:text="From"/>
+
+    <LinearLayout
+        android:id="@+id/weibo_comment_and_retweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weibo_content"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/weibo_from"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginRight="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/face"
+            />
+
+        <TextView
+            android:id="@+id/weibo_attitudes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:text="0"
+            android:textSize="12sp"/>
+
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginRight="2dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/face"
+            />
+
+        <TextView
+            android:id="@+id/weibo_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:text="0"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+
+    <HorizontalScrollView
+        android:id="@+id/weibo_pics_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/weibo_comment_and_retweet"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/weibo_pics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include
+                android:id="@+id/weibo_pic0"
+                layout="@layout/weibo_pic"/>
+
+            <include
+                android:id="@+id/weibo_pic1"
+                layout="@layout/weibo_pic"/>
+
+            <include
+                android:id="@+id/weibo_pic2"
+                layout="@layout/weibo_pic"/>
+
+            <include
+                android:id="@+id/weibo_pic3"
+                layout="@layout/weibo_pic"/>
+
+            <include
+                android:id="@+id/weibo_pic4"
+                layout="@layout/weibo_pic"/>
+
+            <include
+                android:id="@+id/weibo_pic5"
+                layout="@layout/weibo_pic"/>
+
+            <include
+                android:id="@+id/weibo_pic6"
+                layout="@layout/weibo_pic"/>
+
+            <include
+                android:id="@+id/weibo_pic7"
+                layout="@layout/weibo_pic"/>
+
+            <include
+                android:id="@+id/weibo_pic8"
+                layout="@layout/weibo_pic"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</RelativeLayout>

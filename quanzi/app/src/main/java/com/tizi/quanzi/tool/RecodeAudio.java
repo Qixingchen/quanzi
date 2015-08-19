@@ -71,8 +71,7 @@ public class RecodeAudio {
     }
 
     public void release() {
-        recorder.release(); // Now the object cannot be reused
+        recorder.release();
     }
-
 
 }

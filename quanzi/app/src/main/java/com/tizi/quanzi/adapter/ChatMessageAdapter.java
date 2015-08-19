@@ -1,22 +1,17 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
@@ -24,24 +19,47 @@ import com.tizi.quanzi.tool.Tool;
 import java.util.List;
 
 /**
- * Created by qixingchen on 15/7/20.
+ * Created by qixingchen on 15/7/20. 聊天记录Adapter
  */
+
 public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public List<ChatMessage> chatMessageList;
     private Context mContext;
     private VoicePlayAsync voicePlayAsync;
 
+    /**
+     * @param position 记录位置
+     *
+     * @return 记录类型
+     *
+     * @see com.tizi.quanzi.tool.StaticField.ChatFrom
+     */
     @Override
     public int getItemViewType(int position) {
         return chatMessageList.get(position).From;
     }
 
+    /**
+     * @param chatMessageList 聊天记录List
+     * @param context         上下文
+     *
+     * @see ChatMessage
+     */
     public ChatMessageAdapter(List<ChatMessage> chatMessageList, Context context) {
         this.chatMessageList = chatMessageList;
         this.mContext = context;
     }
 
+    /**
+     * @param parent   需要创建ViewHolder的 ViewGroup
+     * @param viewType 记录类型
+     *
+     * @return ViewHolder
+     *
+     * @see com.tizi.quanzi.tool.StaticField.ChatFrom
+     * @see BaseViewHolder
+     */
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -67,36 +85,18 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         return vh;
     }
 
+    /**
+     * 发生绑定时，为viewHolder的元素赋值
+     *
+     * @param holder   被绑定的ViewHolder
+     * @param position 列表位置
+     */
     @Override
     public void onBindViewHolder(final BaseViewHolder holder, int position) {
-        //todo 赋值在这里
         final ChatMessage chatMessage = chatMessageList.get(position);
 
-        //设置已读
-        if (!chatMessage.isread) {
-            chatMessage.isread = true;
-            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-        }
-
-        holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
-                        chatMessage.chatImage, 48 * 3, 48 * 3),
-                GetVolley.getmInstance(mContext).getImageLoader());
-
-        String time = Tool.FriendlyDate(chatMessage.create_time);
-        holder.chatTime.setText(time);
-        if (holder.chatUserName != null) {
-            holder.chatUserName.setText(chatMessage.userName);
-        }
-        if (!chatMessage.isread) {
-            chatMessage.isread = true;
-            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-        }
-        holder.voiceDuration.setText(String.valueOf((int) chatMessage.voice_duration) + " s");
-        holder.contantImageView.setVisibility(View.GONE);
-        holder.chatMessTextView.setVisibility(View.GONE);
-        holder.videoPlayButton.setVisibility(View.GONE);
-        holder.audioProgressBar.setVisibility(View.GONE);
-        holder.voiceDuration.setVisibility(View.GONE);
+        holder.setAllAdditionVisibilityGone();
+        /*根据不同消息类型确定元素是否显示*/
         switch (chatMessage.type) {
             case StaticField.ChatContantType.TEXT:
                 holder.chatMessTextView.setText(chatMessage.text);
@@ -127,6 +127,29 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 holder.chatMessTextView.setVisibility(View.VISIBLE);
                 break;
         }
+
+        /*设置已读*/
+        if (!chatMessage.isread) {
+            chatMessage.isread = true;
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        }
+        /*设置头像*/
+        holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
+                        chatMessage.chatImage, 48 * 3, 48 * 3),
+                GetVolley.getmInstance(mContext).getImageLoader());
+
+        String time = FriendTime.FriendlyDate(chatMessage.create_time);
+        holder.chatTime.setText(time);
+        if (holder.chatUserName != null) {
+            holder.chatUserName.setText(chatMessage.userName);
+        }
+        if (!chatMessage.isread) {
+            chatMessage.isread = true;
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        }
+        holder.voiceDuration.setText(String.valueOf((int) chatMessage.voice_duration) + " s");
+
+        /*播放按钮*/
         holder.videoPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,51 +169,45 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         });
     }
 
+    /**
+     * @return 聊天记录数
+     */
     @Override
     public int getItemCount() {
         return chatMessageList == null ? 0 : chatMessageList.size();
     }
 
+    /**
+     * 实现BaseViewHolder
+     */
     public static class OtherMessViewHolder extends BaseViewHolder {
         public OtherMessViewHolder(View v) {
             super(v);
-            userFaceImageView = (NetworkImageView) v.findViewById(R.id.chat_user_face);
-            chatMessTextView = (TextView) v.findViewById(R.id.chat_message);
-            chatUserName = (TextView) v.findViewById(R.id.chat_user_name);
-            chatTime = (TextView) v.findViewById(R.id.chat_message_time);
-            contantImageView = (NetworkImageView) v.findViewById(R.id.contactImageView);
-            videoPlayButton = (ImageButton) v.findViewById(R.id.vedio_play_button);
-            audioProgressBar = (ProgressBar) v.findViewById(R.id.audio_progressBar);
-            audioProgressBar.setIndeterminate(false);
-            audioProgressBar.setProgress(0);
-            voiceDuration = (TextView) v.findViewById(R.id.audio_duration);
-
+            findViewByID(v, StaticField.ChatFrom.OTHER);
         }
-
     }
 
+    /**
+     * 实现BaseViewHolder
+     */
     public static class MyMessViewHolder extends BaseViewHolder {
         public MyMessViewHolder(View v) {
             super(v);
-            userFaceImageView = (NetworkImageView) v.findViewById(R.id.chat_user_face);
-            chatMessTextView = (TextView) v.findViewById(R.id.chat_message);
-            chatUserName = null;
-            chatTime = (TextView) v.findViewById(R.id.chat_message_time);
-            contantImageView = (NetworkImageView) v.findViewById(R.id.contactImageView);
-            videoPlayButton = (ImageButton) v.findViewById(R.id.vedio_play_button);
-            audioProgressBar = (ProgressBar) v.findViewById(R.id.audio_progressBar);
-            audioProgressBar.setIndeterminate(false);
-            audioProgressBar.setProgress(0);
-            voiceDuration = (TextView) v.findViewById(R.id.audio_duration);
+            findViewByID(v, StaticField.ChatFrom.ME);
         }
-
     }
 
+    /**
+     * 新增或更新消息
+     * 将按照 create_time 插入正确的位置
+     *
+     * @param chatMessage 需要新增或更新的消息
+     */
     public void addOrUpdateMessage(ChatMessage chatMessage) {
         // TODO: 15/8/13 更好的方式查找消息
         int length = chatMessageList.size();
         long time = chatMessage.create_time;
-        int insertposition = length;
+        int insertPosition = length;
         for (int i = length - 1; i >= 0; i--) {
             ChatMessage tempchatMessage = chatMessageList.get(i);
             if (tempchatMessage.messID.compareTo(chatMessage.messID) == 0) {
@@ -199,14 +216,17 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return;
             }
             if (tempchatMessage.create_time > time) {
-                insertposition = i;
+                insertPosition = i;
             }
         }
         //todo 确认加载位置
-        chatMessageList.add(insertposition, chatMessage);
+        chatMessageList.add(insertPosition, chatMessage);
         notifyDataSetChanged();
     }
 
+    /**
+     * @return 返回最后未读的位置
+     */
     public int lastReadPosition() {
         int length = chatMessageList.size();
         int position = 0;

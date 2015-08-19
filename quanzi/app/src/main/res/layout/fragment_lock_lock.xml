@@ -4,23 +4,13 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.fragment.main.LockLock">
 
-    <LinearLayout
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/dyns_item_recycler_view"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/statue_bar_top_padding">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LockLock" />
-
-        <Button
-            android:id="@+id/getDyn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="get动态" />
-
-    </LinearLayout>
+        android:layout_height="fill_parent">
+        
+    </android.support.v7.widget.RecyclerView>
 
 
 </FrameLayout>

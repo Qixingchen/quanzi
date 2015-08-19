@@ -39,7 +39,7 @@ public class LockLock extends Fragment {
         getDynBytton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QuaryDynamic.getInstance().getDynamic();
+                QuaryDynamic.getInstance().getQuanZiDynamic();
             }
         });
         return view;

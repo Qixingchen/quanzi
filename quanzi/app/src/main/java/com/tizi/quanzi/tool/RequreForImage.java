@@ -132,17 +132,11 @@ public class RequreForImage {
         // Create an image file name
         String imageFileName = String.valueOf(new Date().getTime() / 1000) + ".jpg";
 
-//        File file = new File(mActivity.getExternalCacheDir().getAbsolutePath()
-//                + "/image/" + App.getUserID(), imageFileName);
-//
-//
-//        if (!file.getParentFile().exists()) {
-//            file.getParentFile().mkdirs();
-//        }
-//        photoTakenUri = file.getAbsolutePath();
-
-
-        File storageDir = mActivity.getExternalCacheDir();
+        String Dirpath = mActivity.getExternalCacheDir().getAbsolutePath() + "/image/" + App.getUserID();
+        File storageDir = new File(Dirpath);
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
         File image = null;
         try {
             image = File.createTempFile(
@@ -152,6 +146,7 @@ public class RequreForImage {
             );
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
         photoTakenUri = image.getAbsolutePath();
         return image;

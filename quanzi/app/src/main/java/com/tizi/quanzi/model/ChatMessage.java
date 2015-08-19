@@ -1,5 +1,6 @@
 package com.tizi.quanzi.model;
 
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.Tool;
 
 /**
@@ -34,7 +35,7 @@ public class ChatMessage {
                 ", chatImage='" + chatImage + '\'' +
                 ", userName='" + userName + '\'' +
                 ", groupID='" + groupID + '\'' +
-                ", create_time=" + create_time + "  " + Tool.timeStringFromUNIX(create_time) +
+                ", create_time=" + create_time + "  " + FriendTime.timeStringFromUNIX(create_time) +
                 ", receiptTimestamp=" + receiptTimestamp +
                 ", isread=" + isread +
                 ", isSelfSend=" + isSelfSend +

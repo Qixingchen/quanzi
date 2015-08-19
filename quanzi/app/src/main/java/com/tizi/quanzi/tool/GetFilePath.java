@@ -1,5 +1,6 @@
 package com.tizi.quanzi.tool;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
@@ -9,13 +10,15 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresPermission;
 
 /**
  * Created by qixingchen on 15/7/20.
- *
+ * <p/>
  * Get a file path from a Uri. This will get the the path for Storage Access
  * Framework Documents, as well as the _data field for the MediaStore and
  * other file-based ContentProviders.
+ *
  * @author paulburke
  */
 public class GetFilePath {
@@ -65,7 +68,7 @@ public class GetFilePath {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -88,12 +91,13 @@ public class GetFilePath {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
+    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 
@@ -110,10 +114,13 @@ public class GetFilePath {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (cursor != null)
                 cursor.close();
         }
+
         return null;
     }
 

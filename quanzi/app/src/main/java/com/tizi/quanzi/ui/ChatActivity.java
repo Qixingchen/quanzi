@@ -207,7 +207,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
         //adapt
-        conversation.queryMessages(QueryLimit, avimMessagesQueryCallback);
+        //不再检索消息，不知道会不会有问题
+        //conversation.queryMessages(QueryLimit, avimMessagesQueryCallback);
         List<ChatMessage> chatMessageList =
                 DBAct.getInstance().queryMessage(CONVERSATION_ID);
         chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);
@@ -222,7 +223,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        LastPosition = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
+        LastPosition = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
 
     }
 

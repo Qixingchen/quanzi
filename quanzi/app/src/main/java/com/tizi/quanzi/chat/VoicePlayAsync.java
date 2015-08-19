@@ -17,7 +17,7 @@ import java.io.IOException;
 public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
 
     private ChatMessage chatMessage;
-    private BaseViewHolder holder;
+    public BaseViewHolder holder;
     private int voiceSecondMuL10;
     private VoicePlayAsync mInstance = this;
     private Context context;
@@ -47,10 +47,12 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        player.start();
         for (int i = 0; i < voiceSecondMuL10; i++) {
             publishProgress(i);
             if (isCancelled()) {
+                player.stop();
+                player.release();
                 return 1;
             }
             try {
@@ -68,9 +70,6 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
     @Override
     protected void onPostExecute(Integer i) {
         super.onPostExecute(i);
-        if (i == 1) {
-            player.stop();
-        }
         holder.audioProgressBar.setProgress(0);
         player.release();
     }
@@ -80,9 +79,6 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         for (int i : values) {
-            if (i == 0) {
-                player.start();
-            }
             holder.audioProgressBar.setProgress(i);
         }
 

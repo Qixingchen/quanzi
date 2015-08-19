@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.util.DisplayMetrics;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -46,5 +47,33 @@ public class Tool {
 
         return imagePixel;
     }
+
+    private static int daysOfTwo(Date originalDate, Date compareDateDate) {
+        Calendar aCalendar = Calendar.getInstance();
+        aCalendar.setTime(originalDate);
+        int originalDay = aCalendar.get(Calendar.DAY_OF_YEAR);
+        aCalendar.setTime(compareDateDate);
+        int compareDay = aCalendar.get(Calendar.DAY_OF_YEAR);
+
+        return originalDay - compareDay;
+    }
+
+    public static String FriendlyDate(long timestamp) {
+        Date nowDate = new Date();
+        Date compareDate = new Date(timestamp);
+        int dayDiff = daysOfTwo(nowDate, compareDate);
+        String ans = "";
+
+        if (dayDiff == 1) {
+            ans += "昨日";
+        } else if (dayDiff == 2) {
+            ans += "前日";
+        } else {
+            ans += new SimpleDateFormat("M月d日", Locale.CHINESE).format(compareDate);
+        }
+        ans += new SimpleDateFormat(" HH:mm:ss", Locale.CHINESE).format(compareDate);
+        return ans;
+    }
+
 
 }

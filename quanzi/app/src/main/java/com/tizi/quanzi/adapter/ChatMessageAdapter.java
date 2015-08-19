@@ -30,10 +30,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public List<ChatMessage> chatMessageList;
     private Context mContext;
-
-    protected static final int STOP = 0x10000;
-    protected static final int NEXT = 0x10001;
-    private int iCount = 0;
     private VoicePlayAsync voicePlayAsync;
 
     @Override
@@ -75,11 +71,18 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void onBindViewHolder(final BaseViewHolder holder, int position) {
         //todo 赋值在这里
         final ChatMessage chatMessage = chatMessageList.get(position);
+
+        //设置已读
+        if (!chatMessage.isread) {
+            chatMessage.isread = true;
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        }
+
         holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
                         chatMessage.chatImage, 48 * 3, 48 * 3),
                 GetVolley.getmInstance(mContext).getImageLoader());
 
-        String time = Tool.timeStringFromUNIX(chatMessage.create_time);
+        String time = Tool.FriendlyDate(chatMessage.create_time);
         holder.chatTime.setText(time);
         if (holder.chatUserName != null) {
             holder.chatUserName.setText(chatMessage.userName);
@@ -130,7 +133,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 if (voicePlayAsync == null) {
                     voicePlayAsync = new VoicePlayAsync();
                 } else {
-                    voicePlayAsync.cancel(false);
+                    voicePlayAsync.holder.audioProgressBar.setProgress(0);
+                    voicePlayAsync.cancel(true);
+                    voicePlayAsync = new VoicePlayAsync();
                 }
 
                 voicePlayAsync.setContext(mContext)

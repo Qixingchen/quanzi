@@ -132,16 +132,14 @@ public class RequreForImage {
         // Create an image file name
         String imageFileName = String.valueOf(new Date().getTime() / 1000) + ".jpg";
 
-        File file = new File(mActivity.getExternalCacheDir().getAbsolutePath()
-                + "/image/" + App.getUserID(), imageFileName);
-
-
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-
-
-        photoTakenUri = file.getAbsolutePath();
+//        File file = new File(mActivity.getExternalCacheDir().getAbsolutePath()
+//                + "/image/" + App.getUserID(), imageFileName);
+//
+//
+//        if (!file.getParentFile().exists()) {
+//            file.getParentFile().mkdirs();
+//        }
+//        photoTakenUri = file.getAbsolutePath();
 
 
         File storageDir = mActivity.getExternalCacheDir();
@@ -160,10 +158,22 @@ public class RequreForImage {
     }
 
     public String FilePathFromIntent(Intent data) {
+
+        String FilePath;
         if (data.getData() == null) {
-            return photoTakenUri;
+            FilePath = photoTakenUri;
+        } else {
+            FilePath = GetFilePath.getPath(mActivity, data.getData());
         }
-        return GetFilePath.getPath(mActivity, data.getData());
+        if (ZipPic.getSize(FilePath) < 150 * 1024) {
+            return FilePath;
+        }
+
+        boolean compass = true;
+        if (compass) {
+            FilePath = ZipPic.saveMyBitmap(mActivity, ZipPic.compressBySize(FilePath, 960), 50);
+        }
+        return FilePath;
     }
 
 }

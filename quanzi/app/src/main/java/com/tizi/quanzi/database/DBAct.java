@@ -12,6 +12,7 @@ import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 /**
@@ -129,12 +130,31 @@ public class DBAct {
         else {
             if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.GROUP) {
                 chatMessage.From = StaticField.ChatFrom.OTHER;
-            }else {
+            } else {
                 chatMessage.From = StaticField.ChatFrom.OTHER;
             }
         }
 
 
+        return chatMessage;
+    }
+
+    @Nullable
+    public ChatMessage queryMessageByID(String messID) {
+        Cursor chatMessageCursor = db.query(
+                DataBaseHelper.chatHistorySQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.messID + "=?",//条件
+                new String[]{messID},//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        chatMessageCursor.moveToFirst();
+        ChatMessage chatMessage = null;
+        if (chatMessageCursor.getCount() == 1) {
+            chatMessage = chatMessageFromCursor(chatMessageCursor);
+        }
         return chatMessage;
     }
 
@@ -165,7 +185,18 @@ public class DBAct {
 
     //增加或更新
     public void addOrReplaceChatMessage(ChatMessage chatMessage) {
+
         ContentValues content = new ContentValues();
+        ChatMessage oldChatMess = queryMessageByID(chatMessage.messID);
+        if (oldChatMess != null) {
+            if (chatMessage.isread) {
+                content.put(DataBaseHelper.chatHistorySQLName.isread, true);
+            } else {
+                content.put(DataBaseHelper.chatHistorySQLName.isread, oldChatMess.isread);
+            }
+        } else {
+            content.put(DataBaseHelper.chatHistorySQLName.isread, chatMessage.isread);
+        }
         content.put(DataBaseHelper.chatHistorySQLName.messID, chatMessage.messID);
         content.put(DataBaseHelper.chatHistorySQLName.ConversationId, chatMessage.ConversationId);
         content.put(DataBaseHelper.chatHistorySQLName.uid, chatMessage.uid);
@@ -176,7 +207,7 @@ public class DBAct {
         content.put(DataBaseHelper.chatHistorySQLName.local_path, chatMessage.local_path);
         content.put(DataBaseHelper.chatHistorySQLName.url, chatMessage.url);
         content.put(DataBaseHelper.chatHistorySQLName.voice_duration, chatMessage.voice_duration);
-        content.put(DataBaseHelper.chatHistorySQLName.isread, chatMessage.isread);
+
         content.put(DataBaseHelper.chatHistorySQLName.status, chatMessage.status);
         content.put(DataBaseHelper.chatHistorySQLName.receiptTimestamp, chatMessage.receiptTimestamp);
         content.put(DataBaseHelper.chatHistorySQLName.isSelfSend_ioType, chatMessage.isSelfSend);

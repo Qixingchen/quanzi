@@ -75,8 +75,7 @@ public class QuaryDynamic {
     public QuaryDynamic getDynamic() {
 
         Map<String, String> quaryDynmicPara = new TreeMap<>();
-        quaryDynmicPara.put("account", App.getUserPhone());
-        quaryDynmicPara.put("id", App.getUserID());
+        quaryDynmicPara.put("userid", App.getUserID());
 
         GetVolley.getmInstance(mContext).setOKListener(mOKListener).
                 setErrorListener(mErrorListener)

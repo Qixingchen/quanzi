@@ -7,10 +7,15 @@ import android.os.Parcelable;
 import com.tizi.quanzi.gson.Login;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by qixingchen on 15/7/16.
+ * 组群
+ * 对应 Gson
+ *
+ * @see com.tizi.quanzi.gson.Group
  */
 public class GroupClass implements Parcelable {
     public String groupName;
@@ -18,13 +23,36 @@ public class GroupClass implements Parcelable {
     public String groupID;
     public String groupType;
 
-    public static GroupClass[] getGroupByEntity(List<Login.GroupEntity> groupEntityList) {
-        int length = groupEntityList.size();
-        GroupClass[] groupClasses = new GroupClass[length];
-        for (int i = 0; i < length; i++) {
-            groupClasses[i] = getGroupByEntity(groupEntityList.get(i));
+    /**
+     * 将 List<Login.GroupEntity> 转换为 ArrayList<GroupClass>
+     *
+     * @param groupEntityList 须转换的 List<Login.GroupEntity>
+     *
+     * @return 转换完成的 ArrayList<GroupClass>
+     */
+    public static ArrayList<GroupClass> getGroupArrayListByEntityList(
+            List<Login.GroupEntity> groupEntityList) {
+        ArrayList<GroupClass> groupClassArrayList = new ArrayList<>();
+        for (Login.GroupEntity groupEntity : groupEntityList) {
+            groupClassArrayList.add(GroupClass.getGroupByEntity(groupEntity));
         }
-        return groupClasses;
+        return groupClassArrayList;
+    }
+
+    /**
+     * 将 Login.GroupEntity 转换为 GroupClass
+     *
+     * @param groupEntity 须转换的 Login.GroupEntity
+     *
+     * @return 转换完成的 GroupClass
+     */
+    public static GroupClass getGroupByEntity(Login.GroupEntity groupEntity) {
+        GroupClass groupClass = new GroupClass();
+        groupClass.groupID = groupEntity.getId();
+        groupClass.groupName = groupEntity.getGroupName();
+        groupClass.groupFace = Uri.parse(groupEntity.getIcon());
+        groupClass.groupType = groupEntity.getType();
+        return groupClass;
     }
 
     public GroupClass(String groupName, Uri groupFace, String groupID, String groupType) {
@@ -34,14 +62,6 @@ public class GroupClass implements Parcelable {
         this.groupType = groupType;
     }
 
-    public static GroupClass getGroupByEntity(Login.GroupEntity groupEntity){
-        GroupClass groupClass = new GroupClass();
-        groupClass.groupID = groupEntity.getId();
-        groupClass.groupName = groupEntity.getGroupName();
-        groupClass.groupFace = Uri.parse(groupEntity.getIcon());
-        groupClass.groupType = groupEntity.getType();
-        return groupClass;
-    }
 
     @Override
     public int describeContents() {
@@ -75,4 +95,6 @@ public class GroupClass implements Parcelable {
             return new GroupClass[size];
         }
     };
+
+
 }

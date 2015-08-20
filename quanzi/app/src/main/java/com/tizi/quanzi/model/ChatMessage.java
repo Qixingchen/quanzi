@@ -6,6 +6,9 @@ import com.tizi.quanzi.tool.Tool;
 /**
  * Created by qixingchen on 15/8/12.
  * 聊天信息
+ * 转换
+ *
+ * @see com.tizi.quanzi.chat.ChatMessFormatFromAVIM
  */
 public class ChatMessage {
 

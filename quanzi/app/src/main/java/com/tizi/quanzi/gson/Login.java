@@ -3,11 +3,11 @@ package com.tizi.quanzi.gson;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by qixingchen on 15/7/21.
+ * 登陆
  */
 public class Login {
 
@@ -228,4 +228,5 @@ public class Login {
             return mobile;
         }
     }
+
 }

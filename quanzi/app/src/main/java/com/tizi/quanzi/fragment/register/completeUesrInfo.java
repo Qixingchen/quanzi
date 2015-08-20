@@ -23,6 +23,9 @@ import com.tizi.quanzi.tool.RequreForImage;
 
 import java.io.IOException;
 
+/**
+ * 用户填写个人信息界面
+ **/
 public class CompleteUesrInfo extends Fragment {
 
     private Activity mActivity;
@@ -40,6 +43,11 @@ public class CompleteUesrInfo extends Fragment {
 
     private AllDone allDone;
 
+    /**
+     * 全部完成回调
+     *
+     * @see com.tizi.quanzi.fragment.register.CompleteUesrInfo.AllDone
+     */
     public void setAllDone(AllDone allDone) {
         this.allDone = allDone;
     }
@@ -93,19 +101,35 @@ public class CompleteUesrInfo extends Fragment {
      * 本界面完成回调借口
      */
     public interface AllDone {
+        /**
+         * @param userName 用户昵称
+         * @param sex      性别
+         * @param faceUri  头像
+         */
         void CompUserInfoOK(String userName, int sex, String faceUri);
     }
 
+    /**
+     * Intent回调
+     *
+     * @param requestCode 请求码
+     * @param resultCode  结果码（是否完成）
+     * @param data        数据
+     */
     public void onIntentResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            String filePath = requreForImage.FilePathFromIntent(data);
+            String filePath = requreForImage.ZipedFilePathFromIntent(data);
             if (filePath != null) {
                 savePhoto(filePath);
             }
         }
     }
 
-
+    /**
+     * 将图片储存到LeanCloud
+     *
+     * @param filepath 图片地址
+     */
     private void savePhoto(String filepath) {
         AVFile file = null;
         try {

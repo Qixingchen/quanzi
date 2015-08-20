@@ -70,6 +70,12 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 注册第一步完成（手机验证）
+     * 跳转第二界面
+     *
+     * @param phoneNumber 用户手机号
+     */
     @Override
     public void register1stepOK(String phoneNumber) {
         this.phoneNumber = phoneNumber;
@@ -80,6 +86,12 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
                 .replace(R.id.register_fragment, register2stepFragment).commit();
     }
 
+    /**
+     * 注册第2步完成（密码）
+     * 跳转补全
+     *
+     * @param password 用户密码
+     */
     @Override
     public void regi2StepOK(String password) {
         this.password = password;
@@ -89,6 +101,13 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
                 .replace(R.id.register_fragment, completeUesrInfo).commit();
     }
 
+    /**
+     * 注册补全完成（用户信息）
+     *
+     * @param userName 用户昵称
+     * @param sex      性别
+     * @param faceUri  头像
+     */
     @Override
     public void CompUserInfoOK(String userName, int sex, String faceUri) {
         Response.Listener<String> listener = new Response.Listener<String>() {
@@ -109,6 +128,11 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
         GetVolley.getmInstance(this, listener).addPostRequestWithSign(Request.Method.POST, baseuri, para);
     }
 
+    /**
+     * 选图 拍照返回值
+     *
+     * @see CompleteUesrInfo.onIntentResult
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         completeUesrInfo.onIntentResult(requestCode, resultCode, data);

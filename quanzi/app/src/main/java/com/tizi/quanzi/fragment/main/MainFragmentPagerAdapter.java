@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 /**
  * Created by qixingchen on 15/7/13.
+ * 主界面 FragmentPagerAdapter
  */
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
@@ -20,11 +21,19 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
         this.context = context;
     }
 
+    /**
+     * @return page个数
+     */
     @Override
     public int getCount() {
         return PAGE_COUNT;
     }
 
+    /**
+     * @param position 需要Fragment的位置
+     *
+     * @return Fragment 新实例
+     */
     @Override
     public Fragment getItem(int position) {
         switch (position) {
@@ -44,6 +53,11 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
     }
 
+    /**
+     * @param position 需要标题的位置
+     *
+     * @return 标题
+     */
     @Override
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position

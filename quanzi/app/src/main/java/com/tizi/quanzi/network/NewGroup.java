@@ -19,6 +19,10 @@ import java.util.TreeMap;
 
 /**
  * Created by qixingchen on 15/8/17.
+ * 请求一个新群
+ *
+ * @see GroupClass
+ * @see Group
  */
 public class NewGroup {
     private static NewGroup mInstance;
@@ -84,6 +88,15 @@ public class NewGroup {
         };
     }
 
+    /**
+     * 创建一个群
+     *
+     * @param GroupName 群名
+     * @param icon      群头像
+     * @param notice    群公告
+     * @param userID    创建者 todo 去掉
+     * @param tag       群标签
+     */
     public void NewGroup(String GroupName, String icon, String notice, String userID, String tag) {
 
         groupname = GroupName;
@@ -106,6 +119,14 @@ public class NewGroup {
     }
 
     public interface NewGroupListener {
+        /**
+         * 成功回调
+         *
+         * @param groupClass 刚刚创建的群信息
+         *
+         * @see GroupClass
+         * @see Group
+         */
         void onOK(GroupClass groupClass);
 
         void onError();

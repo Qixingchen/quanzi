@@ -106,9 +106,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 int[] imagePix = Tool.getImagePixel(mContext,
                         chatMessage.imageHeight, chatMessage.imageWeight);
                 holder.contantImageView.getLayoutParams().height = imagePix[0];
-                holder.contantImageView.getLayoutParams().height = imagePix[1];
+                holder.contantImageView.getLayoutParams().width = imagePix[1];
                 holder.contantImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
-                                chatMessage.url, 800 * 3, 300 * 3),
+                                chatMessage.url, imagePix[0], imagePix[1]),
                         GetVolley.getmInstance(mContext).getImageLoader());
                 holder.contantImageView.setVisibility(View.VISIBLE);
                 break;

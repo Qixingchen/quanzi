@@ -113,6 +113,9 @@ public class GroupChatList extends Fragment {
         super.onDetach();
     }
 
+    /**
+     * 主界面点击新建群后调用这里
+     */
     public void newAGroup() {
         // TODO: 15/8/20 创建群
         String GroupName = "xingchen test2", icon = "http://ac-hy5srahi.clouddn.com/2j5dU2E1dvXcVD1TKPmgNBC.jpeg";

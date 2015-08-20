@@ -81,6 +81,9 @@ public class QuaryDynamic {
         ;
     }
 
+    /**
+     * 查询圈子类所有人的动态
+     */
     public QuaryDynamic getQuanZiDynamic() {
 
         Map<String, String> quaryDynmicPara = new TreeMap<>();
@@ -94,6 +97,11 @@ public class QuaryDynamic {
     }
 
     public interface QuaryDynamicListener {
+        /**
+         * 成功回调
+         *
+         * @param dyns 动态信息
+         */
         void onOK(Dyns dyns);
 
         void onError();

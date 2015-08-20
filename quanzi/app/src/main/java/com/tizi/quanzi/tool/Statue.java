@@ -2,6 +2,7 @@ package com.tizi.quanzi.tool;
 
 /**
  * Created by qixingchen on 15/7/20.
+ * 开发调试开关
  */
 public class Statue {
     public final static class IsDebug {

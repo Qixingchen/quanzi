@@ -18,8 +18,7 @@ import android.support.annotation.RequiresPermission;
  * Get a file path from a Uri. This will get the the path for Storage Access
  * Framework Documents, as well as the _data field for the MediaStore and
  * other file-based ContentProviders.
- *
- * @author paulburke
+ * 从uri获取文件本地位置
  */
 public class GetFilePath {
 
@@ -95,6 +94,7 @@ public class GetFilePath {
      * @param uri           The Uri to query.
      * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
+     *
      * @return The value of the _data column, which is typically a file path.
      */
     @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -127,6 +127,7 @@ public class GetFilePath {
 
     /**
      * @param uri The Uri to check.
+     *
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
     public static boolean isExternalStorageDocument(Uri uri) {
@@ -135,6 +136,7 @@ public class GetFilePath {
 
     /**
      * @param uri The Uri to check.
+     *
      * @return Whether the Uri authority is DownloadsProvider.
      */
     public static boolean isDownloadsDocument(Uri uri) {
@@ -143,6 +145,7 @@ public class GetFilePath {
 
     /**
      * @param uri The Uri to check.
+     *
      * @return Whether the Uri authority is MediaProvider.
      */
     public static boolean isMediaDocument(Uri uri) {

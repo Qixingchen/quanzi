@@ -19,7 +19,7 @@ import com.tizi.quanzi.tool.Statue;
 
 
 /**
- * A placeholder fragment containing a simple view.
+ * 注册界面第1步
  */
 public class Register1stepFragment extends Fragment {
 
@@ -28,6 +28,13 @@ public class Register1stepFragment extends Fragment {
     private Activity mActivity;
     private NextStep nextStep;
 
+    /**
+     * 设置下一步监听器
+     *
+     * @param nextStep
+     *
+     * @see com.tizi.quanzi.fragment.register.Register1stepFragment.NextStep
+     */
     public void setNextStep(NextStep nextStep) {
         this.nextStep = nextStep;
     }
@@ -124,6 +131,9 @@ public class Register1stepFragment extends Fragment {
     }
 
     public interface NextStep {
+        /**
+         * @param phoneNumber 用户手机号
+         */
         void register1stepOK(String phoneNumber);
     }
 }

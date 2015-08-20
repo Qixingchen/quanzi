@@ -14,54 +14,34 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/7/21.
+ * 主界面唤起
  */
 public class StartMainActivity {
 
+    /**
+     * 使用 groupEntityList 唤起主界面
+     * <p/>
+     * Intent: group : ArrayList<GroupClass>
+     *
+     * @param groupEntityList GroupEntity 的List
+     * @param context         上下文
+     *
+     * @see com.tizi.quanzi.gson.Login.GroupEntity
+     */
     public static void startByLoginGroup(List<Login.GroupEntity> groupEntityList, Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        //todo use getGroupByEntity
 
         Bundle bundle = new Bundle();
 
-        ArrayList<GroupClass> groupClassArrayList = new ArrayList<>();
-        for (Login.GroupEntity groupEntity : groupEntityList) {
-            groupClassArrayList.add(getGroupClassFromLoginGroup(groupEntity));
-        }
-
+        ArrayList<GroupClass> groupClassArrayList = GroupClass.
+                getGroupArrayListByEntityList(groupEntityList);
 
         bundle.putParcelableArrayList("group", groupClassArrayList);
         intent.putExtras(bundle);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
 
-//        int length = groupEntityList.size();
-//
-//        String[] ids = new String[length];
-//        String[] icons = new String[length];
-//        String[] groupNames = new String[length];
-//        String[] types = new String[length];
-//
-//        for (int i = 0; i < length; i++) {
-//            ids[i] = groupEntityList.get(i).getId();
-//            icons[i] = groupEntityList.get(i).getIcon();
-//            groupNames[i] = groupEntityList.get(i).getGroupName();
-//            types[i] = groupEntityList.get(i).getType();
-//        }
-//        intent.putExtra("groupids", ids);
-//        intent.putExtra("groupicons", icons);
-//        intent.putExtra("groupgroupNames", groupNames);
-//        intent.putExtra("grouptypes", types);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startActivity(intent);
     }
 
-    private static GroupClass getGroupClassFromLoginGroup(Login.GroupEntity groupEntity) {
-        GroupClass groupClass = new GroupClass();
-        groupClass.groupFace = Uri.parse(groupEntity.getIcon());
-        groupClass.groupID = groupEntity.getId();
-        groupClass.groupName = groupEntity.getGroupName();
-        groupClass.groupType = groupEntity.getType();
-        return  groupClass;
-    }
 
 }

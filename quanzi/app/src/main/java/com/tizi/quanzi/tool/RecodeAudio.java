@@ -14,6 +14,8 @@ import java.util.Date;
 
 /**
  * Created by qixingchen on 15/8/17.
+ * 录音
+ * 必须调用 release
  */
 public class RecodeAudio {
 
@@ -29,6 +31,9 @@ public class RecodeAudio {
         recorder = new MediaRecorder();
     }
 
+    /**
+     * 开始录音
+     */
     public boolean start() {
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -55,6 +60,11 @@ public class RecodeAudio {
         return false;
     }
 
+    /**
+     * 停止录音并返回录音地址
+     *
+     * @return 录音地址
+     */
     @Nullable
     public String stopAndReturnFilePath() {
         try {
@@ -70,6 +80,9 @@ public class RecodeAudio {
         }
     }
 
+    /**
+     * 释放资源
+     */
     public void release() {
         recorder.release();
     }

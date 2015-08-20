@@ -15,13 +15,18 @@ import android.widget.Button;
 import com.tizi.quanzi.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ * 注册界面第2步
  */
 public class Register2stepFragment extends Fragment {
 
     private Activity mActivity;
     private NextStep nextStep;
 
+    /**
+     * @param nextStep 设置NextStep
+     *
+     * @see com.tizi.quanzi.fragment.register.Register2stepFragment.NextStep
+     */
     public void setNextStep(NextStep nextStep) {
         this.nextStep = nextStep;
     }
@@ -85,7 +90,11 @@ public class Register2stepFragment extends Fragment {
         });
     }
 
+    /*点击下一步的接口*/
     public interface NextStep {
+        /**
+         * @param password 用户输入的密码
+         */
         void regi2StepOK(String password);
     }
 }

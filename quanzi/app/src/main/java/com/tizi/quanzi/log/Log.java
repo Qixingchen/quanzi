@@ -2,6 +2,7 @@ package com.tizi.quanzi.log;
 
 /**
  * Created by qixingchen on 15/7/13.
+ * 注释类
  */
 public class Log {
 

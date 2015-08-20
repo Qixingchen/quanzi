@@ -98,10 +98,13 @@ public class App extends Application {
         UserToken = preferences.getString(StaticField.TokenPreferences.USERTOKEN, "");
         UserPhone = preferences.getString(StaticField.TokenPreferences.USERPHONE, "");
         application = this;
+
+
+//        AVAnalytics.setAnalyticsEnabled(false);
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
-        //AVAnalytics.enableCrashReport(this, true);
-        AVAnalytics.setAnalyticsEnabled(false);
+        AVAnalytics.enableCrashReport(this, true);
+
 
         AVIMClient.setClientEventHandler(new MyAVIMClientEventHandler());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());

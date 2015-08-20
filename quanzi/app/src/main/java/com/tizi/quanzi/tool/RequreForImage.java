@@ -23,6 +23,7 @@ import java.util.Date;
 
 /**
  * Created by qixingchen on 15/8/14.
+ * 拍照或者选取图片
  */
 public class RequreForImage {
 
@@ -39,6 +40,8 @@ public class RequreForImage {
 
     /**
      * 显示选择对话框
+     *
+     * @param Title 对话框标题
      */
     public void showDialogAndCallIntent(String Title) {
 
@@ -90,8 +93,10 @@ public class RequreForImage {
 
     /**
      * todo 裁剪图片方法实现
+     *
+     * @param uri 图片地址
      */
-
+    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public void startPhotoZoom(Uri uri) {
 
         Intent intent = new Intent("com.android.camera.action.CROP");
@@ -116,17 +121,10 @@ public class RequreForImage {
     }
 
     /**
-     * todo 保存裁剪之后的图片数据
+     * 根据用户ID和时间建立临时图片
+     *
+     * @return 创建的文件
      */
-    public void getImageToView(Intent data) {
-        Bundle extras = data.getExtras();
-        if (extras != null) {
-            Bitmap photo = extras.getParcelable("data");
-            Drawable drawable = new BitmapDrawable(photo);
-            //todo 提交图像
-        }
-    }
-
     @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private File createImageFile() {
         // Create an image file name
@@ -152,7 +150,12 @@ public class RequreForImage {
         return image;
     }
 
-    public String FilePathFromIntent(Intent data) {
+    /**
+     * 获取本地图片并压缩
+     *
+     * @param data 图片信息
+     */
+    public String ZipedFilePathFromIntent(Intent data) {
 
         String FilePath;
         if (data.getData() == null) {

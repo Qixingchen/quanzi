@@ -22,6 +22,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.AutoLogin;
+import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -41,7 +42,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        AutoLogin.getInstance().makeOKListener().makeErrorListener().login();
+        //分析GCM分布
+        GetGMSStatue.haveGCM(this);
+        AutoLogin.getInstance().loginFromPrefer();
         this.newaccount = (TextView) findViewById(R.id.new_account);
         this.passwordInputLayout = (TextInputLayout) findViewById(R.id.passwordInputLayout);
         this.phoneNumberInputLayout = (TextInputLayout) findViewById(R.id.phoneNumberInputLayout);
@@ -91,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                 String password = passwordEditText.getText().toString();
                 AutoLogin.getInstance().setmOKListener(mOKListener).
                         setmErrorListener(mErrorListener).
-                        login(GetPassword.preHASH(password));
+                        loginFromPrePassword(GetPassword.preHASH(password));
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {

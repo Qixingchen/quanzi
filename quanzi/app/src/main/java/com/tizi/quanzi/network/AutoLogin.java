@@ -21,6 +21,8 @@ import java.util.TreeMap;
 
 /**
  * Created by qixingchen on 15/7/23.
+ * 登陆
+ * todo 获取本地ts与服务器的差
  */
 public class AutoLogin {
     private static Context mContext;
@@ -45,19 +47,32 @@ public class AutoLogin {
         AutoLogin.mContext = mContext;
         preferences = mContext.getSharedPreferences(
                 StaticField.TokenPreferences.TOKENFILE, Context.MODE_PRIVATE);
+        makeErrorListener();
+        makeOKListener();
     }
 
-    public boolean login() {
+    /**
+     * 从 本地偏好加载密码登陆
+     *
+     * @return 登陆是否成功
+     */
+    public boolean loginFromPrefer() {
         String password = preferences.getString(StaticField.TokenPreferences.PASSWORD, "");
         assert password != null;
         if (password.compareTo("") == 0) {
             return false;
         }
-        login(password);
+        loginFromPrePassword(password);
         return true;
     }
 
-    public void login(String password) {
+    /**
+     * 使用预加密的密码登陆
+     * 账号来自  App.getUserPhone()
+     *
+     * @see GetPassword
+     */
+    public void loginFromPrePassword(String password) {
         Map<String, String> loginPara = new TreeMap<>();
         loginPara.put("account", App.getUserPhone());
         if (App.getUserPhone().compareTo("1") == 0) {
@@ -74,7 +89,8 @@ public class AutoLogin {
                         mContext.getString(R.string.testbaseuri) + "/applogin/loginF", loginPara);
     }
 
-    public AutoLogin makeErrorListener() {
+
+    private AutoLogin makeErrorListener() {
         mErrorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -84,7 +100,7 @@ public class AutoLogin {
         return mInstance;
     }
 
-    public AutoLogin makeOKListener() {
+    private AutoLogin makeOKListener() {
         AutoLogin.mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -101,6 +117,13 @@ public class AutoLogin {
         return mInstance;
     }
 
+    /**
+     * 设置用户信息（APP的更新）
+     *
+     * @param phone 用户手机号
+     * @param ID    userID
+     * @param Token userToken
+     */
     public static AutoLogin setUserInfo(String phone, String ID, String Token) {
         App.setUserToken(Token);
         App.setUserID(ID);
@@ -109,12 +132,25 @@ public class AutoLogin {
         App.getNewImClient(ID);
         return mInstance;
     }
+// TODO: 15/8/20 更换为回调接口
 
+    /**
+     * 设置成功监听器
+     *
+     * @param mOKListener Response.Listener
+     */
+    @Deprecated
     public AutoLogin setmOKListener(Response.Listener<String> mOKListener) {
         AutoLogin.mOKListener = mOKListener;
         return mInstance;
     }
 
+    /**
+     * 设置失败监听器
+     *
+     * @param mErrorListener Response.ErrorListener
+     */
+    @Deprecated
     public AutoLogin setmErrorListener(Response.ErrorListener mErrorListener) {
         AutoLogin.mErrorListener = mErrorListener;
         return mInstance;

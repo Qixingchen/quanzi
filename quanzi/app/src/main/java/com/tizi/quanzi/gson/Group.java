@@ -4,6 +4,11 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/8/17.
+ * 群组
+ * <p/>
+ * 对应 model
+ *
+ * @see com.tizi.quanzi.model.GroupClass
  */
 public class Group {
 

@@ -37,18 +37,6 @@ public class LockLock extends Fragment {
         return mInstance;
     }
 
-    public static LockLock getInstance() {
-        if (mInstance == null) {
-            synchronized (LockLock.class) {
-                if (mInstance == null) {
-                    mInstance = new LockLock();
-                }
-            }
-        }
-        return mInstance;
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tizi.quanzi.app.App;
@@ -47,6 +48,7 @@ public class DBAct {
     /**
      * 根据 ConversationId 查询所有聊天记录
      * 按照时间排序
+     * 没有则返回空List
      *
      * @param ConversationId ConversationId
      *
@@ -55,6 +57,7 @@ public class DBAct {
      * @see com.avos.avoscloud.im.v2.AVIMConversation
      * @see ChatMessage
      */
+    @NonNull
     public List<ChatMessage> queryMessage(String ConversationId) {
         Cursor chatMessageCursor = db.query(
                 DataBaseHelper.chatHistorySQLName.TableName,//table name
@@ -186,6 +189,15 @@ public class DBAct {
         return chatMessage;
     }
 
+    /**
+     * 查询 ConversationId 在数据库中最旧的 ChatMessage
+     *
+     * @param ConversationId ConversationId
+     *
+     * @return ChatMessage
+     *
+     * @see ChatMessage
+     */
     @Nullable
     public ChatMessage queryOldestMessage(String ConversationId) {
         Cursor chatMessageCursor = db.query(
@@ -212,6 +224,15 @@ public class DBAct {
 
 
     /*增加或更新*/
+
+    /**
+     * 添加或更新 chatMessage
+     * 如果 chatMessage.isread 则更新这个项目，否则不更新
+     *
+     * @param chatMessage 需要添加／更新的 ChatMessage
+     *
+     * @see ChatMessage
+     */
     public void addOrReplaceChatMessage(ChatMessage chatMessage) {
 
         ContentValues content = new ContentValues();

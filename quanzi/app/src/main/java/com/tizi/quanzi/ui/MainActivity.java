@@ -10,11 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.fragment.main.GroupChatList;
 import com.tizi.quanzi.fragment.main.MainFragmentPagerAdapter;
-import com.tizi.quanzi.network.NewGroup;
-import com.tizi.quanzi.tool.GetGMSStatue;
 
 
 public class MainActivity extends AppCompatActivity {

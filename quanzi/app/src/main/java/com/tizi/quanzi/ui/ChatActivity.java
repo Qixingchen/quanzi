@@ -45,6 +45,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * 聊天界面
+ */
 public class ChatActivity extends AppCompatActivity {
 
     private Context context;
@@ -78,6 +81,7 @@ public class ChatActivity extends AppCompatActivity {
         final ImageButton insertVoiceButton = (ImageButton) findViewById(R.id.insertVoiceButton);
         recodeAudio = new RecodeAudio(this);
 
+        //录音
         insertVoiceButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -236,6 +240,11 @@ public class ChatActivity extends AppCompatActivity {
         recodeAudio.release();
     }
 
+    /**
+     * 图片回调
+     *
+     * @see RequreForImage
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -245,9 +254,16 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    /*聊天消息回调接口*/
     private void setMessageCallback() {
-        //聊天消息回调接口
+
+        //富文本简体
         MutiTypeMsgHandler.getInstance().setOnMessage(new MutiTypeMsgHandler.OnMessage() {
+            /**
+             * 收到消息，加入列表
+             *
+             * @param chatMessage 收到的消息
+             * */
             @Override
             public void OnMessageGet(ChatMessage chatMessage) {
                 chatMessageAdapter.addOrUpdateMessage(chatMessage);
@@ -269,7 +285,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        //聊天消息获取
+        //聊天消息获取回调
         avimMessagesQueryCallback = new AVIMMessagesQueryCallback() {
             @Override
             public void done(List<AVIMMessage> list, AVException e) {
@@ -288,7 +304,12 @@ public class ChatActivity extends AppCompatActivity {
         };
     }
 
-    private Map<String, Object> getMessAttr() {
+    /**
+     * 设置附加参数
+     *
+     * @return 聊天时需要附加的参数
+     */
+    private Map<String, Object> setMessAttr() {
         Map<String, Object> attr = new TreeMap<>();
         // TODO: 15/8/14 add username userIcon
         attr.put(StaticField.ChatMessAttrName.userName, "todo Name");
@@ -300,6 +321,11 @@ public class ChatActivity extends AppCompatActivity {
         return attr;
     }
 
+    /**
+     * 发送图片消息
+     *
+     * @param Filepath 图片地址
+     */
     private void sendImageMesage(String Filepath) {
         AVIMImageMessage message;
         try {
@@ -309,7 +335,7 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-        message.setAttrs(getMessAttr());
+        message.setAttrs(setMessAttr());
 
         final AVIMImageMessage finalMessage = message;
         conversation.sendMessage(message,
@@ -328,10 +354,15 @@ public class ChatActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * 发送音频消息
+     *
+     * @param Filepath 音频地址
+     */
     private void sendAudioMessage(String Filepath) {
         try {
             AVIMAudioMessage message = new AVIMAudioMessage(Filepath);
-            message.setAttrs(getMessAttr());
+            message.setAttrs(setMessAttr());
             final AVIMAudioMessage finalMessage = message;
             conversation.sendMessage(message, new AVIMConversationCallback() {
                 @Override
@@ -348,10 +379,15 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 发送文本消息
+     *
+     * @param text 发送的文本
+     */
     private void sendTextMessage(String text) {
         final AVIMTextMessage message = new AVIMTextMessage();
         message.setText(text);
-        message.setAttrs(getMessAttr());
+        message.setAttrs(setMessAttr());
 
         conversation.sendMessage(message,
                 new AVIMConversationCallback() {
@@ -370,6 +406,12 @@ public class ChatActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * 消息发送成功时的处理
+     * 加入列表并跳转到最后
+     *
+     * @param Message 发送成功的消息
+     */
     private void onMessageSendOK(AVIMTypedMessage Message) {
         ChatMessage chatMessage =
                 ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);

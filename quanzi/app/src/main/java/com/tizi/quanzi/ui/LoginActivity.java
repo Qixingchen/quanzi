@@ -63,14 +63,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        //成功监听器
         final Response.Listener<String> mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 Login login = gson.fromJson(response, Login.class);
                 if (login.isSuccess()) {
+                    //设置用户信息
                     AutoLogin.setUserInfo(phoneNumberEditText.getText().toString(),
                             login.getUser().getId(), login.getUser().getToken());
+                    //储存密码
                     SharedPreferences preferences = getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
                             MODE_PRIVATE);
                     preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,

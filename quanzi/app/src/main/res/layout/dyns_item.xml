@@ -17,10 +17,11 @@
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/weibo_avatar"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            tools:background="@drawable/face"
             tools:src="@drawable/face"/>
 
         <TextView

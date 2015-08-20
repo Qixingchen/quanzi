@@ -2,7 +2,6 @@ package com.tizi.quanzi.fragment.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,22 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.NewGroup;
 import com.tizi.quanzi.ui.ChatActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 
 public class GroupChatList extends Fragment {
@@ -51,6 +42,7 @@ public class GroupChatList extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     *
      * @return A new instance of fragment GroupChatList.
      */
     // TODO: Rename and change types and number of parameters
@@ -122,6 +114,7 @@ public class GroupChatList extends Fragment {
     }
 
     public void newAGroup() {
+        // TODO: 15/8/20 创建群
         String GroupName = "xingchen test2", icon = "http://ac-hy5srahi.clouddn.com/2j5dU2E1dvXcVD1TKPmgNBC.jpeg";
         String notice = "公告", userID = App.getUserID(), tag = "[{tagid:\"1\",tagname:\"1name\"},{tagid:\"2\",tagName:\"2name\"}]";
         NewGroup.getInstance().setNewGroupListener(new NewGroup.NewGroupListener() {

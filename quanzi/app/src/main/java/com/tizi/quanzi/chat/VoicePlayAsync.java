@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * Created by qixingchen on 15/8/18.
+ * 音频播放 AsyncTask
  */
 public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
 
@@ -23,6 +24,10 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
     private Context context;
     private MediaPlayer player;
 
+    /**
+     * 后台前
+     * 设置进度，预加载
+     */
     @UiThread
     @Override
     protected void onPreExecute() {
@@ -38,6 +43,13 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
         }
     }
 
+    /**
+     * 后台
+     * 播放音频，并更新进度
+     * 每100ms检查是否已停止，停止并释放资源
+     *
+     * @param params 无效参数
+     */
     @WorkerThread
     @Override
     protected Integer doInBackground(Integer... params) {
@@ -67,6 +79,12 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
         return 0;
     }
 
+    /**
+     * 播放结束 设置进度为0，释放资源
+     *
+     * @param i 无效参数
+     */
+    @UiThread
     @Override
     protected void onPostExecute(Integer i) {
         super.onPostExecute(i);
@@ -74,6 +92,11 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
         player.release();
     }
 
+    /**
+     * 更新进度
+     *
+     * @param values 进度值
+     */
     @UiThread
     @Override
     protected void onProgressUpdate(Integer... values) {
@@ -84,16 +107,37 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
 
     }
 
+    /**
+     * 设置 ChatMessage
+     *
+     * @param chatMessage 需要播放的 ChatMessage
+     *
+     * @return 本class实例
+     */
     public VoicePlayAsync setChatMessage(ChatMessage chatMessage) {
         this.chatMessage = chatMessage;
         return mInstance;
     }
 
+    /**
+     * 设置 BaseViewHolder
+     *
+     * @param holder 播放所在的viewHolder
+     *
+     * @return 本class实例
+     */
     public VoicePlayAsync setHolder(BaseViewHolder holder) {
         this.holder = holder;
         return mInstance;
     }
 
+    /**
+     * 设置上下文
+     *
+     * @param context 上下文
+     *
+     * @return 本class实例
+     */
     public VoicePlayAsync setContext(Context context) {
         this.context = context;
         return mInstance;

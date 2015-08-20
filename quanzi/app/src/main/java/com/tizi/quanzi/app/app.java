@@ -2,6 +2,7 @@ package com.tizi.quanzi.app;
 
 /**
  * Created by qixingchen on 15/7/13.
+ * Application
  */
 
 import android.app.Application;
@@ -40,18 +41,19 @@ public class App extends Application {
 
 
     //数据库
+    private static DataBaseHelper db;
+    private static SQLiteDatabase db1;
+
+    /* 设置数据库*/
     public static void setDataBaseHelper(String userID) {
         db = new DataBaseHelper(application, userID, null, 1);
         db1 = db.getWritableDatabase();
     }
 
-    private static DataBaseHelper db;
-
     public static SQLiteDatabase getDatabase() {
         return db1;
     }
 
-    private static SQLiteDatabase db1;
 
     public static String getUserPhone() {
         return UserPhone;
@@ -80,6 +82,11 @@ public class App extends Application {
         UserToken = userToken;
     }
 
+    /**
+     * 应用初始化
+     * 初始化AVIM
+     * 各变量赋值
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -103,25 +110,18 @@ public class App extends Application {
 
     }
 
-    public static AVIMClient getImClient() {
-        if (imClient == null) {
-            imClient = AVIMClient.getInstance(UserID);
-            imClient.open(new AVIMClientCallback() {
-                @Override
-                public void done(AVIMClient avimClient, AVException e) {
-                    if (null != e) {
-                        Log.e(TAG, "AVIMClient链接失败");
-                        e.printStackTrace();
-                    } else {
-                        Log.w(TAG, "AVIMClient链接成功");
-                    }
-                }
-            });
-        }
-        return imClient;
-    }
 
+    /**
+     * 获取新的AVIMClient 并将旧的关闭
+     *
+     * @param userID 用户ID
+     *
+     * @return AVIMClient
+     */
     public static AVIMClient getNewImClient(String userID) {
+        if (imClient != null) {
+            imClient.close(null);
+        }
         imClient = AVIMClient.getInstance(userID);
         imClient.open(new AVIMClientCallback() {
             @Override
@@ -137,12 +137,11 @@ public class App extends Application {
         return imClient;
     }
 
-    public static void setImClient(String userID) {
-        App.imClient = AVIMClient.getInstance(userID);
-    }
-
-    public static void setImClient() {
-        App.imClient = AVIMClient.getInstance(UserID);
+    public static AVIMClient getImClient() {
+        if (imClient == null) {
+            imClient = getNewImClient(UserID);
+        }
+        return imClient;
     }
 
     public static Application getApplication() {

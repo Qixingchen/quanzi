@@ -42,7 +42,19 @@ public class DBAct {
         mContext = App.getApplication();
     }
 
-    //查询
+    /*查询*/
+
+    /**
+     * 根据 ConversationId 查询所有聊天记录
+     * 按照时间排序
+     *
+     * @param ConversationId ConversationId
+     *
+     * @return ChatMessage 的 list
+     *
+     * @see com.avos.avoscloud.im.v2.AVIMConversation
+     * @see ChatMessage
+     */
     public List<ChatMessage> queryMessage(String ConversationId) {
         Cursor chatMessageCursor = db.query(
                 DataBaseHelper.chatHistorySQLName.TableName,//table name
@@ -65,6 +77,13 @@ public class DBAct {
 
     }
 
+    /**
+     * 根据 Cursor 转换 ChatMessage
+     *
+     * @param cursor 查询到的游标
+     *
+     * @return 返回的 ChatMessage
+     */
     private ChatMessage chatMessageFromCursor(Cursor cursor) {
         ChatMessage chatMessage = new ChatMessage();
 
@@ -139,6 +158,15 @@ public class DBAct {
         return chatMessage;
     }
 
+    /**
+     * 根据 messID 查询 ChatMessage
+     *
+     * @param messID 需查询的messID
+     *
+     * @return ChatMessage
+     *
+     * @see ChatMessage
+     */
     @Nullable
     public ChatMessage queryMessageByID(String messID) {
         Cursor chatMessageCursor = db.query(
@@ -180,10 +208,10 @@ public class DBAct {
     }
 
 
-    //判断
+    /*判断*/
 
 
-    //增加或更新
+    /*增加或更新*/
     public void addOrReplaceChatMessage(ChatMessage chatMessage) {
 
         ContentValues content = new ContentValues();

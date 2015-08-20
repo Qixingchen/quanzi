@@ -24,12 +24,27 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     private Context context;
     private Onclick onclick;
 
+    /**
+     * @param groupClasses 群组列表
+     * @param context      上下文
+     * @param onclick      群组被点击时的回调
+     */
     public GroupListAdapter(List<GroupClass> groupClasses, Context context, Onclick onclick) {
         this.groupClasses = groupClasses;
         this.context = context;
         this.onclick = onclick;
     }
 
+    /**
+     * 创建 ViewHolder
+     *
+     * @param viewGroup 需要创建ViewHolder的 ViewGroup
+     * @param i         记录类型
+     *
+     * @return MyViewHolder
+     *
+     * @see com.tizi.quanzi.adapter.GroupListAdapter.MyViewHolder
+     */
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         // create a new view
@@ -40,6 +55,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
         return vh;
     }
 
+    /**
+     * 发生绑定时，为viewHolder的元素赋值
+     *
+     * @param myViewHolder 被绑定的ViewHolder
+     * @param position     列表位置
+     */
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
         myViewHolder.unreadTextview.setText("unread commit");
@@ -56,14 +77,26 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
         });
     }
 
+    /**
+     * @return 记录数
+     */
     @Override
     public int getItemCount() {
         return groupClasses == null ? 0 : groupClasses.size();
     }
 
+    /**
+     * 点击接口
+     */
     public interface Onclick {
+        /**
+         * 项目被点击
+         *
+         * @param position 点击序号
+         */
         void itemClick(int position);
     }
+
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -82,6 +115,11 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
         }
     }
 
+    /**
+     * 为 groupClasses 添加内容
+     *
+     * @param group 需要添加的群
+     */
     public void addAGroup(GroupClass group) {
         groupClasses.add(group);
         notifyDataSetChanged();

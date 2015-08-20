@@ -34,6 +34,17 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
     private MutiTypeMsgHandler() {
     }
 
+    /**
+     * 收到消息
+     * 转换，并存入数据库
+     * 如果当前UI是这条消息该发向的，则通过回调接口通知 OnMessageGet
+     *
+     * @param message      收到的消息
+     * @param conversation 消息来源的AVIMConversation
+     * @param client       消息来源的AVIMClient
+     *
+     * @see com.tizi.quanzi.chat.MutiTypeMsgHandler.OnMessage
+     */
     @Override
     public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
         Log.w(TAG, "收到消息");
@@ -48,6 +59,15 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
     }
 
+    /**
+     * 消息被接收
+     * 转换，并存入数据库
+     * 如果当前UI是这条消息该发向的，则通过回调接口通知 OnMessageGet
+     *
+     * @param message      被接收的消息
+     * @param conversation 消息来源的AVIMConversation
+     * @param client       消息来源的AVIMClient
+     */
     @Override
     public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
         // 请加入你自己需要的逻辑...
@@ -61,10 +81,13 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                 onMessage.OnMyMessageSent(chatMessage);
             }
         }
-
     }
 
-
+    /**
+     * 设置 OnMessage
+     *
+     * @param onMessage 回调监听
+     */
     public void setOnMessage(@Nullable OnMessage onMessage) {
         this.onMessage = onMessage;
     }
@@ -74,8 +97,10 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
     //消息接收器回调接口
     public interface OnMessage {
+        /* 收到的消息*/
         void OnMessageGet(ChatMessage chatMessage);
 
+        /* 发出的消息*/
         void OnMyMessageSent(ChatMessage chatMessage);
     }
 

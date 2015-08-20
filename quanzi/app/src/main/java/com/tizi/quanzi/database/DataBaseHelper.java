@@ -14,6 +14,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         super(context, name, cursorFactory, version);
     }
 
+    /**
+     * 数据库列名
+     */
     public static class chatHistorySQLName {
         public static final String TableName = "chat_history";
         public static final String messID = "id";
@@ -39,13 +42,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /* 创建数据库后，对数据库的操作*/
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // 创建数据库后，对数据库的操作
-
-//        db.execSQL("create table singlechat_list(id varchar(40) primary key not null , uid varchar(40),uname varchar(40), text varchar(50), icon varchar(200),type Integer,create_user varchar(40), send_time integer, convid varchar(50), unread_count integer)");
-//
-//        db.execSQL("create table chat_history(id varchar(40) PRIMARY KEY not null , group_id varchar(40),uid varchar(40), sender varchar(40),send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration DOUBLE, isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),ChatContantType char(40))");
 
         db.execSQL("create table chat_history(id varchar(40)PRIMARY KEY not null, group_id varchar(40),convID varchar(50), account varchar(40), sender varchar(40), send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration varchar(50), isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),ChatBothUserType char(40),imageHeight integer,imageWeight integer,chatImage varchar(200))");
 
@@ -53,15 +52,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /* 更改数据库版本的操作*/
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // 更改数据库版本的操作
+
     }
 
+    /*每次成功打开数据库后首先被执行*/
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-        //每次成功打开数据库后首先被执行
+
     }
 }
 

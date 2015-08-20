@@ -20,6 +20,15 @@ import com.tizi.quanzi.tool.StaticField;
  */
 public class ChatMessFormatFromAVIM {
 
+    /**
+     * 将 AVIMTypedMessage 转换为 ChatMessage
+     *
+     * @param message 需要转换的 AVIMTypedMessage
+     *
+     * @return ChatMessage
+     *
+     * @see ChatMessage
+     */
     public static ChatMessage ChatMessageFromAVMessage(AVIMTypedMessage message) {
         String TAG = "Tool类 消息类型转换";
         ChatMessage chatMessage;
@@ -46,6 +55,7 @@ public class ChatMessFormatFromAVIM {
         return chatMessage;
     }
 
+    /*转换位置消息*/
     private static ChatMessage locationChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.TEXT;
@@ -63,6 +73,7 @@ public class ChatMessFormatFromAVIM {
         return chatMessage;
     }
 
+    /*转换文本消息*/
     private static ChatMessage textChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.TEXT;
@@ -79,6 +90,7 @@ public class ChatMessFormatFromAVIM {
         return chatMessage;
     }
 
+    /*转换图片消息*/
     private static ChatMessage imageChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.IMAGE;
@@ -94,6 +106,7 @@ public class ChatMessFormatFromAVIM {
         return chatMessage;
     }
 
+    /*转换音频消息*/
     private static ChatMessage voiceChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.VOICE;
@@ -108,6 +121,7 @@ public class ChatMessFormatFromAVIM {
         return chatMessage;
     }
 
+    /*转换视频消息*/
     private static ChatMessage vedioChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.VEDIO;
@@ -122,6 +136,15 @@ public class ChatMessFormatFromAVIM {
         return chatMessage;
     }
 
+    /*通用信息转换*/
+
+    /**
+     * @param message 需要转换的 AVIMMessage
+     *
+     * @return 部分信息已经填充的 ChatMessage
+     *
+     * @see ChatMessage
+     */
     private static ChatMessage mainMessageInfoFromAvimMessage(AVIMMessage message) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.messID = message.getMessageId();

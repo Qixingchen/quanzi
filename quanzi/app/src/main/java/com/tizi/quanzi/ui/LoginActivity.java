@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //分析GCM分布
-        GetGMSStatue.haveGCM(this);
+        GetGMSStatue.haveGMS(this);
         AutoLogin.getInstance().loginFromPrefer();
         this.newaccount = (TextView) findViewById(R.id.new_account);
         this.passwordInputLayout = (TextInputLayout) findViewById(R.id.passwordInputLayout);

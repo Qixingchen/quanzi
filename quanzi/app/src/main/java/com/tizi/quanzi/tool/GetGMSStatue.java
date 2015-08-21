@@ -22,22 +22,25 @@ public class GetGMSStatue {
      *
      * @return isHave
      */
-    public static boolean haveGCM(Activity mactivity) {
+    public static boolean haveGMS(Activity mactivity) {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mactivity);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, mactivity,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
-                Log.w("gcm状态", "Type Error : " + resultCode);
-                AVAnalytics.onEvent(mactivity, "GCMStatue", String.valueOf(resultCode));
+                Log.w("GMS状态", "Type Error : " + resultCode);
+                AVAnalytics.onEvent(mactivity, "GMStatue", String.valueOf(resultCode));
+                AVAnalytics.onEvent(mactivity, "GMStatue-" + String.valueOf(resultCode));
             } else {
-                Log.w("gcm状态", "This device is not supported.");
-                AVAnalytics.onEvent(mactivity, "GCMStatue", "NotSupported");
+                Log.w("GMS状态", "This device is not supported.");
+                AVAnalytics.onEvent(mactivity, "GMStatue", "NotSupported");
+                AVAnalytics.onEvent(mactivity, "GMStatue-" + "NotSupported");
             }
             return false;
         }
-        Log.w("gcm状态", "This device is supported.");
-        AVAnalytics.onEvent(mactivity, "GCMStatue", "Supported!");
+        Log.w("GMS状态", "This device is supported.");
+        AVAnalytics.onEvent(mactivity, "GMStatue", "Supported!");
+        AVAnalytics.onEvent(mactivity, "GMStatue-" + "Supported");
         return true;
     }
 }

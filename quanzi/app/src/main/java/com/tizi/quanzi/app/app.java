@@ -16,6 +16,7 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.tizi.quanzi.chat.AVIMSysMessage;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
@@ -90,6 +91,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        application = this;
         //泄露监视器
         //LeakCanary.install(this);
         preferences = this.getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
@@ -97,17 +99,23 @@ public class App extends Application {
         UserID = preferences.getString(StaticField.TokenPreferences.USERID, "");
         UserToken = preferences.getString(StaticField.TokenPreferences.USERTOKEN, "");
         UserPhone = preferences.getString(StaticField.TokenPreferences.USERPHONE, "");
-        application = this;
+        if (UserID.compareTo("") != 0) {
+            setDataBaseHelper(UserID);
+            // TODO: 15/8/21 fix crash
+            //getNewImClient(UserID);
+        }
 
 
-//        AVAnalytics.setAnalyticsEnabled(false);
+        AVAnalytics.setAnalyticsEnabled(false);
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
-        AVAnalytics.enableCrashReport(this, true);
+        //AVAnalytics.enableCrashReport(this, true);
 
 
         AVIMClient.setClientEventHandler(new MyAVIMClientEventHandler());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
+        AVIMMessageManager.registerAVIMMessageType(AVIMSysMessage.class);
+        AVIMMessageManager.registerMessageHandler(AVIMSysMessage.class, MutiTypeMsgHandler.getInstance());
 
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
 

@@ -19,7 +19,7 @@ public class StaticField {
         public final static int IMAGE = -2;
         public final static int VOICE = -3;
         public final static int VEDIO = -4;
-
+        public final static int Location = -5;
     }
 
     /*本地储存信息字段*/
@@ -54,4 +54,9 @@ public class StaticField {
         public static final int CUT_REQUEST_CODE = 2;//裁减
     }
 
+    /*通知Intent*/
+    public static class NotifiName {
+        public final static String NotifiDelete = "NotifiDelete";
+        public final static String NotifiClick = "NotifiClick";
+    }
 }

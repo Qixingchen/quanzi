@@ -10,6 +10,7 @@ import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.notification.AddNotification;
 
 /**
  * Created by qixingchen on 15/8/14.
@@ -56,7 +57,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                 onMessage.OnMessageGet(chatMessage);
             }
         }
-
+        AddNotification.getInstance().AddMessage(chatMessage);
     }
 
     /**

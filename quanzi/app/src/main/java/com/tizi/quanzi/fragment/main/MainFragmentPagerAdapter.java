@@ -10,7 +10,7 @@ import android.widget.Toast;
  * Created by qixingchen on 15/7/13.
  * 主界面 FragmentPagerAdapter
  */
-public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
+public class  MainFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[]{"小圈子", "看一看", "大世界"};
     private Context context;

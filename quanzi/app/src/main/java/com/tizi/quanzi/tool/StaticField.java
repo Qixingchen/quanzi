@@ -58,5 +58,6 @@ public class StaticField {
     public static class NotifiName {
         public final static String NotifiDelete = "NotifiDelete";
         public final static String NotifiClick = "NotifiClick";
+        public final static String Conversation = "Conversation";
     }
 }

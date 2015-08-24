@@ -16,7 +16,6 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.tizi.quanzi.chat.AVIMSysMessage;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
@@ -114,8 +113,6 @@ public class App extends Application {
 
         AVIMClient.setClientEventHandler(new MyAVIMClientEventHandler());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
-        AVIMMessageManager.registerAVIMMessageType(AVIMSysMessage.class);
-        AVIMMessageManager.registerMessageHandler(AVIMSysMessage.class, MutiTypeMsgHandler.getInstance());
 
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
 

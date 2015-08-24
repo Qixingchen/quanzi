@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -69,6 +70,9 @@ public class GroupChatList extends Fragment {
 
         Intent intent = mActivity.getIntent();
         groupClasses = intent.getExtras().getParcelableArrayList("group");
+        if (groupClasses == null) {
+            // TODO: 15/8/24 add GroupList
+        }
 
         mGroupListRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
         GroupListAdapter.Onclick onclick = new GroupListAdapter.Onclick() {
@@ -81,7 +85,7 @@ public class GroupChatList extends Fragment {
         };
         groupListAdapter = new GroupListAdapter(groupClasses, mActivity, onclick);
         mGroupListRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(mActivity);
+        mLayoutManager = new GridLayoutManager(mActivity, 2);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
         mGroupListRecyclerView.setAdapter(groupListAdapter);
     }

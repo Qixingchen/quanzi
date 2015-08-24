@@ -5,6 +5,7 @@ android {
     buildToolsVersion '23'
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.tizi.quanzi"
         minSdkVersion 16
         targetSdkVersion 23
@@ -14,14 +15,17 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    //为了解决部分第三方库重复打包了META-INF的问题
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
     lintOptions {
         abortOnError false
     }
@@ -40,29 +44,34 @@ buildscript {
 repositories {
     mavenCentral()
 }
-apply plugin: 'me.tatarka.retrolambda'
+//apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.android.support:recyclerview-v7:23.0.0'
+    compile 'com.android.support:cardview-v7:23.0.0'
     compile 'com.android.support:design:23.0.0'
     compile 'com.android.support:support-annotations:23.0.0'
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.13'
     compile 'com.google.code.gson:gson:2.3.1'
-
+    //图像加载
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    //circleimageview
+    compile 'de.hdodenhof:circleimageview:1.3.0'
     //avoscloud-sdk 为 LeanCloud基础包
     compile 'cn.leancloud.android:avoscloud-sdk:v3.4.6'
-
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
     compile 'cn.leancloud.android:avoscloud-push:v3.4.6@aar'
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
-
     //avoscloud-statistics 为 LeanCloud 统计包
     compile 'cn.leancloud.android:avoscloud-statistics:v3.4.6@aar'
-
-
     compile 'com.google.android.gms:play-services:7.8.0'
+    //leak canary
 //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
 //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    //RxJAVA
+    compile 'io.reactivex:rxandroid:1.0.1'
+    //lamdba
+//    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.0.4'
 }

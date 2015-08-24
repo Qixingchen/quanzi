@@ -31,13 +31,11 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.chat.AVIMSysMessage;
 import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
-import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
@@ -172,9 +170,7 @@ public class ChatActivity extends AppCompatActivity {
                         if (text.compareTo("") == 0) {
                             return;
                         }
-                        // TODO: 15/8/21  
-                        //sendTextMessage(text);
-                        sendSystenMessage();
+                        sendTextMessage(text);
                     }
                 }
         );
@@ -226,7 +222,6 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             chatmessagerecyclerView.scrollToPosition(chatMessageAdapter.lastReadPosition());
         }
-        sendSystenMessage();
     }
 
     @Override
@@ -408,28 +403,6 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
         );
-    }
-
-
-    private void sendSystenMessage() {
-        try {
-            AVIMSysMessage message = new AVIMSysMessage();
-            message.setMsgType(0);
-            message.setRemark("ass");
-            final AVIMSysMessage finalMessage = message;
-            conversation.sendMessage(message, new AVIMConversationCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e != null) {
-                        e.printStackTrace();
-                    } else {
-                        onMessageSendOK(finalMessage);
-                    }
-                }
-            });
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     /**

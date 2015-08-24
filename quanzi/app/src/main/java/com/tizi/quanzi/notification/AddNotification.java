@@ -3,7 +3,6 @@ package com.tizi.quanzi.notification;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,14 +12,13 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.ui.ChatActivity;
-import com.tizi.quanzi.ui.MainActivity;
 
 import java.util.ArrayList;
 
 /**
  * Created by qixingchen on 15/8/21.
  * 发布通知
+ * todo 删除和点击动作冲突
  */
 public class AddNotification {
 
@@ -51,52 +49,25 @@ public class AddNotification {
 
     /**
      * 通知被点击
-     * 清空List
+     * 清空List并取消通知
      */
     public void notifiClicked() {
         chatMessageArrayList.clear();
+        mNotificationManager.cancel(1);
     }
 
     /**
      * 根据目前的List构造通知列表
      */
-
     private void setNotification() {
-//        int mId = 1;//set Notifi ID
-//
-//
-//        NotificationCompat.Builder mBuilder =
-//                new NotificationCompat.Builder(mContext);
-//        mBuilder = setBuildStyle(mBuilder);
-//
-//        Intent resultIntent;
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
-//        if (chatMessageArrayList.size() == 1) {
-//
-//            resultIntent = new Intent(mContext, ChatActivity.class);
-//            resultIntent.putExtra("conversation", chatMessage.ConversationId);
-//            //导航
-//            stackBuilder.addParentStack(ChatActivity.class);
-//
-//        } else {
-//
-//
-//            resultIntent = new Intent(mContext, MainActivity.class);
-//            //导航
-//            stackBuilder.addParentStack(MainActivity.class);
-//        }
-//
-//        stackBuilder.addNextIntent(resultIntent);
-//
-//        PendingIntent resultPendingIntent =
-//                stackBuilder.getPendingIntent(
-//                        0,
-//                        PendingIntent.FLAG_UPDATE_CURRENT
-//                );
-//        mBuilder.setContentIntent(resultPendingIntent)
-//                .setContentIntent(PendingIntent.getBroadcast(
-//                        mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-//        mNotificationManager.notify(mId, mBuilder.build());
+        int mId = 1;//set Notifi ID
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(mContext);
+        mBuilder = setBuildStyle(mBuilder);
+        mBuilder = setBuildEvent(mBuilder);
+
+        mNotificationManager.notify(mId, mBuilder.build());
     }
 
     /**
@@ -109,10 +80,19 @@ public class AddNotification {
     private NotificationCompat.Builder setBuildEvent(NotificationCompat.Builder mBuilder) {
 
         /*intent*/
-        Intent deleteIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
-        deleteIntent.putExtra(StaticField.NotifiName.NotifiDelete, true);
+        /*click*/
         Intent clickIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
         clickIntent.putExtra(StaticField.NotifiName.NotifiClick, true);
+        if (chatMessageArrayList.size() == 1) {
+            clickIntent.putExtra(StaticField.NotifiName.Conversation, chatMessageArrayList.get(0).ConversationId);
+        }
+        mBuilder.setContentIntent(PendingIntent.getBroadcast(
+                mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+
+        /*delete*/
+        Intent deleteIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
+        deleteIntent.putExtra(StaticField.NotifiName.NotifiDelete, true);
 
         mBuilder.setDeleteIntent(PendingIntent.getBroadcast(
                 mContext, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
@@ -122,7 +102,7 @@ public class AddNotification {
 
 
     /**
-     * 建立通知的样式
+     * 建立通知的样式与内容
      *
      * @param mBuilder 建立样式前的 NotificationCompat.Builder
      *

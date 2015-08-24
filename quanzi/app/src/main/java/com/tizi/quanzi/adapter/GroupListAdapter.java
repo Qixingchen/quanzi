@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GetVolley;
@@ -49,7 +51,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         // create a new view
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.group_chat_item, viewGroup, false);
+                .inflate(R.layout.group_item, viewGroup, false);
         // set the view's size, margins, paddings and layout parameters
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
@@ -66,9 +68,9 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
         myViewHolder.unreadTextview.setText("unread commit");
         myViewHolder.groupNameTextview.setText(groupClasses.get(position).groupName);
         myViewHolder.lastCommitTextview.setText("2015-05-12 12:12");
-        myViewHolder.groupFaceImageView.setImageUrl(
-                groupClasses.get(position).groupFace.toString(),
-                GetVolley.getmInstance(context).getImageLoader());
+        Picasso.with(context)
+                .load(groupClasses.get(position).groupFace.toString())
+                .into(myViewHolder.groupFaceImageView);
         myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,14 +102,14 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public NetworkImageView groupFaceImageView;
+        public ImageView groupFaceImageView;
         public TextView groupNameTextview, lastCommitTextview, unreadTextview, lastTimeTextview;
         public View itemView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            groupFaceImageView = (NetworkImageView) itemView.findViewById(R.id.group_face_image_view);
+            groupFaceImageView = (ImageView) itemView.findViewById(R.id.group_face_image_view);
             groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
             lastCommitTextview = (TextView) itemView.findViewById(R.id.last_commit_text_view);
             unreadTextview = (TextView) itemView.findViewById(R.id.unread_text_view);

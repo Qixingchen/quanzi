@@ -64,9 +64,10 @@ public class NewGroup {
 
                 if (group.isSuccess()) {
                     if (newGroupListener != null) {
-                        GroupClass groupClass = new GroupClass(groupname, Uri.parse(icon),
-                                group.getGroupId(), "");
-                        newGroupListener.onOK(groupClass);
+                        // TODO: 15/8/25 add Group
+                        //                        GroupClass groupClass = new GroupClass(groupname, Uri.parse(icon),
+                        //                                group.getGroupId(), "");
+                        //                        newGroupListener.onOK(groupClass);
                     }
                 } else {
                     Toast.makeText(mContext, group.getMsg(), Toast.LENGTH_LONG).show();

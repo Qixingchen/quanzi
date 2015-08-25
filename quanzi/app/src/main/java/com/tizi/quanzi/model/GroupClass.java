@@ -13,15 +13,19 @@ import java.util.List;
 /**
  * Created by qixingchen on 15/7/16.
  * 组群
- * 对应 Gson
- *
- * @see com.tizi.quanzi.gson.Group
+ * 对应 Gson {@link com.tizi.quanzi.gson.Group}
  */
 public class GroupClass implements Parcelable, Serializable {
     public String groupName;
     public Uri groupFace;
     public String groupID;
     public String groupType;
+    public String Notice;
+    public String convId;
+    public String background;
+    public boolean validation;
+    public String createUser;
+    public String groupNo;
 
     /**
      * 将 List<Login.GroupEntity> 转换为 ArrayList<GroupClass>
@@ -51,14 +55,14 @@ public class GroupClass implements Parcelable, Serializable {
         groupClass.groupName = groupEntity.getGroupName();
         groupClass.groupFace = Uri.parse(groupEntity.getIcon());
         groupClass.groupType = groupEntity.getType();
-        return groupClass;
-    }
+        groupClass.Notice = groupEntity.getNotice();
+        groupClass.convId = groupEntity.getConvId();
+        groupClass.background = groupEntity.getBg();
+        groupClass.validation = groupEntity.getValidation();
+        groupClass.createUser = groupEntity.getCreateUser();
+        groupClass.groupNo = groupEntity.getGroupNo();
 
-    public GroupClass(String groupName, Uri groupFace, String groupID, String groupType) {
-        this.groupName = groupName;
-        this.groupFace = groupFace;
-        this.groupID = groupID;
-        this.groupType = groupType;
+        return groupClass;
     }
 
 
@@ -73,6 +77,12 @@ public class GroupClass implements Parcelable, Serializable {
         dest.writeParcelable(this.groupFace, 0);
         dest.writeString(this.groupID);
         dest.writeString(this.groupType);
+        dest.writeString(this.Notice);
+        dest.writeString(this.convId);
+        dest.writeString(this.background);
+        dest.writeByte(validation ? (byte) 1 : (byte) 0);
+        dest.writeString(this.createUser);
+        dest.writeString(this.groupNo);
     }
 
     public GroupClass() {
@@ -83,9 +93,15 @@ public class GroupClass implements Parcelable, Serializable {
         this.groupFace = in.readParcelable(Uri.class.getClassLoader());
         this.groupID = in.readString();
         this.groupType = in.readString();
+        this.Notice = in.readString();
+        this.convId = in.readString();
+        this.background = in.readString();
+        this.validation = in.readByte() != 0;
+        this.createUser = in.readString();
+        this.groupNo = in.readString();
     }
 
-    public static final Parcelable.Creator<GroupClass> CREATOR = new Parcelable.Creator<GroupClass>() {
+    public static final Creator<GroupClass> CREATOR = new Creator<GroupClass>() {
         public GroupClass createFromParcel(Parcel source) {
             return new GroupClass(source);
         }
@@ -94,6 +110,4 @@ public class GroupClass implements Parcelable, Serializable {
             return new GroupClass[size];
         }
     };
-
-
 }

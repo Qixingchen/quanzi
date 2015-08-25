@@ -43,9 +43,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
      * @param viewGroup 需要创建ViewHolder的 ViewGroup
      * @param i         记录类型
      *
-     * @return MyViewHolder
-     *
-     * @see com.tizi.quanzi.adapter.GroupListAdapter.MyViewHolder
+     * @return MyViewHolder {@link com.tizi.quanzi.adapter.GroupListAdapter.MyViewHolder}
      */
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {

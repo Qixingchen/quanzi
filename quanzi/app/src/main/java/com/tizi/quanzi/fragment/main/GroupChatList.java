@@ -142,7 +142,7 @@ public class GroupChatList extends Fragment {
             @Override
             public void itemClick(int position) {
                 Intent chatmess = new Intent(mActivity, ChatActivity.class);
-                chatmess.putExtra("conversation", groupClasses.get(position).groupID);
+                chatmess.putExtra("conversation", groupClasses.get(position).convId);
                 startActivity(chatmess);
             }
         };

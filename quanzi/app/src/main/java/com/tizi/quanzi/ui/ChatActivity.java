@@ -206,8 +206,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         CONVERSATION_ID = getIntent().getStringExtra("conversation");
-        // TODO: 15/8/12 testID
-        CONVERSATION_ID = "55d163f860b24927fc93795e";
         App.UI_CONVERSATION_ID = CONVERSATION_ID;
         conversation = App.getImClient().getConversation(CONVERSATION_ID);
 

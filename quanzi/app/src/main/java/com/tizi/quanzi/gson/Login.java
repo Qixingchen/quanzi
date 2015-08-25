@@ -1,7 +1,6 @@
 package com.tizi.quanzi.gson;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
@@ -13,8 +12,6 @@ public class Login {
 
 
     /**
-     * group : [{"allowMatch":"Y","groupNo":"","id":"HTDM004894949bddc8f140439ddfe3f7a76104d0","icon":"http://ww1.sinaimg.cn/thumb180/005OaWctjw1eubh7n0zdvj30500503yo.jpg","createUser":"HTDM00485ff2bf0c11ed41848216571ddbbea781","groupName":"哦哦","validation":"Y","remark":null,"bg":null,"type":"0","notice":"噢耶"},{"allowMatch":"Y","groupNo":"","id":"HTDM00481c1fecfdb8b24838b72a0aa1ee9c9639","icon":"http://ww1.sinaimg.cn/thumb180/005OaWctjw1eubh7n0zdvj30500503yo.jpg","createUser":"HTDM0048efd1df5cacd448e48f86775e454e1981","groupName":"测试","validation":"Y","remark":null,"bg":null,"type":"0","notice":"bb"}]
-     * user : {"id":"HTDM0048efd1df5cacd448e48f86775e454e1981","icon":"http://ac-hy5srahi.clouddn.com/q3fLSLIwTbnj8PPM9aJpRKD.png","sex":"0","area":null,"token":"HTDM0048b1c89a47da954a089e49005bcda9d617","account":"1","userName":"1","bg":null,"groupNum":"1","signature":null,"mobile":"1"}
      * success : true
      * msg : null
      */
@@ -22,6 +19,22 @@ public class Login {
     private UserEntity user;
     private boolean success;
     private String msg;
+
+    public void setGroup(List<GroupEntity> group) {
+        this.group = group;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
     public List<GroupEntity> getGroup() {
         return group;
@@ -39,35 +52,74 @@ public class Login {
         return msg;
     }
 
-    public static class GroupEntity implements Parcelable {
+    public static class GroupEntity {
         /**
-         * allowMatch : Y
          * groupNo :
-         * id : HTDM004894949bddc8f140439ddfe3f7a76104d0
-         * icon : http://ww1.sinaimg.cn/thumb180/005OaWctjw1eubh7n0zdvj30500503yo.jpg
-         * createUser : HTDM00485ff2bf0c11ed41848216571ddbbea781
-         * groupName : 哦哦
+         * id : HTDM00483b2b955468cf4c7ba0430c7bf0994c70
+         * icon : http://ac-hy5srahi.clouddn.com/EuzALiJGgUTQTOeewEmMMRD.jpeg
+         * createUser : HTDM0048efd1df5cacd448e48f86775e454e1981
+         * groupName : 我的圈子
          * validation : Y
          * remark : null
+         * convId : 55dc2aa560b27e6cd4e34dec
          * bg : null
          * type : 0
-         * notice : 噢耶
+         * notice : 第一个
          */
-        private String allowMatch;
         private String groupNo;
         private String id;
         private String icon;
         private String createUser;
         private String groupName;
-        private String validation;
+        private boolean validation;
         private String remark;
+        private String convId;
         private String bg;
         private String type;
         private String notice;
 
+        public void setGroupNo(String groupNo) {
+            this.groupNo = groupNo;
+        }
 
-        public String getAllowMatch() {
-            return allowMatch;
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public void setCreateUser(String createUser) {
+            this.createUser = createUser;
+        }
+
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
+        }
+
+        public void setValidation(String validation) {
+            this.validation = (validation.compareTo("Y") == 0);
+        }
+
+        public void setRemark(String remark) {
+            this.remark = remark;
+        }
+
+        public void setConvId(String convId) {
+            this.convId = convId;
+        }
+
+        public void setBg(String bg) {
+            this.bg = bg;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public void setNotice(String notice) {
+            this.notice = notice;
         }
 
         public String getGroupNo() {
@@ -90,12 +142,16 @@ public class Login {
             return groupName;
         }
 
-        public String getValidation() {
+        public boolean getValidation() {
             return validation;
         }
 
         public String getRemark() {
             return remark;
+        }
+
+        public String getConvId() {
+            return convId;
         }
 
         public String getBg() {
@@ -109,53 +165,6 @@ public class Login {
         public String getNotice() {
             return notice;
         }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.allowMatch);
-            dest.writeString(this.groupNo);
-            dest.writeString(this.id);
-            dest.writeString(this.icon);
-            dest.writeString(this.createUser);
-            dest.writeString(this.groupName);
-            dest.writeString(this.validation);
-            dest.writeString(this.remark);
-            dest.writeString(this.bg);
-            dest.writeString(this.type);
-            dest.writeString(this.notice);
-        }
-
-        public GroupEntity() {
-        }
-
-        protected GroupEntity(Parcel in) {
-            this.allowMatch = in.readString();
-            this.groupNo = in.readString();
-            this.id = in.readString();
-            this.icon = in.readString();
-            this.createUser = in.readString();
-            this.groupName = in.readString();
-            this.validation = in.readString();
-            this.remark = in.readString();
-            this.bg = in.readString();
-            this.type = in.readString();
-            this.notice = in.readString();
-        }
-
-        public static final Parcelable.Creator<GroupEntity> CREATOR = new Parcelable.Creator<GroupEntity>() {
-            public GroupEntity createFromParcel(Parcel source) {
-                return new GroupEntity(source);
-            }
-
-            public GroupEntity[] newArray(int size) {
-                return new GroupEntity[size];
-            }
-        };
     }
 
     public static class UserEntity {
@@ -168,7 +177,7 @@ public class Login {
          * account : 1
          * userName : 1
          * bg : null
-         * groupNum : 1
+         * groupNum : 6
          * signature : null
          * mobile : 1
          */
@@ -183,6 +192,50 @@ public class Login {
         private String groupNum;
         private String signature;
         private String mobile;
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
+        public void setArea(String area) {
+            this.area = area;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public void setAccount(String account) {
+            this.account = account;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public void setBg(String bg) {
+            this.bg = bg;
+        }
+
+        public void setGroupNum(String groupNum) {
+            this.groupNum = groupNum;
+        }
+
+        public void setSignature(String signature) {
+            this.signature = signature;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
 
         public String getId() {
             return id;
@@ -228,5 +281,4 @@ public class Login {
             return mobile;
         }
     }
-
 }

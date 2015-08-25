@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/8/19.
+ * 动态
  */
 public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder> {
 

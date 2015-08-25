@@ -44,7 +44,7 @@ buildscript {
 repositories {
     mavenCentral()
 }
-//apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -73,5 +73,5 @@ dependencies {
     //RxJAVA
     compile 'io.reactivex:rxandroid:1.0.1'
     //lamdba
-//    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.0.4'
+    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.0.4'
 }

@@ -9,13 +9,12 @@ import android.database.sqlite.SQLiteOpenHelper;
  * 本地数据库
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
-    public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory cursorFactory,
-                          int version) {
+    public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory cursorFactory, int version) {
         super(context, name, cursorFactory, version);
     }
 
     /**
-     * 数据库列名
+     * chat_history数据库列名
      */
     public static class chatHistorySQLName {
         public static final String TableName = "chat_history";
@@ -42,6 +41,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Group表列名
+     */
+    public static class GroupSQLName {
+        public static final String TableName = "groups";
+        public static final String id = "id";
+        public static final String Serializable = "Serializable";
+    }
+
+    /**
+     * SystemMess 表列名
+     */
+    public static class SystemMessSQLName {
+        public static final String TableName = "systemMess";
+        public static final String id = "id";
+        public static final String create_time = "create_time";
+        public static final String isread = "isread";
+        public static final String Serializable = "Serializable";
+    }
+
     /* 创建数据库后，对数据库的操作*/
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -50,6 +69,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("create table singlechat_list(id varchar(40) primary key not null, account varchar(40),uname varchar(40), text varchar(50), icon varchar(200), type Integer, create_user varchar(40), send_time integer, convid varchar(50), unread_count integer)");
 
+        db.execSQL("create table groups(id varchar(40) PRIMARY KEY not null,Serializable varchar(3000) )");
+
+        db.execSQL("create table systemMess( id varchar(40) PRIMARY KEY not null ,create_time INTEGER, isread varchar(1) ,Serializable varchar(3000) )");
     }
 
     /* 更改数据库版本的操作*/

@@ -12,11 +12,12 @@ import com.avos.avoscloud.im.v2.messages.AVIMVideoMessage;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
 /**
  * Created by qixingchen on 15/8/14.
- * 将AVIM消息类型转换为ChatMessage
+ * 将AVIM消息类型转换为ChatMessage 或systemMess
  */
 public class ChatMessFormatFromAVIM {
 
@@ -25,14 +26,23 @@ public class ChatMessFormatFromAVIM {
      *
      * @param message 需要转换的 AVIMTypedMessage
      *
-     * @return ChatMessage
+     * @return ChatMessage {@link ChatMessage}
      *
-     * @see ChatMessage
+     * @throws ClassFormatError 消息为系统消息
      */
-    public static ChatMessage ChatMessageFromAVMessage(AVIMTypedMessage message) {
+    public static ChatMessage ChatMessageFromAVMessage(AVIMTypedMessage message) throws ClassFormatError {
         String TAG = "Tool类 消息类型转换";
         ChatMessage chatMessage;
         if (message.getMessageType() == AVIMReservedMessageType.TextMessageType.getType()) {
+            /*判断是否为系统消息*/
+            String type = (String) ((AVIMTextMessage) message).getAttrs().get(
+                    StaticField.ChatMessAttrName.IS_SYS_MESS);
+            try {
+                if (type.compareTo(StaticField.SystemMessAttrName.MessTypeCode.System_mess) == 0) {
+                    throw new ClassFormatError("Is System Message");
+                }
+            } catch (Exception ignored) {//旧信息无此项目
+            }
             chatMessage = textChatMessageFromAVMessage(message);
             Log.w(TAG, "文本消息:");
         } else if (message.getMessageType() == AVIMReservedMessageType.ImageMessageType.getType()) {
@@ -53,6 +63,45 @@ public class ChatMessFormatFromAVIM {
         }
         Log.w(TAG, chatMessage.toString());
         return chatMessage;
+    }
+
+    /**
+     * 将 AVIMTypedMessage 转换为 SystemMessage
+     *
+     * @param message 需要转换的 AVIMTypedMessage
+     *
+     * @return SystemMessage {@link SystemMessage}
+     */
+    public static SystemMessage SysMessFromAVMess(AVIMTypedMessage message) {
+        SystemMessage systemMessage = new SystemMessage();
+        AVIMTextMessage textMessage = (AVIMTextMessage) message;
+        systemMessage.setId(textMessage.getMessageId());
+        try {
+            systemMessage.setConvid((String) textMessage.getAttrs().get(
+                    StaticField.SystemMessAttrName.JOIN_CONV_ID));
+        } catch (Exception ignored) {
+        }
+        systemMessage.setUser_id((String) textMessage.getAttrs().get(
+                StaticField.ChatMessAttrName.userID));
+        systemMessage.setUser_icon((String) textMessage.getAttrs().get(
+                StaticField.ChatMessAttrName.userIcon));
+        systemMessage.setUser_name((String) textMessage.getAttrs().get(
+                StaticField.ChatMessAttrName.userName));
+        systemMessage.setMsg_type((String) textMessage.getAttrs().get(
+                StaticField.ChatMessAttrName.IS_SYS_MESS));
+        systemMessage.setContent(textMessage.getText());
+        systemMessage.setRemark((String) textMessage.getAttrs().get(
+                StaticField.SystemMessAttrName.REMARK));
+        systemMessage.setLink_url((String) textMessage.getAttrs().get(
+                StaticField.SystemMessAttrName.LINK_URL));
+        systemMessage.setSys_msg_flag((int) textMessage.getAttrs().get(
+                StaticField.SystemMessAttrName.SYS_MSG_FLAG));
+        systemMessage.setStatus(0);
+        systemMessage.setIsread(false);
+        systemMessage.setGroup_id((String) textMessage.getAttrs().get(
+                StaticField.ChatMessAttrName.groupID));
+        systemMessage.setCreate_time(textMessage.getTimestamp());
+        return systemMessage;
     }
 
     /*转换位置消息*/
@@ -165,7 +214,7 @@ public class ChatMessFormatFromAVIM {
             chatMessage.From = StaticField.ChatFrom.OTHER;
         }
         return chatMessage;
-// TODO: 15/8/17  ChatBothUserType
+        // TODO: 15/8/17  ChatBothUserType
         // ChatBothUserType,;
 
     }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.view.ViewGroup;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.NewGroup;
 import com.tizi.quanzi.ui.ChatActivity;
@@ -69,25 +69,15 @@ public class GroupChatList extends Fragment {
 
 
         Intent intent = mActivity.getIntent();
-        groupClasses = intent.getExtras().getParcelableArrayList("group");
-        if (groupClasses == null) {
-            // TODO: 15/8/24 add GroupList
+
+        try {
+            groupClasses = intent.getExtras().getParcelableArrayList("group");
+        } catch (Exception e) {
+            getAndShowGroup();
         }
 
-        mGroupListRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
-        GroupListAdapter.Onclick onclick = new GroupListAdapter.Onclick() {
-            @Override
-            public void itemClick(int position) {
-                Intent chatmess = new Intent(mActivity, ChatActivity.class);
-                chatmess.putExtra("conversation", groupClasses.get(position).groupID);
-                startActivity(chatmess);
-            }
-        };
-        groupListAdapter = new GroupListAdapter(groupClasses, mActivity, onclick);
-        mGroupListRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(mActivity, 2);
-        mGroupListRecyclerView.setLayoutManager(mLayoutManager);
-        mGroupListRecyclerView.setAdapter(groupListAdapter);
+        showGroup();
+
     }
 
     @Override
@@ -100,8 +90,7 @@ public class GroupChatList extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_group_chat, container, false);
     }
@@ -127,7 +116,7 @@ public class GroupChatList extends Fragment {
         NewGroup.getInstance().setNewGroupListener(new NewGroup.NewGroupListener() {
             @Override
             public void onOK(GroupClass groupClass) {
-                groupListAdapter.addAGroup(groupClass);
+                groupListAdapter.addGroup(groupClass);
             }
 
             @Override
@@ -135,6 +124,33 @@ public class GroupChatList extends Fragment {
 
             }
         }).NewGroup(GroupName, icon, notice, userID, tag);
+    }
+
+    /**
+     * 从数据库获得群组列表
+     */
+    private void getAndShowGroup() {
+        groupClasses = DBAct.getInstance().quaryAllMyGroup();
+    }
+
+    /**
+     * 显示群组
+     */
+    private void showGroup() {
+        mGroupListRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
+        GroupListAdapter.Onclick onclick = new GroupListAdapter.Onclick() {
+            @Override
+            public void itemClick(int position) {
+                Intent chatmess = new Intent(mActivity, ChatActivity.class);
+                chatmess.putExtra("conversation", groupClasses.get(position).groupID);
+                startActivity(chatmess);
+            }
+        };
+        groupListAdapter = new GroupListAdapter(groupClasses, mActivity, onclick);
+        mGroupListRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new GridLayoutManager(mActivity, 2);
+        mGroupListRecyclerView.setLayoutManager(mLayoutManager);
+        mGroupListRecyclerView.setAdapter(groupListAdapter);
     }
 
 }

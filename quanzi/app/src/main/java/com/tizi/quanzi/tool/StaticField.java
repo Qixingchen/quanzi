@@ -44,7 +44,8 @@ public class StaticField {
         public final static String userName = "userName";
         public final static String groupID = "groupId";
         public final static String userID = "userId";
-        public final static String type = "type";
+        public final static String type = "type";//单人群聊
+        public final static String IS_SYS_MESS = "msgType";// 消息类型 ： S：系统消息， C：非系统消息
     }
 
     /*图片请求Code*/
@@ -59,5 +60,27 @@ public class StaticField {
         public final static String NotifiDelete = "NotifiDelete";
         public final static String NotifiClick = "NotifiClick";
         public final static String Conversation = "Conversation";
+    }
+
+    /*系统消息attr名称*/
+    public static class SystemMessAttrName {
+
+        public final static String REMARK = "remark";// 邀请加人时可能会有附加信息
+        public final static String JOIN_CONV_ID = "joinConvId";// 用于邀请加人时
+        public final static String LINK_URL = "linkUrl";// 链接：可以是图片链接或网页等
+        /** 系统消息标识 {@link com.tizi.quanzi.model.SystemMessage} */
+        public final static String SYS_MSG_FLAG = "sysMsgFlag";
+
+        public final class MessTypeCode {
+            public final static String System_mess = "S";
+            public final static String normal_mess = "C";
+        }
+
+        public final class systemFlag {
+            public final static int notice = 0;
+            public final static int invitation = 1;
+            public final static int reject = 2;
+            public final static int group_delete = 3;
+        }
     }
 }

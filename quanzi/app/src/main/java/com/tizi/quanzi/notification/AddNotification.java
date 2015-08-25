@@ -80,6 +80,13 @@ public class AddNotification {
     private NotificationCompat.Builder setBuildEvent(NotificationCompat.Builder mBuilder) {
 
         /*intent*/
+        /*delete*/
+        Intent deleteIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
+        deleteIntent.putExtra(StaticField.NotifiName.NotifiDelete, true);
+
+        mBuilder.setDeleteIntent(PendingIntent.getBroadcast(
+                mContext, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
         /*click*/
         Intent clickIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
         clickIntent.putExtra(StaticField.NotifiName.NotifiClick, true);
@@ -88,14 +95,6 @@ public class AddNotification {
         }
         mBuilder.setContentIntent(PendingIntent.getBroadcast(
                 mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT));
-
-
-        /*delete*/
-        Intent deleteIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
-        deleteIntent.putExtra(StaticField.NotifiName.NotifiDelete, true);
-
-        mBuilder.setDeleteIntent(PendingIntent.getBroadcast(
-                mContext, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         return mBuilder;
     }

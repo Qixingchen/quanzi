@@ -122,8 +122,20 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
      *
      * @param group 需要添加的群
      */
-    public void addAGroup(GroupClass group) {
+    public void addGroup(GroupClass group) {
         groupClasses.add(group);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 为 groupClasses 添加内容
+     *
+     * @param groups 需要添加的群
+     */
+    public void addGroup(List<GroupClass> groups) {
+        for (GroupClass group : groups) {
+            groupClasses.add(group);
+        }
         notifyDataSetChanged();
     }
 }

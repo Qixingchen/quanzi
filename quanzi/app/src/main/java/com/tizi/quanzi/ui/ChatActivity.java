@@ -36,6 +36,7 @@ import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
@@ -65,7 +66,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private int LastPosition = -1;
 
-    private static final int QueryLimit = 10;
+    private static final int QueryLimit = 1000;
     private static final String TAG = ChatActivity.class.getSimpleName();
 
 
@@ -294,9 +295,15 @@ public class ChatActivity extends AppCompatActivity {
                     return;
                 }
                 for (AVIMMessage avimMessage : list) {
-                    ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage((AVIMTypedMessage) avimMessage);
-                    DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-                    chatMessageAdapter.addOrUpdateMessage(chatMessage);
+                    try {
+                        ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage((AVIMTypedMessage) avimMessage);
+                        DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+                        chatMessageAdapter.addOrUpdateMessage(chatMessage);
+                    } catch (ClassFormatError formatError) {
+                        SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess((AVIMTypedMessage) avimMessage);
+                        Log.w(TAG, systemMessage.toString());
+                        DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+                    }
                 }
                 ChatSwipeToRefresh.setRefreshing(false);
             }
@@ -317,6 +324,26 @@ public class ChatActivity extends AppCompatActivity {
         // TODO: 15/8/17 groupID
         attr.put(StaticField.ChatMessAttrName.groupID, "");
         attr.put(StaticField.ChatMessAttrName.type, StaticField.ChatBothUserType.twoPerson);
+        attr.put(StaticField.ChatMessAttrName.IS_SYS_MESS,
+                StaticField.SystemMessAttrName.MessTypeCode.normal_mess);
+        return attr;
+    }
+
+    /**
+     * 设置系统消息的附加参数
+     *
+     * @param attr 原有阐述列
+     *
+     * @return 添加了系统参数的列
+     */
+    private Map<String, Object> setSysMessAttr(Map<String, Object> attr) {
+        attr.put(StaticField.ChatMessAttrName.IS_SYS_MESS,
+                StaticField.SystemMessAttrName.MessTypeCode.System_mess);
+        attr.put(StaticField.SystemMessAttrName.REMARK, "嗨 你好！");
+        attr.put(StaticField.SystemMessAttrName.JOIN_CONV_ID, CONVERSATION_ID);
+        attr.put(StaticField.SystemMessAttrName.LINK_URL, "");
+        attr.put(StaticField.SystemMessAttrName.SYS_MSG_FLAG,
+                StaticField.SystemMessAttrName.systemFlag.invitation);
         return attr;
     }
 

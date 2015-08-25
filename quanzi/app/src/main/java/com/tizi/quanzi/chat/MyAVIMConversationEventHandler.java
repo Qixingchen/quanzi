@@ -11,7 +11,7 @@ import java.util.List;
  * 成员变化
  */
 public class MyAVIMConversationEventHandler extends AVIMConversationEventHandler {
-    // TODO: 15/8/12
+    // TODO: 15/8/12 群成员变动
     @Override
     public void onMemberLeft(AVIMClient avimClient, AVIMConversation avimConversation, List<String> list, String s) {
         

@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @see com.tizi.quanzi.gson.Group
  */
-public class GroupClass implements Parcelable {
+public class GroupClass implements Parcelable, Serializable {
     public String groupName;
     public Uri groupFace;
     public String groupID;
@@ -30,8 +30,7 @@ public class GroupClass implements Parcelable {
      *
      * @return 转换完成的 ArrayList<GroupClass>
      */
-    public static ArrayList<GroupClass> getGroupArrayListByEntityList(
-            List<Login.GroupEntity> groupEntityList) {
+    public static ArrayList<GroupClass> getGroupArrayListByEntityList(List<Login.GroupEntity> groupEntityList) {
         ArrayList<GroupClass> groupClassArrayList = new ArrayList<>();
         for (Login.GroupEntity groupEntity : groupEntityList) {
             groupClassArrayList.add(GroupClass.getGroupByEntity(groupEntity));

@@ -8,8 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.List;
  * Created by qixingchen on 15/8/12.
  * 数据库操作汇总
  * todo 使用workThread操作
+ * todo 事务回滚  https://groups.google.com/forum/#!topic/android-developers/dsEr5hj8k90
  */
 public class DBAct {
     private SQLiteDatabase db;
@@ -45,6 +49,8 @@ public class DBAct {
 
     /*查询*/
 
+    /*ChatMessage*/
+
     /**
      * 根据 ConversationId 查询所有聊天记录
      * 按照时间排序
@@ -59,8 +65,7 @@ public class DBAct {
      */
     @NonNull
     public List<ChatMessage> queryMessage(String ConversationId) {
-        Cursor chatMessageCursor = db.query(
-                DataBaseHelper.chatHistorySQLName.TableName,//table name
+        Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 null,//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
                 new String[]{ConversationId},//条件的参数
@@ -91,59 +96,38 @@ public class DBAct {
         ChatMessage chatMessage = new ChatMessage();
 
         //int
-        chatMessage.type =
-                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.type));
-        chatMessage.status =
-                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.status));
+        chatMessage.type = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.type));
+        chatMessage.status = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.status));
         //from需要在isSelfSend后判断
-        chatMessage.ChatBothUserType =
-                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.ChatBothUserType));
-        chatMessage.imageHeight =
-                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageHeight));
-        chatMessage.imageWeight =
-                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageWeight));
+        chatMessage.ChatBothUserType = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.ChatBothUserType));
+        chatMessage.imageHeight = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageHeight));
+        chatMessage.imageWeight = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageWeight));
 
         //string
-        chatMessage.text =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.text));
-        chatMessage.ConversationId =
-                cursor.getString(cursor.getColumnIndex(
-                        DataBaseHelper.chatHistorySQLName.ConversationId));
-        chatMessage.uid =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.uid));
-        chatMessage.sender =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.sender));
-        chatMessage.local_path =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.local_path));
-        chatMessage.url =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.url));
-        chatMessage.messID =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.messID));
-        chatMessage.chatImage =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.chatImage));
-        chatMessage.userName =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.userName));
-        chatMessage.groupID =
-                cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.Group_id));
+        chatMessage.text = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.text));
+        chatMessage.ConversationId = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.ConversationId));
+        chatMessage.uid = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.uid));
+        chatMessage.sender = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.sender));
+        chatMessage.local_path = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.local_path));
+        chatMessage.url = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.url));
+        chatMessage.messID = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.messID));
+        chatMessage.chatImage = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.chatImage));
+        chatMessage.userName = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.userName));
+        chatMessage.groupID = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.Group_id));
 
 
         //boolean
-        chatMessage.isSelfSend = cursor.getInt(cursor.getColumnIndex(
-                DataBaseHelper.chatHistorySQLName.isSelfSend_ioType)) > 0;
-        chatMessage.isread =
-                cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.isread)) > 0;
+        chatMessage.isSelfSend = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.isSelfSend_ioType)) > 0;
+        chatMessage.isread = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.isread)) > 0;
 
 
         //long
-        chatMessage.create_time =
-                cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.send_time));
+        chatMessage.create_time = cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.send_time));
 
-        chatMessage.receiptTimestamp =
-                cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.receiptTimestamp));
+        chatMessage.receiptTimestamp = cursor.getLong(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.receiptTimestamp));
 
         //double
-        chatMessage.voice_duration = cursor.getDouble(
-                cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.voice_duration));
+        chatMessage.voice_duration = cursor.getDouble(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.voice_duration));
 
         //etc
         if (chatMessage.isSelfSend) {
@@ -172,8 +156,7 @@ public class DBAct {
      */
     @Nullable
     public ChatMessage queryMessageByID(String messID) {
-        Cursor chatMessageCursor = db.query(
-                DataBaseHelper.chatHistorySQLName.TableName,//table name
+        Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 null,//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.messID + "=?",//条件
                 new String[]{messID},//条件的参数
@@ -200,8 +183,7 @@ public class DBAct {
      */
     @Nullable
     public ChatMessage queryOldestMessage(String ConversationId) {
-        Cursor chatMessageCursor = db.query(
-                DataBaseHelper.chatHistorySQLName.TableName,//table name
+        Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 null,//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
                 new String[]{ConversationId},//条件的参数
@@ -219,6 +201,105 @@ public class DBAct {
         return null;
     }
 
+    /*GroupClass*/
+
+    /**
+     * 获取用户自己的所有GroupList
+     *
+     * @return List<GroupClass> {@link GroupClass}
+     */
+    public List<GroupClass> quaryAllMyGroup() {
+
+        Cursor groupCursor = db.query(DataBaseHelper.GroupSQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                null,//条件
+                null,//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+
+        ArrayList<GroupClass> groupClassArrayList = new ArrayList<>();
+
+        groupCursor.moveToFirst();
+        while (!groupCursor.isAfterLast()) {
+            GroupClass temp = groupClassFromCursor(groupCursor);
+            if (temp != null) {
+                groupClassArrayList.add(temp);
+            }
+            groupCursor.moveToNext();
+        }
+        groupCursor.close();
+        return groupClassArrayList;
+    }
+
+    /**
+     * 根据 Cursor 转换 GroupClass
+     *
+     * @param cursor 查询到的游标
+     *
+     * @return 返回的 GroupClass
+     */
+    @Nullable
+    private GroupClass groupClassFromCursor(Cursor cursor) {
+        GroupClass groupClass = new GroupClass();
+        String SerializString = cursor.getString(
+                cursor.getColumnIndex(DataBaseHelper.GroupSQLName.Serializable));
+        byte[] byteout = SerializString.getBytes();
+        Object object = SerializedObjectFormat.readSerializedObject(byteout);
+        if (object != null) {
+            groupClass = (GroupClass) SerializedObjectFormat.readSerializedObject(byteout);
+        }
+        return groupClass;
+    }
+
+    /*SystemMessage*/
+
+    /**
+     * 获取系统消息
+     *
+     * @return 系统消息 List {@link SystemMessage}
+     */
+    public List<SystemMessage> quaryAllSysMess() {
+        Cursor sysMessCursor = db.query(DataBaseHelper.SystemMessSQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                null,//条件
+                null,//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        ArrayList<SystemMessage> systemMessageArrayList = new ArrayList<>();
+        sysMessCursor.moveToFirst();
+        while (!sysMessCursor.isAfterLast()) {
+            SystemMessage temp = sysMessFromCursor(sysMessCursor);
+            if (temp != null) {
+                systemMessageArrayList.add(temp);
+            }
+            sysMessCursor.moveToNext();
+        }
+        return systemMessageArrayList;
+    }
+
+    /**
+     * 根据 Cursor 转换 SystemMessage
+     *
+     * @param cursor 查询到的游标
+     *
+     * @return 返回的 SystemMessage
+     */
+    @Nullable
+    private SystemMessage sysMessFromCursor(Cursor cursor) {
+        SystemMessage systemMessage = new SystemMessage();
+        String SerializString = cursor.getString(
+                cursor.getColumnIndex(DataBaseHelper.GroupSQLName.Serializable));
+        byte[] byteout = SerializString.getBytes();
+        Object object = SerializedObjectFormat.readSerializedObject(byteout);
+        if (object != null) {
+            systemMessage = (SystemMessage) SerializedObjectFormat.readSerializedObject(byteout);
+        }
+        return systemMessage;
+    }
 
     /*判断*/
 
@@ -229,9 +310,7 @@ public class DBAct {
      * 添加或更新 chatMessage
      * 如果 chatMessage.isread 则更新这个项目，否则不更新
      *
-     * @param chatMessage 需要添加／更新的 ChatMessage
-     *
-     * @see ChatMessage
+     * @param chatMessage 需要添加／更新的 ChatMessage {@link ChatMessage}
      */
     public void addOrReplaceChatMessage(ChatMessage chatMessage) {
 
@@ -271,5 +350,31 @@ public class DBAct {
         db.replace(DataBaseHelper.chatHistorySQLName.TableName, null, content);
     }
 
+    /**
+     * 添加或更新 GroupClass
+     *
+     * @param groupClass 需要添加／更新的 GroupClass {@link GroupClass}
+     */
+    public void addOrReplaceGroup(GroupClass groupClass) {
+        ContentValues content = new ContentValues();
+        content.put(DataBaseHelper.GroupSQLName.id, groupClass.groupID);
+        content.put(DataBaseHelper.GroupSQLName.Serializable,
+                SerializedObjectFormat.getSerializedObject(groupClass));
+        db.replace(DataBaseHelper.GroupSQLName.TableName, null, content);
+    }
 
+    /**
+     * 新增系统消息
+     *
+     * @param systemMessage 需要增加或修改的系统消息 {@link SystemMessage}
+     */
+    public void addOrReplaceSysMess(SystemMessage systemMessage) {
+        ContentValues content = new ContentValues();
+        content.put(DataBaseHelper.SystemMessSQLName.id, systemMessage.getId());
+        content.put(DataBaseHelper.SystemMessSQLName.create_time, systemMessage.getCreate_time());
+        content.put(DataBaseHelper.SystemMessSQLName.isread, systemMessage.isread());
+        content.put(DataBaseHelper.SystemMessSQLName.Serializable,
+                SerializedObjectFormat.getSerializedObject(systemMessage));
+        db.replace(DataBaseHelper.SystemMessSQLName.TableName, null, content);
+    }
 }

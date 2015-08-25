@@ -10,6 +10,7 @@ import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.notification.AddNotification;
 
 /**
@@ -49,15 +50,22 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
     @Override
     public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
         Log.w(TAG, "收到消息");
-        ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
+        try {
+            ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
 
-        DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-        if (App.UI_CONVERSATION_ID.compareTo(message.getConversationId()) == 0) {
-            if (onMessage != null) {
-                onMessage.OnMessageGet(chatMessage);
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+            if (App.UI_CONVERSATION_ID.compareTo(message.getConversationId()) == 0) {
+                if (onMessage != null) {
+                    onMessage.OnMessageGet(chatMessage);
+                }
             }
+            AddNotification.getInstance().AddMessage(chatMessage);
+        } catch (ClassFormatError error) {
+            SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
+            // TODO: 15/8/25 do systemMessage
+            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
         }
-        AddNotification.getInstance().AddMessage(chatMessage);
+
     }
 
     /**

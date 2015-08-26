@@ -15,7 +15,6 @@ public class QuanziZoneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quanzi_zone);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

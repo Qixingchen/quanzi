@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             onPageChangeListener = new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    Log.w(TAG, "onPageScrolled position=" + position);
+                    //Log.w(TAG, "onPageScrolled position=" + position);
                 }
 
                 @Override

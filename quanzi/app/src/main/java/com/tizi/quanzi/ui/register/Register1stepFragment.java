@@ -1,4 +1,4 @@
-package com.tizi.quanzi.fragment.register;
+package com.tizi.quanzi.ui.register;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -33,7 +33,7 @@ public class Register1stepFragment extends Fragment {
      *
      * @param nextStep
      *
-     * @see com.tizi.quanzi.fragment.register.Register1stepFragment.NextStep
+     * @see com.tizi.quanzi.ui.register.Register1stepFragment.NextStep
      */
     public void setNextStep(NextStep nextStep) {
         this.nextStep = nextStep;

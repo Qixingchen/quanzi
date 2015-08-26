@@ -5,25 +5,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/md_white">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="@dimen/quanzi_padding_top">
 
         <LinearLayout
             android:layout_width="@dimen/group_circle"
             android:layout_height="@dimen/group_circle"
+            android:layout_gravity="center"
             android:background="@drawable/circle">
 
             <de.hdodenhof.circleimageview.CircleImageView
-
                 android:id="@+id/group_face_image_view"
                 android:layout_width="@dimen/group_face"
                 android:layout_height="@dimen/group_face"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 app:border_color="#00000000"
                 app:border_width="2dp"
                 tools:background="@color/md_red_300"/>
@@ -37,48 +41,21 @@
             android:layout_marginStart="4dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/group_name_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="groupname"/>
-
-                <TextView
-                    android:id="@+id/time_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    tools:text="time:time"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
+            <TextView
+                android:id="@+id/group_name_text_view"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
+                android:layout_gravity="center"
+                tools:text="groupname"/>
 
-                <TextView
-                    android:id="@+id/last_commit_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="lastCommit"/>
-
-                <TextView
-                    android:id="@+id/unread_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginStart="4dp"
-                    android:gravity="end"
-                    tools:text="unread"/>
-
-            </LinearLayout>
-
-
+            <TextView
+                android:id="@+id/last_dyns_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/textColorPrimary"
+                tools:text="lastCommit"/>
         </LinearLayout>
 
     </LinearLayout>

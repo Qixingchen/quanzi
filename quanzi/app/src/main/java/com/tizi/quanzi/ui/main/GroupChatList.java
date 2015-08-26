@@ -1,4 +1,4 @@
-package com.tizi.quanzi.fragment.main;
+package com.tizi.quanzi.ui.main;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -76,7 +76,7 @@ public class GroupChatList extends Fragment {
             getAndShowGroup();
         }
 
-        showGroup();
+        showGroupAndSetCallBack();
 
     }
 
@@ -117,6 +117,7 @@ public class GroupChatList extends Fragment {
             @Override
             public void onOK(GroupClass groupClass) {
                 groupListAdapter.addGroup(groupClass);
+
             }
 
             @Override
@@ -134,16 +135,20 @@ public class GroupChatList extends Fragment {
     }
 
     /**
-     * 显示群组
+     * 显示群组并设置回调
      */
-    private void showGroup() {
+    private void showGroupAndSetCallBack() {
         mGroupListRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
         GroupListAdapter.Onclick onclick = new GroupListAdapter.Onclick() {
             @Override
             public void itemClick(int position) {
-                Intent chatmess = new Intent(mActivity, ChatActivity.class);
-                chatmess.putExtra("conversation", groupClasses.get(position).convId);
-                startActivity(chatmess);
+                if (position == groupClasses.size()) {
+                    // TODO: 15/8/26 add Group
+                } else {
+                    Intent chatmess = new Intent(mActivity, ChatActivity.class);
+                    chatmess.putExtra("conversation", groupClasses.get(position).convId);
+                    startActivity(chatmess);
+                }
             }
         };
         groupListAdapter = new GroupListAdapter(groupClasses, mActivity, onclick);

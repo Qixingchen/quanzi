@@ -2,13 +2,12 @@ package com.tizi.quanzi.Intent;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.ui.MainActivity;
+import com.tizi.quanzi.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

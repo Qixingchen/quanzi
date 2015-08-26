@@ -21,7 +21,7 @@ public class SystemMessage implements Parcelable, Serializable {
     private String remark;//消息中附带的邀请者信息：比如附带消息是“我是xxx，快来加入啊”
     private String link_url;//可能是链接消息，可以通过网址打开网站
     private int sys_msg_flag;//系统消息标识：0：系统消息、1：邀请加入圈子、2：拒绝加入圈子、3:圈子解散
-    // 4:续聊
+    // 4:被踢出圈子
     private int status;//状态：如邀请加入圈子，状态有未处理0、已处理1。当未处理时显示“同意、拒绝”按钮
     private boolean isread;//是否已读
     private String group_id;//邀请加入的圈子ID

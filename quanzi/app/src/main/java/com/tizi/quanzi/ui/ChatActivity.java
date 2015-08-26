@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -40,6 +41,7 @@ import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.QuanziZone.QuanziZoneActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,11 +71,16 @@ public class ChatActivity extends AppCompatActivity {
     private static final int QueryLimit = 1000;
     private static final String TAG = ChatActivity.class.getSimpleName();
 
+    //toolbar
+    private Toolbar toolbar;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         context = this;
         this.SendButton = (ImageButton) findViewById(R.id.SendButton);
         this.InputMessage = (EditText) findViewById(R.id.InputMessage);
@@ -195,7 +202,9 @@ public class ChatActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_zone) {
+            Intent intent = new Intent(this, QuanziZoneActivity.class);
+            startActivity(intent);
             return true;
         }
 

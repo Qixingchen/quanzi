@@ -1,4 +1,4 @@
-package com.tizi.quanzi.fragment.register;
+package com.tizi.quanzi.ui.register;
 
 
 import android.app.Activity;
@@ -46,7 +46,7 @@ public class CompleteUesrInfo extends Fragment {
     /**
      * 全部完成回调
      *
-     * @see com.tizi.quanzi.fragment.register.CompleteUesrInfo.AllDone
+     * @see com.tizi.quanzi.ui.register.CompleteUesrInfo.AllDone
      */
     public void setAllDone(AllDone allDone) {
         this.allDone = allDone;

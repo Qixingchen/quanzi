@@ -1,4 +1,4 @@
-package com.tizi.quanzi.fragment.register;
+package com.tizi.quanzi.ui.register;
 
 
 import android.app.Activity;
@@ -25,7 +25,7 @@ public class Register2stepFragment extends Fragment {
     /**
      * @param nextStep 设置NextStep
      *
-     * @see com.tizi.quanzi.fragment.register.Register2stepFragment.NextStep
+     * @see com.tizi.quanzi.ui.register.Register2stepFragment.NextStep
      */
     public void setNextStep(NextStep nextStep) {
         this.nextStep = nextStep;

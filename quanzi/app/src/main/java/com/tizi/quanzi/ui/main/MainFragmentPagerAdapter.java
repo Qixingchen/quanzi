@@ -1,4 +1,4 @@
-package com.tizi.quanzi.fragment.main;
+package com.tizi.quanzi.ui.main;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

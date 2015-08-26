@@ -1,4 +1,4 @@
-package com.tizi.quanzi.ui;
+package com.tizi.quanzi.ui.register;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.fragment.register.CompleteUesrInfo;
-import com.tizi.quanzi.fragment.register.Register1stepFragment;
-import com.tizi.quanzi.fragment.register.Register2stepFragment;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetPassword;

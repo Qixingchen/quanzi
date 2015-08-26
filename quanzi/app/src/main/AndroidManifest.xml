@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.tizi.quanzi"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.tizi.quanzi"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -16,16 +15,15 @@
     <!-- 用于获取客户端crash log -->
     <!-- 通过将crash log汇报到服务器上，您可以了解您的应用crash的原因以及次数。 -->
     <uses-permission android:name="android.permission.READ_LOGS"/>
-    <!-- 用于录音-->
+    <!-- 用于录音 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <!-- 写入文件-->
+    <!-- 写入文件 -->
     <uses-permission android:name="android.permission.STORAGE"/>
 
-    <!-- 需要相机来照相，但不是必须的-->
+    <!-- 需要相机来照相，但不是必须的 -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false"/>
-
 
     <application
         android:name=".app.App"
@@ -45,9 +43,7 @@
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
         </receiver>
-
-        <receiver
-            android:name=".notification.NotifiReceiver">
+        <receiver android:name=".notification.NotifiReceiver">
             <intent-filter>
                 <action android:name="quanzi.Notification.BROADCAST"/>
             </intent-filter>
@@ -63,10 +59,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:name=".ui.main.MainActivity"
+            android:label="@string/title_activity_main"/>
         <activity
-            android:name=".ui.RegisterActivity"
+            android:name=".ui.register.RegisterActivity"
             android:label="@string/title_activity_register"
             android:parentActivityName=".ui.LoginActivity">
             <meta-data
@@ -75,7 +71,15 @@
         </activity>
         <activity
             android:name=".ui.ChatActivity"
-            android:label="@string/title_activity_chat"></activity>
+            android:label="@string/title_activity_chat"/>
+        <activity
+            android:name=".ui.QuanziZone.QuanziZoneActivity"
+            android:label="@string/title_activity_quanzi_zone"
+            android:parentActivityName=".ui.ChatActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tizi.quanzi.ui.ChatActivity"/>
+        </activity>
     </application>
 
 </manifest>

@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.network.GetVolley;
 
 import java.util.List;
 
@@ -63,12 +61,19 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
      */
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
-        myViewHolder.unreadTextview.setText("unread commit");
-        myViewHolder.groupNameTextview.setText(groupClasses.get(position).groupName);
-        myViewHolder.lastCommitTextview.setText("2015-05-12 12:12");
-        Picasso.with(context)
-                .load(groupClasses.get(position).groupFace.toString())
-                .into(myViewHolder.groupFaceImageView);
+        if (position == groupClasses.size()) {
+            myViewHolder.groupNameTextview.setText("创建圈子");
+            Picasso.with(context).load(R.drawable.face)
+                    .into(myViewHolder.groupFaceImageView);
+
+        } else {
+            //myViewHolder.unreadTextview.setText("unread commit");
+            myViewHolder.groupNameTextview.setText(groupClasses.get(position).groupName);
+            myViewHolder.lastDynsTextview.setText("233:2333ww");
+            Picasso.with(context)
+                    .load(groupClasses.get(position).groupFace.toString())
+                    .into(myViewHolder.groupFaceImageView);
+        }
         myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,11 +83,11 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     }
 
     /**
-     * @return 记录数
+     * @return 记录数+1(最后一个用于创建圈子)
      */
     @Override
     public int getItemCount() {
-        return groupClasses == null ? 0 : groupClasses.size();
+        return groupClasses == null ? 1 : groupClasses.size() + 1;
     }
 
     /**
@@ -101,7 +106,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView groupFaceImageView;
-        public TextView groupNameTextview, lastCommitTextview, unreadTextview, lastTimeTextview;
+        public TextView groupNameTextview, lastDynsTextview, unreadTextview, lastTimeTextview;
         public View itemView;
 
         public MyViewHolder(View itemView) {
@@ -109,9 +114,9 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
             this.itemView = itemView;
             groupFaceImageView = (ImageView) itemView.findViewById(R.id.group_face_image_view);
             groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
-            lastCommitTextview = (TextView) itemView.findViewById(R.id.last_commit_text_view);
-            unreadTextview = (TextView) itemView.findViewById(R.id.unread_text_view);
-            lastTimeTextview = (TextView) itemView.findViewById(R.id.last_commit_text_view);
+            lastDynsTextview = (TextView) itemView.findViewById(R.id.last_dyns_text_view);
+            //unreadTextview = (TextView) itemView.findViewById(R.id.unread_text_view);
+            //lastTimeTextview = (TextView) itemView.findViewById(R.id.last_dyns_text_view);
         }
     }
 

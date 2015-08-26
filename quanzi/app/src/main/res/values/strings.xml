@@ -18,4 +18,7 @@
     <string name="NewAGroup">新建群</string>
 
     <string name="NotificaitonEventIntent">quanzi.Notification.BROADCAST</string>
+    <string name="menu_zone">空间</string>
+    <string name="menu_zone_long">查看圈子的空间</string>
+    <string name="title_activity_quanzi_zone">空间</string>
 </resources>

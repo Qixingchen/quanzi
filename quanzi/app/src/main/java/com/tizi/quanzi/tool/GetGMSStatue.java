@@ -26,8 +26,8 @@ public class GetGMSStatue {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mactivity);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, mactivity,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+//                GooglePlayServicesUtil.getErrorDialog(resultCode, mactivity,
+//                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
                 Log.w("GMS状态", "Type Error : " + resultCode);
                 AVAnalytics.onEvent(mactivity, "GMStatue", String.valueOf(resultCode));
                 AVAnalytics.onEvent(mactivity, "GMStatue-" + String.valueOf(resultCode));

@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.ChatActivity;
-import com.tizi.quanzi.ui.MainActivity;
+import com.tizi.quanzi.ui.main.MainActivity;
 
 /**
  * Created by qixingchen on 15/8/21.

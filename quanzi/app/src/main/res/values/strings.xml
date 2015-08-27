@@ -21,4 +21,6 @@
     <string name="menu_zone">空间</string>
     <string name="menu_zone_long">查看圈子的空间</string>
     <string name="title_activity_quanzi_zone">空间</string>
+    <string name="title_activity_new_group">新建圈子</string>
+    <string name="input_quanzi_name">输入圈圈名称</string>
 </resources>

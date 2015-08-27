@@ -17,6 +17,7 @@ import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.NewGroup;
 import com.tizi.quanzi.ui.ChatActivity;
+import com.tizi.quanzi.ui.NewGroup.NewGroupActivity;
 
 import java.util.List;
 
@@ -143,7 +144,8 @@ public class GroupChatList extends Fragment {
             @Override
             public void itemClick(int position) {
                 if (position == groupClasses.size()) {
-                    // TODO: 15/8/26 add Group
+                    Intent newGroup = new Intent(mActivity, NewGroupActivity.class);
+                    startActivity(newGroup);
                 } else {
                     Intent chatmess = new Intent(mActivity, ChatActivity.class);
                     chatmess.putExtra("conversation", groupClasses.get(position).convId);

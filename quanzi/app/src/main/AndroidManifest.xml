@@ -1,84 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.tizi.quanzi"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tizi.quanzi" >
 
     <!-- 网络权限 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- 外置储存卡写入 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 网络状态 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 设备状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- Wi-Fi状态 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 用于获取客户端crash log -->
     <!-- 通过将crash log汇报到服务器上，您可以了解您的应用crash的原因以及次数。 -->
-    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
     <!-- 用于录音 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- 写入文件 -->
-    <uses-permission android:name="android.permission.STORAGE"/>
+    <uses-permission android:name="android.permission.STORAGE" />
 
     <!-- 需要相机来照相，但不是必须的 -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"/>
+        android:required="false" />
 
     <application
         android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
 
         <!-- LeanCloud 服务 -->
         <service
             android:name="com.avos.avoscloud.PushService"
-            android:exported="true"/>
+            android:exported="true" />
 
-        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".notification.NotifiReceiver">
+        <receiver android:name=".notification.NotifiReceiver" >
             <intent-filter>
-                <action android:name="quanzi.Notification.BROADCAST"/>
+                <action android:name="quanzi.Notification.BROADCAST" />
             </intent-filter>
         </receiver>
 
         <activity
             android:name=".ui.LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
-            android:label="@string/title_activity_main"/>
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".ui.register.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".ui.LoginActivity">
+            android:parentActivityName=".ui.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.LoginActivity"/>
+                android:value=".ui.LoginActivity" />
         </activity>
         <activity
             android:name=".ui.ChatActivity"
-            android:label="@string/title_activity_chat"/>
+            android:label="@string/title_activity_chat" />
         <activity
             android:name=".ui.QuanziZone.QuanziZoneActivity"
             android:label="@string/title_activity_quanzi_zone"
-            android:parentActivityName=".ui.ChatActivity">
+            android:parentActivityName=".ui.ChatActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tizi.quanzi.ui.ChatActivity"/>
+                android:value="com.tizi.quanzi.ui.ChatActivity" />
+        </activity>
+        <activity
+            android:name=".ui.NewGroup.NewGroupActivity"
+            android:label="@string/title_activity_new_group" >
         </activity>
     </application>
 

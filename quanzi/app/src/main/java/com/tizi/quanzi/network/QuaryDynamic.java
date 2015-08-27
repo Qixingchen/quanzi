@@ -92,7 +92,7 @@ public class QuaryDynamic {
         GetVolley.getmInstance(mContext).setOKListener(mOKListener).
                 setErrorListener(mErrorListener)
                 .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/userdyn/findQzF", quaryDynmicPara);
+                        mContext.getString(R.string.testbaseuri) + "/grpdyn/findQzF", quaryDynmicPara);
         return mInstance;
     }
 

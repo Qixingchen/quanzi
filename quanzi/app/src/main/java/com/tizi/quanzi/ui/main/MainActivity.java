@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mainFragmentPagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mainFragmentPagerAdapter);
-        mViewPager.setOnPageChangeListener(getOnPageChangeListener());
+        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
         tabLayout.setupWithViewPager(mViewPager);
 
         TextView tab = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);

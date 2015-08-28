@@ -6,23 +6,28 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.tizi.quanzi.R;
 
 public class NewGroupActivity extends AppCompatActivity {
     NewGroupStep1Fragment newGroupStep1Fragment;
+    NewGroupStep2Fragment newGroupStep2Fragment;
     NewGroupStep1Fragment.NewGroupStep1Ans ans;
+    Toolbar toolbar;
+    private Menu mMenu;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_group);
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         newGroupStep1Fragment = new NewGroupStep1Fragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, newGroupStep1Fragment).commit();
-        Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
     }
 
 
@@ -30,6 +35,7 @@ public class NewGroupActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_new_group, menu);
+        mMenu = menu;
         return true;
     }
 
@@ -45,6 +51,13 @@ public class NewGroupActivity extends AppCompatActivity {
             NewGroupStep1Fragment.NewGroupStep1Ans temp = newGroupStep1Fragment.getNewGroupAns();
             if (temp.complete) {
                 ans = temp;
+                mMenu.findItem(R.id.action_next_step).setVisible(false);
+                mMenu.findItem(R.id.action_complete).setVisible(true);
+                toolbar.setTitle("邀请好友");
+                newGroupStep2Fragment = new NewGroupStep2Fragment();
+                newGroupStep2Fragment.setAns(ans);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, newGroupStep2Fragment).commit();
             }
             return true;
         }

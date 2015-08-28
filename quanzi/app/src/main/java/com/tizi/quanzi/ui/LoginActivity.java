@@ -24,6 +24,7 @@ import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
+import com.tizi.quanzi.tool.GetShareIntent;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.main.MainActivity;
 import com.tizi.quanzi.ui.register.RegisterActivity;

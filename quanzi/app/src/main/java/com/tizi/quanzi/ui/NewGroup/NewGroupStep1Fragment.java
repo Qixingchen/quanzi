@@ -1,10 +1,13 @@
 package com.tizi.quanzi.ui.NewGroup;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.RequiresPermission;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.PermissionChecker;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,10 +82,20 @@ public class NewGroupStep1Fragment extends Fragment {
     }
 
     /**
+     * 授权回调
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        requreForImage.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
      * 将图片储存到LeanCloud
      *
      * @param filepath 图片地址
      */
+    @RequiresPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     private void savePhoto(String filepath) {
         AVFile file = null;
         try {
@@ -112,6 +125,8 @@ public class NewGroupStep1Fragment extends Fragment {
         ans.groupSign = quanziSignInputLayout.getEditText().getText().toString();
         ans.groupFaceUri = groupFaceUri;
         ans.complete = (!ans.groupSign.isEmpty() && !ans.groupName.isEmpty() && !ans.groupFaceUri.isEmpty());
+        // TODO: 15/8/28 test
+        ans.complete = true;
         return ans;
     }
 

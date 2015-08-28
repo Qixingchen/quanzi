@@ -126,6 +126,15 @@ public class CompleteUesrInfo extends Fragment {
     }
 
     /**
+     * 授权回调
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        requreForImage.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
      * 将图片储存到LeanCloud
      *
      * @param filepath 图片地址

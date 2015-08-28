@@ -261,6 +261,15 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 授权回调
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        requreForImage.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
     /*聊天消息回调接口*/
     private void setMessageCallback() {
 

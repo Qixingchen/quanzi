@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,8 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
+import android.support.v4.app.ActivityCompat;
 
 import com.tizi.quanzi.app.App;
 
@@ -30,21 +33,33 @@ public class RequreForImage {
     private String[] items = new String[]{"选择本地图片", "拍照"};
     private static final String IMAGE_FILE_NAME = "faceImage";
     private String photoTakenUri;
+    private Activity mActivity;
+    private String lastTitle;
+
 
     public RequreForImage(Activity mActivity) {
         this.mActivity = mActivity;
     }
-
-    private Activity mActivity;
-
 
     /**
      * 显示选择对话框
      *
      * @param Title 对话框标题
      */
+    @RequiresPermission(allOf = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void showDialogAndCallIntent(String Title) {
+        lastTitle = Title;
 
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            return;
+        }
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return;
+        }
         new AlertDialog.Builder(mActivity)
                 .setTitle(Title)
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -158,7 +173,7 @@ public class RequreForImage {
     public String ZipedFilePathFromIntent(Intent data) {
 
         String FilePath;
-        if (data.getData() == null) {
+        if (data == null || data.getData() == null) {
             FilePath = photoTakenUri;
         } else {
             FilePath = GetFilePath.getPath(mActivity, data.getData());
@@ -174,4 +189,29 @@ public class RequreForImage {
         return FilePath;
     }
 
+    /**
+     * 取得授权
+     *
+     * @param permission 需要授权的权限
+     */
+    private void requestPermission(String permission) {
+        int code = 0;
+        if (permission.compareTo(Manifest.permission.READ_EXTERNAL_STORAGE) == 0) {
+            code = StaticField.PermissionRequestCode.READ_EXTERNAL_STORAGE;
+        }
+        if (permission.compareTo(Manifest.permission.WRITE_EXTERNAL_STORAGE) == 0) {
+            code = StaticField.PermissionRequestCode.WRITE_EXTERNAL_STORAGE;
+        }
+        ActivityCompat.requestPermissions(mActivity, new String[]{permission}, code);
+    }
+
+    /**
+     * 取得授权回调
+     */
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            showDialogAndCallIntent(lastTitle);
+        }
+    }
 }

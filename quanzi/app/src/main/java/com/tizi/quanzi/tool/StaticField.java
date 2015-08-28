@@ -83,4 +83,10 @@ public class StaticField {
             public final static int group_delete = 3;
         }
     }
+
+    /*申请权限ID*/
+    public static class PermissionRequestCode {
+        public final static int WRITE_EXTERNAL_STORAGE = 0;
+        public final static int READ_EXTERNAL_STORAGE = 1;
+    }
 }

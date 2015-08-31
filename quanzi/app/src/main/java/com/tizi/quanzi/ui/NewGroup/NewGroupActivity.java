@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.network.NewGroup;
+import com.tizi.quanzi.network.AddOrQuitGroup;
 import com.tizi.quanzi.ui.BaseActivity;
 
 public class NewGroupActivity extends BaseActivity {
@@ -39,7 +39,7 @@ public class NewGroupActivity extends BaseActivity {
     }
 
     @Override
-    protected void setOnClick() {
+    protected void setViewEvent() {
 
     }
 
@@ -76,7 +76,7 @@ public class NewGroupActivity extends BaseActivity {
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
                 String userID = App.getUserID(), tag = "[{}]";
-                NewGroup.getInstance().setNewGroupListener(null).NewGroup(GroupName, icon, notice, userID, tag);
+                AddOrQuitGroup.getInstance().setNewGroupListener(null).NewAGroup(GroupName, icon, notice, userID, tag);
             }
             return true;
         }

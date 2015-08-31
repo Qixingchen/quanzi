@@ -15,7 +15,7 @@ import com.tizi.quanzi.adapter.GroupListAdapter;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.network.NewGroup;
+import com.tizi.quanzi.network.AddOrQuitGroup;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.ui.NewGroup.NewGroupActivity;
 
@@ -114,7 +114,7 @@ public class GroupChatList extends Fragment {
         // TODO: 15/8/20 创建群
         String GroupName = "xingchen test2", icon = "http://ac-hy5srahi.clouddn.com/2j5dU2E1dvXcVD1TKPmgNBC.jpeg";
         String notice = "公告", userID = App.getUserID(), tag = "[{tagid:\"1\",tagname:\"1name\"},{tagid:\"2\",tagName:\"2name\"}]";
-        NewGroup.getInstance().setNewGroupListener(new NewGroup.NewGroupListener() {
+        AddOrQuitGroup.getInstance().setNewGroupListener(new AddOrQuitGroup.NewGroupListener() {
             @Override
             public void onOK(GroupClass groupClass) {
                 groupListAdapter.addGroup(groupClass);
@@ -125,7 +125,7 @@ public class GroupChatList extends Fragment {
             public void onError() {
 
             }
-        }).NewGroup(GroupName, icon, notice, userID, tag);
+        }).NewAGroup(GroupName, icon, notice, userID, tag);
     }
 
     /**

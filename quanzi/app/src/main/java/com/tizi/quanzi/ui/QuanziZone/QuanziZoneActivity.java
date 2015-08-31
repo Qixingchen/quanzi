@@ -1,15 +1,20 @@
 package com.tizi.quanzi.ui.QuanziZone;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.gson.GroupInfo;
+import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.network.AddOrQuitGroup;
 import com.tizi.quanzi.ui.BaseActivity;
 
 public class QuanziZoneActivity extends BaseActivity {
-    private Toolbar toolbar;
+
     private QuanziIntroduceFragment quanziIntroduceFragment;
     private QuanziSetFragment quanziSetFragment;
 
@@ -23,20 +28,35 @@ public class QuanziZoneActivity extends BaseActivity {
 
     @Override
     protected void findView() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
     }
 
     @Override
     protected void initView() {
-        toolbar.setTitle("Detail");
-        setSupportActionBar(toolbar);
+        Intent intent = getIntent();
+        String convID = intent.getStringExtra("conversation");
+
+        String GroupID = DBAct.getInstance().quaryGroupIDByconvID(convID);
+        AddOrQuitGroup.getInstance().setQueryListener(new AddOrQuitGroup.QueryGroupListener() {
+            @Override
+            public void OK(GroupInfo groupInfo) {
+                if (quanziIntroduceFragment != null) {
+                    quanziIntroduceFragment.setGroupInfo(groupInfo);
+                }
+            }
+
+            @Override
+            public void Error(String Mess) {
+
+            }
+        }).queryGroup(GroupID);
         quanziIntroduceFragment = new QuanziIntroduceFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, quanziIntroduceFragment).commit();
     }
 
     @Override
-    protected void setOnClick() {
+    protected void setViewEvent() {
 
     }
 

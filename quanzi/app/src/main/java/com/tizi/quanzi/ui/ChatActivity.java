@@ -204,6 +204,7 @@ public class ChatActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_zone) {
             Intent intent = new Intent(this, QuanziZoneActivity.class);
+            intent.putExtra("conversation", CONVERSATION_ID);
             startActivity(intent);
             return true;
         }

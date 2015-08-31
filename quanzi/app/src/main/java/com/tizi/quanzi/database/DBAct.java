@@ -253,6 +253,30 @@ public class DBAct {
         return groupClass;
     }
 
+    /**
+     * 使用convID 查询Group
+     *
+     * @param convID 通讯ID
+     *
+     * @return 对应的群组ID
+     */
+    @Nullable
+    public String quaryGroupIDByconvID(String convID) {
+        Cursor groupCursor = db.query(DataBaseHelper.GroupSQLName.TableName,//table name
+                new String[]{DataBaseHelper.GroupSQLName.id},//返回的列,null表示全选
+                DataBaseHelper.GroupSQLName.convID + "=?",//条件
+                new String[]{convID},//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        groupCursor.moveToFirst();
+        if (groupCursor.getCount() == 1) {
+            return groupCursor.getString(0);
+        }
+        return null;
+    }
+
     /*SystemMessage*/
 
     /**
@@ -358,6 +382,7 @@ public class DBAct {
     public void addOrReplaceGroup(GroupClass groupClass) {
         ContentValues content = new ContentValues();
         content.put(DataBaseHelper.GroupSQLName.id, groupClass.groupID);
+        content.put(DataBaseHelper.GroupSQLName.convID, groupClass.convId);
         content.put(DataBaseHelper.GroupSQLName.Serializable,
                 SerializedObjectFormat.getSerializedObject(groupClass));
         db.replace(DataBaseHelper.GroupSQLName.TableName, null, content);

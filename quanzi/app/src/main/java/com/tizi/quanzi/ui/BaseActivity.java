@@ -16,7 +16,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.setContentView(layoutResID);
         findView();
         initView();
-        setOnClick();
+        setViewEvent();
     }
 
     @Override
@@ -38,6 +38,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 设置点击监听
      */
-    protected abstract void setOnClick();
+    protected abstract void setViewEvent();
 
 }

@@ -1,16 +1,17 @@
 package com.tizi.quanzi.ui.NewGroup;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.network.NewGroup;
+import com.tizi.quanzi.ui.BaseActivity;
 
-public class NewGroupActivity extends AppCompatActivity {
+public class NewGroupActivity extends BaseActivity {
     NewGroupStep1Fragment newGroupStep1Fragment;
     NewGroupStep2Fragment newGroupStep2Fragment;
     NewGroupStep1Fragment.NewGroupStep1Ans ans;
@@ -22,11 +23,23 @@ public class NewGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_group);
+    }
+
+    @Override
+    protected void findView() {
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         newGroupStep1Fragment = new NewGroupStep1Fragment();
+    }
+
+    @Override
+    protected void initView() {
+        setSupportActionBar(toolbar);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, newGroupStep1Fragment).commit();
+    }
+
+    @Override
+    protected void setOnClick() {
 
     }
 
@@ -58,6 +71,12 @@ public class NewGroupActivity extends AppCompatActivity {
                 newGroupStep2Fragment.setAns(ans);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, newGroupStep2Fragment).commit();
+                // TODO: 15/8/31 send to Server
+                String GroupName = ans.groupName;
+                String icon = ans.groupFaceUri;
+                String notice = ans.groupSign;
+                String userID = App.getUserID(), tag = "[{}]";
+                NewGroup.getInstance().setNewGroupListener(null).NewGroup(GroupName, icon, notice, userID, tag);
             }
             return true;
         }

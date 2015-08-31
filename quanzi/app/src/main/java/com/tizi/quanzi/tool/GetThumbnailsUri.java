@@ -1,5 +1,7 @@
 package com.tizi.quanzi.tool;
 
+import android.content.Context;
+
 /**
  * Created by qixingchen on 15/8/18.
  * 获取7牛的缩略图
@@ -7,6 +9,22 @@ package com.tizi.quanzi.tool;
 public class GetThumbnailsUri {
 
     private static final String addUri = "?imageView2";
+
+    /**
+     * 获取DPI
+     */
+    public static float getDpi(Context context) {
+        return context.getResources().getDisplayMetrics().density;
+    }
+
+    /**
+     * 获取像素大小
+     *
+     * @param dp 所需的图像DP大小
+     */
+    public static int getPXs(Context context, int dp) {
+        return ((int) (dp * getDpi(context)));
+    }
 
     /**
      * 按照最长获取

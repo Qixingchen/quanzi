@@ -12,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupZonePagerAdapter;
+import com.tizi.quanzi.tool.GetThumbnailsUri;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -22,7 +24,8 @@ import com.tizi.quanzi.adapter.GroupZonePagerAdapter;
 public class QuanziIntroduceFragment extends Fragment {
 
     private Activity mActivity;
-    private ImageView zoneBackgroundImageView, groupFaceImageView, userface[];
+    private ImageView groupFaceImageView, userface[];
+    private NetworkImageView zoneBackgroundImageView;
     private TextView zoneSignTextview;
     private CollapsingToolbarLayout collapsingtoolbar;
     private ViewPager viewPager;
@@ -44,9 +47,10 @@ public class QuanziIntroduceFragment extends Fragment {
         findViews();
 
         Picasso.with(mActivity).load(R.drawable.face)
+                .resize(GetThumbnailsUri.getPXs(mActivity, 120),
+                        GetThumbnailsUri.getPXs(mActivity, 120))
                 .into(groupFaceImageView);
-        Picasso.with(mActivity).load(R.drawable.face)
-                .into(zoneBackgroundImageView);
+        zoneBackgroundImageView.setDefaultImageResId(R.drawable.face);
         zoneSignTextview.setText("这里是签名");
 
     }
@@ -58,7 +62,7 @@ public class QuanziIntroduceFragment extends Fragment {
     }
 
     private void findViews() {
-        zoneBackgroundImageView = (ImageView) mActivity.findViewById(R.id.zoneBackground);
+        zoneBackgroundImageView = (NetworkImageView) mActivity.findViewById(R.id.zoneBackground);
         groupFaceImageView = (ImageView) mActivity.findViewById(R.id.gruop_face);
         zoneSignTextview = (TextView) mActivity.findViewById(R.id.zoneSign);
 

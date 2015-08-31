@@ -119,7 +119,7 @@ public class AddNotification {
         if (chatMessageArrayList.size() == 1) {
             ChatMessage chatMessage = chatMessageArrayList.get(0);
             mBuilder.setContentTitle(chatMessage.userName)
-                    .setContentText(getContentText(chatMessage));
+                    .setContentText(ChatMessage.getContentText(chatMessage));
         } else {
             /*多条消息*/
             mBuilder.setContentTitle("圈子")
@@ -128,7 +128,7 @@ public class AddNotification {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             inboxStyle.setBigContentTitle("圈子");
             for (ChatMessage chatMessage : chatMessageArrayList) {
-                inboxStyle.addLine(getContentText(chatMessage));
+                inboxStyle.addLine(ChatMessage.getContentText(chatMessage));
             }
             inboxStyle.setSummaryText("收到" + chatMessageArrayList.size() + "条消息");
             mBuilder.setStyle(inboxStyle);
@@ -146,30 +146,6 @@ public class AddNotification {
     public void AddMessage(ChatMessage chatMessage) {
         chatMessageArrayList.add(chatMessage);
         setNotification();
-    }
-
-    /**
-     * 生成内容文字
-     * todo add name
-     *
-     * @param chatMessage 需要发布的消息
-     *
-     * @return 可阅读的消息内容
-     */
-    private String getContentText(ChatMessage chatMessage) {
-        String contentText;
-        if (chatMessage.type == StaticField.ChatContantType.IMAGE) {
-            contentText = "收到了一张图片";
-        } else if (chatMessage.type == StaticField.ChatContantType.VOICE) {
-            contentText = "收到了一段录音";
-        } else if (chatMessage.type == StaticField.ChatContantType.VEDIO) {
-            contentText = "收到了一段视频";
-        } else if (chatMessage.type == StaticField.ChatContantType.Location) {
-            contentText = "收到了一个位置";
-        } else {
-            contentText = chatMessage.text;
-        }
-        return contentText;
     }
 
 

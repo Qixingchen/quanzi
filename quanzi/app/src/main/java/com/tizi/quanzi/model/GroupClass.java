@@ -26,6 +26,8 @@ public class GroupClass implements Parcelable, Serializable {
     public boolean validation;
     public String createUser;
     public String groupNo;
+    public int UnreadCount;
+    public String lastMess;
 
     /**
      * 将 List<Login.GroupEntity> 转换为 ArrayList<GroupClass>
@@ -65,6 +67,12 @@ public class GroupClass implements Parcelable, Serializable {
         return groupClass;
     }
 
+    public GroupClass() {
+    }
+
+
+    //    Parcelable
+
 
     @Override
     public int describeContents() {
@@ -83,9 +91,8 @@ public class GroupClass implements Parcelable, Serializable {
         dest.writeByte(validation ? (byte) 1 : (byte) 0);
         dest.writeString(this.createUser);
         dest.writeString(this.groupNo);
-    }
-
-    public GroupClass() {
+        dest.writeInt(this.UnreadCount);
+        dest.writeString(this.lastMess);
     }
 
     protected GroupClass(Parcel in) {
@@ -99,6 +106,8 @@ public class GroupClass implements Parcelable, Serializable {
         this.validation = in.readByte() != 0;
         this.createUser = in.readString();
         this.groupNo = in.readString();
+        this.UnreadCount = in.readInt();
+        this.lastMess = in.readString();
     }
 
     public static final Creator<GroupClass> CREATOR = new Creator<GroupClass>() {

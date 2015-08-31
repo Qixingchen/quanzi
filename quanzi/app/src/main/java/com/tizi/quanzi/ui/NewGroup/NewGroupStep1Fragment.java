@@ -19,6 +19,7 @@ import com.avos.avoscloud.SaveCallback;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 
 import java.io.IOException;
@@ -109,7 +110,10 @@ public class NewGroupStep1Fragment extends Fragment {
                         //上传失败
                     } else {
                         String photoUri = finalFile.getThumbnailUrl(false, 200, 200);
-                        Picasso.with(mActivity).load(photoUri).into(UserPhotoImageView);
+                        Picasso.with(mActivity).load(photoUri)
+                                //todo getsize
+                                .resize(GetThumbnailsUri.getPXs(mActivity, 48), GetThumbnailsUri.getPXs(mActivity, 48))
+                                .into(UserPhotoImageView);
                         groupFaceUri = photoUri;
                     }
                 }

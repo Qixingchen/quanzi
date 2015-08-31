@@ -1,23 +1,43 @@
 package com.tizi.quanzi.ui.QuanziZone;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.ui.BaseActivity;
 
-public class QuanziZoneActivity extends AppCompatActivity {
+public class QuanziZoneActivity extends BaseActivity {
     private Toolbar toolbar;
+    private QuanziIntroduceFragment quanziIntroduceFragment;
+    private QuanziSetFragment quanziSetFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quanzi_zone);
+
+
+    }
+
+    @Override
+    protected void findView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+    }
+
+    @Override
+    protected void initView() {
         toolbar.setTitle("Detail");
         setSupportActionBar(toolbar);
+        quanziIntroduceFragment = new QuanziIntroduceFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment, quanziIntroduceFragment).commit();
+    }
+
+    @Override
+    protected void setOnClick() {
+
     }
 
     @Override
@@ -36,6 +56,9 @@ public class QuanziZoneActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            quanziSetFragment = new QuanziSetFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment, quanziSetFragment).commit();
             return true;
         }
 

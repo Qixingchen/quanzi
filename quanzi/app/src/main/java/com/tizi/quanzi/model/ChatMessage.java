@@ -1,6 +1,7 @@
 package com.tizi.quanzi.model;
 
 import com.tizi.quanzi.tool.FriendTime;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 
 /**
@@ -18,6 +19,30 @@ public class ChatMessage {
     public long create_time, receiptTimestamp;
     public boolean isread, isSelfSend;
     public double voice_duration;
+
+    /**
+     * 生成内容文字
+     * todo add name
+     *
+     * @param chatMessage 需要发布的消息
+     *
+     * @return 可阅读的消息内容
+     */
+    public static String getContentText(ChatMessage chatMessage) {
+        String contentText;
+        if (chatMessage.type == StaticField.ChatContantType.IMAGE) {
+            contentText = "收到了一张图片";
+        } else if (chatMessage.type == StaticField.ChatContantType.VOICE) {
+            contentText = "收到了一段录音";
+        } else if (chatMessage.type == StaticField.ChatContantType.VEDIO) {
+            contentText = "收到了一段视频";
+        } else if (chatMessage.type == StaticField.ChatContantType.Location) {
+            contentText = "收到了一个位置";
+        } else {
+            contentText = chatMessage.text;
+        }
+        return contentText;
+    }
 
     @Override
     public String toString() {

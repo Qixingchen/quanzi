@@ -5,9 +5,11 @@ package com.tizi.quanzi.app;
  * Application
  */
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.util.SparseArrayCompat;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
@@ -16,6 +18,7 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.facebook.stetho.Stetho;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
@@ -23,9 +26,13 @@ import com.tizi.quanzi.database.DataBaseHelper;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+
 public class App extends Application {
     private static final String TAG = "App";
     private static Application application;
+    private static HashMap<String, WeakReference<Activity>> mActivitys = new HashMap<>();
 
     private static AVIMClient imClient = null;
 
@@ -83,6 +90,20 @@ public class App extends Application {
     }
 
     /**
+     * 设置Activity引用
+     *
+     * @param activity 新增的activity
+     */
+    public static synchronized void setActivitys(Activity activity) {
+        WeakReference<Activity> reference = new WeakReference<Activity>(activity);
+        mActivitys.put(activity.getClass().getSimpleName(), reference);
+    }
+
+    public static Activity getActivity(String ActivityName) {
+        return mActivitys.get(ActivityName).get();
+    }
+
+    /**
      * 应用初始化
      * 初始化AVIM
      * 各变量赋值
@@ -115,6 +136,15 @@ public class App extends Application {
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
 
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
+
+        //facebook Stetho
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(
+                                Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(
+                                Stetho.defaultInspectorModulesProvider(this))
+                        .build());
 
     }
 

@@ -1,12 +1,14 @@
 package com.tizi.quanzi.log;
 
+import com.tizi.quanzi.BuildConfig;
+
 /**
  * Created by qixingchen on 15/7/13.
  * 注释类
  */
 public class Log {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = BuildConfig.DEBUG;
 
     public static void e(String tag, String message) {
         if (DEBUG && message != null) {

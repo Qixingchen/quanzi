@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.tool.GetThumbnailsUri;
 
 import java.util.List;
 
@@ -64,14 +65,18 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
         if (position == groupClasses.size()) {
             myViewHolder.groupNameTextview.setText("创建圈子");
             Picasso.with(context).load(R.drawable.face)
+                    .resize(GetThumbnailsUri.getPXs(context, 127),
+                            GetThumbnailsUri.getPXs(context, 127))
                     .into(myViewHolder.groupFaceImageView);
 
         } else {
             //myViewHolder.unreadTextview.setText("unread commit");
             myViewHolder.groupNameTextview.setText(groupClasses.get(position).groupName);
-            myViewHolder.lastDynsTextview.setText("233:2333ww");
+            myViewHolder.lastDynsTextview.setText(groupClasses.get(position).lastMess);
             Picasso.with(context)
                     .load(groupClasses.get(position).groupFace.toString())
+                    .resize((int) (127 * GetThumbnailsUri.getDpi(context)),
+                            (int) (127 * GetThumbnailsUri.getDpi(context)))
                     .into(myViewHolder.groupFaceImageView);
         }
         myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {

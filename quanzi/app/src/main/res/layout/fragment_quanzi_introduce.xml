@@ -25,7 +25,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:theme="@style/AppTheme.Revert">
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/zoneBackground"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

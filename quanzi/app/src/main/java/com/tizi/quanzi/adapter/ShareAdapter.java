@@ -1,13 +1,10 @@
 package com.tizi.quanzi.adapter;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.support.v7.media.MediaItemMetadata;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

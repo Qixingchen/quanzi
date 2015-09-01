@@ -38,7 +38,7 @@ public abstract class NetWorkAbs<T extends OnlySuccess> {
 
     public interface QuaryDynamicListener {
         // TODO: 15/8/20 why
-        //void onOK(T ts);
+//        void onOK(T  ts);
 
         void onError();
     }

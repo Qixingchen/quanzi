@@ -13,16 +13,18 @@ import android.view.ViewGroup;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuitGroup;
+import com.tizi.quanzi.tool.FlushMess;
+import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.ui.NewGroup.NewGroupActivity;
 
 import java.util.List;
 
 
-public class GroupChatList extends Fragment {
+public class GroupChatList extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -36,7 +38,6 @@ public class GroupChatList extends Fragment {
     private GroupListAdapter groupListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private Activity mActivity;
 
     /**
      * Use this factory method to create a new instance of
@@ -67,16 +68,7 @@ public class GroupChatList extends Fragment {
         if (mParam1.compareTo("1") != 0) {
             return;
         }
-
-
-        Intent intent = mActivity.getIntent();
-
-        try {
-            groupClasses = intent.getExtras().getParcelableArrayList("group");
-        } catch (Exception e) {
-            getAndShowGroup();
-        }
-
+        groupClasses = GroupList.getInstance().getGroupList();
         showGroupAndSetCallBack();
 
     }
@@ -97,9 +89,19 @@ public class GroupChatList extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mActivity = activity;
+    protected void findViews() {
+
+    }
+
+    @Override
+    protected void initViewsAndSetEvent() {
+        List<GroupClass> groupClasses = GroupList.getInstance().getGroupList();
+        for (GroupClass groupClass : groupClasses) {
+            if (groupClass.needFlushMess) {
+                FlushMess.Flush(groupClass.convId);
+                groupClass.needFlushMess = false;
+            }
+        }
     }
 
     @Override
@@ -128,12 +130,6 @@ public class GroupChatList extends Fragment {
         }).NewAGroup(GroupName, icon, notice, userID, tag);
     }
 
-    /**
-     * 从数据库获得群组列表
-     */
-    private void getAndShowGroup() {
-        groupClasses = DBAct.getInstance().quaryAllMyGroup();
-    }
 
     /**
      * 显示群组并设置回调

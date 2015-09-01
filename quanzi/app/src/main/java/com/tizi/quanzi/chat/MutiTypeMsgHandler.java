@@ -7,6 +7,7 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
@@ -60,6 +61,8 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                 }
             }
             AddNotification.getInstance().AddMessage(chatMessage);
+            GroupList.getInstance().updateGroupLastMess(
+                    chatMessage.ConversationId, chatMessage.text, chatMessage.create_time);
         } catch (ClassFormatError error) {
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
             // TODO: 15/8/25 do systemMessage

@@ -22,6 +22,8 @@ import com.facebook.stetho.Stetho;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
+import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.database.DataBaseHelper;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
@@ -123,8 +125,9 @@ public class App extends Application {
             setDataBaseHelper(UserID);
             // TODO: 15/8/21 fix crash
             //getNewImClient(UserID);
+            //getGroup
+            GroupList.getInstance().setGroupList(DBAct.getInstance().quaryAllMyGroup());
         }
-
 
         AVAnalytics.setAnalyticsEnabled(false);
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",

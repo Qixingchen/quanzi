@@ -89,4 +89,10 @@ public class StaticField {
         public final static int WRITE_EXTERNAL_STORAGE = 0;
         public final static int READ_EXTERNAL_STORAGE = 1;
     }
+
+    /*消息刷新数量*/
+    public static class MessageQueryLimit {
+        public static final int Limit = 1000;
+        public static final int FlushMaxTimes = 10;
+    }
 }

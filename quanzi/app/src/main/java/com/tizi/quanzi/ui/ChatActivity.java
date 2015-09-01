@@ -68,7 +68,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private int LastPosition = -1;
 
-    private static final int QueryLimit = 1000;
+    private static final int QueryLimit = StaticField.MessageQueryLimit.Limit;
     private static final String TAG = ChatActivity.class.getSimpleName();
 
     //toolbar

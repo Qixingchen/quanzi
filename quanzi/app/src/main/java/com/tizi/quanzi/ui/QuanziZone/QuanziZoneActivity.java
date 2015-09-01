@@ -17,6 +17,7 @@ public class QuanziZoneActivity extends BaseActivity {
 
     private QuanziIntroduceFragment quanziIntroduceFragment;
     private QuanziSetFragment quanziSetFragment;
+    private GroupInfo mGroupInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class QuanziZoneActivity extends BaseActivity {
         AddOrQuitGroup.getInstance().setQueryListener(new AddOrQuitGroup.QueryGroupListener() {
             @Override
             public void OK(GroupInfo groupInfo) {
+                mGroupInfo = groupInfo;
                 if (quanziIntroduceFragment != null) {
                     quanziIntroduceFragment.setGroupInfo(groupInfo);
                 }
@@ -77,6 +79,7 @@ public class QuanziZoneActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             quanziSetFragment = new QuanziSetFragment();
+            quanziSetFragment.setGroupInfo(mGroupInfo);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment, quanziSetFragment).commit();
             return true;

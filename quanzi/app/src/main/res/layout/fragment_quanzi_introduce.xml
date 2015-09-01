@@ -157,7 +157,7 @@
                     android:id="@+id/Group_user12"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/face"/>
+                    tools:background="@drawable/face"/>
             </LinearLayout>
 
             <android.support.v4.view.ViewPager

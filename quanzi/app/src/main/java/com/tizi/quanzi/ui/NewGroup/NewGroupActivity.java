@@ -76,7 +76,10 @@ public class NewGroupActivity extends BaseActivity {
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
                 String userID = App.getUserID(), tag = "[{}]";
-                AddOrQuitGroup.getInstance().setNewGroupListener(null).NewAGroup(GroupName, icon, notice, userID, tag);
+                AddOrQuitGroup.getInstance().setNewGroupListener(null
+                        //todo add Group
+                ).NewAGroup(GroupName, icon, notice, userID, tag);
+
             }
             return true;
         }

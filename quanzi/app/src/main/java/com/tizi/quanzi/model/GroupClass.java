@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 
 import java.io.Serializable;
@@ -26,8 +28,25 @@ public class GroupClass implements Parcelable, Serializable {
     public boolean validation;
     public String createUser;
     public String groupNo;
+    //不要重置的项目
+    public boolean needFlushMess;
     public int UnreadCount;
     public String lastMess;
+    public long lastMessTime;// TODO: 15/9/1
+
+    public GroupClass(String groupName, Uri groupFace, String groupID, String groupType, String notice, String convId, String background, boolean validation, String createUser, String groupNo, boolean needFlushMess) {
+        this.groupName = groupName;
+        this.groupFace = groupFace;
+        this.groupID = groupID;
+        this.groupType = groupType;
+        Notice = notice;
+        this.convId = convId;
+        this.background = background;
+        this.validation = validation;
+        this.createUser = createUser;
+        this.groupNo = groupNo;
+        this.needFlushMess = needFlushMess;
+    }
 
     /**
      * 将 List<Login.GroupEntity> 转换为 ArrayList<GroupClass>
@@ -53,6 +72,7 @@ public class GroupClass implements Parcelable, Serializable {
      */
     public static GroupClass getGroupByEntity(Login.GroupEntity groupEntity) {
         GroupClass groupClass = new GroupClass();
+        GroupClass groupOld = GroupList.getInstance().getGroup(groupEntity.getId());
         groupClass.groupID = groupEntity.getId();
         groupClass.groupName = groupEntity.getGroupName();
         groupClass.groupFace = Uri.parse(groupEntity.getIcon());
@@ -63,6 +83,16 @@ public class GroupClass implements Parcelable, Serializable {
         groupClass.validation = groupEntity.getValidation();
         groupClass.createUser = groupEntity.getCreateUser();
         groupClass.groupNo = groupEntity.getGroupNo();
+        if (groupOld != null) {
+            groupClass.lastMess = groupOld.lastMess;
+            groupClass.lastMessTime = groupOld.lastMessTime;
+            groupClass.UnreadCount = groupOld.UnreadCount;
+            groupClass.needFlushMess = groupOld.needFlushMess;
+        } else {
+            groupClass.lastMessTime = 0;
+            groupClass.UnreadCount = 0;
+            groupClass.needFlushMess = true;
+        }
 
         return groupClass;
     }

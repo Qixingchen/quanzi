@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.model.GroupClass;
@@ -28,10 +29,8 @@ public class StartMainActivity {
      * @param context         上下文
      */
     public static void startByLoginGroup(List<Login.GroupEntity> groupEntityList, Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
 
-        Bundle bundle = new Bundle();
-
+        //set group
         ArrayList<GroupClass> groupClassArrayList = GroupClass.
                 getGroupArrayListByEntityList(groupEntityList);
 
@@ -39,8 +38,10 @@ public class StartMainActivity {
             DBAct.getInstance().addOrReplaceGroup(groupClass);
         }
 
-        bundle.putParcelableArrayList("group", groupClassArrayList);
-        intent.putExtras(bundle);
+        GroupList.getInstance().setGroupList(groupClassArrayList);
+
+        //start intent
+        Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
 

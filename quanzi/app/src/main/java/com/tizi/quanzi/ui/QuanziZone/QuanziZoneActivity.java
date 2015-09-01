@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.GroupInfo;
 import com.tizi.quanzi.model.GroupClass;
@@ -37,7 +38,7 @@ public class QuanziZoneActivity extends BaseActivity {
         Intent intent = getIntent();
         String convID = intent.getStringExtra("conversation");
 
-        String GroupID = DBAct.getInstance().quaryGroupIDByconvID(convID);
+        String GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
         AddOrQuitGroup.getInstance().setQueryListener(new AddOrQuitGroup.QueryGroupListener() {
             @Override
             public void OK(GroupInfo groupInfo) {

@@ -2,7 +2,6 @@ package com.tizi.quanzi.dataStatic;
 
 import android.support.annotation.Nullable;
 
-import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.model.GroupClass;
 
 import java.util.ArrayList;
@@ -17,6 +16,16 @@ import java.util.List;
 public class GroupList {
     private final static ArrayList<GroupClass> groupList = new ArrayList<>();
     private static GroupList mInstance;
+    private ArrayList<OnChangeCallBack> onChangeCallBacks = new ArrayList<>();
+
+    public GroupList addOnChangeCallBack(OnChangeCallBack onChangeCallBack) {
+        onChangeCallBacks.add(onChangeCallBack);
+        return mInstance;
+    }
+
+    public void deleteOnChangeCallBack(OnChangeCallBack onChangeCallBack) {
+        onChangeCallBacks.remove(onChangeCallBack);
+    }
 
     public static GroupList getInstance() {
         if (mInstance == null) {
@@ -36,6 +45,10 @@ public class GroupList {
         return groupList;
     }
 
+    public void callUpdate() {
+        noticeAllCallBack();
+    }
+
     @Nullable
     public GroupClass getGroup(String id) {
         synchronized (groupList) {
@@ -48,12 +61,24 @@ public class GroupList {
         return null;
     }
 
+    public String getGroupIDByConvID(String convID) {
+        synchronized (groupList) {
+            for (GroupClass group : groupList) {
+                if (group.convId.compareTo(convID) == 0) {
+                    return group.groupID;
+                }
+            }
+        }
+        return "";
+    }
+
     public void setGroupList(List<GroupClass> newGroupList) {
         synchronized (groupList) {
             groupList.clear();
             groupList.addAll(newGroupList);
         }
         sort();
+        noticeAllCallBack();
     }
 
     public void addGroup(GroupClass group) {
@@ -61,6 +86,7 @@ public class GroupList {
             groupList.add(group);
         }
         sort();
+        noticeAllCallBack();
     }
 
     public boolean deleteGroup(GroupClass group) {
@@ -68,6 +94,7 @@ public class GroupList {
             for (GroupClass groupclass : groupList) {
                 if (groupclass.groupNo.compareTo(group.groupID) == 0) {
                     groupList.remove(groupclass);
+                    noticeAllCallBack();
                     return true;
                 }
             }
@@ -85,6 +112,7 @@ public class GroupList {
             }
         }
         sort();
+        noticeAllCallBack();
     }
 
     public void sort() {
@@ -104,6 +132,7 @@ public class GroupList {
                 if (group.convId.compareTo(convID) == 0) {
                     group.lastMess = lastMess;
                     group.lastMessTime = lastTime;
+                    noticeAllCallBack();
                     return true;
                 }
             }
@@ -111,4 +140,13 @@ public class GroupList {
         return false;
     }
 
+    private void noticeAllCallBack() {
+        for (OnChangeCallBack cb : onChangeCallBacks) {
+            cb.changed();
+        }
+    }
+
+    public interface OnChangeCallBack {
+        void changed();
+    }
 }

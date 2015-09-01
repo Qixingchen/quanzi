@@ -24,4 +24,5 @@
     <string name="title_activity_new_group">新建圈子</string>
     <string name="input_quanzi_name">输入圈圈名称</string>
     <string name="complete">完成</string>
+    <string name="isFirstRun">isFirstRun</string>
 </resources>

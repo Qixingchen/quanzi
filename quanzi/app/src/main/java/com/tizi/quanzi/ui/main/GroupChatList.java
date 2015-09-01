@@ -14,6 +14,8 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuitGroup;
 import com.tizi.quanzi.tool.FlushMess;
@@ -96,12 +98,19 @@ public class GroupChatList extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
         List<GroupClass> groupClasses = GroupList.getInstance().getGroupList();
-        for (GroupClass groupClass : groupClasses) {
-            if (groupClass.needFlushMess) {
-                FlushMess.Flush(groupClass.convId);
-                groupClass.needFlushMess = false;
+        if (App.getPrefer(getString(R.string.isFirstRun)).compareTo("") == 0) {
+            for (GroupClass groupClass : groupClasses) {
+
+                FlushMess.getInstance().Flush(groupClass.convId);
+                ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(groupClass.convId);
+                if (chatMessage != null) {
+                    groupClass.lastMessTime = chatMessage.create_time;
+                    groupClass.lastMess = chatMessage.text;
+                    GroupList.getInstance().updateGroup(groupClass);
+                }
             }
         }
+        App.setPrefer(getString(R.string.isFirstRun), "NO");
     }
 
     @Override
@@ -114,20 +123,20 @@ public class GroupChatList extends BaseFragment {
      */
     public void newAGroup() {
         // TODO: 15/8/20 创建群
-        String GroupName = "xingchen test2", icon = "http://ac-hy5srahi.clouddn.com/2j5dU2E1dvXcVD1TKPmgNBC.jpeg";
-        String notice = "公告", userID = App.getUserID(), tag = "[{tagid:\"1\",tagname:\"1name\"},{tagid:\"2\",tagName:\"2name\"}]";
-        AddOrQuitGroup.getInstance().setNewGroupListener(new AddOrQuitGroup.NewGroupListener() {
-            @Override
-            public void onOK(GroupClass groupClass) {
-                groupListAdapter.addGroup(groupClass);
-
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        }).NewAGroup(GroupName, icon, notice, userID, tag);
+        //        String GroupName = "xingchen test2", icon = "http://ac-hy5srahi.clouddn.com/2j5dU2E1dvXcVD1TKPmgNBC.jpeg";
+        //        String notice = "公告", userID = App.getUserID(), tag = "[{tagid:\"1\",tagname:\"1name\"},{tagid:\"2\",tagName:\"2name\"}]";
+        //        AddOrQuitGroup.getInstance().setNewGroupListener(new AddOrQuitGroup.NewGroupListener() {
+        //            @Override
+        //            public void onOK(GroupClass groupClass) {
+        //                groupListAdapter.addGroup(groupClass);
+        //
+        //            }
+        //
+        //            @Override
+        //            public void onError() {
+        //
+        //            }
+        //        }).NewAGroup();
     }
 
 

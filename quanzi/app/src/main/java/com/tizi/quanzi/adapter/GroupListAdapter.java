@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 
@@ -26,14 +27,21 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     private Onclick onclick;
 
     /**
-     * @param groupClasses 群组列表
-     * @param context      上下文
-     * @param onclick      群组被点击时的回调
+     * @param kGroupClasses 群组列表
+     * @param context       上下文
+     * @param onclick       群组被点击时的回调
      */
-    public GroupListAdapter(List<GroupClass> groupClasses, Context context, Onclick onclick) {
-        this.groupClasses = groupClasses;
+    public GroupListAdapter(final List<GroupClass> kGroupClasses, Context context, Onclick onclick) {
+        this.groupClasses = kGroupClasses;
         this.context = context;
         this.onclick = onclick;
+        GroupList.getInstance().addOnChangeCallBack(new GroupList.OnChangeCallBack() {
+            @Override
+            public void changed() {
+                groupClasses = GroupList.getInstance().getGroupList();
+                notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -72,7 +80,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
         } else {
             //myViewHolder.unreadTextview.setText("unread commit");
             myViewHolder.groupNameTextview.setText(groupClasses.get(position).groupName);
-            myViewHolder.lastDynsTextview.setText(groupClasses.get(position).lastMess);
+            myViewHolder.lastMessTextview.setText(groupClasses.get(position).lastMess);
             Picasso.with(context)
                     .load(groupClasses.get(position).groupFace.toString())
                     .resize((int) (127 * GetThumbnailsUri.getDpi(context)),
@@ -111,7 +119,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView groupFaceImageView;
-        public TextView groupNameTextview, lastDynsTextview, unreadTextview, lastTimeTextview;
+        public TextView groupNameTextview, lastMessTextview, unreadTextview, lastTimeTextview;
         public View itemView;
 
         public MyViewHolder(View itemView) {
@@ -119,7 +127,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
             this.itemView = itemView;
             groupFaceImageView = (ImageView) itemView.findViewById(R.id.group_face_image_view);
             groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
-            lastDynsTextview = (TextView) itemView.findViewById(R.id.last_dyns_text_view);
+            lastMessTextview = (TextView) itemView.findViewById(R.id.last_mess_text_view);
             //unreadTextview = (TextView) itemView.findViewById(R.id.unread_text_view);
             //lastTimeTextview = (TextView) itemView.findViewById(R.id.last_dyns_text_view);
         }

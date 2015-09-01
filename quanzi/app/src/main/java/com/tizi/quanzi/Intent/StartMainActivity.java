@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
+import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.ui.main.MainActivity;
 
@@ -35,7 +36,11 @@ public class StartMainActivity {
                 getGroupArrayListByEntityList(groupEntityList);
 
         for (GroupClass groupClass : groupClassArrayList) {
-            DBAct.getInstance().addOrReplaceGroup(groupClass);
+            ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(groupClass.convId);
+            if (chatMessage != null) {
+                groupClass.lastMessTime = chatMessage.create_time;
+                groupClass.lastMess = chatMessage.text;
+            }
         }
 
         GroupList.getInstance().setGroupList(groupClassArrayList);

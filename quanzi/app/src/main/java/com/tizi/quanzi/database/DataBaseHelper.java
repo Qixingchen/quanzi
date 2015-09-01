@@ -70,9 +70,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("create table singlechat_list(id varchar(40) primary key not null, account varchar(40),uname varchar(40), text varchar(50), icon varchar(200), type Integer, create_user varchar(40), send_time integer, convid varchar(50), unread_count integer)");
 
-        db.execSQL("create table groups(id varchar(40) PRIMARY KEY not null,convID varchar(40),Serializable varchar(3000) )");
+        db.execSQL("create table groups(id varchar(40) PRIMARY KEY not null,convID varchar(40),Serializable blob )");
 
-        db.execSQL("create table systemMess( id varchar(40) PRIMARY KEY not null ,create_time INTEGER, isread varchar(1) ,Serializable varchar(3000) )");
+        db.execSQL("create table systemMess( id varchar(40) PRIMARY KEY not null ,create_time INTEGER, isread varchar(1) ,Serializable blob )");
     }
 
     /* 更改数据库版本的操作*/

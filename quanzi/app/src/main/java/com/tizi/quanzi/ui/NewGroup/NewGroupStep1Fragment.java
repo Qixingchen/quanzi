@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresPermission;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.PermissionChecker;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,7 +135,9 @@ public class NewGroupStep1Fragment extends Fragment {
 
     public class NewGroupStep1Ans {
         public boolean complete;
-        public String groupName, groupSign, groupFaceUri;
+        public String groupName;
+        public String groupSign;
+        public String groupFaceUri;
 
     }
 

@@ -201,6 +201,35 @@ public class DBAct {
         return null;
     }
 
+    /**
+     * 查询 ConversationId 在数据库中最新的 ChatMessage
+     *
+     * @param ConversationId ConversationId
+     *
+     * @return ChatMessage
+     *
+     * @see ChatMessage
+     */
+    @Nullable
+    public ChatMessage queryNewestMessage(String ConversationId) {
+        Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
+                new String[]{ConversationId},//条件的参数
+                null,//groupBy
+                null,//having
+                DataBaseHelper.chatHistorySQLName.send_time + " DESC",//orderBy
+                "1" //limit
+        );
+        chatMessageCursor.moveToFirst();
+        if (chatMessageCursor.getCount() == 1) {
+            ChatMessage chatMessage = chatMessageFromCursor(chatMessageCursor);
+            Log.w(TAG, "最旧的消息是：" + chatMessage.toString());
+            return chatMessage;
+        }
+        return null;
+    }
+
     /*GroupClass*/
 
     /**
@@ -208,7 +237,8 @@ public class DBAct {
      *
      * @return List<GroupClass> {@link GroupClass}
      */
-    public List<GroupClass> quaryAllMyGroup() {
+    @Deprecated
+    private List<GroupClass> quaryAllMyGroup() {
 
         Cursor groupCursor = db.query(DataBaseHelper.GroupSQLName.TableName,//table name
                 null,//返回的列,null表示全选
@@ -241,16 +271,21 @@ public class DBAct {
      * @return 返回的 GroupClass
      */
     @Nullable
+    @Deprecated
     private GroupClass groupClassFromCursor(Cursor cursor) {
         GroupClass groupClass = new GroupClass();
-        String SerializString = cursor.getString(
+        byte[] SerializString = cursor.getBlob(
                 cursor.getColumnIndex(DataBaseHelper.GroupSQLName.Serializable));
-        byte[] byteout = SerializString.getBytes();
-        Object object = SerializedObjectFormat.readSerializedObject(byteout);
-        if (object != null) {
-            groupClass = (GroupClass) SerializedObjectFormat.readSerializedObject(byteout);
+        try {
+            Object object = SerializedObjectFormat.readSerializedObject(SerializString);
+            if (object != null) {
+                groupClass = (GroupClass) object;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return groupClass;
+
     }
 
     /**
@@ -261,7 +296,8 @@ public class DBAct {
      * @return 对应的群组ID
      */
     @Nullable
-    public String quaryGroupIDByconvID(String convID) {
+    @Deprecated
+    private String quaryGroupIDByconvID(String convID) {
         Cursor groupCursor = db.query(DataBaseHelper.GroupSQLName.TableName,//table name
                 new String[]{DataBaseHelper.GroupSQLName.id},//返回的列,null表示全选
                 DataBaseHelper.GroupSQLName.convID + "=?",//条件
@@ -315,12 +351,11 @@ public class DBAct {
     @Nullable
     private SystemMessage sysMessFromCursor(Cursor cursor) {
         SystemMessage systemMessage = new SystemMessage();
-        String SerializString = cursor.getString(
+        byte[] SerializString = cursor.getBlob(
                 cursor.getColumnIndex(DataBaseHelper.GroupSQLName.Serializable));
-        byte[] byteout = SerializString.getBytes();
-        Object object = SerializedObjectFormat.readSerializedObject(byteout);
+        Object object = SerializedObjectFormat.readSerializedObject(SerializString);
         if (object != null) {
-            systemMessage = (SystemMessage) SerializedObjectFormat.readSerializedObject(byteout);
+            systemMessage = (SystemMessage) object;
         }
         return systemMessage;
     }
@@ -379,7 +414,8 @@ public class DBAct {
      *
      * @param groupClass 需要添加／更新的 GroupClass {@link GroupClass}
      */
-    public void addOrReplaceGroup(GroupClass groupClass) {
+    @Deprecated
+    private void addOrReplaceGroup(GroupClass groupClass) {
         ContentValues content = new ContentValues();
         content.put(DataBaseHelper.GroupSQLName.id, groupClass.groupID);
         content.put(DataBaseHelper.GroupSQLName.convID, groupClass.convId);

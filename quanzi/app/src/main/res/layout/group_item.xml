@@ -50,11 +50,12 @@
                 tools:text="groupname"/>
 
             <TextView
-                android:id="@+id/last_dyns_text_view"
+                android:id="@+id/last_mess_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/normal_text_size"
                 tools:text="lastCommit"/>
         </LinearLayout>
 

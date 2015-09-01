@@ -1,6 +1,7 @@
 package com.tizi.quanzi.network;
 
 import android.content.Context;
+import android.net.Uri;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -69,7 +70,7 @@ public class AddOrQuitGroup {
      * @param userID    创建者 todo 去掉
      * @param tag       群标签
      */
-    public void NewAGroup(String GroupName, String icon, String notice, String userID, String tag) {
+    public void NewAGroup(String GroupName, String icon, String notice, String userID, String tag, String convid) {
         makeAddListener();
 
         groupname = GroupName;
@@ -84,6 +85,7 @@ public class AddOrQuitGroup {
         newGroupPara.put("notice", notice);
         newGroupPara.put("userid", userID);
         newGroupPara.put("grouptags", tag);
+        newGroupPara.put("convid", convid);
 
         GetVolley.getmInstance(mContext).setOKListener(mOKListener).
                 setErrorListener(mErrorListener)
@@ -192,9 +194,9 @@ public class AddOrQuitGroup {
                 if (group.isSuccess()) {
                     if (newGroupListener != null) {
                         // TODO: 15/8/25 add Group
-                        //                        GroupClass groupClass = new GroupClass(groupname, Uri.parse(icon),
-                        //                                group.getGroupId(), "");
-                        //                        newGroupListener.onOK(groupClass);
+                        GroupClass groupClass = new GroupClass();
+                        groupClass.groupID = group.getGroupId();
+                        newGroupListener.onOK(groupClass);
 
                     } else {
                         Toast.makeText(mContext, group.getMsg(), Toast.LENGTH_LONG).show();

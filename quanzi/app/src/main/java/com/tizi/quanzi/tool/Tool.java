@@ -39,7 +39,6 @@ public class Tool {
      *
      * @return 计算得到的图片高，宽
      */
-    // TODO: 15/8/20 add@
     public static int[] getImagePixel(Context context, int Heigh, int Weith) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         //宽度最大0.6
@@ -47,14 +46,12 @@ public class Tool {
         int[] imagePixel = new int[2];
         if (Weith > imageMaxWidth) {
             imagePixel[1] = imageMaxWidth;
-            Double imageHei = Weith * 1.0 / imageMaxWidth * Heigh;
+            Double imageHei = imageMaxWidth * 1.0 / Weith * Heigh;
             imagePixel[0] = imageHei.intValue();
         } else {
             imagePixel[0] = Heigh;
             imagePixel[1] = Weith;
         }
-
-
         return imagePixel;
     }
 

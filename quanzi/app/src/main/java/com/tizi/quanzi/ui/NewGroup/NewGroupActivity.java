@@ -5,21 +5,36 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuitGroup;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
+import com.tizi.quanzi.ui.main.MainActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NewGroupActivity extends BaseActivity {
     NewGroupStep1Fragment newGroupStep1Fragment;
     NewGroupStep2Fragment newGroupStep2Fragment;
     NewGroupStep1Fragment.NewGroupStep1Ans ans;
     Toolbar toolbar;
+    private String convID;
     private Menu mMenu;
+    private static final String TAG = NewGroupActivity.class.getSimpleName();
 
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_group);
@@ -40,7 +55,23 @@ public class NewGroupActivity extends BaseActivity {
 
     @Override
     protected void setViewEvent() {
-
+        List<String> clientIds = new ArrayList<String>();
+        clientIds.add(App.getUserID());
+        AVIMClient imClient = App.getImClient();
+        Map<String, Object> attr = new HashMap<String, Object>();
+        attr.put("type", StaticField.ChatBothUserType.GROUP);
+        imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
+            @Override
+            public void done(AVIMConversation avimConversation, AVException e) {
+                if (e != null) {
+                    Log.e(TAG, e.getMessage());
+                    Toast.makeText(App.getActivity(NewGroupActivity.class.getSimpleName()).getBaseContext(),
+                            e.getMessage(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                convID = avimConversation.getConversationId();
+            }
+        });
     }
 
 
@@ -76,12 +107,34 @@ public class NewGroupActivity extends BaseActivity {
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
                 String userID = App.getUserID(), tag = "[{}]";
-                AddOrQuitGroup.getInstance().setNewGroupListener(null
+                AddOrQuitGroup.getInstance().setNewGroupListener(
+                        new AddOrQuitGroup.NewGroupListener() {
+                            @Override
+                            public void onOK(GroupClass groupClass) {
+                                groupClass.groupName = ans.groupName;
+                                groupClass.groupFace = ans.groupFaceUri;
+                                groupClass.groupType = StaticField.ChatBothUserType.GROUP;
+                                groupClass.Notice = ans.groupSign;
+                                groupClass.convId = convID;
+                                groupClass.createUser = App.getUserID();
+                                groupClass.UnreadCount = 0;
+                                GroupList.getInstance().addGroup(groupClass);
+                            }
+
+                            @Override
+                            public void onError() {
+                                // TODO: 15/9/1 on error
+                            }
+                        }
                         //todo add Group
-                ).NewAGroup(GroupName, icon, notice, userID, tag);
+                ).NewAGroup(GroupName, icon, notice, userID, tag, convID);
 
             }
             return true;
+        }
+
+        if (id == R.id.action_complete) {
+            startActivity(new Intent(this, MainActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

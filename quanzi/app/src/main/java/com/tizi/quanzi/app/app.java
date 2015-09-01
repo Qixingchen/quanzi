@@ -86,6 +86,14 @@ public class App extends Application {
         return UserToken;
     }
 
+    public static String getPrefer(String Name) {
+        return preferences.getString(Name, "");
+    }
+
+    public static void setPrefer(String name, String vaule) {
+        preferences.edit().putString(name, vaule).apply();
+    }
+
     public static void setUserToken(String userToken) {
         preferences.edit().putString(StaticField.TokenPreferences.USERTOKEN, userToken).apply();
         UserToken = userToken;
@@ -125,8 +133,6 @@ public class App extends Application {
             setDataBaseHelper(UserID);
             // TODO: 15/8/21 fix crash
             //getNewImClient(UserID);
-            //getGroup
-            GroupList.getInstance().setGroupList(DBAct.getInstance().quaryAllMyGroup());
         }
 
         AVAnalytics.setAnalyticsEnabled(false);

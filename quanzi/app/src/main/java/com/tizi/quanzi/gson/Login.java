@@ -75,7 +75,7 @@ public class Login {
         private String remark;
         private String convId;
         private String bg;
-        private String type;
+        private int type;
         private String notice;
 
         public void setGroupNo(String groupNo) {
@@ -114,7 +114,7 @@ public class Login {
             this.bg = bg;
         }
 
-        public void setType(String type) {
+        public void setType(int type) {
             this.type = type;
         }
 
@@ -158,7 +158,7 @@ public class Login {
             return bg;
         }
 
-        public String getType() {
+        public int getType() {
             return type;
         }
 

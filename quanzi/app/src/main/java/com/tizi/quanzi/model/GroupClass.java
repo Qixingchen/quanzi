@@ -1,11 +1,9 @@
 package com.tizi.quanzi.model;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 
 import java.io.Serializable;
@@ -19,9 +17,9 @@ import java.util.List;
  */
 public class GroupClass implements Parcelable, Serializable {
     public String groupName;
-    public Uri groupFace;
+    public String groupFace;
     public String groupID;
-    public String groupType;
+    public int groupType;
     public String Notice;
     public String convId;
     public String background;
@@ -29,24 +27,10 @@ public class GroupClass implements Parcelable, Serializable {
     public String createUser;
     public String groupNo;
     //不要重置的项目
-    public boolean needFlushMess;
     public int UnreadCount;
     public String lastMess;
     public long lastMessTime;// TODO: 15/9/1
 
-    public GroupClass(String groupName, Uri groupFace, String groupID, String groupType, String notice, String convId, String background, boolean validation, String createUser, String groupNo, boolean needFlushMess) {
-        this.groupName = groupName;
-        this.groupFace = groupFace;
-        this.groupID = groupID;
-        this.groupType = groupType;
-        Notice = notice;
-        this.convId = convId;
-        this.background = background;
-        this.validation = validation;
-        this.createUser = createUser;
-        this.groupNo = groupNo;
-        this.needFlushMess = needFlushMess;
-    }
 
     /**
      * 将 List<Login.GroupEntity> 转换为 ArrayList<GroupClass>
@@ -75,7 +59,7 @@ public class GroupClass implements Parcelable, Serializable {
         GroupClass groupOld = GroupList.getInstance().getGroup(groupEntity.getId());
         groupClass.groupID = groupEntity.getId();
         groupClass.groupName = groupEntity.getGroupName();
-        groupClass.groupFace = Uri.parse(groupEntity.getIcon());
+        groupClass.groupFace = groupEntity.getIcon();
         groupClass.groupType = groupEntity.getType();
         groupClass.Notice = groupEntity.getNotice();
         groupClass.convId = groupEntity.getConvId();
@@ -87,11 +71,9 @@ public class GroupClass implements Parcelable, Serializable {
             groupClass.lastMess = groupOld.lastMess;
             groupClass.lastMessTime = groupOld.lastMessTime;
             groupClass.UnreadCount = groupOld.UnreadCount;
-            groupClass.needFlushMess = groupOld.needFlushMess;
         } else {
             groupClass.lastMessTime = 0;
             groupClass.UnreadCount = 0;
-            groupClass.needFlushMess = true;
         }
 
         return groupClass;
@@ -103,7 +85,6 @@ public class GroupClass implements Parcelable, Serializable {
 
     //    Parcelable
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -112,9 +93,9 @@ public class GroupClass implements Parcelable, Serializable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.groupName);
-        dest.writeParcelable(this.groupFace, 0);
+        dest.writeString(this.groupFace);
         dest.writeString(this.groupID);
-        dest.writeString(this.groupType);
+        dest.writeInt(this.groupType);
         dest.writeString(this.Notice);
         dest.writeString(this.convId);
         dest.writeString(this.background);
@@ -123,13 +104,14 @@ public class GroupClass implements Parcelable, Serializable {
         dest.writeString(this.groupNo);
         dest.writeInt(this.UnreadCount);
         dest.writeString(this.lastMess);
+        dest.writeLong(this.lastMessTime);
     }
 
     protected GroupClass(Parcel in) {
         this.groupName = in.readString();
-        this.groupFace = in.readParcelable(Uri.class.getClassLoader());
+        this.groupFace = in.readString();
         this.groupID = in.readString();
-        this.groupType = in.readString();
+        this.groupType = in.readInt();
         this.Notice = in.readString();
         this.convId = in.readString();
         this.background = in.readString();
@@ -138,6 +120,7 @@ public class GroupClass implements Parcelable, Serializable {
         this.groupNo = in.readString();
         this.UnreadCount = in.readInt();
         this.lastMess = in.readString();
+        this.lastMessTime = in.readLong();
     }
 
     public static final Creator<GroupClass> CREATOR = new Creator<GroupClass>() {

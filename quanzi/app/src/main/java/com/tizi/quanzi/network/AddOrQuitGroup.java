@@ -1,7 +1,6 @@
 package com.tizi.quanzi.network;
 
 import android.content.Context;
-import android.net.Uri;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -11,7 +10,7 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.Group;
-import com.tizi.quanzi.gson.GroupInfo;
+import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
 
@@ -148,7 +147,7 @@ public class AddOrQuitGroup {
     }
 
     public interface QueryGroupListener {
-        void OK(GroupInfo groupInfo);
+        void OK(GroupUserInfo groupUserInfo);
 
         void Error(String Mess);
     }
@@ -225,7 +224,7 @@ public class AddOrQuitGroup {
         mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                GroupInfo group = gson.fromJson(response, GroupInfo.class);
+                GroupUserInfo group = gson.fromJson(response, GroupUserInfo.class);
 
                 if (group.success) {
                     if (queryGroupListener != null) {

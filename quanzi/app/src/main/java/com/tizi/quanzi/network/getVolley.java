@@ -14,6 +14,9 @@ import com.android.volley.toolbox.Volley;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.log.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -136,7 +139,7 @@ public class GetVolley {
     public GetVolley addRequestWithSign(int method, String baseuri, Map<String, String> para) {
         String uri = baseuri + "?";
         para = addSignMap(para);
-        String paraUri = getParaUriFromMap(para);
+        String paraUri = convertToUTF8(getParaUriFromMap(para));
         uri += paraUri;
         StringRequest stringRequest = new StringRequest(method, uri, mOKListener, mErrorListener);
         addToRequestQueue(stringRequest);
@@ -249,6 +252,18 @@ public class GetVolley {
         };
         addToRequestQueue(stringRequest);
         return mInstance;
+    }
+
+    private String convertToUTF8(String s) {
+        Log.w(TAG, s);
+        ByteBuffer bb = Charset.forName("UTF-8").encode(s);
+
+        try {
+            return new String(bb.array(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

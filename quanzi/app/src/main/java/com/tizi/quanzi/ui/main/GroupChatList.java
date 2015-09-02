@@ -102,12 +102,6 @@ public class GroupChatList extends BaseFragment {
             for (GroupClass groupClass : groupClasses) {
 
                 FlushMess.getInstance().Flush(groupClass.convId);
-                ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(groupClass.convId);
-                if (chatMessage != null) {
-                    groupClass.lastMessTime = chatMessage.create_time;
-                    groupClass.lastMess = chatMessage.text;
-                    GroupList.getInstance().updateGroup(groupClass);
-                }
             }
         }
         App.setPrefer(getString(R.string.isFirstRun), "NO");

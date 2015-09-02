@@ -81,6 +81,7 @@ public class StaticField {
             public final static int invitation = 1;
             public final static int reject = 2;
             public final static int group_delete = 3;
+            public final static int kicked = 4;
         }
     }
 

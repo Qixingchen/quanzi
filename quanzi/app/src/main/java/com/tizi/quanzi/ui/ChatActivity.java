@@ -34,6 +34,7 @@ import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
@@ -460,6 +461,7 @@ public class ChatActivity extends AppCompatActivity {
                 ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
         Log.d("发送成功", chatMessage.toString());
         DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID, chatMessage.text, chatMessage.create_time);
         chatMessageAdapter.addOrUpdateMessage(chatMessage);
         chatmessagerecyclerView.scrollToPosition(
                 chatMessageAdapter.chatMessageList.size() - 1);

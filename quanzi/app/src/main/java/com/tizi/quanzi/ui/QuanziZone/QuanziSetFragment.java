@@ -14,8 +14,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.gson.GroupInfo;
-import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.network.AddOrQuitGroup;
 import com.tizi.quanzi.ui.BaseFragment;
 
@@ -27,15 +26,15 @@ public class QuanziSetFragment extends BaseFragment {
     private TextView quanziName, quanziTag, quanziSign, deleteMess;
     private Switch messNotifiSwitch;
     private Button exitQuanzi;
-    private GroupInfo groupInfo;
+    private GroupUserInfo groupUserInfo;
 
 
     public QuanziSetFragment() {
         // Required empty public constructor
     }
 
-    public void setGroupInfo(GroupInfo groupInfo) {
-        this.groupInfo = groupInfo;
+    public void setGroupUserInfo(GroupUserInfo groupUserInfo) {
+        this.groupUserInfo = groupUserInfo;
     }
 
 
@@ -59,9 +58,9 @@ public class QuanziSetFragment extends BaseFragment {
 
     @Override
     public void initViewsAndSetEvent() {
-        if (groupInfo != null) {
-            quanziName.setText(groupInfo.groupName);
-            quanziSign.setText(groupInfo.groupName);
+        if (groupUserInfo != null) {
+            quanziName.setText(groupUserInfo.groupName);
+            quanziSign.setText(groupUserInfo.groupName);
             deleteMess.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -107,7 +106,7 @@ public class QuanziSetFragment extends BaseFragment {
                                             // TODO: 15/8/31 error
                                         }
                                     })
-                                    .exitGroup(groupInfo.groupNo);
+                                    .exitGroup(groupUserInfo.groupNo);
                         }
                     });
                     builder.setNegativeButton("取消", null);

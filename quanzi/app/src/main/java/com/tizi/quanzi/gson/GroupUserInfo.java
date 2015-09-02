@@ -6,10 +6,10 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/8/31.
- * 组群详细信息
+ * 组群详细信息,仅成员列表有用
  * http://120.25.232.240:8080/group/findF?groupid=HTDM0048f4c2d7967c6f4011b69aaaa7af17b4e2&sign=ba5d601990b9c5e4e628d0139e7d2dcb&ts=1441010617&uid=HTDM004825b32141fe9c41f09846e85f0902f0bd
  */
-public class GroupInfo {
+public class GroupUserInfo {
 
     /**
      * groupNo :

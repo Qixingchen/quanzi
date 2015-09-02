@@ -53,7 +53,7 @@ public class GroupList {
     public GroupClass getGroup(String id) {
         synchronized (groupList) {
             for (GroupClass group : groupList) {
-                if (group.groupNo.compareTo(id) == 0) {
+                if (group.groupID.compareTo(id) == 0) {
                     return group;
                 }
             }
@@ -92,7 +92,7 @@ public class GroupList {
     public boolean deleteGroup(GroupClass group) {
         synchronized (groupList) {
             for (GroupClass groupclass : groupList) {
-                if (groupclass.groupNo.compareTo(group.groupID) == 0) {
+                if (groupclass.groupID.compareTo(group.groupID) == 0) {
                     groupList.remove(groupclass);
                     noticeAllCallBack();
                     return true;
@@ -105,7 +105,7 @@ public class GroupList {
     public void updateGroup(GroupClass group) {
         synchronized (groupList) {
             for (GroupClass groupclass : groupList) {
-                if (groupclass.groupNo.compareTo(group.groupID) == 0) {
+                if (groupclass.groupID.compareTo(group.groupID) == 0) {
                     groupList.remove(groupclass);
                     groupList.add(groupclass);
                 }
@@ -120,24 +120,38 @@ public class GroupList {
             Collections.sort(groupList, new Comparator<GroupClass>() {
                 @Override
                 public int compare(GroupClass lhs, GroupClass rhs) {
-                    return (int) (lhs.lastMessTime - rhs.lastMessTime);
+                    if (lhs.lastMessTime == 0 && rhs.lastMessTime == 0) {
+                        return 0;
+                    }
+                    if (lhs.lastMessTime == 0) {
+                        return Integer.MAX_VALUE;
+                    }
+                    if (rhs.lastMessTime == 0) {
+                        return Integer.MIN_VALUE;
+                    }
+                    return (int) -(lhs.lastMessTime - rhs.lastMessTime);
                 }
             });
         }
     }
 
     public boolean updateGroupLastMess(String convID, String lastMess, long lastTime) {
+        boolean isUpdated = false;
         synchronized (groupList) {
             for (GroupClass group : groupList) {
                 if (group.convId.compareTo(convID) == 0) {
                     group.lastMess = lastMess;
                     group.lastMessTime = lastTime;
-                    noticeAllCallBack();
-                    return true;
+                    isUpdated = true;
+                    break;
                 }
             }
         }
-        return false;
+        if (isUpdated) {
+            sort();
+            noticeAllCallBack();
+        }
+        return isUpdated;
     }
 
     private void noticeAllCallBack() {

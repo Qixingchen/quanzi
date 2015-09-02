@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +16,11 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.adapter.GroupUserAdapter;
 import com.tizi.quanzi.adapter.GroupZonePagerAdapter;
-import com.tizi.quanzi.gson.GroupInfo;
+import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.ui.BaseFragment;
@@ -32,6 +37,11 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private CollapsingToolbarLayout collapsingtoolbar;
     private ViewPager viewPager;
     private GroupZonePagerAdapter groupZonePagerAdapter;
+    private RecyclerView groupUsersRecyclerView;
+    private GroupUserAdapter groupUserAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private GroupUserInfo groupUserInfo;
+    private GroupClass groupClass;
 
 
     public QuanziIntroduceFragment() {
@@ -57,47 +67,39 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupZonePagerAdapter = new GroupZonePagerAdapter(mActivity);
         viewPager.setAdapter(groupZonePagerAdapter);
         toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
-        userface = new NetworkImageView[12];
-        userface[0] = (NetworkImageView) mActivity.findViewById(R.id.Group_user1);
-        userface[1] = (NetworkImageView) mActivity.findViewById(R.id.Group_user2);
-        userface[2] = (NetworkImageView) mActivity.findViewById(R.id.Group_user3);
-        userface[3] = (NetworkImageView) mActivity.findViewById(R.id.Group_user4);
-        userface[4] = (NetworkImageView) mActivity.findViewById(R.id.Group_user5);
-        userface[5] = (NetworkImageView) mActivity.findViewById(R.id.Group_user6);
-        userface[6] = (NetworkImageView) mActivity.findViewById(R.id.Group_user7);
-        userface[7] = (NetworkImageView) mActivity.findViewById(R.id.Group_user8);
-        userface[8] = (NetworkImageView) mActivity.findViewById(R.id.Group_user9);
-        userface[9] = (NetworkImageView) mActivity.findViewById(R.id.Group_user10);
-        userface[10] = (NetworkImageView) mActivity.findViewById(R.id.Group_user11);
-        userface[11] = (NetworkImageView) mActivity.findViewById(R.id.Group_user12);
     }
 
     @Override
     protected void initViewsAndSetEvent() {
 
         ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
+        groupUsersRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_users_item_recycler_view);
+        //todo creater
+
+        groupUserAdapter = new GroupUserAdapter(mActivity,
+                groupUserInfo == null ? null : groupUserInfo.memlist,
+                groupClass != null && groupClass.createUser.compareTo(App.getUserID()) == 0);
+        mLayoutManager = new GridLayoutManager(mActivity, 6);
+        groupUsersRecyclerView.setAdapter(groupUserAdapter);
+        groupUsersRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-    public void setGroupInfo(GroupInfo groupInfo) {
-        Picasso.with(mActivity).load(groupInfo.icon)
+    public void setGroupInfo(GroupUserInfo groupUserInfo, GroupClass groupClass) {
+        this.groupUserInfo = groupUserInfo;
+        this.groupClass = groupClass;
+        boolean isCreate = groupClass.createUser.compareTo(App.getUserID()) == 0;
+        if (groupUserAdapter != null) {
+            groupUserAdapter.setMemlist(groupUserInfo.memlist);
+            groupUserAdapter.setIsCreater(isCreate);
+            groupUserAdapter.setGroupID(groupClass.groupID);
+        }
+        Picasso.with(mActivity).load(groupClass.groupFace)
                 .resize(GetThumbnailsUri.getPXs(mActivity, 120),
                         GetThumbnailsUri.getPXs(mActivity, 120))
                 .into(groupFaceImageView);
-        zoneBackgroundImageView.setImageUrl(groupInfo.icon, GetVolley.getmInstance(mActivity).getImageLoader());
-        // TODO: 15/9/1 sign
-        zoneSignTextview.setText("签名是：");
-        for (int i = 0; i < groupInfo.memlist.size(); i++) {
-            userface[i].setImageUrl(groupInfo.memlist.get(i).icon, GetVolley.getmInstance(mActivity).getImageLoader());
-        }
-        deleteUserfaces(groupInfo.memlist.size());
+        zoneBackgroundImageView.setImageUrl(groupClass.background, GetVolley.getmInstance(mActivity).getImageLoader());
+        zoneSignTextview.setText("签名是：" + groupClass.Notice);
+
     }
 
-    private void deleteUserfaces(int userCount) {
-        if (userCount == 12) {
-            return;
-        }
-        for (int i = userCount; i < 12; i++) {
-            userface[i].setVisibility(View.GONE);
-        }
-    }
 }

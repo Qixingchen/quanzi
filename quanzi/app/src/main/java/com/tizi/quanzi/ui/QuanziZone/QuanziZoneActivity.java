@@ -2,15 +2,12 @@ package com.tizi.quanzi.ui.QuanziZone;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.database.DBAct;
-import com.tizi.quanzi.gson.GroupInfo;
-import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.network.AddOrQuitGroup;
 import com.tizi.quanzi.ui.BaseActivity;
 
@@ -18,7 +15,7 @@ public class QuanziZoneActivity extends BaseActivity {
 
     private QuanziIntroduceFragment quanziIntroduceFragment;
     private QuanziSetFragment quanziSetFragment;
-    private GroupInfo mGroupInfo;
+    private GroupUserInfo mGroupUserInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +32,20 @@ public class QuanziZoneActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        Intent intent = getIntent();
-        String convID = intent.getStringExtra("conversation");
+        quanziIntroduceFragment = new QuanziIntroduceFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment, quanziIntroduceFragment).commit();
 
-        String GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
+        Intent intent = getIntent();
+        final String convID = intent.getStringExtra("conversation");
+        final String GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
         AddOrQuitGroup.getInstance().setQueryListener(new AddOrQuitGroup.QueryGroupListener() {
             @Override
-            public void OK(GroupInfo groupInfo) {
-                mGroupInfo = groupInfo;
+            public void OK(GroupUserInfo groupUserInfo) {
+                mGroupUserInfo = groupUserInfo;
                 if (quanziIntroduceFragment != null) {
-                    quanziIntroduceFragment.setGroupInfo(groupInfo);
+                    mGroupUserInfo.groupNo = GroupID;
+                    quanziIntroduceFragment.setGroupInfo(groupUserInfo, GroupList.getInstance().getGroup(GroupID));
                 }
             }
 
@@ -53,9 +54,7 @@ public class QuanziZoneActivity extends BaseActivity {
 
             }
         }).queryGroup(GroupID);
-        quanziIntroduceFragment = new QuanziIntroduceFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment, quanziIntroduceFragment).commit();
+
     }
 
     @Override
@@ -80,7 +79,7 @@ public class QuanziZoneActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             quanziSetFragment = new QuanziSetFragment();
-            quanziSetFragment.setGroupInfo(mGroupInfo);
+            quanziSetFragment.setGroupUserInfo(mGroupUserInfo);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment, quanziSetFragment).commit();
             return true;

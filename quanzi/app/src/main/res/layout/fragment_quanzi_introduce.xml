@@ -72,93 +72,14 @@
                 android:textSize="@dimen/normal_text_size"
                 tools:text="签名：1234"/>
 
-            <LinearLayout
-                android:id="@+id/group_users_L1"
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/group_users_item_recycler_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                tools:layout_height="60dp">
+                tools:layout_height="64dp">
 
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user1"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user2"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user3"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user4"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user5"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user6"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/group_users_L2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                tools:layout_height="60dp">
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user7"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user8"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user9"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user10"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user11"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/Group_user12"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    tools:background="@drawable/face"/>
-            </LinearLayout>
+            </android.support.v7.widget.RecyclerView>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/detail_viewpager"

@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
 
@@ -53,10 +54,10 @@ public class UserManageInGroup {
         mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                OnlySuccess dyns = gson.fromJson(response, OnlySuccess.class);
-                if (dyns.isSuccess()) {
+                GroupUserInfo groupUserInfo = gson.fromJson(response, GroupUserInfo.class);
+                if (groupUserInfo.success) {
                     if (ManageGroupListener != null) {
-                        ManageGroupListener.onOK();
+                        ManageGroupListener.onOK(groupUserInfo);
                     }
                 } else {
                     Log.e(TAG, "Error");
@@ -84,7 +85,7 @@ public class UserManageInGroup {
     /**
      * 将用户从圈子中删除
      */
-    public UserManageInGroup deleteUser(String GroupID, String UserID) {
+    public void deleteUser(String GroupID, String UserID) {
 
         Map<String, String> deleteUserPara = new TreeMap<>();
         deleteUserPara.put("userid", UserID);
@@ -95,14 +96,25 @@ public class UserManageInGroup {
                 setErrorListener(mErrorListener)
                 .addRequestWithSign(Request.Method.GET,
                         mContext.getString(R.string.testbaseuri) + "/group/exitGroupF", deleteUserPara);
-        return mInstance;
+    }
+
+    public void acceptJoinGroup(String GroupID, String UserID) {
+        Map<String, String> acceptJoinGroupPara = new TreeMap<>();
+        acceptJoinGroupPara.put("userid", UserID);
+        acceptJoinGroupPara.put("groupid", GroupID);
+
+
+        GetVolley.getmInstance(mContext).setOKListener(mOKListener).
+                setErrorListener(mErrorListener)
+                .addRequestWithSign(Request.Method.GET,
+                        mContext.getString(R.string.testbaseuri) + "/group/acceptGroupInvite", acceptJoinGroupPara);
     }
 
     public interface ManageGroupListener {
         /**
          * 成功回调
          */
-        void onOK();
+        void onOK(GroupUserInfo groupUserInfo);
 
         void onError();
     }

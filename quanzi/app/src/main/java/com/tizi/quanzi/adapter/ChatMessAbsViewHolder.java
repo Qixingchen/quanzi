@@ -14,18 +14,18 @@ import com.tizi.quanzi.tool.StaticField;
  * Created by qixingchen on 15/7/23.
  * 聊天记录组件抽象类
  */
-public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
+public abstract class ChatMessAbsViewHolder extends RecyclerView.ViewHolder {
     //界面元素
     public NetworkImageView userFaceImageView, contantImageView;
     public TextView chatMessTextView, chatUserName, chatTime, voiceDuration;
     public ImageButton videoPlayButton;
     public ProgressBar audioProgressBar;
 
-    public BaseViewHolder baseViewHolder;
+    public ChatMessAbsViewHolder chatMessAbsViewHolder;
 
-    public BaseViewHolder(View itemView) {
+    public ChatMessAbsViewHolder(View itemView) {
         super(itemView);
-        baseViewHolder = this;
+        chatMessAbsViewHolder = this;
     }
 
     /**

@@ -169,6 +169,7 @@ public class DBAct {
         if (chatMessageCursor.getCount() == 1) {
             chatMessage = chatMessageFromCursor(chatMessageCursor);
         }
+        chatMessageCursor.close();
         return chatMessage;
     }
 
@@ -196,8 +197,10 @@ public class DBAct {
         if (chatMessageCursor.getCount() == 1) {
             ChatMessage chatMessage = chatMessageFromCursor(chatMessageCursor);
             Log.w(TAG, "最旧的消息是：" + chatMessage.toString());
+            chatMessageCursor.close();
             return chatMessage;
         }
+        chatMessageCursor.close();
         return null;
     }
 
@@ -225,8 +228,10 @@ public class DBAct {
         if (chatMessageCursor.getCount() == 1) {
             ChatMessage chatMessage = chatMessageFromCursor(chatMessageCursor);
             Log.w(TAG, "最旧的消息是：" + chatMessage.toString());
+            chatMessageCursor.close();
             return chatMessage;
         }
+        chatMessageCursor.close();
         return null;
     }
 
@@ -308,12 +313,38 @@ public class DBAct {
         );
         groupCursor.moveToFirst();
         if (groupCursor.getCount() == 1) {
-            return groupCursor.getString(0);
+            String ans = groupCursor.getString(0);
+            groupCursor.close();
+            return ans;
         }
+        groupCursor.close();
         return null;
     }
 
     /*SystemMessage*/
+
+    /**
+     * 获取指定的系统消息
+     *
+     * @return 系统消息 {@link SystemMessage}
+     */
+    public SystemMessage quarySysMess(String messID) {
+        Cursor sysMessCursor = db.query(DataBaseHelper.SystemMessSQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                null,//条件
+                null,//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        SystemMessage systemMessage = new SystemMessage();
+        sysMessCursor.moveToFirst();
+        if (sysMessCursor.getCount() == 1) {
+            systemMessage = sysMessFromCursor(sysMessCursor);
+        }
+        sysMessCursor.close();
+        return systemMessage;
+    }
 
     /**
      * 获取系统消息
@@ -338,8 +369,10 @@ public class DBAct {
             }
             sysMessCursor.moveToNext();
         }
+        sysMessCursor.close();
         return systemMessageArrayList;
     }
+
 
     /**
      * 根据 Cursor 转换 SystemMessage

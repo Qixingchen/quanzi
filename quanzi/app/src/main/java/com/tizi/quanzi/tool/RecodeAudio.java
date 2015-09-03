@@ -1,9 +1,11 @@
 package com.tizi.quanzi.tool;
 
+import android.Manifest;
 import android.app.Activity;
-import android.media.MediaCodec;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.log.Log;
@@ -21,26 +23,47 @@ public class RecodeAudio {
 
     private MediaRecorder recorder;
 
-    private Activity mContext;
+    private Activity mActivity;
 
     private String FileName;
     private File file;
 
-    public RecodeAudio(Activity context) {
-        mContext = context;
+    private RecodeAudio(Activity mActivity) {
+        this.mActivity = mActivity;
         recorder = new MediaRecorder();
+    }
+
+    public static RecodeAudio getInstance(Activity mActivity) {
+        return new RecodeAudio(mActivity);
     }
 
     /**
      * 开始录音
      */
     public boolean start() {
+
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            return false;
+        }
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return false;
+        }
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermission(Manifest.permission.RECORD_AUDIO);
+            return false;
+        }
+        recorder.reset();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         FileName = String.valueOf(new Date().getTime() / 1000) + ".aac";
 
-        file = new File(mContext.getCacheDir().getAbsolutePath() + "/audio/" + App.getUserID(),
+        file = new File(mActivity.getCacheDir().getAbsolutePath() + "/audio/" + App.getUserID(),
                 FileName);
         Log.d("录音", file.getAbsolutePath());
         try {
@@ -69,11 +92,11 @@ public class RecodeAudio {
     public String stopAndReturnFilePath() {
         try {
             recorder.stop();
-            recorder.reset();
+            recorder.release();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (file.exists()) {
+        if (file != null && file.exists()) {
             return file.getAbsolutePath();
         } else {
             return null;
@@ -84,7 +107,19 @@ public class RecodeAudio {
      * 释放资源
      */
     public void release() {
-        recorder.release();
+        try {
+            recorder.release();
+        } catch (Exception ignore) {
+        }
     }
 
+    /**
+     * 取得授权
+     *
+     * @param permission 需要授权的权限
+     */
+    private void requestPermission(String permission) {
+        int code = StaticField.PermissionRequestCode.RECORD_AUDIO;
+        ActivityCompat.requestPermissions(mActivity, new String[]{permission}, code);
+    }
 }

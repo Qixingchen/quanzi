@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.gson.Login;
 
 import java.io.Serializable;
@@ -75,6 +76,28 @@ public class GroupClass implements Parcelable, Serializable {
             groupClass.lastMessTime = 0;
             groupClass.UnreadCount = 0;
         }
+
+        return groupClass;
+    }
+
+    /**
+     * 将 GroupUserInfo 转换为 GroupClass
+     *
+     * @param groupUserInfo 须转换的 GroupUserInfo {@link GroupUserInfo}
+     *
+     * @return 转换完成的 GroupClass
+     */
+    @Deprecated
+    public static GroupClass getGroupByGroupUserInfo(GroupUserInfo groupUserInfo, String groupID,
+                                                     String convId) {
+        GroupClass groupClass = new GroupClass();
+        groupClass.groupID = groupID;
+        groupClass.groupName = groupUserInfo.groupName;
+        groupClass.groupFace = groupUserInfo.icon;
+        groupClass.groupType = Integer.valueOf(groupUserInfo.type);
+        groupClass.Notice = "";
+        groupClass.convId = convId;
+        // TODO: 15/9/3 信息不够！
 
         return groupClass;
     }

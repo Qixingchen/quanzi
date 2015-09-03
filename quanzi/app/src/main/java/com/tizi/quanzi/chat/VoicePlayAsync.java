@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 
-import com.tizi.quanzi.adapter.BaseViewHolder;
+import com.tizi.quanzi.adapter.ChatMessAbsViewHolder;
 import com.tizi.quanzi.model.ChatMessage;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
 
     private ChatMessage chatMessage;
-    public BaseViewHolder holder;
+    public ChatMessAbsViewHolder holder;
     private int voiceSecondMuL10;
     private VoicePlayAsync mInstance = this;
     private Context context;
@@ -120,13 +120,13 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
     }
 
     /**
-     * 设置 BaseViewHolder
+     * 设置 ChatMessAbsViewHolder
      *
      * @param holder 播放所在的viewHolder
      *
      * @return 本class实例
      */
-    public VoicePlayAsync setHolder(BaseViewHolder holder) {
+    public VoicePlayAsync setHolder(ChatMessAbsViewHolder holder) {
         this.holder = holder;
         return mInstance;
     }

@@ -3,6 +3,8 @@ package com.tizi.quanzi.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tizi.quanzi.tool.StaticField;
+
 import java.io.Serializable;
 
 /**
@@ -20,9 +22,11 @@ public class SystemMessage implements Parcelable, Serializable {
     private String content;//消息内容：如 xxx邀请您加入xx圈子
     private String remark;//消息中附带的邀请者信息：比如附带消息是“我是xxx，快来加入啊”
     private String link_url;//可能是链接消息，可以通过网址打开网站
-    private int sys_msg_flag;//系统消息标识：0：系统消息、1：邀请加入圈子、2：拒绝加入圈子、3:圈子解散
-    // 4:被踢出圈子
-    private int status;//状态：如邀请加入圈子，状态有未处理0、已处理1。当未处理时显示“同意、拒绝”按钮
+    /** 系统消息标识 {@link com.tizi.quanzi.tool.StaticField.SystemMessAttrName.systemFlag} */
+    private int sys_msg_flag;
+    /** 处理状态 {@link StaticField.SystemMessAttrName.statueCode} */
+    private int status;
+
     private boolean isread;//是否已读
     private String group_id;//邀请加入的圈子ID
     private long create_time;

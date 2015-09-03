@@ -62,7 +62,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             }
             AddNotification.getInstance().AddMessage(chatMessage);
             GroupList.getInstance().updateGroupLastMess(
-                    chatMessage.ConversationId, chatMessage.text, chatMessage.create_time);
+                    chatMessage.ConversationId, ChatMessage.getContentText(chatMessage), chatMessage.create_time);
         } catch (ClassFormatError error) {
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
             // TODO: 15/8/25 do systemMessage

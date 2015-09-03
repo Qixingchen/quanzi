@@ -25,4 +25,5 @@
     <string name="input_quanzi_name">输入圈圈名称</string>
     <string name="complete">完成</string>
     <string name="isFirstRun">isFirstRun</string>
+    <string name="private_message">私信</string>
 </resources>

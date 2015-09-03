@@ -68,7 +68,6 @@ public class StaticField {
         public final static String REMARK = "remark";// 邀请加人时可能会有附加信息
         public final static String JOIN_CONV_ID = "joinConvId";// 用于邀请加人时
         public final static String LINK_URL = "linkUrl";// 链接：可以是图片链接或网页等
-        /** 系统消息标识 {@link com.tizi.quanzi.model.SystemMessage} */
         public final static String SYS_MSG_FLAG = "sysMsgFlag";
 
         public final class MessTypeCode {
@@ -76,6 +75,14 @@ public class StaticField {
             public final static String normal_mess = "C";
         }
 
+        //状态：如邀请加入圈子，状态有未处理0、已处理1。当未处理时显示“同意、拒绝”按钮
+        public final class statueCode {
+            public final static int complete = 1;
+            public final static int notComplete = 0;
+        }
+
+        //系统消息标识：0：系统消息、1：邀请加入圈子、2：拒绝加入圈子、3:圈子解散
+        // 4:被踢出圈子
         public final class systemFlag {
             public final static int notice = 0;
             public final static int invitation = 1;
@@ -87,13 +94,21 @@ public class StaticField {
 
     /*申请权限ID*/
     public static class PermissionRequestCode {
-        public final static int WRITE_EXTERNAL_STORAGE = 0;
-        public final static int READ_EXTERNAL_STORAGE = 1;
+
+        public final static int requreForImage = 1;
+        public final static int RECORD_AUDIO = 2;
     }
 
     /*消息刷新数量*/
     public static class MessageQueryLimit {
         public static final int Limit = 1000;
         public static final int FlushMaxTimes = 10;
+    }
+
+    /*系统消息还是私聊*/
+
+    public static class PrivateMessOrSysMess {
+        public final static int PrivateMess = 1;
+        public final static int SysMess = 2;
     }
 }

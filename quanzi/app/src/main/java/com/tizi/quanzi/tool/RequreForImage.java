@@ -195,13 +195,7 @@ public class RequreForImage {
      * @param permission 需要授权的权限
      */
     private void requestPermission(String permission) {
-        int code = 0;
-        if (permission.compareTo(Manifest.permission.READ_EXTERNAL_STORAGE) == 0) {
-            code = StaticField.PermissionRequestCode.READ_EXTERNAL_STORAGE;
-        }
-        if (permission.compareTo(Manifest.permission.WRITE_EXTERNAL_STORAGE) == 0) {
-            code = StaticField.PermissionRequestCode.WRITE_EXTERNAL_STORAGE;
-        }
+        int code = StaticField.PermissionRequestCode.requreForImage;
         ActivityCompat.requestPermissions(mActivity, new String[]{permission}, code);
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
  * Created by qixingchen on 15/7/20. 聊天记录Adapter
  */
 
-public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHolder> {
 
     public List<ChatMessage> chatMessageList;
     private Context mContext;
@@ -58,13 +58,13 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      * @return ViewHolder
      *
      * @see com.tizi.quanzi.tool.StaticField.ChatFrom
-     * @see BaseViewHolder
+     * @see ChatMessAbsViewHolder
      */
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChatMessAbsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v;
-        BaseViewHolder vh;
+        ChatMessAbsViewHolder vh;
         switch (viewType) {
             case StaticField.ChatFrom.OTHER:
                 v = LayoutInflater.from(parent.getContext())
@@ -92,7 +92,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(final BaseViewHolder holder, int position) {
+    public void onBindViewHolder(final ChatMessAbsViewHolder holder, int position) {
         final ChatMessage chatMessage = chatMessageList.get(position);
 
         holder.setAllAdditionVisibilityGone();
@@ -180,7 +180,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     /**
      * 实现BaseViewHolder
      */
-    public static class OtherMessViewHolder extends BaseViewHolder {
+    public static class OtherMessViewHolder extends ChatMessAbsViewHolder {
         public OtherMessViewHolder(View v) {
             super(v);
             findViewByID(v, StaticField.ChatFrom.OTHER);
@@ -190,7 +190,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     /**
      * 实现BaseViewHolder
      */
-    public static class MyMessViewHolder extends BaseViewHolder {
+    public static class MyMessViewHolder extends ChatMessAbsViewHolder {
         public MyMessViewHolder(View v) {
             super(v);
             findViewByID(v, StaticField.ChatFrom.ME);

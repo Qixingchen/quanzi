@@ -1,9 +1,7 @@
 package com.tizi.quanzi.ui.main;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,10 +12,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.database.DBAct;
-import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.network.AddOrQuitGroup;
 import com.tizi.quanzi.tool.FlushMess;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;

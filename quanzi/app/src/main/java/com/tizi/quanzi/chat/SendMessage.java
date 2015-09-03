@@ -184,7 +184,9 @@ public class SendMessage {
                     ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
             Log.d("发送成功", chatMessage.toString());
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-            GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID, chatMessage.text, chatMessage.create_time);
+            GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID, ChatMessage.getContentText(chatMessage),
+                    chatMessage.create_time);
+
         } catch (ClassFormatError e) {
             Log.w("", e.getMessage());
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(Message);

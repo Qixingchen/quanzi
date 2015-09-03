@@ -9,103 +9,94 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.gson.OnlySuccess;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Created by qixingchen on 15/9/2.
- * 成员管理后台调用
+ * Created by qixingchen on 15/9/3.
  */
-public class UserManageInGroup {
-
-    private static UserManageInGroup mInstance;
-    private static final String TAG = UserManageInGroup.class.getSimpleName();
+public class FindUser {
+    private static FindUser mInstance;
+    private static final String TAG = FindUser.class.getSimpleName();
     private Gson gson;
     private Context mContext;
 
-    private ManageGroupListener ManageGroupListener;
+    private FindUserListener findUserListener;
 
     private static Response.Listener<String> mOKListener;
     private static Response.ErrorListener mErrorListener;
 
-    public UserManageInGroup setManageGroupListener(ManageGroupListener ManageGroupListener) {
-        this.ManageGroupListener = ManageGroupListener;
+    public FindUser setFindUserListener(FindUserListener findUserListener) {
+        this.findUserListener = findUserListener;
         return mInstance;
     }
 
-    public static UserManageInGroup getInstance() {
+    public static FindUser getInstance() {
         if (mInstance == null) {
-            synchronized (UserManageInGroup.class) {
+            synchronized (FindUser.class) {
                 if (mInstance == null) {
-                    mInstance = new UserManageInGroup();
+                    mInstance = new FindUser();
                 }
             }
         }
         return mInstance;
     }
 
-    private UserManageInGroup() {
+    private FindUser() {
         this.mContext = App.getApplication();
         gson = new Gson();
         mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                OnlySuccess dyns = gson.fromJson(response, OnlySuccess.class);
-                if (dyns.isSuccess()) {
-                    if (ManageGroupListener != null) {
-                        ManageGroupListener.onOK();
+                // TODO: 15/9/3 add json
+                OtherUserInfo otherUserInfo = gson.fromJson(response, OtherUserInfo.class);
+                if (otherUserInfo.success) {
+                    if (findUserListener != null) {
+                        findUserListener.onOK(otherUserInfo);
                     }
                 } else {
                     Log.e(TAG, "Error");
                     Toast.makeText(mContext, "Error", Toast.LENGTH_LONG).show();
-                    ManageGroupListener.onError();
+                    findUserListener.onError("Error");
                 }
             }
         };
-        mErrorListener = new Response.ErrorListener()
-
-        {
+        mErrorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.w(TAG, error.getMessage());
                 Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_LONG).show();
-                if (ManageGroupListener != null) {
-                    ManageGroupListener.onError();
+                if (findUserListener != null) {
+                    findUserListener.onError(error.getMessage());
                 }
             }
-        }
-
-        ;
+        };
     }
 
     /**
-     * 将用户从圈子中删除
+     * 将用户加入圈子
      */
-    public UserManageInGroup deleteUser(String GroupID, String UserID) {
+    public FindUser finduser(String account) {
 
-        Map<String, String> deleteUserPara = new TreeMap<>();
-        deleteUserPara.put("userid", UserID);
-        deleteUserPara.put("groupid", GroupID);
-
+        Map<String, String> findUserPara = new TreeMap<>();
+        findUserPara.put("account", account);
 
         GetVolley.getmInstance(mContext).setOKListener(mOKListener).
                 setErrorListener(mErrorListener)
                 .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/group/exitGroupF", deleteUserPara);
+                        mContext.getString(R.string.testbaseuri) + "/user/findUserF", findUserPara);
         return mInstance;
     }
 
-    public interface ManageGroupListener {
+    public interface FindUserListener {
         /**
          * 成功回调
          */
-        void onOK();
+        void onOK(OtherUserInfo otherUserInfo);
 
-        void onError();
+        void onError(String errorMessage);
     }
-
-
 }

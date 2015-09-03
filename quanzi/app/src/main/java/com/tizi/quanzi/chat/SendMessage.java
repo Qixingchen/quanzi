@@ -13,6 +13,7 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.io.IOException;
@@ -23,26 +24,21 @@ import java.util.TreeMap;
  * Created by qixingchen on 15/9/2.
  */
 public class SendMessage {
-    private static SendMessage mInstance;
+    private SendMessage mInstance;
     private SendOK sendOK;
 
 
     public static SendMessage getInstance() {
-        if (mInstance == null) {
-            synchronized (SendMessage.class) {
-                if (mInstance == null) {
-                    mInstance = new SendMessage();
-                }
-            }
-        }
-        return mInstance;
+        return new SendMessage();
     }
 
     private SendMessage() {
+        mInstance = this;
     }
 
-    public void setSendOK(SendOK sendOK) {
+    public SendMessage setSendOK(SendOK sendOK) {
         this.sendOK = sendOK;
+        return mInstance;
     }
 
     /**
@@ -183,11 +179,19 @@ public class SendMessage {
      * @param Message 发送成功的消息
      */
     private void onMessageSendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-        ChatMessage chatMessage =
-                ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
-        Log.d("发送成功", chatMessage.toString());
-        DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-        GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID, chatMessage.text, chatMessage.create_time);
+        try {
+            ChatMessage chatMessage =
+                    ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
+            Log.d("发送成功", chatMessage.toString());
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+            GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID, chatMessage.text, chatMessage.create_time);
+        } catch (ClassFormatError e) {
+            Log.w("", e.getMessage());
+            SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(Message);
+            // TODO: 15/8/25 do systemMessage
+            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+        }
+
         if (sendOK != null) {
             sendOK.sendOK(Message, CONVERSATION_ID);
         }

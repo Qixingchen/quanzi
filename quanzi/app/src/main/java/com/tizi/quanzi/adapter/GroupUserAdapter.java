@@ -14,17 +14,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
-import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.gson.OtherUserInfo;
+import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.UserManageInGroup;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.QuanziZone.QuanziZoneActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +45,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
     private List<GroupUserInfo.MemlistEntity> memlist;
     private boolean isCreater;
     private String groupID;
+    private static final String TAG = GroupUserAdapter.class.getSimpleName();
 
     public GroupUserAdapter(Context mContext, @Nullable List<GroupUserInfo.MemlistEntity> memlist, boolean isCreater) {
         this.mContext = mContext;
@@ -71,6 +79,8 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      */
     @Override
     public void onBindViewHolder(GroupUserViewHolder holder, int position) {
+        holder.weibo_avatar_NetworkImageView.setOnLongClickListener(null);
+        holder.weibo_avatar_NetworkImageView.setOnClickListener(null);
         if (memlist == null || position == memlist.size()) {
             holder.weibo_avatar_NetworkImageView.setDefaultImageResId(R.drawable.face);
             holder.weibo_avatar_NetworkImageView.setOnClickListener(new View.OnClickListener() {
@@ -135,11 +145,40 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                 .setPositiveButton("添加", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String convID = GroupList.getInstance().getGroup(groupid).convId;
-                        Map<String, Object> attr = SendMessage.setMessAttr();
-                        attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
-                                StaticField.SystemMessAttrName.systemFlag.invitation);
-                        SendMessage.getInstance().sendTextMessage(convID, "邀请你来玩", attr);
+                        final String convID = GroupList.getInstance().getGroup(groupid).convId;
+
+                        FindUser.getInstance().setFindUserListener(
+                                new FindUser.FindUserListener() {
+                                    @Override
+                                    public void onOK(OtherUserInfo otherUserInfo) {
+                                        GroupUserAdmin.getInstance(mContext)
+                                                .setOnResult(new GroupUserAdmin.OnResult() {
+                                                    @Override
+                                                    public void OK() {
+                                                        Toast.makeText(mContext, "添加请求发送成功", Toast.LENGTH_LONG).show();
+                                                        Log.i(TAG, "添加请求发送成功");
+                                                    }
+
+                                                    @Override
+                                                    public void error(String errorMessage) {
+                                                        Toast.makeText(mContext, "添加失败" + errorMessage
+                                                                , Toast.LENGTH_LONG).show();
+                                                        Log.w(TAG, "添加失败" + errorMessage);
+                                                    }
+                                                })
+                                                .addMember(convID, groupid, otherUserInfo.id);
+                                    }
+
+                                    @Override
+                                    public void onError(String errorMessage) {
+                                        Toast.makeText(mContext, "添加失败,查找用户失败：" + errorMessage
+                                                , Toast.LENGTH_LONG).show();
+                                        Log.w(TAG, "添加失败,查找用户失败：" + errorMessage);
+                                    }
+                                }
+                        ).finduser(userid.getText().toString());
+
+
                     }
                 }).setNegativeButton("取消", null).show();
     }
@@ -158,7 +197,20 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                         SendMessage.getInstance().sendTextMessage(convID, "你被踢出了OAQ", attr);
 
                         //LeanCloud删除
-                        // TODO: 15/9/2  
+                        List<String> userIds = new ArrayList<>();
+                        userIds.add(userID);
+                        AVIMConversation conversation = App.getImClient().getConversation(convID);
+                        conversation.kickMembers(userIds, new AVIMConversationCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                if (e != null) {
+                                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Log.w(TAG, "LC删除好友成功");
+                                }
+                            }
+                        });
+
 
                         //后台删除
                         UserManageInGroup.getInstance().setManageGroupListener(

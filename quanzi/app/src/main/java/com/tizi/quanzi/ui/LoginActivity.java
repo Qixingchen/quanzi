@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.tool.GetGMSStatue;
@@ -66,42 +67,29 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-        //成功监听器
-        final Response.Listener<String> mOKListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Login login = gson.fromJson(response, Login.class);
-                if (login.isSuccess()) {
-                    //设置用户信息
-                    AutoLogin.setUserInfo(phoneNumberEditText.getText().toString(),
-                            login.getUser().getId(), login.getUser().getToken());
-                    //储存密码
-                    SharedPreferences preferences = getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
-                            MODE_PRIVATE);
-                    preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,
-                            GetPassword.preHASH(passwordEditText.getText().toString())).apply();
-
-                    StartMainActivity.startByLoginGroup(login.getGroup(), mActivity);
-                }
-            }
-        };
-        final Response.ErrorListener mErrorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Snackbar.make(findViewById(R.id.LoginLayout), "网络错误", Snackbar.LENGTH_LONG).show();
-            }
-        };
-
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 App.setUserPhone(phoneNumberEditText.getText().toString());
                 String password = passwordEditText.getText().toString();
-                AutoLogin.getInstance().setmOKListener(mOKListener).
-                        setmErrorListener(mErrorListener).
-                        loginFromPrePassword(GetPassword.preHASH(password));
+                AutoLogin.getInstance()
+                        .setOnLogin(new AutoLogin.onLogin() {
+                            @Override
+                            public void Success(Login login) {
+                                //储存密码
+                                SharedPreferences preferences =
+                                        getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
+                                                MODE_PRIVATE);
+                                preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,
+                                        GetPassword.preHASH(passwordEditText.getText().toString())).apply();
+                            }
+
+                            @Override
+                            public void error(String errorMess) {
+                                Snackbar.make(findViewById(R.id.LoginLayout), "网络错误", Snackbar.LENGTH_LONG).show();
+                            }
+                        })
+                        .loginFromPrePassword(GetPassword.preHASH(password));
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {

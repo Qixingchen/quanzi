@@ -13,8 +13,8 @@ import android.view.ViewGroup;
  */
 public abstract class BaseFragment extends Fragment {
     protected Activity mActivity;
+    protected final String TAG = this.getClass().getSimpleName();
 
-    @Override
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container,
                                       Bundle savedInstanceState);
 

@@ -65,7 +65,7 @@ public class GroupClass implements Parcelable, Serializable {
         groupClass.Notice = groupEntity.getNotice();
         groupClass.convId = groupEntity.getConvId();
         groupClass.background = groupEntity.getBg();
-        groupClass.validation = groupEntity.getValidation();
+        groupClass.validation = groupEntity.isValidation();
         groupClass.createUser = groupEntity.getCreateUser();
         groupClass.groupNo = groupEntity.getGroupNo();
         if (groupOld != null) {

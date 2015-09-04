@@ -33,6 +33,8 @@ public class AutoLogin {
     private static Response.Listener<String> mOKListener;
     private static Response.ErrorListener mErrorListener;
 
+    private static onLogin onLogin;
+
     public static AutoLogin getInstance() {
         if (mInstance == null) {
             synchronized (AutoLogin.class) {
@@ -96,6 +98,9 @@ public class AutoLogin {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("自动登录", error.getMessage());
+                if (onLogin != null) {
+                    onLogin.error(error.getMessage());
+                }
             }
         };
         return mInstance;
@@ -111,8 +116,14 @@ public class AutoLogin {
                     setUserInfo(App.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     StartMainActivity.startByLoginGroup(login.getGroup(), mContext);
+                    if (onLogin != null) {
+                        onLogin.Success(login);
+                    }
                 } else {
                     Toast.makeText(mContext, login.getMsg(), Toast.LENGTH_LONG).show();
+                    if (onLogin != null) {
+                        onLogin.error(login.getMsg());
+                    }
                 }
             }
         };
@@ -136,25 +147,15 @@ public class AutoLogin {
     }
     // TODO: 15/8/20 更换为回调接口
 
-    /**
-     * 设置成功监听器
-     *
-     * @param mOKListener Response.Listener
-     */
-    @Deprecated
-    public AutoLogin setmOKListener(Response.Listener<String> mOKListener) {
-        AutoLogin.mOKListener = mOKListener;
+
+    public AutoLogin setOnLogin(AutoLogin.onLogin onLogin) {
+        AutoLogin.onLogin = onLogin;
         return mInstance;
     }
 
-    /**
-     * 设置失败监听器
-     *
-     * @param mErrorListener Response.ErrorListener
-     */
-    @Deprecated
-    public AutoLogin setmErrorListener(Response.ErrorListener mErrorListener) {
-        AutoLogin.mErrorListener = mErrorListener;
-        return mInstance;
+    public interface onLogin {
+        void Success(Login login);
+
+        void error(String errorMess);
     }
 }

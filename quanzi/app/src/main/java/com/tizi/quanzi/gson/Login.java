@@ -17,7 +17,7 @@ public class Login {
      */
 
     @SerializedName("msg")
-    private Object msg;
+    private String msg;
     @SerializedName("success")
     private boolean success;
     @SerializedName("user")
@@ -25,36 +25,36 @@ public class Login {
     @SerializedName("group")
     private List<GroupEntity> group;
 
-    public void setMsg(Object msg) {
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 
     public void setSuccess(boolean success) {
         this.success = success;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    public void setGroup(List<GroupEntity> group) {
-        this.group = group;
-    }
-
-    public Object getMsg() {
-        return msg;
-    }
-
-    public boolean getSuccess() {
-        return success;
-    }
-
     public UserEntity getUser() {
         return user;
     }
 
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
     public List<GroupEntity> getGroup() {
         return group;
+    }
+
+    public void setGroup(List<GroupEntity> group) {
+        this.group = group;
     }
 
     public static class UserEntity {
@@ -219,106 +219,106 @@ public class Login {
         @SerializedName("notice")
         private String notice;
         @SerializedName("type")
-        private String type;
+        private int type;
         @SerializedName("convId")
         private String convId;
         @SerializedName("icon")
         private String icon;
         @SerializedName("bg")
-        private Object bg;
+        private String bg;
         @SerializedName("remark")
-        private Object remark;
+        private String remark;
         @SerializedName("validation")
-        private String validation;
+        private boolean validation;
         @SerializedName("createUser")
         private String createUser;
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setGroupNo(String groupNo) {
-            this.groupNo = groupNo;
-        }
-
-        public void setGroupName(String groupName) {
-            this.groupName = groupName;
-        }
-
-        public void setNotice(String notice) {
-            this.notice = notice;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public void setConvId(String convId) {
-            this.convId = convId;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public void setBg(Object bg) {
-            this.bg = bg;
-        }
-
-        public void setRemark(Object remark) {
-            this.remark = remark;
-        }
-
-        public void setValidation(String validation) {
-            this.validation = validation;
-        }
-
-        public void setCreateUser(String createUser) {
-            this.createUser = createUser;
-        }
-
         public String getId() {
             return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
 
         public String getGroupNo() {
             return groupNo;
         }
 
+        public void setGroupNo(String groupNo) {
+            this.groupNo = groupNo;
+        }
+
         public String getGroupName() {
             return groupName;
+        }
+
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
         }
 
         public String getNotice() {
             return notice;
         }
 
-        public String getType() {
+        public void setNotice(String notice) {
+            this.notice = notice;
+        }
+
+        public int getType() {
             return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
         }
 
         public String getConvId() {
             return convId;
         }
 
+        public void setConvId(String convId) {
+            this.convId = convId;
+        }
+
         public String getIcon() {
             return icon;
         }
 
-        public Object getBg() {
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public String getBg() {
             return bg;
         }
 
-        public Object getRemark() {
+        public void setBg(String bg) {
+            this.bg = bg;
+        }
+
+        public String getRemark() {
             return remark;
         }
 
-        public String getValidation() {
+        public void setRemark(String remark) {
+            this.remark = remark;
+        }
+
+        public boolean isValidation() {
             return validation;
+        }
+
+        public void setValidation(boolean validation) {
+            this.validation = validation;
         }
 
         public String getCreateUser() {
             return createUser;
+        }
+
+        public void setCreateUser(String createUser) {
+            this.createUser = createUser;
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.tizi.quanzi.gson;
 
-import android.support.v7.widget.RecyclerView;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -10,191 +10,100 @@ import java.util.List;
  */
 public class Login {
 
-
     /**
-     * success : true
      * msg : null
+     * success : true
+     * user :
      */
-    private List<GroupEntity> group;
-    private UserEntity user;
+
+    @SerializedName("msg")
+    private Object msg;
+    @SerializedName("success")
     private boolean success;
-    private String msg;
+    @SerializedName("user")
+    private UserEntity user;
+    @SerializedName("group")
+    private List<GroupEntity> group;
 
-    public void setGroup(List<GroupEntity> group) {
-        this.group = group;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void setMsg(Object msg) {
+        this.msg = msg;
     }
 
     public void setSuccess(boolean success) {
         this.success = success;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    public List<GroupEntity> getGroup() {
-        return group;
+    public void setGroup(List<GroupEntity> group) {
+        this.group = group;
+    }
+
+    public Object getMsg() {
+        return msg;
+    }
+
+    public boolean getSuccess() {
+        return success;
     }
 
     public UserEntity getUser() {
         return user;
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public static class GroupEntity {
-        /**
-         * groupNo :
-         * id : HTDM00483b2b955468cf4c7ba0430c7bf0994c70
-         * icon : http://ac-hy5srahi.clouddn.com/EuzALiJGgUTQTOeewEmMMRD.jpeg
-         * createUser : HTDM0048efd1df5cacd448e48f86775e454e1981
-         * groupName : 我的圈子
-         * validation : Y
-         * remark : null
-         * convId : 55dc2aa560b27e6cd4e34dec
-         * bg : null
-         * type : 0
-         * notice : 第一个
-         */
-        private String groupNo;
-        private String id;
-        private String icon;
-        private String createUser;
-        private String groupName;
-        private boolean validation;
-        private String remark;
-        private String convId;
-        private String bg;
-        private int type;
-        private String notice;
-
-        public void setGroupNo(String groupNo) {
-            this.groupNo = groupNo;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public void setCreateUser(String createUser) {
-            this.createUser = createUser;
-        }
-
-        public void setGroupName(String groupName) {
-            this.groupName = groupName;
-        }
-
-        public void setValidation(String validation) {
-            this.validation = (validation.compareTo("Y") == 0);
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
-
-        public void setConvId(String convId) {
-            this.convId = convId;
-        }
-
-        public void setBg(String bg) {
-            this.bg = bg;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        public void setNotice(String notice) {
-            this.notice = notice;
-        }
-
-        public String getGroupNo() {
-            return groupNo;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        public String getCreateUser() {
-            return createUser;
-        }
-
-        public String getGroupName() {
-            return groupName;
-        }
-
-        public boolean getValidation() {
-            return validation;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public String getConvId() {
-            return convId;
-        }
-
-        public String getBg() {
-            return bg;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public String getNotice() {
-            return notice;
-        }
+    public List<GroupEntity> getGroup() {
+        return group;
     }
 
     public static class UserEntity {
         /**
-         * id : HTDM0048efd1df5cacd448e48f86775e454e1981
-         * icon : http://ac-hy5srahi.clouddn.com/q3fLSLIwTbnj8PPM9aJpRKD.png
-         * sex : 0
+         * id : HTDM004825b32141fe9c41f09846e85f0902f0bd
+         * birthday : null
+         * icon : http://ac-hy5srahi.clouddn.com/caLxbdJcpOapVD1UR2yoJvD.jpeg
+         * sex : 1
          * area : null
-         * token : HTDM0048b1c89a47da954a089e49005bcda9d617
-         * account : 1
-         * userName : 1
-         * bg : null
+         * token : HTDM004887328d430d664e2d9396c88216bac375
          * groupNum : 6
+         * bg : null
+         * userName : 232
+         * account : 1
          * signature : null
          * mobile : 1
          */
+
+        @SerializedName("id")
         private String id;
+        @SerializedName("birthday")
+        private Object birthday;
+        @SerializedName("icon")
         private String icon;
+        @SerializedName("sex")
         private String sex;
-        private String area;
+        @SerializedName("area")
+        private Object area;
+        @SerializedName("token")
         private String token;
-        private String account;
-        private String userName;
-        private String bg;
+        @SerializedName("groupNum")
         private String groupNum;
-        private String signature;
+        @SerializedName("bg")
+        private Object bg;
+        @SerializedName("userName")
+        private String userName;
+        @SerializedName("account")
+        private String account;
+        @SerializedName("signature")
+        private Object signature;
+        @SerializedName("mobile")
         private String mobile;
 
         public void setId(String id) {
             this.id = id;
+        }
+
+        public void setBirthday(Object birthday) {
+            this.birthday = birthday;
         }
 
         public void setIcon(String icon) {
@@ -205,7 +114,7 @@ public class Login {
             this.sex = sex;
         }
 
-        public void setArea(String area) {
+        public void setArea(Object area) {
             this.area = area;
         }
 
@@ -213,23 +122,23 @@ public class Login {
             this.token = token;
         }
 
-        public void setAccount(String account) {
-            this.account = account;
+        public void setGroupNum(String groupNum) {
+            this.groupNum = groupNum;
+        }
+
+        public void setBg(Object bg) {
+            this.bg = bg;
         }
 
         public void setUserName(String userName) {
             this.userName = userName;
         }
 
-        public void setBg(String bg) {
-            this.bg = bg;
+        public void setAccount(String account) {
+            this.account = account;
         }
 
-        public void setGroupNum(String groupNum) {
-            this.groupNum = groupNum;
-        }
-
-        public void setSignature(String signature) {
+        public void setSignature(Object signature) {
             this.signature = signature;
         }
 
@@ -241,6 +150,10 @@ public class Login {
             return id;
         }
 
+        public Object getBirthday() {
+            return birthday;
+        }
+
         public String getIcon() {
             return icon;
         }
@@ -249,7 +162,7 @@ public class Login {
             return sex;
         }
 
-        public String getArea() {
+        public Object getArea() {
             return area;
         }
 
@@ -257,28 +170,155 @@ public class Login {
             return token;
         }
 
-        public String getAccount() {
-            return account;
+        public String getGroupNum() {
+            return groupNum;
+        }
+
+        public Object getBg() {
+            return bg;
         }
 
         public String getUserName() {
             return userName;
         }
 
-        public String getBg() {
-            return bg;
+        public String getAccount() {
+            return account;
         }
 
-        public String getGroupNum() {
-            return groupNum;
-        }
-
-        public String getSignature() {
+        public Object getSignature() {
             return signature;
         }
 
         public String getMobile() {
             return mobile;
+        }
+    }
+
+    public static class GroupEntity {
+        /**
+         * id : HTDM0048f4c2d7967c6f4011b69aaaa7af17b4e2
+         * groupNo :
+         * groupName : 圈子
+         * notice : 圈子1
+         * type : 0
+         * convId : 55dea61a00b0afd40404a73d
+         * icon : http://ac-hy5srahi.clouddn.com/fnwlHqNa7BPXdAfs8bZAFID.jpeg
+         * bg : null
+         * remark : null
+         * validation : Y
+         * createUser : HTDM004825b32141fe9c41f09846e85f0902f0bd
+         */
+
+        @SerializedName("id")
+        private String id;
+        @SerializedName("groupNo")
+        private String groupNo;
+        @SerializedName("groupName")
+        private String groupName;
+        @SerializedName("notice")
+        private String notice;
+        @SerializedName("type")
+        private String type;
+        @SerializedName("convId")
+        private String convId;
+        @SerializedName("icon")
+        private String icon;
+        @SerializedName("bg")
+        private Object bg;
+        @SerializedName("remark")
+        private Object remark;
+        @SerializedName("validation")
+        private String validation;
+        @SerializedName("createUser")
+        private String createUser;
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public void setGroupNo(String groupNo) {
+            this.groupNo = groupNo;
+        }
+
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
+        }
+
+        public void setNotice(String notice) {
+            this.notice = notice;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public void setConvId(String convId) {
+            this.convId = convId;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public void setBg(Object bg) {
+            this.bg = bg;
+        }
+
+        public void setRemark(Object remark) {
+            this.remark = remark;
+        }
+
+        public void setValidation(String validation) {
+            this.validation = validation;
+        }
+
+        public void setCreateUser(String createUser) {
+            this.createUser = createUser;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getGroupNo() {
+            return groupNo;
+        }
+
+        public String getGroupName() {
+            return groupName;
+        }
+
+        public String getNotice() {
+            return notice;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getConvId() {
+            return convId;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public Object getBg() {
+            return bg;
+        }
+
+        public Object getRemark() {
+            return remark;
+        }
+
+        public String getValidation() {
+            return validation;
+        }
+
+        public String getCreateUser() {
+            return createUser;
         }
     }
 }

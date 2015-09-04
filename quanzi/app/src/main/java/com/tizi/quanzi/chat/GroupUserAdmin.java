@@ -1,16 +1,16 @@
 package com.tizi.quanzi.chat;
 
 import android.content.Context;
-import android.nfc.Tag;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
@@ -44,11 +44,10 @@ public class GroupUserAdmin {
         return this;
     }
 
-    public void addMember(String convID, String groupID, String userID) {
-        // TODO: 15/9/3 setUserMess
-        Map<String, Object> attr = SendMessage.setMessAttr();
+    public void addMember(String convID, final String groupID, String userID) {
+        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.twoPerson);
         attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
-                StaticField.SystemMessAttrName.systemFlag.invitation);
+                StaticField.SystemMessAttrName.systemFlag.invitation, "");
 
         List<String> clientIds = new ArrayList<>();
         clientIds.add(App.getUserID());
@@ -82,7 +81,10 @@ public class GroupUserAdmin {
                                 }
                             }
                         }
-                ).sendTextMessage(avimConversation.getConversationId(), "邀请你来玩", finalAttr);
+                ).sendTextMessage(avimConversation.getConversationId(),
+                        MyUserInfo.getInstance().getUserInfo().getUserName() + "邀请你来加入圈子" +
+                                GroupList.getInstance().getGroup(groupID).groupName
+                        , finalAttr);
             }
         });
 
@@ -90,7 +92,55 @@ public class GroupUserAdmin {
     }
 
     public void deleteMember(String convID, String groupID, String userID) {
+        //发送系统通知
+        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.twoPerson);
+        attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
+                StaticField.SystemMessAttrName.systemFlag.kicked, "");
+        SendMessage.getInstance().setSendOK(
+                new SendMessage.SendOK() {
+                    @Override
+                    public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                        Log.i(TAG, "已发送删除通知");
+                    }
 
+                    @Override
+                    public void sendError(String errorMessage, String CONVERSATION_ID) {
+                        Toast.makeText(mContext, "发送删除通知失败", Toast.LENGTH_LONG).show();
+                        Log.w(TAG, "发送删除通知失败" + errorMessage);
+                    }
+                }
+        ).sendTextMessage(convID, "你被踢出了OAQ", attr);
+
+        //LeanCloud删除
+        List<String> userIds = new ArrayList<>();
+        userIds.add(userID);
+        AVIMConversation conversation = App.getImClient().getConversation(convID);
+        conversation.kickMembers(userIds, new AVIMConversationCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e != null) {
+                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
+                } else {
+                    Log.w(TAG, "LC删除好友成功");
+                }
+            }
+        });
+
+
+        //后台删除
+        UserManageInGroup.getInstance().setManageGroupListener(
+                new UserManageInGroup.ManageGroupListener() {
+                    @Override
+                    public void onOK(GroupUserInfo groupUserInfo) {
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
+                        Log.w(TAG, "后台删除好友成功");
+                    }
+
+                }).deleteUser(groupID, userID);
     }
 
     public void deleteGroup(String convID, String groupID) {

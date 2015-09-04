@@ -14,6 +14,7 @@ import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.tool.FlushMess;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.ui.NewGroup.NewGroupActivity;
@@ -142,6 +143,7 @@ public class GroupChatList extends BaseFragment {
                     startActivity(newGroup);
                 } else {
                     Intent chatmess = new Intent(mActivity, ChatActivity.class);
+                    chatmess.putExtra("chatType", StaticField.ChatBothUserType.GROUP);
                     chatmess.putExtra("conversation", groupClasses.get(position).convId);
                     startActivity(chatmess);
                 }

@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.GroupUserInfo;
-import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
 
 import java.util.Map;

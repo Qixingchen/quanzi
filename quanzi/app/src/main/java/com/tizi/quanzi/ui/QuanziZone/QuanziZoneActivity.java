@@ -81,7 +81,8 @@ public class QuanziZoneActivity extends BaseActivity {
             quanziSetFragment = new QuanziSetFragment();
             quanziSetFragment.setGroupUserInfo(mGroupUserInfo);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment, quanziSetFragment).commit();
+                    .replace(R.id.fragment, quanziSetFragment)
+                    .addToBackStack("quanziSetFragment").commit();
             return true;
         }
 

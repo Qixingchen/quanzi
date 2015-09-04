@@ -3,6 +3,8 @@ package com.tizi.quanzi.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tizi.quanzi.tool.StaticField;
+
 import java.io.Serializable;
 
 /**
@@ -22,6 +24,18 @@ public class PrivateMessPair implements Serializable, Parcelable {
     //如果是系统消息
     public String MessID;
 
+    public static PrivateMessPair PriMessFromSystemMess(SystemMessage systemMessage) {
+        PrivateMessPair privateMessPair = new PrivateMessPair();
+        privateMessPair.Type = StaticField.PrivateMessOrSysMess.SysMess;
+        privateMessPair.Name = systemMessage.getUser_name();
+        privateMessPair.Face = systemMessage.getUser_icon();
+        privateMessPair.ID = systemMessage.getId();
+        privateMessPair.convId = systemMessage.getConvid();
+        privateMessPair.MessID = systemMessage.getId();
+        privateMessPair.lastMess = systemMessage.getContent();
+        privateMessPair.lastMessTime = systemMessage.getCreate_time();
+        return privateMessPair;
+    }
 
     //auto make
 

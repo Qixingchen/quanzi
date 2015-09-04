@@ -1,14 +1,10 @@
 package com.tizi.quanzi.ui;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,11 +23,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
-import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
-import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
-import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
@@ -48,11 +40,8 @@ import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.QuanziZone.QuanziZoneActivity;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
 
 /**
  * 聊天界面
@@ -71,6 +60,7 @@ public class ChatActivity extends BaseActivity {
     private AVIMMessagesQueryCallback avimMessagesQueryCallback;
     private RequreForImage requreForImage;
     private RecodeAudio recodeAudio;
+    private int ChatType;
 
     private ImageButton insertImageButton, insertVoiceButton;
 
@@ -140,7 +130,7 @@ public class ChatActivity extends BaseActivity {
                                 }
                             })
                                     .sendAudioMessage(CONVERSATION_ID, Filepath,
-                                            SendMessage.setMessAttr());
+                                            setAttrs());
                         }
                 }
                 return false;
@@ -213,9 +203,6 @@ public class ChatActivity extends BaseActivity {
                             return;
                         }
 
-                        // sendTextMessage(text);
-
-                        Map<String, Object> attrs = SendMessage.setMessAttr();
                         SendMessage.getInstance().setSendOK(
                                 new SendMessage.SendOK() {
                                     @Override
@@ -230,7 +217,7 @@ public class ChatActivity extends BaseActivity {
                                     }
                                 }
                         )
-                                .sendTextMessage(CONVERSATION_ID, text, attrs);
+                                .sendTextMessage(CONVERSATION_ID, text, setAttrs());
 
                     }
                 }
@@ -269,9 +256,8 @@ public class ChatActivity extends BaseActivity {
         App.UI_CONVERSATION_ID = CONVERSATION_ID;
         conversation = App.getImClient().getConversation(CONVERSATION_ID);
 
+        ChatType = getIntent().getIntExtra("chatType", 9);
         //adapt
-        //不再检索消息，不知道会不会有问题
-        //conversation.queryMessages(QueryLimit, avimMessagesQueryCallback);
         List<ChatMessage> chatMessageList =
                 DBAct.getInstance().queryMessage(CONVERSATION_ID);
         chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);
@@ -295,8 +281,9 @@ public class ChatActivity extends BaseActivity {
         super.onDestroy();
         App.UI_CONVERSATION_ID = "";
         MutiTypeMsgHandler.getInstance().setOnMessage(null);
-        if (recodeAudio!=null){
-        recodeAudio.release();}
+        if (recodeAudio != null) {
+            recodeAudio.release();
+        }
     }
 
     /**
@@ -321,7 +308,8 @@ public class ChatActivity extends BaseActivity {
                         }
                     })
                     .sendImageMesage(CONVERSATION_ID, requreForImage.ZipedFilePathFromIntent(data),
-                            SendMessage.setMessAttr());
+                            setAttrs());
+
         }
 
     }
@@ -394,6 +382,19 @@ public class ChatActivity extends BaseActivity {
         };
     }
 
+    /**
+     * 设置attrs
+     */
+    private Map<String, Object> setAttrs() {
+        Map<String, Object> attr;
+        if (ChatType == StaticField.ChatBothUserType.GROUP) {
+            attr = SendMessage.setMessAttr(GroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID),
+                    ChatType);
+        } else {
+            attr = SendMessage.setMessAttr("", ChatType);
+        }
+        return attr;
+    }
 
     /**
      * 消息发送成功时的处理

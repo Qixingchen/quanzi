@@ -10,7 +10,9 @@ import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.SystemMessage;
@@ -46,13 +48,13 @@ public class SendMessage {
      *
      * @return 聊天时需要附加的参数
      */
-    public static Map<String, Object> setMessAttr(String userName, String userIcon, String groupID,
-                                                  int ChatBothUserType) {
+    private static Map<String, Object> setMessAttr(String userID, String userName, String userIcon, String groupID,
+                                                   int ChatBothUserType) {
         Map<String, Object> attr = new TreeMap<>();
         // TODO: 15/8/14 add username userIcon
         attr.put(StaticField.ChatMessAttrName.userName, userName);
         attr.put(StaticField.ChatMessAttrName.userIcon, userIcon);
-        attr.put(StaticField.ChatMessAttrName.userID, App.getUserID());
+        attr.put(StaticField.ChatMessAttrName.userID, userID);
         // TODO: 15/8/17 groupID
         attr.put(StaticField.ChatMessAttrName.groupID, groupID);
         attr.put(StaticField.ChatMessAttrName.type, ChatBothUserType);
@@ -61,10 +63,9 @@ public class SendMessage {
         return attr;
     }
 
-    @Deprecated
-    public static Map<String, Object> setMessAttr() {
-        return setMessAttr("todo Name", "http://ac-iz9otzx1.clouddn.com/lo73gXLe1hsXP93fGs0m4TMibivViSLY6qN4Pt3A.jpg",
-                "", StaticField.ChatBothUserType.twoPerson);
+    public static Map<String, Object> setMessAttr(String groupID, int ChatBothUserType) {
+        Login.UserEntity my = MyUserInfo.getInstance().getUserInfo();
+        return setMessAttr(my.getId(), my.getUserName(), my.getIcon(), groupID, ChatBothUserType);
     }
 
     /**
@@ -75,10 +76,10 @@ public class SendMessage {
      * @return 添加了系统参数的列
      */
     public static Map<String, Object> setGroupManageSysMessAttr(Map<String, Object> attr,
-                                                                String CONVERSATION_ID, int systemFlag) {
+                                                                String CONVERSATION_ID, int systemFlag, String remark) {
         attr.put(StaticField.ChatMessAttrName.IS_SYS_MESS,
                 StaticField.SystemMessAttrName.MessTypeCode.System_mess);
-        attr.put(StaticField.SystemMessAttrName.REMARK, "嗨 你好！");
+        attr.put(StaticField.SystemMessAttrName.REMARK, remark);
         attr.put(StaticField.SystemMessAttrName.JOIN_CONV_ID, CONVERSATION_ID);
         attr.put(StaticField.SystemMessAttrName.LINK_URL, "");
         attr.put(StaticField.SystemMessAttrName.SYS_MSG_FLAG,

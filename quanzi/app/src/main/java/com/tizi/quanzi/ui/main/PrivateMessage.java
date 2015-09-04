@@ -11,7 +11,13 @@ import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.PrivateMessageAdapter;
+import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.model.PrivateMessPair;
+import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.ui.BaseFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,8 +50,18 @@ public class PrivateMessage extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
         mPrivateMessRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
-
-        privateMessageAdapter = new PrivateMessageAdapter(groupClasses, mActivity, onclick);
+        List<SystemMessage> systemMessages = DBAct.getInstance().quaryAllSysMess();
+        List<PrivateMessPair> privateMessPairs = new ArrayList<>();
+        for (SystemMessage systemMessage : systemMessages) {
+            privateMessPairs.add(PrivateMessPair.PriMessFromSystemMess(systemMessage));
+        }
+        privateMessageAdapter = new PrivateMessageAdapter(privateMessPairs, mActivity,
+                new PrivateMessageAdapter.Onclick() {
+                    @Override
+                    public void itemClick(int position) {
+                        // TODO: 15/9/4 add on click
+                    }
+                });
         mPrivateMessRecyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(mActivity, 2);
         mPrivateMessRecyclerView.setLayoutManager(mLayoutManager);

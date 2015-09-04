@@ -78,7 +78,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(GroupUserViewHolder holder, int position) {
+    public void onBindViewHolder(GroupUserViewHolder holder, final int position) {
         holder.weibo_avatar_NetworkImageView.setOnLongClickListener(null);
         holder.weibo_avatar_NetworkImageView.setOnClickListener(null);
         if (memlist == null || position == memlist.size()) {
@@ -98,7 +98,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                 holder.weibo_avatar_NetworkImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        deleteUser(mem.name, mem.id, groupID);
+                        deleteUser(mem.name, mem.id, groupID, position);
                         return false;
                     }
                 });
@@ -183,49 +183,26 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                 }).setNegativeButton("取消", null).show();
     }
 
-    private void deleteUser(String UserName, final String userID, final String groupID) {
+    private void deleteUser(String UserName, final String userID, final String groupID, final int postion) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("删除好友").setMessage("确认删除好友: " + UserName + " 么？")
                 .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //发送系统通知
-                        String convID = GroupList.getInstance().getGroup(groupID).convId;
-                        Map<String, Object> attr = SendMessage.setMessAttr();
-                        attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
-                                StaticField.SystemMessAttrName.systemFlag.kicked);
-                        SendMessage.getInstance().sendTextMessage(convID, "你被踢出了OAQ", attr);
-
-                        //LeanCloud删除
-                        List<String> userIds = new ArrayList<>();
-                        userIds.add(userID);
-                        AVIMConversation conversation = App.getImClient().getConversation(convID);
-                        conversation.kickMembers(userIds, new AVIMConversationCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e != null) {
-                                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
-                                } else {
-                                    Log.w(TAG, "LC删除好友成功");
-                                }
-                            }
-                        });
-
-
-                        //后台删除
-                        UserManageInGroup.getInstance().setManageGroupListener(
-                                new UserManageInGroup.ManageGroupListener() {
+                        String ConvID = GroupList.getInstance().getGroup(groupID).convId;
+                        GroupUserAdmin.getInstance(mContext).setOnResult(
+                                new GroupUserAdmin.OnResult() {
                                     @Override
-                                    public void onOK() {
-                                        Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
+                                    public void OK() {
+                                        memlist.remove(postion);
                                     }
 
                                     @Override
-                                    public void onError() {
-                                        Toast.makeText(mContext, "失败", Toast.LENGTH_LONG).show();
+                                    public void error(String errorMessage) {
+
                                     }
                                 }
-                        ).deleteUser(groupID, userID);
+                        ).deleteMember(ConvID, groupID, userID);
                     }
                 }).setNegativeButton("取消", null).show();
     }

@@ -101,15 +101,11 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id==R.id.action_private_message){
+
+        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void newAGroupButton(MenuItem item) {
-        Fragment fragment = mainFragmentPagerAdapter.fragments[0];
-        if (fragment != null) {
-            ((GroupChatList) fragment).newAGroup();
-        }
     }
 
     private ViewPager.OnPageChangeListener getOnPageChangeListener() {

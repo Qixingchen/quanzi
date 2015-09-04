@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.GetPassword;
@@ -108,6 +109,7 @@ public class AutoLogin {
                 Login login = gson.fromJson(response, Login.class);
                 if (login.isSuccess()) {
                     setUserInfo(App.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
+                    MyUserInfo.getInstance().setUserInfo(login.getUser());
                     StartMainActivity.startByLoginGroup(login.getGroup(), mContext);
                 } else {
                     Toast.makeText(mContext, login.getMsg(), Toast.LENGTH_LONG).show();
@@ -132,7 +134,7 @@ public class AutoLogin {
         App.getNewImClient(ID);
         return mInstance;
     }
-// TODO: 15/8/20 更换为回调接口
+    // TODO: 15/8/20 更换为回调接口
 
     /**
      * 设置成功监听器

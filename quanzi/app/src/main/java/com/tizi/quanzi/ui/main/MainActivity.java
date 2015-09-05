@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager.OnPageChangeListener onPageChangeListener;
 
     private MainFragment mainFragment;
+    private PrivateMessageFragment privateMessageFragment;
 
     //toolbar
     private Toolbar toolbar;
@@ -58,30 +59,6 @@ public class MainActivity extends AppCompatActivity {
         //        }
 
 
-        //        TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
-        //        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        //        mainFragmentPagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
-        //        mViewPager.setAdapter(mainFragmentPagerAdapter);
-        //        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
-        //        tabLayout.setupWithViewPager(mViewPager);
-        //
-        //        TextView tab = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        //        tab.setText("小圈子");
-        //        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_insert_photo_black_36dp, 0, 0);
-        //        tabLayout.getTabAt(0).setCustomView(tab);
-        //
-        //        tab = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        //        tab.setText("看一看");
-        //        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_insert_photo_black_36dp, 0, 0);
-        //        tabLayout.getTabAt(1).setCustomView(tab);
-        //
-        //        tab = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        //        tab.setText("大世界");
-        //        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_insert_photo_black_36dp, 0, 0);
-        //        tabLayout.getTabAt(2).setCustomView(tab);
-
-        //Snackbar.make(mViewPager, "网络故障", Snackbar.LENGTH_LONG).show();
-
     }
 
     @Override
@@ -109,7 +86,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_private_message) {
-
+            privateMessageFragment = new PrivateMessageFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment, privateMessageFragment)
+                    .addToBackStack("privateMessageFragment").commit();
         }
 
         return super.onOptionsItemSelected(item);

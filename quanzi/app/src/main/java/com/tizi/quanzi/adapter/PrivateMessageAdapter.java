@@ -89,6 +89,8 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
         if (privateMessPair.Type == StaticField.PrivateMessOrSysMess.SysMess) {
             final SystemMessage systemMessage = DBAct.getInstance().quarySysMess(privateMessPair.MessID);
             if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.invitation) {
+                holder.titleTextview.setVisibility(View.VISIBLE);
+                holder.MessTextview.setVisibility(View.VISIBLE);
                 holder.titleTextview.setText("邀请您加入圈子");
                 holder.MessTextview.setText(systemMessage.getContent());
                 if (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.notComplete) {
@@ -101,6 +103,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
                                     acceptToJoinGroup(true, systemMessage.getConvid(), systemMessage.getGroup_id());
                             systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
                             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+                            notifyDataSetChanged();
                         }
                     });
                     holder.refuseButton.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +111,9 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
                         public void onClick(View v) {
                             GroupUserAdmin.getInstance(context).
                                     acceptToJoinGroup(false, systemMessage.getConvid(), systemMessage.getGroup_id());
+                            systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
+                            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+                            notifyDataSetChanged();
                         }
                     });
                 }

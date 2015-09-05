@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.tizi.quanzi.ui.main.PrivateMessage">
+             tools:context="com.tizi.quanzi.ui.main.PrivateMessageFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/private_message_item_recycler_view"

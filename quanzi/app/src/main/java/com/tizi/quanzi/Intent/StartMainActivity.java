@@ -39,7 +39,7 @@ public class StartMainActivity {
             ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(groupClass.convId);
             if (chatMessage != null) {
                 groupClass.lastMessTime = chatMessage.create_time;
-                groupClass.lastMess = chatMessage.text;
+                groupClass.lastMess = ChatMessage.getContentText(chatMessage);
             }
         }
 

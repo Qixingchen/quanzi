@@ -23,14 +23,14 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  * 私信／系统通知
  */
-public class PrivateMessage extends BaseFragment {
+public class PrivateMessageFragment extends BaseFragment {
 
     private RecyclerView mPrivateMessRecyclerView;
     private PrivateMessageAdapter privateMessageAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
 
-    public PrivateMessage() {
+    public PrivateMessageFragment() {
         // Required empty public constructor
     }
 
@@ -49,7 +49,7 @@ public class PrivateMessage extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-        mPrivateMessRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_item_recycler_view);
+        mPrivateMessRecyclerView = (RecyclerView) mActivity.findViewById(R.id.private_message_item_recycler_view);
         List<SystemMessage> systemMessages = DBAct.getInstance().quaryAllSysMess();
         List<PrivateMessPair> privateMessPairs = new ArrayList<>();
         for (SystemMessage systemMessage : systemMessages) {

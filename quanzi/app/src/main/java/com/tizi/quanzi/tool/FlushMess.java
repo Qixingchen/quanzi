@@ -51,7 +51,8 @@ public class FlushMess {
                     try {
                         ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage((AVIMTypedMessage) avimMessage);
                         DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-                        GroupList.getInstance().updateGroupLastMess(convID, chatMessage.text, chatMessage.create_time);
+                        GroupList.getInstance().updateGroupLastMess(convID, ChatMessage.getContentText(chatMessage),
+                                chatMessage.create_time);
                     } catch (ClassFormatError formatError) {
                         SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess((AVIMTypedMessage) avimMessage);
                         Log.w(TAG, systemMessage.toString());

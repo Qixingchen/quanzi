@@ -331,8 +331,8 @@ public class DBAct {
     public SystemMessage quarySysMess(String messID) {
         Cursor sysMessCursor = db.query(DataBaseHelper.SystemMessSQLName.TableName,//table name
                 null,//返回的列,null表示全选
-                null,//条件
-                null,//条件的参数
+                DataBaseHelper.SystemMessSQLName.id + "=?",//条件
+                new String[]{messID},//条件的参数
                 null,//groupBy
                 null,//having
                 null //+ " DESC"//orderBy

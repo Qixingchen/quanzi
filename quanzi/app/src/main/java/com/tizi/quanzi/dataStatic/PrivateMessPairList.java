@@ -46,12 +46,22 @@ public class PrivateMessPairList {
         return PrivateMessPairList;
     }
 
+    public int getUnreadNum() {
+        int ans = 0;
+        for (PrivateMessPair privateMessPair : PrivateMessPairList) {
+            if (privateMessPair.UnreadCount != 0) {
+                ans++;
+            }
+        }
+        return ans;
+    }
+
     public void callUpdate() {
         noticeAllCallBack();
     }
 
     @Nullable
-    public PrivateMessPair getGroup(String id) {
+    public PrivateMessPair getPrivateMessPair(String id) {
         synchronized (PrivateMessPairList) {
             for (PrivateMessPair privateMessPair : PrivateMessPairList) {
                 if (privateMessPair.ID.compareTo(id) == 0) {
@@ -62,7 +72,7 @@ public class PrivateMessPairList {
         return null;
     }
 
-    public String getGroupIDByConvID(String convID) {
+    public String getIDByConvID(String convID) {
         synchronized (PrivateMessPairList) {
             for (PrivateMessPair privateMessPair : PrivateMessPairList) {
                 if (privateMessPair.convId.compareTo(convID) == 0) {
@@ -82,18 +92,18 @@ public class PrivateMessPairList {
         noticeAllCallBack();
     }
 
-    public void addGroup(PrivateMessPair group) {
+    public void addPair(PrivateMessPair Pair) {
         synchronized (PrivateMessPairList) {
-            PrivateMessPairList.add(group);
+            PrivateMessPairList.add(Pair);
         }
         sort();
         noticeAllCallBack();
     }
 
-    public boolean deleteGroup(PrivateMessPair group) {
+    public boolean deletePair(String ID) {
         synchronized (PrivateMessPairList) {
             for (PrivateMessPair PrivateMessPair : PrivateMessPairList) {
-                if (PrivateMessPair.ID.compareTo(group.ID) == 0) {
+                if (PrivateMessPair.ID.compareTo(ID) == 0) {
                     PrivateMessPairList.remove(PrivateMessPair);
                     noticeAllCallBack();
                     return true;
@@ -103,10 +113,10 @@ public class PrivateMessPairList {
         }
     }
 
-    public void updateGroup(PrivateMessPair group) {
+    public void updatePair(PrivateMessPair pair) {
         synchronized (PrivateMessPairList) {
             for (PrivateMessPair PrivateMessPair : PrivateMessPairList) {
-                if (PrivateMessPair.ID.compareTo(group.ID) == 0) {
+                if (PrivateMessPair.ID.compareTo(pair.ID) == 0) {
                     PrivateMessPairList.remove(PrivateMessPair);
                     PrivateMessPairList.add(PrivateMessPair);
                 }
@@ -136,7 +146,7 @@ public class PrivateMessPairList {
         }
     }
 
-    public boolean updateGroupLastMess(String convID, String lastMess, long lastTime) {
+    public boolean updatePairLastMess(String convID, String lastMess, long lastTime) {
         boolean isUpdated = false;
         synchronized (PrivateMessPairList) {
             for (PrivateMessPair group : PrivateMessPairList) {

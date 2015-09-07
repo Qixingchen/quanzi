@@ -54,7 +54,6 @@ public class GroupUserAdmin {
         clientIds.add(userID);
 
         Map<String, Object> chatAttr = new HashMap<String, Object>();
-        attr.put("type", StaticField.ChatBothUserType.twoPerson);
         final Map<String, Object> finalAttr = attr;
         App.getImClient().createConversation(clientIds, chatAttr, new AVIMConversationCreatedCallback() {
             @Override
@@ -92,25 +91,29 @@ public class GroupUserAdmin {
     }
 
     public void deleteMember(String convID, String groupID, String userID) {
-        //发送系统通知
-        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.twoPerson);
-        attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
-                StaticField.SystemMessAttrName.systemFlag.kicked, "");
-        SendMessage.getInstance().setSendOK(
-                new SendMessage.SendOK() {
-                    @Override
-                    public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                        Log.i(TAG, "已发送删除通知");
-                    }
+        if (userID.compareTo(App.getUserID()) == 0) {
+            //发送系统通知
+            Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.twoPerson);
+            attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
+                    StaticField.SystemMessAttrName.systemFlag.kicked, "");
+            SendMessage.getInstance().setSendOK(
+                    new SendMessage.SendOK() {
+                        @Override
+                        public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                            Log.i(TAG, "已发送删除通知");
+                        }
 
-                    @Override
-                    public void sendError(String errorMessage, String CONVERSATION_ID) {
-                        Toast.makeText(mContext, "发送删除通知失败", Toast.LENGTH_LONG).show();
-                        Log.w(TAG, "发送删除通知失败" + errorMessage);
+                        @Override
+                        public void sendError(String errorMessage, String CONVERSATION_ID) {
+                            Toast.makeText(mContext, "发送删除通知失败", Toast.LENGTH_LONG).show();
+                            Log.w(TAG, "发送删除通知失败" + errorMessage);
+                            if (onResult != null) {
+                                onResult.error(errorMessage);
+                            }
+                        }
                     }
-                }
-        ).sendTextMessage(convID, "你被踢出了OAQ", attr);
-
+            ).sendTextMessage(convID, "你被踢出了OAQ", attr);
+        }
         //LeanCloud删除
         List<String> userIds = new ArrayList<>();
         userIds.add(userID);
@@ -119,9 +122,12 @@ public class GroupUserAdmin {
             @Override
             public void done(AVException e) {
                 if (e != null) {
-                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
+                    Log.w(TAG, "LC删除好友失败");
+                    if (onResult != null) {
+                        onResult.error(e.getMessage());
+                    }
                 } else {
-                    Log.w(TAG, "LC删除好友成功");
+                    Log.i(TAG, "LC删除好友成功");
                 }
             }
         });
@@ -132,19 +138,66 @@ public class GroupUserAdmin {
                 new UserManageInGroup.ManageGroupListener() {
                     @Override
                     public void onOK(GroupUserInfo groupUserInfo) {
+                        if (onResult != null) {
+                            onResult.OK();
+                        }
                     }
 
                     @Override
-                    public void onError() {
-                        Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
-                        Log.w(TAG, "后台删除好友成功");
+                    public void onError(String errorMessage) {
+                        Log.w(TAG, "后台删除好友失败" + errorMessage);
+                        if (onResult != null) {
+                            onResult.error("后台删除好友失败");
+                        }
                     }
 
                 }).deleteUser(groupID, userID);
     }
 
     public void deleteGroup(String convID, String groupID) {
+        //后台
+        UserManageInGroup.getInstance().setManageGroupListener(
+                new UserManageInGroup.ManageGroupListener() {
+                    @Override
+                    public void onOK(GroupUserInfo groupUserInfo) {
+                        Log.i(TAG, "后台 发送成功");
+                        if (onResult != null) {
+                            onResult.OK();
+                        }
+                    }
 
+                    @Override
+                    public void onError(String errorMessage) {
+                        if (onResult != null) {
+                            onResult.error(errorMessage);
+                        }
+                    }
+                }
+        ).deleteGroup(groupID);
+
+        //LC
+        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.GROUP);
+        attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
+                StaticField.SystemMessAttrName.systemFlag.group_delete, "圈子已解散");
+        SendMessage.getInstance().setSendOK(
+                new SendMessage.SendOK() {
+                    @Override
+                    public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                        Log.i(TAG, "LC 发送成功");
+                        if (onResult != null) {
+                            onResult.OK();
+                        }
+                    }
+
+                    @Override
+                    public void sendError(String errorMessage, String CONVERSATION_ID) {
+                        Log.w(TAG, errorMessage);
+                        if (onResult != null) {
+                            onResult.error(errorMessage);
+                        }
+                    }
+                }
+        ).sendTextMessage(convID, "", attr);
     }
 
     public void acceptToJoinGroup(boolean isAccept, final String convID, final String groupID) {
@@ -178,14 +231,31 @@ public class GroupUserAdmin {
                     }
 
                     @Override
-                    public void onError() {
+                    public void onError(String ErrorMessage) {
+                        Log.w(TAG, "后台失败" + ErrorMessage);
                         if (onResult != null) {
-                            onResult.error("");
+                            onResult.error("后台失败" + ErrorMessage);
                         }
                     }
                 }
         ).acceptJoinGroup(groupID, App.getUserID());
-
+        List<String> userIds = new ArrayList<String>();
+        userIds.add(App.getUserID());
+        App.getImClient().getConversation(convID).addMembers(userIds, new AVIMConversationCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    if (onResult != null) {
+                        onResult.OK();
+                    }
+                } else {
+                    Log.w(TAG, e.getMessage());
+                    if (onResult != null) {
+                        onResult.error(e.getMessage());
+                    }
+                }
+            }
+        });
     }
 
     public interface OnResult {

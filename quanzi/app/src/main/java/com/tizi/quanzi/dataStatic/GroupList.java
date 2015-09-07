@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.tizi.quanzi.model.GroupClass;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,12 +20,9 @@ public class GroupList {
     private ArrayList<OnChangeCallBack> onChangeCallBacks = new ArrayList<>();
 
     public GroupList addOnChangeCallBack(OnChangeCallBack onChangeCallBack) {
+
         onChangeCallBacks.add(onChangeCallBack);
         return mInstance;
-    }
-
-    public void deleteOnChangeCallBack(OnChangeCallBack onChangeCallBack) {
-        onChangeCallBacks.remove(onChangeCallBack);
     }
 
     public static GroupList getInstance() {
@@ -89,10 +87,10 @@ public class GroupList {
         noticeAllCallBack();
     }
 
-    public boolean deleteGroup(GroupClass group) {
+    public boolean deleteGroup(String groupID) {
         synchronized (groupList) {
             for (GroupClass groupclass : groupList) {
-                if (groupclass.groupID.compareTo(group.groupID) == 0) {
+                if (groupclass.groupID.compareTo(groupID) == 0) {
                     groupList.remove(groupclass);
                     noticeAllCallBack();
                     return true;

@@ -24,9 +24,9 @@ import java.util.TreeMap;
  * @see GroupClass
  * @see Group
  */
-public class AddOrQuitGroup {
-    private static AddOrQuitGroup mInstance;
-    private static final String TAG = AddOrQuitGroup.class.getSimpleName();
+public class AddOrQuaryGroup {
+    private static AddOrQuaryGroup mInstance;
+    private static final String TAG = AddOrQuaryGroup.class.getSimpleName();
     private Gson gson;
     private Context mContext;
 
@@ -34,29 +34,28 @@ public class AddOrQuitGroup {
 
 
     private NewGroupListener newGroupListener;
-    private QuitGroupListener quitGroupListener;
     private QueryGroupListener queryGroupListener;
 
     private static Response.Listener<String> mOKListener;
     private static Response.ErrorListener mErrorListener;
 
-    public AddOrQuitGroup setNewGroupListener(NewGroupListener newGroupListener) {
+    public AddOrQuaryGroup setNewGroupListener(NewGroupListener newGroupListener) {
         this.newGroupListener = newGroupListener;
         return mInstance;
     }
 
-    public static AddOrQuitGroup getInstance() {
+    public static AddOrQuaryGroup getInstance() {
         if (mInstance == null) {
-            synchronized (AddOrQuitGroup.class) {
+            synchronized (AddOrQuaryGroup.class) {
                 if (mInstance == null) {
-                    mInstance = new AddOrQuitGroup();
+                    mInstance = new AddOrQuaryGroup();
                 }
             }
         }
         return mInstance;
     }
 
-    private AddOrQuitGroup() {
+    private AddOrQuaryGroup() {
         this.mContext = App.getApplication();
     }
 
@@ -92,23 +91,8 @@ public class AddOrQuitGroup {
                         mContext.getString(R.string.testbaseuri) + "/group/createF", newGroupPara);
     }
 
-    public AddOrQuitGroup setQuitGroupListener(QuitGroupListener quitGroupListener) {
-        this.quitGroupListener = quitGroupListener;
-        return mInstance;
-    }
 
-    public void exitGroup(String GroupID) {
-        makeQuitListener();
-        Map<String, String> quitGroupPara = new TreeMap<>();
-        quitGroupPara.put("groupid", GroupID);
-        quitGroupPara.put("userid", App.getUserID());
-        GetVolley.getmInstance(mContext).setOKListener(mOKListener).setErrorListener(mErrorListener)
-                .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/group/exitGroupF"
-                        , quitGroupPara);
-    }
-
-    public AddOrQuitGroup setQueryListener(QueryGroupListener queryListener) {
+    public AddOrQuaryGroup setQueryListener(QueryGroupListener queryListener) {
         this.queryGroupListener = queryListener;
         return mInstance;
     }
@@ -137,50 +121,11 @@ public class AddOrQuitGroup {
         void onError();
     }
 
-    public interface QuitGroupListener {
-        /**
-         * 成功回调
-         */
-        void onOK();
-
-        void onError();
-    }
 
     public interface QueryGroupListener {
         void OK(GroupUserInfo groupUserInfo);
 
         void Error(String Mess);
-    }
-
-    private void makeQuitListener() {
-        mOKListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Group group = gson.fromJson(response, Group.class);
-
-                if (group.isSuccess()) {
-                    if (quitGroupListener != null) {
-                        // TODO: 15/8/31 判断是否成功
-                        quitGroupListener.onOK();
-                    }
-                } else {
-                    Toast.makeText(mContext, group.getMsg(), Toast.LENGTH_LONG).show();
-                    if (quitGroupListener != null) {
-                        quitGroupListener.onError();
-                    }
-                }
-            }
-        };
-        mErrorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.w(TAG, error.getMessage());
-                Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_LONG).show();
-                if (newGroupListener != null) {
-                    newGroupListener.onError();
-                }
-            }
-        };
     }
 
     private void makeAddListener() {

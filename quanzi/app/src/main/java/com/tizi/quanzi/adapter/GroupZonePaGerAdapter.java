@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.QuaryDynamic;
 
 /**
@@ -25,6 +26,7 @@ public class GroupZonePagerAdapter extends PagerAdapter {
     private RecyclerView mDynsItemsRecyclerView;
     private DynsAdapter dynsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private final static String TAG = GroupZonePagerAdapter.class.getSimpleName();
 
     public GroupZonePagerAdapter(Context context) {
         mContext = context;
@@ -77,7 +79,7 @@ public class GroupZonePagerAdapter extends PagerAdapter {
 
                 @Override
                 public void onError() {
-
+                    Log.e(TAG, "加载群动态失败");
                 }
             }).getQuanZiDynamic();
         }

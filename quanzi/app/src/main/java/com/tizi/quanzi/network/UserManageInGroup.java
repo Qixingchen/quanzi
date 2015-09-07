@@ -21,7 +21,6 @@ import java.util.TreeMap;
  */
 public class UserManageInGroup {
 
-    private static UserManageInGroup mInstance;
     private static final String TAG = UserManageInGroup.class.getSimpleName();
     private Gson gson;
     private Context mContext;
@@ -33,18 +32,11 @@ public class UserManageInGroup {
 
     public UserManageInGroup setManageGroupListener(ManageGroupListener ManageGroupListener) {
         this.ManageGroupListener = ManageGroupListener;
-        return mInstance;
+        return this;
     }
 
     public static UserManageInGroup getInstance() {
-        if (mInstance == null) {
-            synchronized (UserManageInGroup.class) {
-                if (mInstance == null) {
-                    mInstance = new UserManageInGroup();
-                }
-            }
-        }
-        return mInstance;
+        return new UserManageInGroup();
     }
 
     private UserManageInGroup() {
@@ -61,7 +53,7 @@ public class UserManageInGroup {
                 } else {
                     Log.e(TAG, "Error");
                     Toast.makeText(mContext, "Error", Toast.LENGTH_LONG).show();
-                    ManageGroupListener.onError();
+                    ManageGroupListener.onError("");
                 }
             }
         };
@@ -73,7 +65,7 @@ public class UserManageInGroup {
                 Log.w(TAG, error.getMessage());
                 Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_LONG).show();
                 if (ManageGroupListener != null) {
-                    ManageGroupListener.onError();
+                    ManageGroupListener.onError(error.getMessage());
                 }
             }
         }
@@ -109,13 +101,25 @@ public class UserManageInGroup {
                         mContext.getString(R.string.testbaseuri) + "/group/acceptGroupInvite", acceptJoinGroupPara);
     }
 
+    public void deleteGroup(String GroupID) {
+        Map<String, String> deleteGroupPara = new TreeMap<>();
+        deleteGroupPara.put("userid", App.getUserID());
+        deleteGroupPara.put("groupid", GroupID);
+
+
+        GetVolley.getmInstance(mContext).setOKListener(mOKListener).
+                setErrorListener(mErrorListener)
+                .addRequestWithSign(Request.Method.GET,
+                        mContext.getString(R.string.testbaseuri) + "/group/dropGroupF", deleteGroupPara);
+    }
+
     public interface ManageGroupListener {
         /**
          * 成功回调
          */
         void onOK(GroupUserInfo groupUserInfo);
 
-        void onError();
+        void onError(String errorMessage);
     }
 
 

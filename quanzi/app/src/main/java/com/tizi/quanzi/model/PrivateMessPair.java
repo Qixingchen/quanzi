@@ -34,6 +34,8 @@ public class PrivateMessPair implements Serializable, Parcelable {
         privateMessPair.MessID = systemMessage.getId();
         privateMessPair.lastMess = systemMessage.getContent();
         privateMessPair.lastMessTime = systemMessage.getCreate_time();
+        privateMessPair.UnreadCount = (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.complete)
+                ? 0 : 1;
         return privateMessPair;
     }
 

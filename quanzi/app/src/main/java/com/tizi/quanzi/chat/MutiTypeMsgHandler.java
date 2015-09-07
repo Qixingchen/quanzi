@@ -8,11 +8,14 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.notification.AddNotification;
+import com.tizi.quanzi.tool.StaticField;
 
 /**
  * Created by qixingchen on 15/8/14.
@@ -65,7 +68,16 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     chatMessage.ConversationId, ChatMessage.getContentText(chatMessage), chatMessage.create_time);
         } catch (ClassFormatError error) {
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
+
             // TODO: 15/8/25 do systemMessage
+
+            /*圈子解散*/
+            if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_delete) {
+
+                GroupList.getInstance().deleteGroup(systemMessage.getGroup_id());
+                systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
+            }
+            PrivateMessPairList.getInstance().addPair(PrivateMessPair.PriMessFromSystemMess(systemMessage));
             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
         }
 

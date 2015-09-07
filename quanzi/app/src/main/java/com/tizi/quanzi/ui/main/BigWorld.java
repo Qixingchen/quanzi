@@ -1,18 +1,23 @@
 package com.tizi.quanzi.ui.main;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.Login;
+import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.ui.BaseFragment;
 
 /**
  */
-public class BigWorld extends Fragment {
+public class BigWorld extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -22,7 +27,10 @@ public class BigWorld extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private TextView textView;
+    private TextView userName, userSign;
+    private NetworkImageView userFace;
+    private ImageView userSex;
+    private View Share, Setting;
 
 
     /**
@@ -31,6 +39,7 @@ public class BigWorld extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     *
      * @return A new instance of fragment BigWorld.
      */
     // TODO: Rename and change types and number of parameters
@@ -62,15 +71,34 @@ public class BigWorld extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_big_world, container,
                 false);
-
-        textView = (TextView) rootView.findViewById(R.id.text);
         return rootView;
     }
 
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    protected void findViews() {
+        userFace = (NetworkImageView) mActivity.findViewById(R.id.userFace);
+        userName = (TextView) mActivity.findViewById(R.id.userName);
+        userSex = (ImageView) mActivity.findViewById(R.id.userSex);
+        userSign = (TextView) mActivity.findViewById(R.id.userSign);
+        Share = mActivity.findViewById(R.id.share);
+        Setting = mActivity.findViewById(R.id.setting);
+    }
+
+    @Override
+    protected void initViewsAndSetEvent() {
+        Login.UserEntity userInfo = MyUserInfo.getInstance().getUserInfo();
+        userFace.setImageUrl(userInfo.getIcon(),
+                GetVolley.getmInstance(mActivity).getImageLoader());
+        userName.setText(userInfo.getUserName());
+
+        if (userInfo.getSex() == 1) {
+            Picasso.with(mActivity).load(R.drawable.man).into(userSex);
+        } else {
+            Picasso.with(mActivity).load(R.drawable.girl).into(userSex);
+        }
+        userSign.setText(userInfo.getSignature());
+
     }
 
     @Override
@@ -78,9 +106,4 @@ public class BigWorld extends Fragment {
         super.onDetach();
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        textView.setText(mParam1);
-    }
 }

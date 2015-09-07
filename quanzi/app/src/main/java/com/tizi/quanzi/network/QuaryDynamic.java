@@ -87,12 +87,12 @@ public class QuaryDynamic {
     public QuaryDynamic getQuanZiDynamic() {
 
         Map<String, String> quaryDynmicPara = new TreeMap<>();
-        quaryDynmicPara.put("userid", App.getUserID());
+        //quaryDynmicPara.put("userid", App.getUserID());
 
         GetVolley.getmInstance(mContext).setOKListener(mOKListener).
                 setErrorListener(mErrorListener)
                 .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/grpdyn/findQzF", quaryDynmicPara);
+                        mContext.getString(R.string.testbaseuri) + "/grpdyn/findF", quaryDynmicPara);
         return mInstance;
     }
 

@@ -17,6 +17,7 @@ import com.tizi.quanzi.log.Log;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -256,14 +257,8 @@ public class GetVolley {
 
     private String convertToUTF8(String s) {
         Log.w(TAG, s);
-        ByteBuffer bb = Charset.forName("UTF-8").encode(s);
 
-        try {
-            return new String(bb.array(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new String(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
     }
 
 }

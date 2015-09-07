@@ -56,12 +56,12 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="fill_parent"
             android:orientation="vertical"
             android:paddingTop="24dp">
 
@@ -76,22 +76,31 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/group_users_item_recycler_view"
                 android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                tools:layout_height="100dp"/>
+
+            <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/detail_viewpager"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="600dp">-->
+
+            <!--<android.support.v4.view.PagerTabStrip-->
+            <!--android:id="@+id/PagerTab"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="top"/>-->
+            <!--</android.support.v4.view.ViewPager>-->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/group_dyns_item_recycler_view"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                tools:layout_height="64dp">
+                tools:layout_height="640dp"/>
 
-            </android.support.v7.widget.RecyclerView>
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/detail_viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="600dp">
-
-                <android.support.v4.view.PagerTabStrip
-                    android:id="@+id/PagerTab"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"/>
-            </android.support.v4.view.ViewPager>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1222222"/>
 
         </LinearLayout>
 

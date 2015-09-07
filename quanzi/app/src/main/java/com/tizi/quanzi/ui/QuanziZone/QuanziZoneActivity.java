@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
-import com.tizi.quanzi.network.AddOrQuitGroup;
+import com.tizi.quanzi.network.AddOrQuaryGroup;
 import com.tizi.quanzi.ui.BaseActivity;
 
 public class QuanziZoneActivity extends BaseActivity {
@@ -39,7 +39,7 @@ public class QuanziZoneActivity extends BaseActivity {
         Intent intent = getIntent();
         final String convID = intent.getStringExtra("conversation");
         final String GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
-        AddOrQuitGroup.getInstance().setQueryListener(new AddOrQuitGroup.QueryGroupListener() {
+        AddOrQuaryGroup.getInstance().setQueryListener(new AddOrQuaryGroup.QueryGroupListener() {
             @Override
             public void OK(GroupUserInfo groupUserInfo) {
                 mGroupUserInfo = groupUserInfo;

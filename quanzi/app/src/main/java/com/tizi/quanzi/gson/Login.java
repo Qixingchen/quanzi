@@ -80,13 +80,13 @@ public class Login {
         @SerializedName("icon")
         private String icon;
         @SerializedName("sex")
-        private String sex;
+        private int sex;
         @SerializedName("area")
         private Object area;
         @SerializedName("token")
         private String token;
         @SerializedName("groupNum")
-        private String groupNum;
+        private int groupNum;
         @SerializedName("bg")
         private Object bg;
         @SerializedName("userName")
@@ -94,104 +94,104 @@ public class Login {
         @SerializedName("account")
         private String account;
         @SerializedName("signature")
-        private Object signature;
+        private String signature;
         @SerializedName("mobile")
         private String mobile;
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setBirthday(Object birthday) {
-            this.birthday = birthday;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public void setSex(String sex) {
-            this.sex = sex;
-        }
-
-        public void setArea(Object area) {
-            this.area = area;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public void setGroupNum(String groupNum) {
-            this.groupNum = groupNum;
-        }
-
-        public void setBg(Object bg) {
-            this.bg = bg;
-        }
-
-        public void setUserName(String userName) {
-            this.userName = userName;
-        }
-
-        public void setAccount(String account) {
-            this.account = account;
-        }
-
-        public void setSignature(Object signature) {
-            this.signature = signature;
-        }
-
-        public void setMobile(String mobile) {
-            this.mobile = mobile;
-        }
-
         public String getId() {
             return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
 
         public Object getBirthday() {
             return birthday;
         }
 
+        public void setBirthday(Object birthday) {
+            this.birthday = birthday;
+        }
+
         public String getIcon() {
             return icon;
         }
 
-        public String getSex() {
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public int getSex() {
             return sex;
+        }
+
+        public void setSex(int sex) {
+            this.sex = sex;
         }
 
         public Object getArea() {
             return area;
         }
 
+        public void setArea(Object area) {
+            this.area = area;
+        }
+
         public String getToken() {
             return token;
         }
 
-        public String getGroupNum() {
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public int getGroupNum() {
             return groupNum;
+        }
+
+        public void setGroupNum(int groupNum) {
+            this.groupNum = groupNum;
         }
 
         public Object getBg() {
             return bg;
         }
 
+        public void setBg(Object bg) {
+            this.bg = bg;
+        }
+
         public String getUserName() {
             return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
         }
 
         public String getAccount() {
             return account;
         }
 
-        public Object getSignature() {
+        public void setAccount(String account) {
+            this.account = account;
+        }
+
+        public String getSignature() {
             return signature;
+        }
+
+        public void setSignature(String signature) {
+            this.signature = signature;
         }
 
         public String getMobile() {
             return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
         }
     }
 

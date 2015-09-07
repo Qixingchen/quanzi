@@ -14,26 +14,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.chat.GroupUserAdmin;
-import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
-import com.tizi.quanzi.network.UserManageInGroup;
-import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.QuanziZone.QuanziZoneActivity;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by qixingchen on 15/9/2.
@@ -111,11 +103,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      */
     @Override
     public int getItemCount() {
-        if (memlist == null) {
-            return 1;
-        } else {
-            return memlist.size() + 1;
-        }
+        return memlist == null ? 1 : memlist.size() + 1;
     }
 
     /**

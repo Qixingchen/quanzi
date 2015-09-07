@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
 
 
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     //toolbar
     private Toolbar toolbar;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,13 @@ public class MainActivity extends AppCompatActivity {
         mainFragment = new MainFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, mainFragment).commit();
+
+        PrivateMessPairList.getInstance().addOnChangeCallBack(new PrivateMessPairList.OnChangeCallBack() {
+            @Override
+            public void changed() {
+                menu.findItem(R.id.action_private_message).setTitle("私信（" + PrivateMessPairList.getInstance().getUnreadNum() + "）条");
+            }
+        });
 
 
         //Drawable logo = getDrawable(R.drawable.face);
@@ -71,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -94,26 +104,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    //
-    //    private ViewPager.OnPageChangeListener getOnPageChangeListener() {
-    //        if (onPageChangeListener == null) {
-    //            onPageChangeListener = new ViewPager.OnPageChangeListener() {
-    //                @Override
-    //                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    //                    //Log.w(TAG, "onPageScrolled position=" + position);
-    //                }
-    //
-    //                @Override
-    //                public void onPageSelected(int position) {
-    //                    Log.w(TAG, "onPageSelected position=" + position);
-    //                }
-    //
-    //                @Override
-    //                public void onPageScrollStateChanged(int state) {
-    //                    Log.w(TAG, "onPageScrollStateChanged state=" + state);
-    //                }
-    //            };
-    //        }
-    //        return onPageChangeListener;
-    //    }
 }

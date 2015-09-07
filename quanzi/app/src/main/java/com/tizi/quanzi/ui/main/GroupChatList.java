@@ -115,7 +115,7 @@ public class GroupChatList extends BaseFragment {
         // TODO: 15/8/20 创建群
         //        String GroupName = "xingchen test2", icon = "http://ac-hy5srahi.clouddn.com/2j5dU2E1dvXcVD1TKPmgNBC.jpeg";
         //        String notice = "公告", userID = App.getUserID(), tag = "[{tagid:\"1\",tagname:\"1name\"},{tagid:\"2\",tagName:\"2name\"}]";
-        //        AddOrQuitGroup.getInstance().setNewGroupListener(new AddOrQuitGroup.NewGroupListener() {
+        //        AddOrQuaryGroup.getInstance().setNewGroupListener(new AddOrQuaryGroup.NewGroupListener() {
         //            @Override
         //            public void onOK(GroupClass groupClass) {
         //                groupListAdapter.addGroup(groupClass);

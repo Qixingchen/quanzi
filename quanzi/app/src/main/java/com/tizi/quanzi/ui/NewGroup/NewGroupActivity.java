@@ -16,7 +16,7 @@ import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.network.AddOrQuitGroup;
+import com.tizi.quanzi.network.AddOrQuaryGroup;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
@@ -107,8 +107,8 @@ public class NewGroupActivity extends BaseActivity {
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
                 String userID = App.getUserID(), tag = "[{}]";
-                AddOrQuitGroup.getInstance().setNewGroupListener(
-                        new AddOrQuitGroup.NewGroupListener() {
+                AddOrQuaryGroup.getInstance().setNewGroupListener(
+                        new AddOrQuaryGroup.NewGroupListener() {
                             @Override
                             public void onOK(GroupClass groupClass) {
                                 groupClass.groupName = ans.groupName;

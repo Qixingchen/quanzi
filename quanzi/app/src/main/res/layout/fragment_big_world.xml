@@ -1,14 +1,124 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.tizi.quanzi.ui.main.BigWorld">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="#F3F3F3"
+             tools:context="com.tizi.quanzi.ui.main.BigWorld">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/userInfoLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="98dp"
+            android:layout_marginTop="11dp"
+            android:background="@color/md_white"
+            android:orientation="horizontal">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/userFace"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="9dp"
+                android:layout_marginStart="9dp"
+                tools:background="@drawable/face"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        tools:text="马云"/>
+
+                    <ImageView
+                        android:id="@+id/userSex"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/man"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/userSign"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#B6B6B6"
+                    android:textSize="9sp"
+                    tools:text="122222222222"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="11dp"
+            android:background="@color/md_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:layout_marginStart="33dp"
+                android:src="@drawable/share"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="分享"
+                android:textSize="10sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/setting"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="11dp"
+            android:background="@color/md_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
+                android:layout_marginStart="33dp"
+                android:src="@drawable/setting"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="系统设置"
+                android:textSize="10sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="273dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="?selectableItemBackground"
+            android:text="退出登陆"/>
+    </LinearLayout>
 </FrameLayout>

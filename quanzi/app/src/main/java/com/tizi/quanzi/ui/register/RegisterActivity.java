@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;

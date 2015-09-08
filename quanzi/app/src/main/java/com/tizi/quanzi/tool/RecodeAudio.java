@@ -7,7 +7,6 @@ import android.media.MediaRecorder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 

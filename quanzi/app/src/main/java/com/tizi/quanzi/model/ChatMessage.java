@@ -2,7 +2,6 @@ package com.tizi.quanzi.model;
 
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.tool.Tool;
 
 /**
  * Created by qixingchen on 15/8/12.

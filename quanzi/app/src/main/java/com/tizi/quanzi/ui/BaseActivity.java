@@ -3,7 +3,6 @@ package com.tizi.quanzi.ui;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 
 /**

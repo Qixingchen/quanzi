@@ -1,7 +1,6 @@
 package com.tizi.quanzi.tool;
 
 import android.app.Activity;
-import android.test.RenamingDelegatingContext;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.google.android.gms.common.ConnectionResult;

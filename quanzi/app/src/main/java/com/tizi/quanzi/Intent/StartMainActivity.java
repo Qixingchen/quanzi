@@ -2,7 +2,6 @@ package com.tizi.quanzi.Intent;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;

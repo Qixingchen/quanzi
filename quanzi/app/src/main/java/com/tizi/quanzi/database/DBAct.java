@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
@@ -17,7 +16,6 @@ import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 /**

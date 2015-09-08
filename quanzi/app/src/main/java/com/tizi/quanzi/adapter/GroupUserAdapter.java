@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.GroupList;

@@ -15,7 +15,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.GroupList;

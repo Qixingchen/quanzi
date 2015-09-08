@@ -21,7 +21,6 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.DynsAdapter;
 import com.tizi.quanzi.adapter.GroupUserAdapter;
 import com.tizi.quanzi.adapter.GroupZonePagerAdapter;
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.GroupUserInfo;

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;

@@ -12,6 +12,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 
 import java.io.UnsupportedEncodingException;
@@ -156,8 +157,8 @@ public class GetVolley {
      */
     private Map<String, String> addSignMap(Map<String, String> para) {
         para.put("ts", String.valueOf(System.currentTimeMillis() / 1000L));
-        para.put("uid", App.getUserID());
-        para.put("sign", getSignString(para.get("ts"), App.getUserID()));
+        para.put("uid", AppStaticValue.getUserID());
+        para.put("sign", getSignString(para.get("ts"), AppStaticValue.getUserID()));
         return para;
     }
 
@@ -190,7 +191,7 @@ public class GetVolley {
     private String getSignString(String ts, String userid) {
 
         String para = "ts=" + ts + "&uid=" + userid;
-        para += App.getUserToken();
+        para += AppStaticValue.getUserToken();
 
         MessageDigest md = null;
         try {
@@ -255,6 +256,10 @@ public class GetVolley {
         return mInstance;
     }
 
+    /**
+     * 将请求串转换为UTF－8编码
+     * todo 未成功
+     */
     private String convertToUTF8(String s) {
         Log.w(TAG, s);
 

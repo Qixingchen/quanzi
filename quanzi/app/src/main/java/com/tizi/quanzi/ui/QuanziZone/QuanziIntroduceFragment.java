@@ -22,6 +22,7 @@ import com.tizi.quanzi.adapter.DynsAdapter;
 import com.tizi.quanzi.adapter.GroupUserAdapter;
 import com.tizi.quanzi.adapter.GroupZonePagerAdapter;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.log.Log;
@@ -33,6 +34,7 @@ import com.tizi.quanzi.ui.BaseFragment;
 
 /**
  * A placeholder fragment containing a simple view.
+ * 群空间，介绍页
  */
 public class QuanziIntroduceFragment extends BaseFragment {
 
@@ -130,7 +132,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         groupUserAdapter = new GroupUserAdapter(mActivity,
                 groupUserInfo == null ? null : groupUserInfo.memlist,
-                groupClass != null && groupClass.createUser.compareTo(App.getUserID()) == 0);
+                groupClass != null && groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0);
         groupUsersLayoutManager = new GridLayoutManager(mActivity, 6);
         Log.i(TAG, "groupUsersLayoutManager Heigh:" + groupUsersLayoutManager.getHeight());
 
@@ -138,10 +140,13 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupUsersRecyclerView.setLayoutManager(groupUsersLayoutManager);
     }
 
+    /**
+     * 设置群的信息
+     */
     public void setGroupInfo(GroupUserInfo groupUserInfo, GroupClass groupClass) {
         this.groupUserInfo = groupUserInfo;
         this.groupClass = groupClass;
-        boolean isCreate = groupClass.createUser.compareTo(App.getUserID()) == 0;
+        boolean isCreate = groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0;
         if (groupUserAdapter != null) {
             groupUserAdapter.setMemlist(groupUserInfo.memlist);
             groupUserAdapter.setIsCreater(isCreate);

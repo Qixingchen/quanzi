@@ -9,6 +9,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.GroupUserInfo;
@@ -39,23 +40,35 @@ public class GroupUserAdmin {
         this.mContext = context;
     }
 
+    /**
+     * 设置回调
+     *
+     * @param onResult 回调函数
+     */
     public GroupUserAdmin setOnResult(OnResult onResult) {
         this.onResult = onResult;
         return this;
     }
 
+    /**
+     * 向组内邀请成员
+     *
+     * @param convID  组的convID
+     * @param groupID 组ID
+     * @param userID  成员ID
+     */
     public void addMember(String convID, final String groupID, String userID) {
         Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.twoPerson);
         attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
                 StaticField.SystemMessAttrName.systemFlag.invitation, "");
 
         List<String> clientIds = new ArrayList<>();
-        clientIds.add(App.getUserID());
+        clientIds.add(AppStaticValue.getUserID());
         clientIds.add(userID);
 
         Map<String, Object> chatAttr = new HashMap<String, Object>();
         final Map<String, Object> finalAttr = attr;
-        App.getImClient().createConversation(clientIds, chatAttr, new AVIMConversationCreatedCallback() {
+        AppStaticValue.getImClient().createConversation(clientIds, chatAttr, new AVIMConversationCreatedCallback() {
             @Override
             public void done(AVIMConversation avimConversation, AVException e) {
                 if (e != null) {
@@ -90,8 +103,15 @@ public class GroupUserAdmin {
 
     }
 
+    /**
+     * 在组类删除用户
+     *
+     * @param convID  组的convID
+     * @param groupID 组ID
+     * @param userID  成员ID
+     */
     public void deleteMember(String convID, String groupID, String userID) {
-        if (userID.compareTo(App.getUserID()) == 0) {
+        if (userID.compareTo(AppStaticValue.getUserID()) == 0) {
             //发送系统通知
             Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.twoPerson);
             attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
@@ -117,7 +137,7 @@ public class GroupUserAdmin {
         //LeanCloud删除
         List<String> userIds = new ArrayList<>();
         userIds.add(userID);
-        AVIMConversation conversation = App.getImClient().getConversation(convID);
+        AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
         conversation.kickMembers(userIds, new AVIMConversationCallback() {
             @Override
             public void done(AVException e) {
@@ -154,6 +174,12 @@ public class GroupUserAdmin {
                 }).deleteUser(groupID, userID);
     }
 
+    /**
+     * 删除组
+     *
+     * @param convID  组的convID
+     * @param groupID 组ID
+     */
     public void deleteGroup(String convID, String groupID) {
         //后台
         UserManageInGroup.getInstance().setManageGroupListener(
@@ -200,6 +226,13 @@ public class GroupUserAdmin {
         ).sendTextMessage(convID, "", attr);
     }
 
+    /**
+     * 同意加入组
+     *
+     * @param isAccept 是否接受加入
+     * @param convID   组的convID
+     * @param groupID  组ID
+     */
     public void acceptToJoinGroup(boolean isAccept, final String convID, final String groupID) {
         if (!isAccept) {
             return;
@@ -211,8 +244,8 @@ public class GroupUserAdmin {
                         GroupClass groupClass = GroupClass.getGroupByGroupUserInfo(groupUserInfo, groupID, convID);
                         GroupList.getInstance().addGroup(groupClass);
                         List<String> clientIds = new ArrayList<>();
-                        clientIds.add(App.getUserID());
-                        App.getImClient().getConversation(convID).addMembers(clientIds, new AVIMConversationCallback() {
+                        clientIds.add(AppStaticValue.getUserID());
+                        AppStaticValue.getImClient().getConversation(convID).addMembers(clientIds, new AVIMConversationCallback() {
                             @Override
                             public void done(AVException e) {
                                 if (e != null) {
@@ -238,10 +271,10 @@ public class GroupUserAdmin {
                         }
                     }
                 }
-        ).acceptJoinGroup(groupID, App.getUserID());
+        ).acceptJoinGroup(groupID, AppStaticValue.getUserID());
         List<String> userIds = new ArrayList<String>();
-        userIds.add(App.getUserID());
-        App.getImClient().getConversation(convID).addMembers(userIds, new AVIMConversationCallback() {
+        userIds.add(AppStaticValue.getUserID());
+        AppStaticValue.getImClient().getConversation(convID).addMembers(userIds, new AVIMConversationCallback() {
             @Override
             public void done(AVException e) {
                 if (e == null) {

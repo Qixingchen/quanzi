@@ -16,8 +16,19 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     protected final ArrayList<T> groupList = new ArrayList<>();
     protected ArrayList<OnChangeCallBack> onChangeCallBacks = new ArrayList<>();
 
+    /**
+     * 获取未读数量
+     *
+     * @param convID 需查询的组的ID
+     *
+     * @return 未读数量
+     */
     public abstract int getUnreadCount(String convID);
 
+    /**
+     * 添加数据变更时的回调
+     * 添加后会立即调用一次
+     */
     public ConvGroupAbsList addOnChangeCallBack(OnChangeCallBack onChangeCallBack) {
 
         onChangeCallBacks.add(onChangeCallBack);
@@ -25,15 +36,28 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         return this;
     }
 
+    /**
+     * 获取组列表
+     */
     public ArrayList<T> getGroupList() {
         updateUnreadCount();
         return groupList;
     }
 
+    /**
+     * 向所有回调发布更新通知
+     */
     public void callUpdate() {
         noticeAllCallBack();
     }
 
+    /**
+     * 获取组
+     *
+     * @param id 组ID
+     *
+     * @return 组
+     */
     @Nullable
     public T getGroup(String id) {
         synchronized (groupList) {
@@ -47,6 +71,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         return null;
     }
 
+    /**
+     * 获取组的ConvID
+     */
     public String getGroupIDByConvID(String convID) {
         synchronized (groupList) {
             for (T group : groupList) {
@@ -58,6 +85,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         return "";
     }
 
+    /**
+     * 重设整个组
+     */
     public void setGroupList(List<T> newGroupList) {
         synchronized (groupList) {
             groupList.clear();
@@ -68,6 +98,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         noticeAllCallBack();
     }
 
+    /**
+     * 添加一个组
+     */
     public void addGroup(T group) {
         synchronized (groupList) {
             groupList.add(group);
@@ -77,6 +110,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         noticeAllCallBack();
     }
 
+    /**
+     * 删除一个组
+     */
     public boolean deleteGroup(String groupID) {
         synchronized (groupList) {
             for (T groupclass : groupList) {
@@ -90,6 +126,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         }
     }
 
+    /**
+     * 更新组，条件是ID相同
+     */
     public void updateGroup(T group) {
         synchronized (groupList) {
             for (T groupclass : groupList) {
@@ -104,6 +143,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         noticeAllCallBack();
     }
 
+    /**
+     * 排序
+     */
     public void sort() {
         synchronized (groupList) {
             Collections.sort(groupList, new Comparator<T>() {
@@ -124,6 +166,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         }
     }
 
+    /**
+     * 更新最后一条消息的信息
+     */
     public boolean updateGroupLastMess(String convID, String lastMess, long lastTime) {
         boolean isUpdated = false;
         synchronized (groupList) {
@@ -144,12 +189,18 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         return isUpdated;
     }
 
+    /**
+     * 更新未读数量
+     */
     protected void updateUnreadCount() {
         for (T group : groupList) {
             group.UnreadCount = getUnreadCount(group.convId);
         }
     }
 
+    /**
+     * 通知所有回调
+     */
     protected void noticeAllCallBack() {
         for (OnChangeCallBack cb : onChangeCallBacks) {
             cb.changed();

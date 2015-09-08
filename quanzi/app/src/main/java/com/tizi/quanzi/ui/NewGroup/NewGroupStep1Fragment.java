@@ -17,7 +17,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 
@@ -99,7 +99,7 @@ public class NewGroupStep1Fragment extends Fragment {
     private void savePhoto(String filepath) {
         AVFile file = null;
         try {
-            file = AVFile.withAbsoluteLocalPath(App.getUserID() + "group.jpg",
+            file = AVFile.withAbsoluteLocalPath(AppStaticValue.getUserID() + "group.jpg",
                     filepath);
             final AVFile finalFile = file;
             file.saveInBackground(new SaveCallback() {
@@ -122,6 +122,11 @@ public class NewGroupStep1Fragment extends Fragment {
         }
     }
 
+    /**
+     * 获取本页的结果
+     *
+     * @return NewGroupStep1Ans
+     */
     public NewGroupStep1Ans getNewGroupAns() {
         NewGroupStep1Ans ans = new NewGroupStep1Ans();
         ans.groupName = quanziNameInputLayout.getEditText().getText().toString();
@@ -133,6 +138,9 @@ public class NewGroupStep1Fragment extends Fragment {
         return ans;
     }
 
+    /**
+     * 本页的结果组
+     */
     public class NewGroupStep1Ans {
         public boolean complete;
         public String groupName;

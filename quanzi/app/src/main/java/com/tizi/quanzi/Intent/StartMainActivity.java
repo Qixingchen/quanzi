@@ -22,7 +22,6 @@ public class StartMainActivity {
 
     /**
      * 使用 groupEntityList 唤起主界面
-     * 并储存 GroupList 至数据库
      * <p/>
      * Intent: group : ArrayList<GroupClass>
      *

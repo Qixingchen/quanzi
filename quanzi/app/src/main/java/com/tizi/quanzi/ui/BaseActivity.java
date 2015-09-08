@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 
 /**
  * Created by qixingchen on 15/8/31.
@@ -22,7 +23,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.setActivitys(this);
+        AppStaticValue.setActivitys(this);
     }
 
     /**

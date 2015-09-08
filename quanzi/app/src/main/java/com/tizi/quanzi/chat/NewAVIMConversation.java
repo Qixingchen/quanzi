@@ -5,6 +5,7 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -42,14 +43,14 @@ public class NewAVIMConversation {
      *
      * @return mInstance
      */
-    private NewAVIMConversation newAChatGroup() {
+    public NewAVIMConversation newAChatGroup() {
         List<String> clientIds = new ArrayList<>();
-        clientIds.add(App.getUserID());
+        clientIds.add(AppStaticValue.getUserID());
 
 
         Map<String, Object> attr = new HashMap<>();
         attr.put("type", StaticField.ChatBothUserType.GROUP);
-        AVIMClient imClient = App.getImClient();
+        AVIMClient imClient = AppStaticValue.getImClient();
         imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
             @Override
             public void done(AVIMConversation avimConversation, AVException e) {

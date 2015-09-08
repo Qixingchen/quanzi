@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.AutoLogin;
@@ -30,7 +31,9 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.main.MainActivity;
 import com.tizi.quanzi.ui.register.RegisterActivity;
 
-
+/**
+ * 登陆界面
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private android.widget.EditText phoneNumberEditText;
@@ -70,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                App.setUserPhone(phoneNumberEditText.getText().toString());
+                AppStaticValue.setUserPhone(phoneNumberEditText.getText().toString());
                 String password = passwordEditText.getText().toString();
                 AutoLogin.getInstance()
                         .setOnLogin(new AutoLogin.onLogin() {

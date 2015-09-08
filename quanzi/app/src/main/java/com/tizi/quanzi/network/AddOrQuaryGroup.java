@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.log.Log;
@@ -77,7 +78,7 @@ public class AddOrQuaryGroup {
         this.grouptags = tag;
 
         Map<String, String> newGroupPara = new TreeMap<>();
-        newGroupPara.put("account", App.getUserPhone());
+        newGroupPara.put("account", AppStaticValue.getUserPhone());
         newGroupPara.put("groupname", GroupName);
         newGroupPara.put("icon", icon);
         newGroupPara.put("notice", notice);
@@ -97,6 +98,12 @@ public class AddOrQuaryGroup {
         return mInstance;
     }
 
+    /**
+     * 查询群信息
+     * 通过回调返回值
+     *
+     * @param GroupID 群ID
+     */
     public void queryGroup(String GroupID) {
         makeQueryListener();
         Map<String, String> queryParas = new TreeMap<>();
@@ -128,6 +135,9 @@ public class AddOrQuaryGroup {
         void Error(String Mess);
     }
 
+    /**
+     * 加群的监听器
+     */
     private void makeAddListener() {
         gson = new Gson();
         mOKListener = new Response.Listener<String>() {
@@ -164,6 +174,9 @@ public class AddOrQuaryGroup {
         };
     }
 
+    /**
+     * 查询的监听器
+     */
     private void makeQueryListener() {
         gson = new Gson();
         mOKListener = new Response.Listener<String>() {

@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/8/28.
+ * 分享适配器
  */
 public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder> {
 

@@ -10,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetPassword;
@@ -76,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
     @Override
     public void register1stepOK(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-        App.setUserID(phoneNumber);
+        AppStaticValue.setUserID(phoneNumber);
         Register2stepFragment register2stepFragment = new Register2stepFragment();
         register2stepFragment.setNextStep(this);
         getSupportFragmentManager().beginTransaction()
@@ -121,7 +122,7 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
         //todo 判断性别
         para.put("sex", "0");
         para.put("icon", faceUri);
-        App.setUserToken(App.getUserID());
+        AppStaticValue.setUserToken(AppStaticValue.getUserID());
         GetVolley.getmInstance(this, listener).addPostRequestWithSign(Request.Method.POST, baseuri, para);
     }
 

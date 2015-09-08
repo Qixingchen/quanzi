@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/9/3.
+ * 私信、系统消息列表
  */
 public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsViewHolder> {
 
@@ -55,6 +56,9 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
         this.onclick = onclick;
     }
 
+    /**
+     * 从 {@link PrivateMessPairList}刷新数据
+     */
     private void updateData() {
         this.privateMessPairs = PrivateMessPairList.getInstance().getGroupList();
         notifyDataSetChanged();
@@ -105,9 +109,12 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
                 holder.MessTextview.setVisibility(View.VISIBLE);
                 holder.titleTextview.setText("邀请您加入圈子");
                 holder.MessTextview.setText(systemMessage.getContent());
+
                 if (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.notComplete) {
+
                     holder.acceptButton.setVisibility(View.VISIBLE);
                     holder.refuseButton.setVisibility(View.VISIBLE);
+
                     holder.acceptButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -118,6 +125,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
                             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
                         }
                     });
+
                     holder.refuseButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

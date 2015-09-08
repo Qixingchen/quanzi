@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.log.Log;
 
@@ -89,6 +90,9 @@ public class UserManageInGroup {
                         mContext.getString(R.string.testbaseuri) + "/group/exitGroupF", deleteUserPara);
     }
 
+    /**
+     * 同意加入圈子
+     */
     public void acceptJoinGroup(String GroupID, String UserID) {
         Map<String, String> acceptJoinGroupPara = new TreeMap<>();
         acceptJoinGroupPara.put("userid", UserID);
@@ -101,9 +105,12 @@ public class UserManageInGroup {
                         mContext.getString(R.string.testbaseuri) + "/group/acceptGroupInvite", acceptJoinGroupPara);
     }
 
+    /**
+     * 删除圈子
+     */
     public void deleteGroup(String GroupID) {
         Map<String, String> deleteGroupPara = new TreeMap<>();
-        deleteGroupPara.put("userid", App.getUserID());
+        deleteGroupPara.put("userid", AppStaticValue.getUserID());
         deleteGroupPara.put("groupid", GroupID);
 
 

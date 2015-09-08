@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
@@ -25,6 +26,7 @@ import com.tizi.quanzi.ui.main.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
+ * 群的设置
  */
 public class QuanziSetFragment extends BaseFragment {
 
@@ -96,7 +98,7 @@ public class QuanziSetFragment extends BaseFragment {
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                     final GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupUserInfo.groupNo);
-                    if (groupClass.createUser.compareTo(App.getUserID()) == 0) {
+                    if (groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
                         builder.setTitle("确认解散这个圈子么？");
                         builder.setPositiveButton("解散", new DialogInterface.OnClickListener() {
                             @Override
@@ -140,7 +142,7 @@ public class QuanziSetFragment extends BaseFragment {
 
                                             }
                                         }
-                                ).deleteMember(groupClass.convId, groupClass.ID, App.getUserID());
+                                ).deleteMember(groupClass.convId, groupClass.ID, AppStaticValue.getUserID());
 
                             }
                         });

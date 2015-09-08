@@ -82,7 +82,7 @@ public class QuaryDynamic {
     }
 
     /**
-     * 查询圈子类所有人的动态
+     * 查询圈子内所有人的动态
      */
     public QuaryDynamic getQuanZiDynamic() {
 

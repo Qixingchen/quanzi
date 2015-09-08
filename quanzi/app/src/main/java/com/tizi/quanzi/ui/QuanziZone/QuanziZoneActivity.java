@@ -12,6 +12,9 @@ import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuaryGroup;
 import com.tizi.quanzi.ui.BaseActivity;
 
+/**
+ * 群空间
+ */
 public class QuanziZoneActivity extends BaseActivity {
 
     private QuanziIntroduceFragment quanziIntroduceFragment;

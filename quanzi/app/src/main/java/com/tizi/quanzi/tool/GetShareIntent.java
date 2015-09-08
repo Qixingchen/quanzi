@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/8/28.
+ * 获取系统可分享的应用列表
  */
 public class GetShareIntent {
 

@@ -7,6 +7,7 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
@@ -58,7 +59,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
 
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-            if (App.UI_CONVERSATION_ID.compareTo(message.getConversationId()) == 0) {
+            if (AppStaticValue.UI_CONVERSATION_ID.compareTo(message.getConversationId()) == 0) {
                 if (onMessage != null) {
                     onMessage.OnMessageGet(chatMessage);
                 }
@@ -100,7 +101,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
         DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
         //todo 消息被接受
-        if (App.UI_CONVERSATION_ID.compareTo(message.getConversationId()) == 0) {
+        if (AppStaticValue.UI_CONVERSATION_ID.compareTo(message.getConversationId()) == 0) {
             if (onMessage != null) {
                 onMessage.OnMyMessageSent(chatMessage);
             }

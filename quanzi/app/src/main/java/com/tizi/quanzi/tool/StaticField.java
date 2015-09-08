@@ -106,7 +106,6 @@ public class StaticField {
     }
 
     /*系统消息还是私聊*/
-
     public static class PrivateMessOrSysMess {
         public final static int PrivateMess = 1;
         public final static int SysMess = 2;

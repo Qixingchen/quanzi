@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
@@ -36,6 +37,13 @@ public class NotifiReceiver extends BroadcastReceiver {
             if (Conversation != null) {
                 Intent conversationIntent = new Intent(context, ChatActivity.class);
                 conversationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                conversationIntent.putExtra("conversation", Conversation);
+                String groupID = GroupList.getInstance().getGroupIDByConvID(Conversation);
+                if (groupID.compareTo("") == 0) {
+                    conversationIntent.putExtra("chatType", StaticField.ChatBothUserType.twoPerson);
+                } else {
+                    conversationIntent.putExtra("chatType", StaticField.ChatBothUserType.GROUP);
+                }
                 context.startActivity(conversationIntent);
             } else {
                 Intent MainIntent = new Intent(context, MainActivity.class);

@@ -6,6 +6,7 @@ import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
@@ -29,10 +30,15 @@ public class FlushMess {
         return new FlushMess();
     }
 
+    /**
+     * 刷新聊天记录，从LC
+     *
+     * @param convID 需刷新的convID
+     */
     public void Flush(final String convID) {
 
         final int[] lastFlushNum = {0};
-        conversation = App.getImClient().getConversation(convID);
+        conversation = AppStaticValue.getImClient().getConversation(convID);
         final int[] flushTimes = {0};
 
         //聊天消息获取回调

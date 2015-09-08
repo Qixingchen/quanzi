@@ -17,6 +17,7 @@ import java.util.TreeMap;
 
 /**
  * Created by qixingchen on 15/9/3.
+ * 通过account查询用户
  */
 public class FindUser {
     private static FindUser mInstance;

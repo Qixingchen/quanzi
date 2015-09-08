@@ -35,6 +35,9 @@ public class GroupZonePagerAdapter extends PagerAdapter {
         Views[1] = Inflater.inflate(R.layout.group_zone_dyns_item, null);
     }
 
+    /**
+     * 获取标签数量
+     */
     @Override
     public int getCount() {
         return tabTitles.length;
@@ -60,6 +63,9 @@ public class GroupZonePagerAdapter extends PagerAdapter {
         ((ViewPager) container).removeView(Views[position]);
     }
 
+    /**
+     * 新增项目
+     */
     @Override
     public Object instantiateItem(View container, int position) {
         if (position == 0) {

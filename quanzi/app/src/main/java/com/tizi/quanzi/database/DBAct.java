@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
@@ -43,7 +44,7 @@ public class DBAct {
     }
 
     private DBAct() {
-        db = App.getDatabase();
+        db = AppStaticValue.getDatabase();
         mContext = App.getApplication();
     }
 

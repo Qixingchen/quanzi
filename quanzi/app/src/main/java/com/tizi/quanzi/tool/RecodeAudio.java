@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 
 import java.io.File;
@@ -44,17 +45,17 @@ public class RecodeAudio {
 
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            requestAllPermission();
             return false;
         }
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            requestAllPermission();
             return false;
         }
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.RECORD_AUDIO);
+            requestAllPermission();
             return false;
         }
         recorder.reset();
@@ -63,7 +64,7 @@ public class RecodeAudio {
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         FileName = String.valueOf(new Date().getTime() / 1000) + ".aac";
 
-        file = new File(mActivity.getCacheDir().getAbsolutePath() + "/audio/" + App.getUserID(),
+        file = new File(mActivity.getCacheDir().getAbsolutePath() + "/audio/" + AppStaticValue.getUserID(),
                 FileName);
         Log.d("录音", file.getAbsolutePath());
         try {
@@ -114,12 +115,12 @@ public class RecodeAudio {
     }
 
     /**
-     * 取得授权
-     *
-     * @param permission 需要授权的权限
+     * 取得所有需要的授权
      */
-    private void requestPermission(String permission) {
+    private void requestAllPermission() {
+        String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO};
         int code = StaticField.PermissionRequestCode.RECORD_AUDIO;
-        ActivityCompat.requestPermissions(mActivity, new String[]{permission}, code);
+        ActivityCompat.requestPermissions(mActivity, permission, code);
     }
 }

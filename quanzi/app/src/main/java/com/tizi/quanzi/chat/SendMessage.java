@@ -9,6 +9,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.database.DBAct;
@@ -46,6 +47,8 @@ public class SendMessage {
     /**
      * 设置附加参数
      *
+     * @param ChatBothUserType {@link com.tizi.quanzi.tool.StaticField.ChatBothUserType}
+     *
      * @return 聊天时需要附加的参数
      */
     private static Map<String, Object> setMessAttr(String userID, String userName, String userIcon, String groupID,
@@ -71,7 +74,9 @@ public class SendMessage {
     /**
      * 设置系统消息的附加参数
      *
-     * @param attr 原有阐述列
+     * @param attr       原有参数列
+     * @param systemFlag {@link com.tizi.quanzi.tool.StaticField.SystemMessAttrName.systemFlag}
+     * @param remark     附注内容
      *
      * @return 添加了系统参数的列
      */
@@ -104,7 +109,7 @@ public class SendMessage {
         message.setAttrs(attr);
 
         final AVIMImageMessage finalMessage = message;
-        final AVIMConversation conversation = App.getImClient().getConversation(convID);
+        final AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
         conversation.sendMessage(message,
                 new AVIMConversationCallback() {
                     @Override
@@ -131,7 +136,7 @@ public class SendMessage {
             AVIMAudioMessage message = new AVIMAudioMessage(Filepath);
             message.setAttrs(attr);
             final AVIMAudioMessage finalMessage = message;
-            final AVIMConversation conversation = App.getImClient().getConversation(convID);
+            final AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
             conversation.sendMessage(message, new AVIMConversationCallback() {
                 @Override
                 public void done(AVException e) {
@@ -156,7 +161,7 @@ public class SendMessage {
         final AVIMTextMessage message = new AVIMTextMessage();
         message.setText(text);
         message.setAttrs(attr);
-        final AVIMConversation conversation = App.getImClient().getConversation(convID);
+        final AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
         conversation.sendMessage(message,
                 new AVIMConversationCallback() {
                     @Override

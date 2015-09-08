@@ -10,6 +10,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMVideoMessage;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.SystemMessage;
@@ -202,10 +203,10 @@ public class ChatMessFormatFromAVIM {
         chatMessage.status = message.getMessageStatus().getStatusCode();
         chatMessage.text = message.getContent();
         chatMessage.ConversationId = message.getConversationId();
-        chatMessage.uid = App.getUserID();
+        chatMessage.uid = AppStaticValue.getUserID();
         chatMessage.sender = message.getFrom();
         // TODO: 15/8/13  getMessageIOType不可用 为什么？
-        chatMessage.isSelfSend = (message.getFrom().compareTo(App.getUserID()) == 0);
+        chatMessage.isSelfSend = (message.getFrom().compareTo(AppStaticValue.getUserID()) == 0);
         // TODO: 15/8/17 isread
         chatMessage.isread = chatMessage.isSelfSend;
         if (chatMessage.isSelfSend) {

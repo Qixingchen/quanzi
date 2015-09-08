@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.tool.FlushMess;
@@ -94,39 +95,19 @@ public class GroupChatList extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
         List<GroupClass> groupClasses = GroupList.getInstance().getGroupList();
-        if (App.getPrefer(getString(R.string.isFirstRun)).compareTo("") == 0) {
+        /*检查是否第一次运行，是的话刷新纪录*/
+        if (AppStaticValue.getPrefer(getString(R.string.isFirstRun)).compareTo("") == 0) {
             for (GroupClass groupClass : groupClasses) {
 
                 FlushMess.getInstance().Flush(groupClass.convId);
             }
         }
-        App.setPrefer(getString(R.string.isFirstRun), "NO");
+        AppStaticValue.setPrefer(getString(R.string.isFirstRun), "NO");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    /**
-     * 主界面点击新建群后调用这里
-     */
-    public void newAGroup() {
-        // TODO: 15/8/20 创建群
-        //        String GroupName = "xingchen test2", icon = "http://ac-hy5srahi.clouddn.com/2j5dU2E1dvXcVD1TKPmgNBC.jpeg";
-        //        String notice = "公告", userID = App.getUserID(), tag = "[{tagid:\"1\",tagname:\"1name\"},{tagid:\"2\",tagName:\"2name\"}]";
-        //        AddOrQuaryGroup.getInstance().setNewGroupListener(new AddOrQuaryGroup.NewGroupListener() {
-        //            @Override
-        //            public void onOK(GroupClass groupClass) {
-        //                groupListAdapter.addGroup(groupClass);
-        //
-        //            }
-        //
-        //            @Override
-        //            public void onError() {
-        //
-        //            }
-        //        }).NewAGroup();
     }
 
 

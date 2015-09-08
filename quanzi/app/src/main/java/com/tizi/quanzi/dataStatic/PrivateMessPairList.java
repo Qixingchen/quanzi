@@ -40,6 +40,9 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
         return mInstance;
     }
 
+    /**
+     * 从数据库加载原有的消息
+     */
     public void getGroupsFromDataBase() {
         List<SystemMessage> systemMessges = DBAct.getInstance().quaryAllSysMess();
         setGroupList(PrivateMessPair.PriMessesFromSystemMesses(systemMessges));

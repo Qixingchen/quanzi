@@ -18,6 +18,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.RequreForImage;
 
@@ -142,7 +143,7 @@ public class CompleteUesrInfo extends Fragment {
     private void savePhoto(String filepath) {
         AVFile file = null;
         try {
-            file = AVFile.withAbsoluteLocalPath(App.getUserID() + "face.jpg",
+            file = AVFile.withAbsoluteLocalPath(AppStaticValue.getUserID() + "face.jpg",
                     filepath);
             final AVFile finalFile = file;
             file.saveInBackground(new SaveCallback() {

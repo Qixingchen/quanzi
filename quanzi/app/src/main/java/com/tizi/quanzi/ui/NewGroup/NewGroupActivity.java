@@ -5,26 +5,16 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.chat.NewAVIMConversation;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuaryGroup;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class NewGroupActivity extends BaseActivity {
     NewGroupStep1Fragment newGroupStep1Fragment;
@@ -33,7 +23,6 @@ public class NewGroupActivity extends BaseActivity {
     Toolbar toolbar;
     private String convID;
     private Menu mMenu;
-    private static final String TAG = NewGroupActivity.class.getSimpleName();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,23 +44,14 @@ public class NewGroupActivity extends BaseActivity {
 
     @Override
     protected void setViewEvent() {
-        List<String> clientIds = new ArrayList<String>();
-        clientIds.add(App.getUserID());
-        AVIMClient imClient = App.getImClient();
-        Map<String, Object> attr = new HashMap<String, Object>();
-        attr.put("type", StaticField.ChatBothUserType.GROUP);
-        imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
-            @Override
-            public void done(AVIMConversation avimConversation, AVException e) {
-                if (e != null) {
-                    Log.e(TAG, e.getMessage());
-                    Toast.makeText(App.getActivity(NewGroupActivity.class.getSimpleName()).getBaseContext(),
-                            e.getMessage(), Toast.LENGTH_LONG).show();
-                    return;
+        NewAVIMConversation.getInstance().setConversationCallBack(
+                new NewAVIMConversation.ConversationCallBack() {
+                    @Override
+                    public void setConversationID(String conversationID) {
+                        convID = conversationID;
+                    }
                 }
-                convID = avimConversation.getConversationId();
-            }
-        });
+        ).newAChatGroup();
     }
 
 
@@ -93,6 +73,7 @@ public class NewGroupActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_next_step) {
             NewGroupStep1Fragment.NewGroupStep1Ans temp = newGroupStep1Fragment.getNewGroupAns();
+            /*下一步*/
             if (temp.complete) {
                 ans = temp;
                 mMenu.findItem(R.id.action_next_step).setVisible(false);
@@ -106,7 +87,7 @@ public class NewGroupActivity extends BaseActivity {
                 String GroupName = ans.groupName;
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
-                String userID = App.getUserID(), tag = "[{}]";
+                String userID = AppStaticValue.getUserID(), tag = "[{}]";
                 AddOrQuaryGroup.getInstance().setNewGroupListener(
                         new AddOrQuaryGroup.NewGroupListener() {
                             @Override
@@ -116,7 +97,7 @@ public class NewGroupActivity extends BaseActivity {
                                 groupClass.Type = StaticField.ChatBothUserType.GROUP;
                                 groupClass.Notice = ans.groupSign;
                                 groupClass.convId = convID;
-                                groupClass.createUser = App.getUserID();
+                                groupClass.createUser = AppStaticValue.getUserID();
                                 groupClass.UnreadCount = 0;
                                 GroupList.getInstance().addGroup(groupClass);
                             }

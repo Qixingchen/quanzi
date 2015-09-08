@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -236,7 +237,7 @@ public class ZipPic {
     public static String saveMyBitmap(Activity mActivity, Bitmap mBitmap, int quality) {
         String imageFileName = String.valueOf(new Date().getTime() / 1000) + "small.jpg";
         File file = new File(mActivity.getExternalCacheDir().getAbsolutePath()
-                + "/image/" + App.getUserID(), imageFileName);
+                + "/image/" + AppStaticValue.getUserID(), imageFileName);
 
 
         if (!file.getParentFile().exists()) {

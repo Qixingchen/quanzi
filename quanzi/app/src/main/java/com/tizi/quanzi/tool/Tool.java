@@ -2,13 +2,7 @@ package com.tizi.quanzi.tool;
 
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.IntDef;
 import android.util.DisplayMetrics;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by qixingchen on 15/7/20.

@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
@@ -57,7 +58,7 @@ public class AutoLogin {
     /**
      * 从 本地偏好加载密码登陆
      *
-     * @return 登陆是否成功
+     * @return 是否有密码
      */
     public boolean loginFromPrefer() {
         String password = preferences.getString(StaticField.TokenPreferences.PASSWORD, "");
@@ -77,10 +78,10 @@ public class AutoLogin {
      */
     public void loginFromPrePassword(String password) {
         Map<String, String> loginPara = new TreeMap<>();
-        loginPara.put("account", App.getUserPhone());
-        if (App.getUserPhone().compareTo("1") == 0) {
+        loginPara.put("account", AppStaticValue.getUserPhone());
+        if (AppStaticValue.getUserPhone().compareTo("1") == 0) {
             loginPara.put("password", "96e79218965eb72c92a549dd5a330112");
-        } else if (App.getUserPhone().compareTo("2") == 0) {
+        } else if (AppStaticValue.getUserPhone().compareTo("2") == 0) {
             loginPara.put("password", "e3ceb5881a0a1fdaad01296d7554868d");
         } else {
             loginPara.put("password", GetPassword.LaterHASH(password));
@@ -113,7 +114,7 @@ public class AutoLogin {
                 Gson gson = new Gson();
                 Login login = gson.fromJson(response, Login.class);
                 if (login.isSuccess()) {
-                    setUserInfo(App.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
+                    setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     StartMainActivity.startByLoginGroup(login.getGroup(), mContext);
                     if (onLogin != null) {
@@ -138,15 +139,13 @@ public class AutoLogin {
      * @param Token userToken
      */
     public static AutoLogin setUserInfo(String phone, String ID, String Token) {
-        App.setUserToken(Token);
-        App.setUserID(ID);
-        App.setUserPhone(phone);
-        App.setDataBaseHelper(ID);
-        App.getNewImClient(ID);
+        AppStaticValue.setUserToken(Token);
+        AppStaticValue.setUserID(ID);
+        AppStaticValue.setUserPhone(phone);
+        AppStaticValue.setDataBaseHelper(ID);
+        AppStaticValue.getNewImClient(ID);
         return mInstance;
     }
-    // TODO: 15/8/20 更换为回调接口
-
 
     public AutoLogin setOnLogin(AutoLogin.onLogin onLogin) {
         AutoLogin.onLogin = onLogin;

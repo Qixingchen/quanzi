@@ -27,6 +27,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.SendMessage;
@@ -107,7 +108,7 @@ public class ChatActivity extends BaseActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        recodeAudio = RecodeAudio.getInstance(App.getActivity(ChatActivity.class.getSimpleName()));
+                        recodeAudio = RecodeAudio.getInstance(AppStaticValue.getActivity(ChatActivity.class.getSimpleName()));
                         if (recodeAudio.start()) {
                             Toast.makeText(context, "录音中", Toast.LENGTH_SHORT).show();
                         } else {
@@ -253,8 +254,8 @@ public class ChatActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         CONVERSATION_ID = getIntent().getStringExtra("conversation");
-        App.UI_CONVERSATION_ID = CONVERSATION_ID;
-        conversation = App.getImClient().getConversation(CONVERSATION_ID);
+        AppStaticValue.UI_CONVERSATION_ID = CONVERSATION_ID;
+        conversation = AppStaticValue.getImClient().getConversation(CONVERSATION_ID);
 
         ChatType = getIntent().getIntExtra("chatType", 9);
         //adapt
@@ -279,7 +280,7 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        App.UI_CONVERSATION_ID = "";
+        AppStaticValue.UI_CONVERSATION_ID = "";
         MutiTypeMsgHandler.getInstance().setOnMessage(null);
         if (recodeAudio != null) {
             recodeAudio.release();

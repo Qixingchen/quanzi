@@ -19,6 +19,7 @@ import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 
 import java.io.File;
 import java.io.IOException;
@@ -145,7 +146,7 @@ public class RequreForImage {
         // Create an image file name
         String imageFileName = String.valueOf(new Date().getTime() / 1000) + ".jpg";
 
-        String Dirpath = mActivity.getExternalCacheDir().getAbsolutePath() + "/image/" + App.getUserID();
+        String Dirpath = mActivity.getExternalCacheDir().getAbsolutePath() + "/image/" + AppStaticValue.getUserID();
         File storageDir = new File(Dirpath);
         if (!storageDir.exists()) {
             storageDir.mkdirs();

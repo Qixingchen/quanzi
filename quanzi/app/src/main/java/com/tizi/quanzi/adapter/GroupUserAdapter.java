@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
@@ -114,13 +115,21 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         notifyDataSetChanged();
     }
 
+    /**
+     * 设置当前用户是否是创建者
+     */
     public void setIsCreater(boolean isCreater) {
         this.isCreater = isCreater;
         notifyDataSetChanged();
     }
 
+    /**
+     * 邀请用户
+     *
+     * @param groupid 当前组ID
+     */
     private void addUser(final String groupid) {
-        final Activity activity = App.getActivity(QuanziZoneActivity.class.getSimpleName());
+        final Activity activity = AppStaticValue.getActivity(QuanziZoneActivity.class.getSimpleName());
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         LayoutInflater inflater = activity.getLayoutInflater();
         final View layout = inflater.inflate(R.layout.one_line_dialog,
@@ -171,6 +180,14 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                 }).setNegativeButton("取消", null).show();
     }
 
+    /**
+     * 删除用户
+     *
+     * @param UserName 将被删除的用户的名字
+     * @param userID   将被删除的用户ID
+     * @param groupID  当前组ID
+     * @param postion  将被删除的用户目前的位置
+     */
     private void deleteUser(String UserName, final String userID, final String groupID, final int postion) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("删除好友").setMessage("确认删除好友: " + UserName + " 么？")

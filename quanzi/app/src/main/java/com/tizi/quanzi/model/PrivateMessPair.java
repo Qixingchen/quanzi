@@ -15,6 +15,9 @@ public class PrivateMessPair extends ConvGroupAbs implements Serializable {
     //如果是系统消息
     public String MessID;
 
+    /**
+     * 从List<SystemMessage> 转换 List<PrivateMessPair>
+     */
     public static List<PrivateMessPair> PriMessesFromSystemMesses(List<SystemMessage> systemMessages) {
         List<PrivateMessPair> privateMessPairs = new ArrayList<>();
         for (SystemMessage systemMessage : systemMessages) {
@@ -23,6 +26,9 @@ public class PrivateMessPair extends ConvGroupAbs implements Serializable {
         return privateMessPairs;
     }
 
+    /**
+     * 从SystemMessage 转换 PrivateMessPair
+     */
     public static PrivateMessPair PriMessFromSystemMess(SystemMessage systemMessage) {
         PrivateMessPair privateMessPair = new PrivateMessPair();
         privateMessPair.Type = StaticField.PrivateMessOrSysMess.SysMess;

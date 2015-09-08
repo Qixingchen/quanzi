@@ -70,6 +70,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
      */
     @Override
     public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
+        myViewHolder.unreadCountTextview.setVisibility(View.GONE);
         if (position == groupClasses.size()) {
             myViewHolder.groupNameTextview.setText("创建圈子");
             Picasso.with(context).load(R.drawable.face)
@@ -78,11 +79,14 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
                     .into(myViewHolder.groupFaceImageView);
 
         } else {
-            //myViewHolder.unreadTextview.setText("unread commit");
-            myViewHolder.groupNameTextview.setText(groupClasses.get(position).groupName);
+            if (groupClasses.get(position).UnreadCount != 0) {
+                myViewHolder.unreadCountTextview.setVisibility(View.VISIBLE);
+                myViewHolder.unreadCountTextview.setText(String.valueOf(groupClasses.get(position).UnreadCount));
+            }
+            myViewHolder.groupNameTextview.setText(groupClasses.get(position).Name);
             myViewHolder.lastMessTextview.setText(groupClasses.get(position).lastMess);
             Picasso.with(context)
-                    .load(groupClasses.get(position).groupFace.toString())
+                    .load(groupClasses.get(position).Face.toString())
                     .resize((int) (127 * GetThumbnailsUri.getDpi(context)),
                             (int) (127 * GetThumbnailsUri.getDpi(context)))
                     .into(myViewHolder.groupFaceImageView);
@@ -119,7 +123,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView groupFaceImageView;
-        public TextView groupNameTextview, lastMessTextview, unreadTextview, lastTimeTextview;
+        public TextView groupNameTextview, lastMessTextview, unreadCountTextview, lastTimeTextview;
         public View itemView;
 
         public MyViewHolder(View itemView) {
@@ -128,7 +132,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
             groupFaceImageView = (ImageView) itemView.findViewById(R.id.group_face_image_view);
             groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
             lastMessTextview = (TextView) itemView.findViewById(R.id.last_mess_text_view);
-            //unreadTextview = (TextView) itemView.findViewById(R.id.unread_text_view);
+            unreadCountTextview = (TextView) itemView.findViewById(R.id.unread_count);
             //lastTimeTextview = (TextView) itemView.findViewById(R.id.last_dyns_text_view);
         }
     }

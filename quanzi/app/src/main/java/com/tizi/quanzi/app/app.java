@@ -23,6 +23,7 @@ import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.database.DataBaseHelper;
 import com.tizi.quanzi.log.Log;
@@ -134,6 +135,8 @@ public class App extends Application {
             // TODO: 15/8/21 fix crash
             //getNewImClient(UserID);
         }
+
+        PrivateMessPairList.getInstance().getGroupsFromDataBase();
 
         AVAnalytics.setAnalyticsEnabled(false);
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",

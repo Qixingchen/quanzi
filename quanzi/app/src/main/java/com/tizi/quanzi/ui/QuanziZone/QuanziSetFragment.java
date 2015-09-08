@@ -95,7 +95,7 @@ public class QuanziSetFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                    final GroupClass groupClass = GroupList.getInstance().getGroup(groupUserInfo.groupNo);
+                    final GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupUserInfo.groupNo);
                     if (groupClass.createUser.compareTo(App.getUserID()) == 0) {
                         builder.setTitle("确认解散这个圈子么？");
                         builder.setPositiveButton("解散", new DialogInterface.OnClickListener() {
@@ -106,7 +106,7 @@ public class QuanziSetFragment extends BaseFragment {
                                         new GroupUserAdmin.OnResult() {
                                             @Override
                                             public void OK() {
-                                                GroupList.getInstance().deleteGroup(groupClass.groupID);
+                                                GroupList.getInstance().deleteGroup(groupClass.ID);
                                                 Intent mainActivity = new Intent(mActivity, MainActivity.class);
                                                 startActivity(mainActivity);
                                             }
@@ -116,7 +116,7 @@ public class QuanziSetFragment extends BaseFragment {
 
                                             }
                                         }
-                                ).deleteGroup(groupClass.convId, groupClass.groupID);
+                                ).deleteGroup(groupClass.convId, groupClass.ID);
                             }
                         });
                         builder.setNegativeButton("取消", null);
@@ -130,7 +130,7 @@ public class QuanziSetFragment extends BaseFragment {
                                         new GroupUserAdmin.OnResult() {
                                             @Override
                                             public void OK() {
-                                                GroupList.getInstance().deleteGroup(groupClass.groupID);
+                                                GroupList.getInstance().deleteGroup(groupClass.ID);
                                                 Intent mainActivity = new Intent(mActivity, MainActivity.class);
                                                 startActivity(mainActivity);
                                             }
@@ -140,7 +140,7 @@ public class QuanziSetFragment extends BaseFragment {
 
                                             }
                                         }
-                                ).deleteMember(groupClass.convId, groupClass.groupID, App.getUserID());
+                                ).deleteMember(groupClass.convId, groupClass.ID, App.getUserID());
 
                             }
                         });

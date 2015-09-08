@@ -145,12 +145,12 @@ public class QuanziIntroduceFragment extends BaseFragment {
         if (groupUserAdapter != null) {
             groupUserAdapter.setMemlist(groupUserInfo.memlist);
             groupUserAdapter.setIsCreater(isCreate);
-            groupUserAdapter.setGroupID(groupClass.groupID);
+            groupUserAdapter.setGroupID(groupClass.ID);
         }
         groupUsersRecyclerView.getLayoutParams().height = (int) (105 * GetThumbnailsUri.getDpi(mActivity)
                 * ((groupUserInfo.memlist.size() / 6) + 1));
         Log.i(TAG, "groupUsersLayoutManager Heigh:" + groupUsersLayoutManager.getHeight());
-        Picasso.with(mActivity).load(groupClass.groupFace)
+        Picasso.with(mActivity).load(groupClass.Face)
                 .resize(GetThumbnailsUri.getPXs(mActivity, 120),
                         GetThumbnailsUri.getPXs(mActivity, 120))
                 .into(groupFaceImageView);

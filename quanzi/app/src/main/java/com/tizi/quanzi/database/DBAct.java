@@ -235,7 +235,31 @@ public class DBAct {
         return null;
     }
 
-    /*GroupClass*/
+    /**
+     * 返回所查询的对话组的未读数量
+     *
+     * @param ConversationId 所需查询对话组的ConvID
+     *
+     * @return 未读数量
+     */
+    public int quaryUnreadCount(String ConversationId) {
+        Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.isread + "=? and "
+                        + DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
+                new String[]{"0", ConversationId},//条件的参数
+                null,//groupBy
+                null,//having
+                null, //+ " DESC"//orderBy
+                null //limit
+        );
+        chatMessageCursor.moveToFirst();
+        int count = chatMessageCursor.getCount();
+        chatMessageCursor.close();
+        return count;
+    }
+
+    /*GroupClass 这个类不记载到数据库*/
 
     /**
      * 获取用户自己的所有GroupList
@@ -450,7 +474,7 @@ public class DBAct {
     @Deprecated
     private void addOrReplaceGroup(GroupClass groupClass) {
         ContentValues content = new ContentValues();
-        content.put(DataBaseHelper.GroupSQLName.id, groupClass.groupID);
+        content.put(DataBaseHelper.GroupSQLName.id, groupClass.ID);
         content.put(DataBaseHelper.GroupSQLName.convID, groupClass.convId);
         content.put(DataBaseHelper.GroupSQLName.Serializable,
                 SerializedObjectFormat.getSerializedObject(groupClass));
@@ -470,5 +494,31 @@ public class DBAct {
         content.put(DataBaseHelper.SystemMessSQLName.Serializable,
                 SerializedObjectFormat.getSerializedObject(systemMessage));
         db.replace(DataBaseHelper.SystemMessSQLName.TableName, null, content);
+    }
+
+    /**
+     * 全部标记为已读
+     *
+     * @param convID 需标记为已读的 ConvID
+     */
+    public void setAllAsRead(String convID) {
+        Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.isread + "=? and "
+                        + DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
+                new String[]{"0", convID},//条件的参数
+                null,//groupBy
+                null,//having
+                null, //+ " DESC"//orderBy
+                null //limit
+        );
+        chatMessageCursor.moveToFirst();
+        while (!chatMessageCursor.isAfterLast()) {
+            ChatMessage chatMessage = chatMessageFromCursor(chatMessageCursor);
+            chatMessage.isread = true;
+            addOrReplaceChatMessage(chatMessage);
+            chatMessageCursor.moveToNext();
+        }
+        chatMessageCursor.close();
     }
 }

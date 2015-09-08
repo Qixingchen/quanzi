@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuaryGroup;
 import com.tizi.quanzi.ui.BaseActivity;
 
@@ -45,7 +46,7 @@ public class QuanziZoneActivity extends BaseActivity {
                 mGroupUserInfo = groupUserInfo;
                 if (quanziIntroduceFragment != null) {
                     mGroupUserInfo.groupNo = GroupID;
-                    quanziIntroduceFragment.setGroupInfo(groupUserInfo, GroupList.getInstance().getGroup(GroupID));
+                    quanziIntroduceFragment.setGroupInfo(groupUserInfo, (GroupClass) GroupList.getInstance().getGroup(GroupID));
                 }
             }
 

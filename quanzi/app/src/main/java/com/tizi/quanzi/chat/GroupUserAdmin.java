@@ -82,7 +82,7 @@ public class GroupUserAdmin {
                         }
                 ).sendTextMessage(avimConversation.getConversationId(),
                         MyUserInfo.getInstance().getUserInfo().getUserName() + "邀请你来加入圈子" +
-                                GroupList.getInstance().getGroup(groupID).groupName
+                                GroupList.getInstance().getGroup(groupID).Name
                         , finalAttr);
             }
         });

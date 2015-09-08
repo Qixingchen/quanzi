@@ -111,9 +111,9 @@ public class NewGroupActivity extends BaseActivity {
                         new AddOrQuaryGroup.NewGroupListener() {
                             @Override
                             public void onOK(GroupClass groupClass) {
-                                groupClass.groupName = ans.groupName;
-                                groupClass.groupFace = ans.groupFaceUri;
-                                groupClass.groupType = StaticField.ChatBothUserType.GROUP;
+                                groupClass.Name = ans.groupName;
+                                groupClass.Face = ans.groupFaceUri;
+                                groupClass.Type = StaticField.ChatBothUserType.GROUP;
                                 groupClass.Notice = ans.groupSign;
                                 groupClass.convId = convID;
                                 groupClass.createUser = App.getUserID();

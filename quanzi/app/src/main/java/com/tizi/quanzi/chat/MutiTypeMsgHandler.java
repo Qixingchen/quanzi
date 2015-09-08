@@ -77,7 +77,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                 GroupList.getInstance().deleteGroup(systemMessage.getGroup_id());
                 systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
             }
-            PrivateMessPairList.getInstance().addPair(PrivateMessPair.PriMessFromSystemMess(systemMessage));
+            PrivateMessPairList.getInstance().addGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
         }
 

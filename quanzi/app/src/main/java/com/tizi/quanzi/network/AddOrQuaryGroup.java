@@ -139,7 +139,7 @@ public class AddOrQuaryGroup {
                     if (newGroupListener != null) {
                         // TODO: 15/8/25 add Group
                         GroupClass groupClass = new GroupClass();
-                        groupClass.groupID = group.getGroupId();
+                        groupClass.ID = group.getGroupId();
                         newGroupListener.onOK(groupClass);
 
                     } else {

@@ -133,6 +133,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
             chatMessage.isread = true;
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
         }
+        if (position == chatMessageList.size() - 1) {
+            DBAct.getInstance().setAllAsRead(chatMessage.ConversationId);
+        }
         /*设置头像*/
         holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
                         chatMessage.chatImage, 48 * 3, 48 * 3),

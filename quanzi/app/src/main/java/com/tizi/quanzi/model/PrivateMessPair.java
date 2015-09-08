@@ -1,28 +1,27 @@
 package com.tizi.quanzi.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by qixingchen on 15/9/3.
  * 私信对信息
  */
-public class PrivateMessPair implements Serializable, Parcelable {
-    public String Name;
-    public String Face;
-    public String ID;
-    public int Type;
-    public String convId;
-    //不要重置的项目
-    public int UnreadCount;
-    public String lastMess;
-    public long lastMessTime;
+public class PrivateMessPair extends ConvGroupAbs implements Serializable {
     //如果是系统消息
     public String MessID;
+
+    public static List<PrivateMessPair> PriMessesFromSystemMesses(List<SystemMessage> systemMessages) {
+        List<PrivateMessPair> privateMessPairs = new ArrayList<>();
+        for (SystemMessage systemMessage : systemMessages) {
+            privateMessPairs.add(PriMessFromSystemMess(systemMessage));
+        }
+        return privateMessPairs;
+    }
 
     public static PrivateMessPair PriMessFromSystemMess(SystemMessage systemMessage) {
         PrivateMessPair privateMessPair = new PrivateMessPair();
@@ -39,46 +38,4 @@ public class PrivateMessPair implements Serializable, Parcelable {
         return privateMessPair;
     }
 
-    //auto make
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.Name);
-        dest.writeString(this.Face);
-        dest.writeString(this.ID);
-        dest.writeInt(this.Type);
-        dest.writeString(this.convId);
-        dest.writeInt(this.UnreadCount);
-        dest.writeString(this.lastMess);
-        dest.writeLong(this.lastMessTime);
-    }
-
-    public PrivateMessPair() {
-    }
-
-    protected PrivateMessPair(Parcel in) {
-        this.Name = in.readString();
-        this.Face = in.readString();
-        this.ID = in.readString();
-        this.Type = in.readInt();
-        this.convId = in.readString();
-        this.UnreadCount = in.readInt();
-        this.lastMess = in.readString();
-        this.lastMessTime = in.readLong();
-    }
-
-    public static final Parcelable.Creator<PrivateMessPair> CREATOR = new Parcelable.Creator<PrivateMessPair>() {
-        public PrivateMessPair createFromParcel(Parcel source) {
-            return new PrivateMessPair(source);
-        }
-
-        public PrivateMessPair[] newArray(int size) {
-            return new PrivateMessPair[size];
-        }
-    };
 }

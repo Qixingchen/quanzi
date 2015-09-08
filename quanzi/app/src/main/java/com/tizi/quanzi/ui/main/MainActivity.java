@@ -20,19 +20,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
-    private MainFragmentPagerAdapter mainFragmentPagerAdapter;
-    private ViewPager.OnPageChangeListener onPageChangeListener;
-
     private MainFragment mainFragment;
     private PrivateMessageFragment privateMessageFragment;
 
     //toolbar
     private Toolbar toolbar;
-    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +37,6 @@ public class MainActivity extends AppCompatActivity {
         mainFragment = new MainFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, mainFragment).commit();
-
-        PrivateMessPairList.getInstance().addOnChangeCallBack(new PrivateMessPairList.OnChangeCallBack() {
-            @Override
-            public void changed() {
-                menu.findItem(R.id.action_private_message).setTitle("私信（" + PrivateMessPairList.getInstance().getUnreadNum() + "）条");
-            }
-        });
 
 
         //Drawable logo = getDrawable(R.drawable.face);
@@ -77,10 +62,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        this.menu = menu;
+        PrivateMessPairList.getInstance().addOnChangeCallBack(new PrivateMessPairList.OnChangeCallBack() {
+            @Override
+            public void changed() {
+                int num = PrivateMessPairList.getInstance().getUnreadCount("");
+                if (num != 0) {
+                    menu.findItem(R.id.action_private_message).setTitle("私信（" + num + "）条");
+                } else {
+                    menu.findItem(R.id.action_private_message).setTitle("私信");
+                }
+            }
+        });
         return true;
     }
 

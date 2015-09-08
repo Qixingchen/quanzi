@@ -1,8 +1,6 @@
 package com.tizi.quanzi.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.gson.Login;
@@ -16,21 +14,11 @@ import java.util.List;
  * 组群
  * 对应 Gson {@link com.tizi.quanzi.gson.Group}
  */
-public class GroupClass implements Parcelable, Serializable {
-    public String groupName;
-    public String groupFace;
-    public String groupID;
-    public int groupType;
+public class GroupClass extends ConvGroupAbs implements Serializable {
     public String Notice;
-    public String convId;
     public String background;
     public boolean validation;
     public String createUser;
-    public String groupNo;
-    //不要重置的项目
-    public int UnreadCount;
-    public String lastMess;
-    public long lastMessTime;// TODO: 15/9/1
 
 
     /**
@@ -57,17 +45,16 @@ public class GroupClass implements Parcelable, Serializable {
      */
     public static GroupClass getGroupByEntity(Login.GroupEntity groupEntity) {
         GroupClass groupClass = new GroupClass();
-        GroupClass groupOld = GroupList.getInstance().getGroup(groupEntity.getId());
-        groupClass.groupID = groupEntity.getId();
-        groupClass.groupName = groupEntity.getGroupName();
-        groupClass.groupFace = groupEntity.getIcon();
-        groupClass.groupType = groupEntity.getType();
+        GroupClass groupOld = (GroupClass) GroupList.getInstance().getGroup(groupEntity.getId());
+        groupClass.ID = groupEntity.getId();
+        groupClass.Name = groupEntity.getGroupName();
+        groupClass.Face = groupEntity.getIcon();
+        groupClass.Type = groupEntity.getType();
         groupClass.Notice = groupEntity.getNotice();
         groupClass.convId = groupEntity.getConvId();
         groupClass.background = groupEntity.getBg();
         groupClass.validation = groupEntity.isValidation();
         groupClass.createUser = groupEntity.getCreateUser();
-        groupClass.groupNo = groupEntity.getGroupNo();
         if (groupOld != null) {
             groupClass.lastMess = groupOld.lastMess;
             groupClass.lastMessTime = groupOld.lastMessTime;
@@ -91,10 +78,10 @@ public class GroupClass implements Parcelable, Serializable {
     public static GroupClass getGroupByGroupUserInfo(GroupUserInfo groupUserInfo, String groupID,
                                                      String convId) {
         GroupClass groupClass = new GroupClass();
-        groupClass.groupID = groupID;
-        groupClass.groupName = groupUserInfo.groupName;
-        groupClass.groupFace = groupUserInfo.icon;
-        groupClass.groupType = Integer.valueOf(groupUserInfo.type);
+        groupClass.ID = groupID;
+        groupClass.Name = groupUserInfo.groupName;
+        groupClass.Face = groupUserInfo.icon;
+        groupClass.Type = Integer.valueOf(groupUserInfo.type);
         groupClass.Notice = "";
         groupClass.convId = convId;
         // TODO: 15/9/3 信息不够！
@@ -106,53 +93,4 @@ public class GroupClass implements Parcelable, Serializable {
     }
 
 
-    //    Parcelable
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.groupName);
-        dest.writeString(this.groupFace);
-        dest.writeString(this.groupID);
-        dest.writeInt(this.groupType);
-        dest.writeString(this.Notice);
-        dest.writeString(this.convId);
-        dest.writeString(this.background);
-        dest.writeByte(validation ? (byte) 1 : (byte) 0);
-        dest.writeString(this.createUser);
-        dest.writeString(this.groupNo);
-        dest.writeInt(this.UnreadCount);
-        dest.writeString(this.lastMess);
-        dest.writeLong(this.lastMessTime);
-    }
-
-    protected GroupClass(Parcel in) {
-        this.groupName = in.readString();
-        this.groupFace = in.readString();
-        this.groupID = in.readString();
-        this.groupType = in.readInt();
-        this.Notice = in.readString();
-        this.convId = in.readString();
-        this.background = in.readString();
-        this.validation = in.readByte() != 0;
-        this.createUser = in.readString();
-        this.groupNo = in.readString();
-        this.UnreadCount = in.readInt();
-        this.lastMess = in.readString();
-        this.lastMessTime = in.readLong();
-    }
-
-    public static final Creator<GroupClass> CREATOR = new Creator<GroupClass>() {
-        public GroupClass createFromParcel(Parcel source) {
-            return new GroupClass(source);
-        }
-
-        public GroupClass[] newArray(int size) {
-            return new GroupClass[size];
-        }
-    };
 }

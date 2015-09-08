@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.GroupUserAdmin;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
@@ -44,8 +45,19 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
      */
     public PrivateMessageAdapter(List<PrivateMessPair> privateMessPairs, Context context, Onclick onclick) {
         this.privateMessPairs = privateMessPairs;
+        PrivateMessPairList.getInstance().addOnChangeCallBack(new PrivateMessPairList.OnChangeCallBack() {
+            @Override
+            public void changed() {
+                updateData();
+            }
+        });
         this.context = context;
         this.onclick = onclick;
+    }
+
+    private void updateData() {
+        this.privateMessPairs = PrivateMessPairList.getInstance().getGroupList();
+        notifyDataSetChanged();
     }
 
     /**
@@ -102,8 +114,8 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
                             GroupUserAdmin.getInstance(context).
                                     acceptToJoinGroup(true, systemMessage.getConvid(), systemMessage.getGroup_id());
                             systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
+                            PrivateMessPairList.getInstance().updateGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
                             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
-                            notifyDataSetChanged();
                         }
                     });
                     holder.refuseButton.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +125,8 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
                                     acceptToJoinGroup(false, systemMessage.getConvid(), systemMessage.getGroup_id());
                             systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
                             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
-                            notifyDataSetChanged();
+                            PrivateMessPairList.getInstance().updateGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
+
                         }
                     });
                 }

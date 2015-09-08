@@ -64,7 +64,7 @@ public abstract class PriavteMessAbsViewHolder extends RecyclerView.ViewHolder {
             MessTextview = (TextView) itemView.findViewById(R.id.mess_text_view);
             acceptButton = (Button) itemView.findViewById(R.id.accept_button);
             refuseButton = (Button) itemView.findViewById(R.id.refuse_button);
-            //unreadTextview = (TextView) itemView.findViewById(R.id.unread_text_view);
+            //unreadCountTextview = (TextView) itemView.findViewById(R.id.unread_text_view);
             //lastTimeTextview = (TextView) itemView.findViewById(R.id.last_dyns_text_view);
         } else {
             // TODO: 15/9/3 set

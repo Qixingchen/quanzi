@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class PrivateMessPair extends ConvGroupAbs implements Serializable {
     //如果是系统消息
-    public String MessID;
+    public SystemMessage systemMessage;
 
     /**
      * 从List<SystemMessage> 转换 List<PrivateMessPair>
@@ -36,11 +36,10 @@ public class PrivateMessPair extends ConvGroupAbs implements Serializable {
         privateMessPair.Face = systemMessage.getUser_icon();
         privateMessPair.ID = systemMessage.getId();
         privateMessPair.convId = systemMessage.getConvid();
-        privateMessPair.MessID = systemMessage.getId();
+        privateMessPair.systemMessage = systemMessage;
         privateMessPair.lastMess = systemMessage.getContent();
         privateMessPair.lastMessTime = systemMessage.getCreate_time();
-        privateMessPair.UnreadCount = (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.complete)
-                ? 0 : 1;
+        privateMessPair.UnreadCount = (systemMessage.isread()) ? 0 : 1;
         return privateMessPair;
     }
 

@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         PrivateMessPairList.getInstance().addOnChangeCallBack(new PrivateMessPairList.OnChangeCallBack() {
             @Override
             public void changed() {
-                int num = PrivateMessPairList.getInstance().getUnreadCount("");
+                int num = PrivateMessPairList.getInstance().getAllUnreadCount();
                 if (num != 0) {
                     menu.findItem(R.id.action_private_message).setTitle("私信（" + num + "）条");
                 } else {

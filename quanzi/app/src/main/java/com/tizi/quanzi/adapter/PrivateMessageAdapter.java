@@ -103,7 +103,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
         holder.setAllAdditionVisibilityGone();
         PrivateMessPair privateMessPair = privateMessPairs.get(position);
         if (privateMessPair.Type == StaticField.PrivateMessOrSysMess.SysMess) {
-            final SystemMessage systemMessage = DBAct.getInstance().quarySysMess(privateMessPair.MessID);
+            final SystemMessage systemMessage = privateMessPair.systemMessage;
             if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.invitation) {
                 holder.titleTextview.setVisibility(View.VISIBLE);
                 holder.MessTextview.setVisibility(View.VISIBLE);
@@ -121,8 +121,9 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
                             GroupUserAdmin.getInstance(context).
                                     acceptToJoinGroup(true, systemMessage.getConvid(), systemMessage.getGroup_id());
                             systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
-                            PrivateMessPairList.getInstance().updateGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
+                            systemMessage.setIsread(true);
                             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+                            PrivateMessPairList.getInstance().updateGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
                         }
                     });
 
@@ -132,6 +133,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
                             GroupUserAdmin.getInstance(context).
                                     acceptToJoinGroup(false, systemMessage.getConvid(), systemMessage.getGroup_id());
                             systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
+                            systemMessage.setIsread(true);
                             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
                             PrivateMessPairList.getInstance().updateGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
 

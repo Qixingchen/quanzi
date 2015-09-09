@@ -17,16 +17,8 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
 
     @Override
     public int getUnreadCount(String convID) {
-        int ans = 0;
-        for (PrivateMessPair privateMessPair : groupList) {
-            if (privateMessPair.Type == StaticField.PrivateMessOrSysMess.SysMess) {
-                SystemMessage systemMessage = DBAct.getInstance().quarySysMess(privateMessPair.MessID);
-                ans += systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.complete ? 0 : 1;
-            } else if (privateMessPair.UnreadCount != 0) {
-                ans++;
-            }
-        }
-        return ans;
+        // TODO: 15/9/9 get Unread count
+        return 0;
     }
 
     public static PrivateMessPairList getInstance() {
@@ -47,5 +39,19 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
         List<SystemMessage> systemMessges = DBAct.getInstance().quaryAllSysMess();
         setGroupList(PrivateMessPair.PriMessesFromSystemMesses(systemMessges));
         // TODO: 15/9/8 私聊添加
+    }
+
+    public int getAllUnreadCount() {
+        int ans = 0;
+        synchronized (groupList) {
+            for (PrivateMessPair pair : groupList) {
+                if (pair.Type == StaticField.PrivateMessOrSysMess.SysMess) {
+                    ans += pair.systemMessage.isread() ? 0 : 1;
+                } else {
+                    ans += pair.UnreadCount == 0 ? 0 : 1;
+                }
+            }
+        }
+        return ans;
     }
 }

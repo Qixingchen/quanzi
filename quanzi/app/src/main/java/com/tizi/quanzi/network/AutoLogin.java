@@ -13,6 +13,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.GetPassword;
@@ -116,6 +117,7 @@ public class AutoLogin {
                 if (login.isSuccess()) {
                     setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
+                    PrivateMessPairList.getInstance().getGroupsFromDataBase();
                     StartMainActivity.startByLoginGroup(login.getGroup(), mContext);
                     if (onLogin != null) {
                         onLogin.Success(login);

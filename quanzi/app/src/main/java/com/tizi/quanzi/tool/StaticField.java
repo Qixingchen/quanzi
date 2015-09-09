@@ -89,6 +89,7 @@ public class StaticField {
             public final static int reject = 2;
             public final static int group_delete = 3;
             public final static int kicked = 4;
+            public final static int group_change_name = 5;
         }
     }
 
@@ -97,6 +98,7 @@ public class StaticField {
 
         public final static int requreForImage = 1;
         public final static int RECORD_AUDIO = 2;
+        public final static int userInfoSetFragment = 3;
     }
 
     /*消息刷新数量*/

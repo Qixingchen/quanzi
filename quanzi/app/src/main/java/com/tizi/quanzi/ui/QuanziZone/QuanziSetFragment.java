@@ -11,15 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
+import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.main.MainActivity;
 
@@ -64,9 +68,62 @@ public class QuanziSetFragment extends BaseFragment {
 
     @Override
     public void initViewsAndSetEvent() {
+        final GroupClass group = (GroupClass) GroupList.getInstance().getGroup(groupUserInfo.groupNo);
+        if (group == null) {
+            Log.e(TAG, "group 获取失败");
+            return;
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        LayoutInflater inflater = mActivity.getLayoutInflater();
+        final View layout = inflater.inflate(R.layout.one_line_dialog,
+                (ViewGroup) mActivity.findViewById(R.id.one_line_dialog));
+        final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
+        final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
+
         if (groupUserInfo != null) {
-            quanziName.setText(groupUserInfo.groupName);
+            quanziName.setText(group.Name);
+            quanziName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    title.setText("输入新的圈子名称");
+                    input.setHint("圈子名称");
+                    input.setText(group.Name);
+                    builder.setTitle("更改圈子名称").setView(layout)
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String name = input.getText().toString();
+                                    //后台
+
+                                    //LC发送广播
+                                    SendMessage.getInstance().sendTextMessage(
+                                            group.convId,
+                                            name,
+                                            SendMessage.setGroupManageSysMessAttr(
+                                                    SendMessage.setMessAttr(group.ID,
+                                                            StaticField.ChatBothUserType.GROUP),
+                                                    group.convId,
+                                                    StaticField.SystemMessAttrName.systemFlag.group_change_name,
+                                                    ""));
+
+                                    //GroupList更新
+                                    group.Name = name;
+                                    GroupList.getInstance().updateGroup(group);
+                                    quanziName.setText(name);
+
+                                }
+                            }).setNegativeButton("取消", null).show();
+                }
+            });
             quanziSign.setText(groupUserInfo.groupName);
+
+            if (group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
+                exitQuanzi.setText("解散圈子");
+            } else {
+                exitQuanzi.setText("退出圈子");
+            }
             deleteMess.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

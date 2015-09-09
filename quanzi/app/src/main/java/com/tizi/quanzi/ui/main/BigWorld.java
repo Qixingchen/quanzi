@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.GetVolley;
@@ -30,7 +31,7 @@ public class BigWorld extends BaseFragment {
     private TextView userName, userSign;
     private NetworkImageView userFace;
     private ImageView userSex;
-    private View Share, Setting;
+    private View Share, Setting, userInfoLayout;
 
 
     /**
@@ -83,6 +84,7 @@ public class BigWorld extends BaseFragment {
         userSign = (TextView) mActivity.findViewById(R.id.userSign);
         Share = mActivity.findViewById(R.id.share);
         Setting = mActivity.findViewById(R.id.setting);
+        userInfoLayout = mActivity.findViewById(R.id.userInfoLayout);
     }
 
     @Override
@@ -98,7 +100,12 @@ public class BigWorld extends BaseFragment {
             Picasso.with(mActivity).load(R.drawable.girl).into(userSex);
         }
         userSign.setText(userInfo.getSignature());
-
+        userInfoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) AppStaticValue.getActivity(MainActivity.class.getSimpleName())).StartUserInfoSet();
+            }
+        });
     }
 
     @Override

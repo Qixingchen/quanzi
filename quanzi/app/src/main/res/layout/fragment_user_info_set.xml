@@ -1,0 +1,86 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.tizi.quanzi.ui.main.UserInfoSetFragment">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/userFace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="头像"/>
+
+        <TextView
+            android:id="@+id/userFaceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="123"/>
+
+        <Button
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="昵称"/>
+
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="123"/>
+
+        <Button
+            android:id="@+id/userSex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="性别"/>
+
+        <TextView
+            android:id="@+id/userSexTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="123"/>
+
+        <Button
+            android:id="@+id/userAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="年龄"/>
+
+        <TextView
+            android:id="@+id/userAgeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="123"/>
+
+        <Button
+            android:id="@+id/userLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="位置"/>
+
+        <TextView
+            android:id="@+id/userLocationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="123"/>
+
+        <Button
+            android:id="@+id/userSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="签名"/>
+
+        <TextView
+            android:id="@+id/userSignTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="123"/>
+
+    </LinearLayout>
+
+</FrameLayout>

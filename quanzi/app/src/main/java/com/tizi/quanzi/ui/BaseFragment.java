@@ -1,6 +1,7 @@
 package com.tizi.quanzi.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,16 +14,30 @@ import android.view.ViewGroup;
  */
 public abstract class BaseFragment extends Fragment {
     protected Activity mActivity;
+    protected Context mContext;
+    protected View view;
     protected final String TAG = this.getClass().getSimpleName();
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container,
                                       Bundle savedInstanceState);
+
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.view = view;
+
+    }
 
     @Override
     public void onStart() {
         super.onStart();
         findViews();
         initViewsAndSetEvent();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     @Override

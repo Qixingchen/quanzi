@@ -12,6 +12,7 @@ import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.notification.AddNotification;
@@ -20,6 +21,7 @@ import com.tizi.quanzi.tool.StaticField;
 /**
  * Created by qixingchen on 15/8/14.
  * 富文本消息接收
+ * 系统消息接收
  */
 public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
@@ -70,6 +72,18 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
 
             // TODO: 15/8/25 do systemMessage
+
+            /*圈子改名*/
+            if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
+                GroupClass group = (GroupClass) GroupList.getInstance().getGroup(systemMessage.getGroup_id());
+                if (group != null) {
+                    Log.i(TAG, group.Name + "更名为" + systemMessage.getContent());
+                    group.Name = systemMessage.getContent();
+                    GroupList.getInstance().updateGroup(group);
+                }
+                //不必加入数据库
+                return;
+            }
 
             /*圈子解散*/
             if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_delete) {

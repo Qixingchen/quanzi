@@ -41,6 +41,9 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
         // TODO: 15/9/8 私聊添加
     }
 
+    /**
+     * 获取未读数量，每组最多按1计算
+     */
     public int getAllUnreadCount() {
         int ans = 0;
         synchronized (groupList) {

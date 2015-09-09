@@ -1,5 +1,6 @@
 package com.tizi.quanzi.model;
 
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
@@ -84,6 +85,8 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         groupClass.Type = Integer.valueOf(groupUserInfo.type);
         groupClass.Notice = "";
         groupClass.convId = convId;
+        groupClass.validation = true;
+        groupClass.createUser = AppStaticValue.getUserID();
         // TODO: 15/9/3 信息不够！
 
         return groupClass;

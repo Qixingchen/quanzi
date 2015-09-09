@@ -2,7 +2,6 @@ package com.tizi.quanzi.app;
 
 import android.app.Application;
 
-import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
@@ -11,6 +10,8 @@ import com.facebook.stetho.Stetho;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
+
+//import me.drakeet.library.CrashWoodpecker;
 
 
 /**
@@ -34,8 +35,9 @@ public class App extends Application {
         appStaticValue = new AppStaticValue();
         //泄露监视器
         //LeakCanary.install(this);
+//        CrashWoodpecker.fly().to(this);
 
-        AVAnalytics.setAnalyticsEnabled(false);
+        //AVAnalytics.setAnalyticsEnabled(false);
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
         //AVAnalytics.enableCrashReport(this, true);

@@ -76,19 +76,19 @@ public class Login {
         @SerializedName("id")
         private String id;
         @SerializedName("birthday")
-        private Object birthday;
+        private String birthday;
         @SerializedName("icon")
         private String icon;
         @SerializedName("sex")
         private int sex;
         @SerializedName("area")
-        private Object area;
+        private String area;
         @SerializedName("token")
         private String token;
         @SerializedName("groupNum")
         private int groupNum;
         @SerializedName("bg")
-        private Object bg;
+        private String bg;
         @SerializedName("userName")
         private String userName;
         @SerializedName("account")
@@ -106,11 +106,11 @@ public class Login {
             this.id = id;
         }
 
-        public Object getBirthday() {
+        public String getBirthday() {
             return birthday;
         }
 
-        public void setBirthday(Object birthday) {
+        public void setBirthday(String birthday) {
             this.birthday = birthday;
         }
 
@@ -130,11 +130,11 @@ public class Login {
             this.sex = sex;
         }
 
-        public Object getArea() {
+        public String getArea() {
             return area;
         }
 
-        public void setArea(Object area) {
+        public void setArea(String area) {
             this.area = area;
         }
 
@@ -154,11 +154,11 @@ public class Login {
             this.groupNum = groupNum;
         }
 
-        public Object getBg() {
+        public String getBg() {
             return bg;
         }
 
-        public void setBg(Object bg) {
+        public void setBg(String bg) {
             this.bg = bg;
         }
 

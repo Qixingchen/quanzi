@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.tizi.quanzi"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="com.tizi.quanzi"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -21,6 +22,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <!-- 写入文件 -->
     <uses-permission android:name="android.permission.STORAGE"/>
+    <!--定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <!-- 需要相机来照相，但不是必须的 -->
     <uses-feature

@@ -1,21 +1,27 @@
 package com.tizi.quanzi.ui.main;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.BaseActivity;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private MainFragment mainFragment;
     private PrivateMessageFragment privateMessageFragment;
+    private UserInfoSetFragment userInfoSetFragment;
 
     //toolbar
     private Toolbar toolbar;
@@ -24,15 +30,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
+    @Override
+    protected void findView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         mainFragment = new MainFragment();
+    }
+
+    @Override
+    protected void initView() {
+        setSupportActionBar(toolbar);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, mainFragment).commit();
+    }
 
-
+    @Override
+    protected void setViewEvent() {
         //Drawable logo = getDrawable(R.drawable.face);
         //toolbar.setLogo(R.drawable.face);
         //        for (int i = 0; i < toolbar.getChildCount(); i++) {
@@ -45,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
         //                    }
         //                }
         //        }
-
-
     }
 
     @Override
@@ -92,5 +104,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void StartUserInfoSet() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "没有位置权限");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                    StaticField.PermissionRequestCode.userInfoSetFragment);
+            return;
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "没有位置权限");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION},
+                    StaticField.PermissionRequestCode.userInfoSetFragment);
+            return;
+        }
+        userInfoSetFragment = new UserInfoSetFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, userInfoSetFragment).addToBackStack("userInfoSetFragment").commit();
     }
 }

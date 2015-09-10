@@ -28,6 +28,10 @@ public class AppStaticValue {
         UserID = preferences.getString(StaticField.TokenPreferences.USERID, "");
         UserToken = preferences.getString(StaticField.TokenPreferences.USERTOKEN, "");
         UserPhone = preferences.getString(StaticField.TokenPreferences.USERPHONE, "");
+
+        groupNotifipreferences = application.getSharedPreferences(UserID + "GroupNotifi",
+                App.MODE_PRIVATE);
+
         if (UserID.compareTo("") != 0) {
             setDataBaseHelper(UserID);
             // TODO: 15/8/21 fix crash
@@ -41,6 +45,7 @@ public class AppStaticValue {
     private static Application application;
 
     //偏好储存
+    private static SharedPreferences groupNotifipreferences;
     private static SharedPreferences preferences;
     private static String UserToken = "";
     //todo 本地储存 UserAccount
@@ -89,6 +94,10 @@ public class AppStaticValue {
 
     public static String getPrefer(String Name) {
         return preferences.getString(Name, "");
+    }
+
+    public static SharedPreferences getGroupNotifipreferences() {
+        return groupNotifipreferences;
     }
 
     public static void setPrefer(String name, String vaule) {

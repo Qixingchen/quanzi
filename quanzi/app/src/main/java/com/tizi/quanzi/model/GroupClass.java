@@ -20,7 +20,18 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
     public String background;
     public boolean validation;
     public String createUser;
+    private Boolean needNotifi;
 
+    public Boolean getNeedNotifi() {
+        return needNotifi;
+    }
+
+    public void setNeedNotifi(Boolean needNotifi, boolean NeedWrite) {
+        if (NeedWrite) {
+            AppStaticValue.getGroupNotifipreferences().edit().putBoolean(ID, needNotifi).apply();
+        }
+        this.needNotifi = needNotifi;
+    }
 
     /**
      * 将 List<Login.GroupEntity> 转换为 ArrayList<GroupClass>
@@ -64,6 +75,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
             groupClass.lastMessTime = 0;
             groupClass.UnreadCount = 0;
         }
+        groupClass.needNotifi = AppStaticValue.getGroupNotifipreferences().getBoolean(groupClass.ID, true);
 
         return groupClass;
     }

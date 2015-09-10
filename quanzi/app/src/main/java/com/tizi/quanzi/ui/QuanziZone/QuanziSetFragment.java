@@ -144,74 +144,88 @@ public class QuanziSetFragment extends BaseFragment {
                     builder.create().show();
                 }
             });
-            messNotifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        // TODO: 15/8/31 ignore
-                    } else {
-                        // TODO: 15/8/31 not ignore
-                    }
-                }
-            });
-            exitQuanzi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                    final GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupUserInfo.groupNo);
-                    if (groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
-                        builder.setTitle("确认解散这个圈子么？");
-                        builder.setPositiveButton("解散", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+            messNotifiSwitch.setOnCheckedChangeListener(
+                    new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                                GroupUserAdmin.getInstance(mActivity).setOnResult(
-                                        new GroupUserAdmin.OnResult() {
-                                            @Override
-                                            public void OK() {
-                                                GroupList.getInstance().deleteGroup(groupClass.ID);
-                                                Intent mainActivity = new Intent(mActivity, MainActivity.class);
-                                                startActivity(mainActivity);
-                                            }
+                            GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(group.ID);
+                            if (groupClass != null) {
+                                if (isChecked) {
 
-                                            @Override
-                                            public void error(String errorMessage) {
+                                    groupClass.setNeedNotifi(false, true);
+                                } else {
+                                    groupClass.setNeedNotifi(true, true);
 
-                                            }
-                                        }
-                                ).deleteGroup(groupClass.convId, groupClass.ID);
+                                }
                             }
-                        });
-                        builder.setNegativeButton("取消", null);
-                        builder.create().show();
-                    } else {
-                        builder.setTitle("确认退出这个圈子么？");
-                        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                GroupUserAdmin.getInstance(mActivity).setOnResult(
-                                        new GroupUserAdmin.OnResult() {
-                                            @Override
-                                            public void OK() {
-                                                GroupList.getInstance().deleteGroup(groupClass.ID);
-                                                Intent mainActivity = new Intent(mActivity, MainActivity.class);
-                                                startActivity(mainActivity);
-                                            }
+                        }
 
-                                            @Override
-                                            public void error(String errorMessage) {
-
-                                            }
-                                        }
-                                ).deleteMember(groupClass.convId, groupClass.ID, AppStaticValue.getUserID());
-
-                            }
-                        });
-                        builder.setNegativeButton("取消", null);
-                        builder.create().show();
                     }
-                }
-            });
+
+            );
+            exitQuanzi.setOnClickListener(new View.OnClickListener()
+
+                                          {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                                                  final GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupUserInfo.groupNo);
+                                                  if (groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
+                                                      builder.setTitle("确认解散这个圈子么？");
+                                                      builder.setPositiveButton("解散", new DialogInterface.OnClickListener() {
+                                                          @Override
+                                                          public void onClick(DialogInterface dialog, int which) {
+
+                                                              GroupUserAdmin.getInstance(mActivity).setOnResult(
+                                                                      new GroupUserAdmin.OnResult() {
+                                                                          @Override
+                                                                          public void OK() {
+                                                                              GroupList.getInstance().deleteGroup(groupClass.ID);
+                                                                              Intent mainActivity = new Intent(mActivity, MainActivity.class);
+                                                                              startActivity(mainActivity);
+                                                                          }
+
+                                                                          @Override
+                                                                          public void error(String errorMessage) {
+
+                                                                          }
+                                                                      }
+                                                              ).deleteGroup(groupClass.convId, groupClass.ID);
+                                                          }
+                                                      });
+                                                      builder.setNegativeButton("取消", null);
+                                                      builder.create().show();
+                                                  } else {
+                                                      builder.setTitle("确认退出这个圈子么？");
+                                                      builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                                                          @Override
+                                                          public void onClick(DialogInterface dialog, int which) {
+                                                              GroupUserAdmin.getInstance(mActivity).setOnResult(
+                                                                      new GroupUserAdmin.OnResult() {
+                                                                          @Override
+                                                                          public void OK() {
+                                                                              GroupList.getInstance().deleteGroup(groupClass.ID);
+                                                                              Intent mainActivity = new Intent(mActivity, MainActivity.class);
+                                                                              startActivity(mainActivity);
+                                                                          }
+
+                                                                          @Override
+                                                                          public void error(String errorMessage) {
+
+                                                                          }
+                                                                      }
+                                                              ).deleteMember(groupClass.convId, groupClass.ID, AppStaticValue.getUserID());
+
+                                                          }
+                                                      });
+                                                      builder.setNegativeButton("取消", null);
+                                                      builder.create().show();
+                                                  }
+                                              }
+                                          }
+
+            );
         }
     }
 

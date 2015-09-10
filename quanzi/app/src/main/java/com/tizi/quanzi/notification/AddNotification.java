@@ -10,7 +10,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
@@ -138,12 +140,17 @@ public class AddNotification {
     }
 
     /**
+     * 判断用户是否需要接收这条通知
      * 将消息添加进List
      * 并添加通知
      *
      * @param chatMessage 需要发布通知的消息
      */
     public void AddMessage(ChatMessage chatMessage) {
+        GroupClass group = (GroupClass) GroupList.getInstance().getGroup(chatMessage.groupID);
+        if (group != null && !group.getNeedNotifi()) {
+            return;
+        }
         chatMessageArrayList.add(chatMessage);
         setNotification();
     }

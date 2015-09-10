@@ -87,7 +87,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         collapsingtoolbar =
                 (CollapsingToolbarLayout) mActivity.findViewById(R.id.collapsing_toolbar);
-        collapsingtoolbar.setTitle("圈名");
         //crash is know issue at https://code.google.com/p/android/issues/detail?id=183166
         //        viewPager = (ViewPager) mActivity.findViewById(R.id.detail_viewpager);
         //        groupZonePagerAdapter = new GroupZonePagerAdapter(mActivity);
@@ -164,6 +163,9 @@ public class QuanziIntroduceFragment extends BaseFragment {
     public void setGroupInfo(GroupUserInfo groupUserInfo, final GroupClass groupClass) {
         this.groupUserInfo = groupUserInfo;
         this.groupClass = groupClass;
+
+        collapsingtoolbar.setTitle(groupClass.Name);
+
         boolean isCreate = groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0;
         if (groupUserAdapter != null) {
             groupUserAdapter.setMemlist(groupUserInfo.memlist);

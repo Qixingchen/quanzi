@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.ui.BaseFragment;
 
 /**
@@ -63,24 +62,6 @@ public class MainFragment extends BaseFragment {
     }
 
     private ViewPager.OnPageChangeListener getOnPageChangeListener() {
-        if (onPageChangeListener == null) {
-            onPageChangeListener = new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    //Log.w(TAG, "onPageScrolled position=" + position);
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    Log.w(TAG, "onPageSelected position=" + position);
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                    Log.w(TAG, "onPageScrollStateChanged state=" + state);
-                }
-            };
-        }
-        return onPageChangeListener;
+        return null;
     }
 }

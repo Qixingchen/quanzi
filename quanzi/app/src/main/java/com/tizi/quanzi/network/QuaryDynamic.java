@@ -11,6 +11,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.tool.StaticField;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -94,6 +95,18 @@ public class QuaryDynamic {
                 .addRequestWithSign(Request.Method.GET,
                         mContext.getString(R.string.testbaseuri) + "/grpdyn/findF", quaryDynmicPara);
         return mInstance;
+    }
+
+    public void getGroupDynamic(String groupID, String start) {
+        Map<String, String> para = new TreeMap<>();
+        para.put("grpid", groupID);
+        para.put("start", start);
+        para.put("limit", String.valueOf(StaticField.MessageQueryLimit.DynamicLimit));
+
+        GetVolley.getmInstance(mContext).setOKListener(mOKListener).
+                setErrorListener(mErrorListener)
+                .addRequestWithSign(Request.Method.GET,
+                        mContext.getString(R.string.testbaseuri) + "/grpdyn/findF", para);
     }
 
     public interface QuaryDynamicListener {

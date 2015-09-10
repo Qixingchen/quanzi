@@ -1,23 +1,27 @@
 package com.tizi.quanzi.network;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
 
 /**
  * Created by qixingchen on 15/8/20.
  * 网络请求抽象类 未完成
+ * 需要实现 public static GroupSetting getInstance(Context context)
+ * 请求具体
  */
-public abstract class NetWorkAbs {
-    private static Context mContext;
+public abstract class NetWorkAbs<T extends OnlySuccess> {
+    protected static Context mContext;
+    protected Gson gson;
 
-    private static Response.Listener<String> mOKListener;
-    private static Response.ErrorListener mErrorListener;
-    private final String TAG = this.getClass().getSimpleName();
-    private NetworkListener networkListener;
+    protected static Response.Listener<String> mOKListener;
+    protected static Response.ErrorListener mErrorListener;
+    protected final String TAG = this.getClass().getSimpleName();
+    protected NetworkListener networkListener;
 
     protected static NetWorkAbs mInstance;
 
@@ -25,23 +29,25 @@ public abstract class NetWorkAbs {
         this.networkListener = networkListener;
     }
 
-    private NetWorkAbs makeErrorListener() {
-        mErrorListener = new Response.ErrorListener() {
+    protected Response.ErrorListener makeErrorListener() {
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, error.getMessage());
-                Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_LONG).show();
+                if (networkListener != null) {
+                    networkListener.onError(error.getMessage());
+                }
             }
         };
-        return mInstance;
+        return errorListener;
     }
 
-    public abstract NetWorkAbs makeOKListener();
+    protected abstract Response.Listener<String> makeOkListener();
 
     public interface NetworkListener {
         // TODO: 15/8/20 why
         void onOK(Object ts);
 
-        void onError();
+        void onError(String Message);
     }
 }

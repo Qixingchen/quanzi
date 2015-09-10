@@ -69,9 +69,7 @@ public class UserManageInGroup {
                     ManageGroupListener.onError(error.getMessage());
                 }
             }
-        }
-
-        ;
+        };
     }
 
     /**

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
 
     private List<Dyns.DynsEntity> dynsList;
     private Context mContext;
+    private NeedMore needMore;
+    private static final String TAG = DynsAdapter.class.getSimpleName();
 
     /**
      * @param dynsList 动态List
@@ -65,7 +68,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     public void onBindViewHolder(DynsViewHolder holder, int position) {
         final Dyns.DynsEntity dyns = dynsList.get(position);
         // TODO: 15/8/20 getUserAvatar
-//        holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.createUser,
+        //        holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.createUser,
         holder.weibo_avatar_NetworkImageView.setImageUrl("http://gravatar.duoshuo.com/avatar/6727fb208dd4a54b0eac56f8f6142cda?s=500",
                 GetVolley.getmInstance(mContext).getImageLoader());
         holder.userNameTextView.setText(dyns.nickName);
@@ -79,6 +82,13 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
                     GetVolley.getmInstance(mContext).getImageLoader());
         }
         holder.setPicUnvisable(picsNum);
+        if (position == dynsList.size() - 1) {
+            if (needMore != null) {
+                needMore.needMore();
+            } else {
+                Log.w(TAG, "needMore 回调为空");
+            }
+        }
     }
 
     /**
@@ -104,6 +114,14 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
             dynsList.add(dynsEntity);
         }
         notifyDataSetChanged();
+    }
+
+    public void setNeedMore(NeedMore needMore) {
+        this.needMore = needMore;
+    }
+
+    public interface NeedMore {
+        void needMore();
     }
 
     /**

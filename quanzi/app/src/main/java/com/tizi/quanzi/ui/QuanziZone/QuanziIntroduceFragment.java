@@ -29,6 +29,7 @@ import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.QuaryDynamic;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
 /**
@@ -51,6 +52,8 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private RecyclerView.LayoutManager groupDynsLayoutManager;
     private GroupUserInfo groupUserInfo;
     private GroupClass groupClass;
+    private boolean hasMoreToGet = true;
+    private int lastIndex = 0;
 
 
     public QuanziIntroduceFragment() {
@@ -87,6 +90,15 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         groupDynsRecyclerView.setHasFixedSize(true);
         dynsAdapter = new DynsAdapter(null, mActivity);
+        dynsAdapter.setNeedMore(new DynsAdapter.NeedMore() {
+            @Override
+            public void needMore() {
+                if (hasMoreToGet) {
+                    quaryMore(groupClass.ID, lastIndex);
+                    lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
+                }
+            }
+        });
         groupDynsLayoutManager = new LinearLayoutManager(mActivity);
         groupDynsRecyclerView.setLayoutManager(groupDynsLayoutManager);
         groupDynsRecyclerView.setAdapter(dynsAdapter);
@@ -112,21 +124,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
             }
         });
-
-        QuaryDynamic.getInstance().setQuaryDynamicListener(new QuaryDynamic.QuaryDynamicListener() {
-            @Override
-            public void onOK(Dyns dyns) {
-                dynsAdapter.addItems(dyns.dyns);
-                Log.i(TAG, "groupDynsLayoutManager Heigh:" + groupDynsLayoutManager.getHeight());
-            }
-
-            @Override
-            public void onError() {
-                Log.e(TAG, "加载群动态失败");
-            }
-        }).getQuanZiDynamic();
-
-
         //todo creater
 
         groupUserAdapter = new GroupUserAdapter(mActivity,
@@ -142,7 +139,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
     /**
      * 设置群的信息
      */
-    public void setGroupInfo(GroupUserInfo groupUserInfo, GroupClass groupClass) {
+    public void setGroupInfo(GroupUserInfo groupUserInfo, final GroupClass groupClass) {
         this.groupUserInfo = groupUserInfo;
         this.groupClass = groupClass;
         boolean isCreate = groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0;
@@ -160,7 +157,28 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 .into(groupFaceImageView);
         zoneBackgroundImageView.setImageUrl(groupClass.background, GetVolley.getmInstance(mActivity).getImageLoader());
         zoneSignTextview.setText("签名是：" + groupClass.Notice);
+        quaryMore(groupClass.ID, lastIndex);
+        lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
+    }
 
+    private void quaryMore(String groupID, int lastIndex) {
+        Log.i(TAG, "查询群动态 lastIndex=" + lastIndex);
+        QuaryDynamic.getInstance().setQuaryDynamicListener(new QuaryDynamic.QuaryDynamicListener() {
+            @Override
+            public void onOK(Dyns dyns) {
+                dynsAdapter.addItems(dyns.dyns);
+                if (dyns.dyns.size() != StaticField.MessageQueryLimit.DynamicLimit) {
+                    hasMoreToGet = false;
+                }
+                Log.i(TAG, "groupDynsLayoutManager Heigh:" + groupDynsLayoutManager.getHeight());
+            }
+
+            @Override
+            public void onError() {
+                Log.e(TAG, "加载群动态失败");
+            }
+        })
+                .getGroupDynamic(groupID, String.valueOf(lastIndex));
     }
 
 }

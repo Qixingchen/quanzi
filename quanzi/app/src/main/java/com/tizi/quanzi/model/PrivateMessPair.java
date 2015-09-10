@@ -39,6 +39,9 @@ public class PrivateMessPair extends ConvGroupAbs implements Serializable {
         privateMessPair.systemMessage = systemMessage;
         privateMessPair.lastMess = systemMessage.getContent();
         privateMessPair.lastMessTime = systemMessage.getCreate_time();
+        if (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.complete) {
+            systemMessage.setIsread(true);
+        }
         privateMessPair.UnreadCount = (systemMessage.isread()) ? 0 : 1;
         return privateMessPair;
     }

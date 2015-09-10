@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 
+import com.tizi.quanzi.dataStatic.MyUserInfo;
+
 /**
  * Created by qixingchen on 15/7/20.
  * 工具类
@@ -49,5 +51,10 @@ public class Tool {
         return imagePixel;
     }
 
-
+    /**
+     * 判断当前用户是不是游客
+     */
+    public static boolean isGuest() {
+        return MyUserInfo.getInstance().getUserInfo().getAccount().compareTo(StaticField.GuestUser.Account) == 0;
+    }
 }

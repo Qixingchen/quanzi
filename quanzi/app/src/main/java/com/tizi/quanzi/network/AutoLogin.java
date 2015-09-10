@@ -73,21 +73,34 @@ public class AutoLogin {
 
     /**
      * 使用预加密的密码登陆
+     * 并储存密码
      * 账号来自  App.getUserPhone()
      *
      * @see GetPassword
      */
-    public void loginFromPrePassword(String password) {
-        Map<String, String> loginPara = new TreeMap<>();
-        loginPara.put("account", AppStaticValue.getUserPhone());
+    public void loginFromPrePassword(String PrePassword) {
+        preferences.edit().putString(StaticField.TokenPreferences.PASSWORD, PrePassword).apply();
+        String RawPassword;
         if (AppStaticValue.getUserPhone().compareTo("1") == 0) {
-            loginPara.put("password", "96e79218965eb72c92a549dd5a330112");
+            RawPassword = "96e79218965eb72c92a549dd5a330112";
         } else if (AppStaticValue.getUserPhone().compareTo("2") == 0) {
-            loginPara.put("password", "e3ceb5881a0a1fdaad01296d7554868d");
+            RawPassword = "e3ceb5881a0a1fdaad01296d7554868d";
         } else {
-            loginPara.put("password", GetPassword.LaterHASH(password));
+            RawPassword = GetPassword.LaterHASH(PrePassword);
         }
-        preferences.edit().putString(StaticField.TokenPreferences.PASSWORD, password).apply();
+
+        String account = AppStaticValue.getUserPhone();
+
+        loginRaw(account, RawPassword);
+    }
+
+    /**
+     * 使用给予的账号密码登陆
+     */
+    public void loginRaw(String account, String password) {
+        Map<String, String> loginPara = new TreeMap<>();
+        loginPara.put("account", account);
+        loginPara.put("password", password);
         GetVolley.getmInstance(mContext).setOKListener(mOKListener).
                 setErrorListener(mErrorListener)
                 .addRequestWithSign(Request.Method.GET,

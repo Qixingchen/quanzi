@@ -113,4 +113,9 @@ public class StaticField {
         public final static int PrivateMess = 1;
         public final static int SysMess = 2;
     }
+
+    public static class GuestUser {
+        public final static String Account = "guest";
+        public final static String PassWord = "1a100d2c0dab19ce3ceb5881a0a1fdaad01296d7554868d4430e7d73762f379e";
+    }
 }

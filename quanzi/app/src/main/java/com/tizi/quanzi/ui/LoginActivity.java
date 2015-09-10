@@ -21,7 +21,6 @@ import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.ui.main.MainActivity;
 import com.tizi.quanzi.ui.register.RegisterActivity;
 
 /**
@@ -52,6 +51,13 @@ public class LoginActivity extends AppCompatActivity {
         this.LoginButton = (Button) findViewById(R.id.LoginButton);
         this.passwordEditText = (EditText) findViewById(R.id.passwordEditText);
         this.phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
+
+        findViewById(R.id.guest_user_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AutoLogin.getInstance().loginRaw(StaticField.GuestUser.Account, StaticField.GuestUser.PassWord);
+            }
+        });
 
         mActivity = this;
 
@@ -116,9 +122,5 @@ public class LoginActivity extends AppCompatActivity {
             phoneNumberInputLayout.setErrorEnabled(false);
             return true;
         }
-    }
-
-    public void toMainActivity(View view) {
-        startActivity(new Intent(this, MainActivity.class));
     }
 }

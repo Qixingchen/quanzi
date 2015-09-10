@@ -63,7 +63,7 @@ public class FlushMess {
                     } catch (ClassFormatError formatError) {
                         SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess((AVIMTypedMessage) avimMessage);
                         //todo 与系统消息统一处理
-                        MutiTypeMsgHandler.HandlerSystemMess(systemMessage);
+                        MutiTypeMsgHandler.HandlerSystemMess(systemMessage, true);
                     }
 
                 }

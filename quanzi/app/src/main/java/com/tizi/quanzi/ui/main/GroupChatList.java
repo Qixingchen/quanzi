@@ -15,9 +15,11 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.tool.FlushMess;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.ui.NewGroup.NewGroupActivity;
+import com.tizi.quanzi.ui.register.RegisterActivity;
 
 import java.util.List;
 
@@ -95,13 +97,13 @@ public class GroupChatList extends BaseFragment {
     protected void initViewsAndSetEvent() {
         List<GroupClass> groupClasses = GroupList.getInstance().getGroupList();
         /*检查是否第一次运行，是的话刷新纪录*/
-        if (AppStaticValue.getPrefer(getString(R.string.isFirstRun)).compareTo("") == 0) {
+        if (AppStaticValue.getPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID()).compareTo("") == 0) {
             for (GroupClass groupClass : groupClasses) {
 
                 FlushMess.getInstance().Flush(groupClass.convId);
             }
         }
-        AppStaticValue.setPrefer(getString(R.string.isFirstRun), "NO");
+        AppStaticValue.setPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID(), "NO");
     }
 
     @Override
@@ -119,8 +121,13 @@ public class GroupChatList extends BaseFragment {
             @Override
             public void itemClick(int position) {
                 if (position == groupClasses.size()) {
-                    Intent newGroup = new Intent(mActivity, NewGroupActivity.class);
-                    startActivity(newGroup);
+                    if (Tool.isGuest()) {
+                        Intent register = new Intent(mActivity, RegisterActivity.class);
+                        startActivity(register);
+                    } else {
+                        Intent newGroup = new Intent(mActivity, NewGroupActivity.class);
+                        startActivity(newGroup);
+                    }
                 } else {
                     Intent chatmess = new Intent(mActivity, ChatActivity.class);
                     chatmess.putExtra("chatType", StaticField.ChatBothUserType.GROUP);

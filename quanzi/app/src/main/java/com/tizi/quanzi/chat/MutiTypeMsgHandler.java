@@ -70,7 +70,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     chatMessage.ConversationId, ChatMessage.getContentText(chatMessage), chatMessage.create_time);
         } catch (ClassFormatError error) {
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
-            HandlerSystemMess(systemMessage);
+            HandlerSystemMess(systemMessage, false);
         }
     }
 
@@ -109,7 +109,18 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
     private OnMessage onMessage;
 
-    public static void HandlerSystemMess(SystemMessage systemMessage) {
+    /**
+     * 系统消息的处理
+     *
+     * @param systemMessage 对应的系统消息
+     * @param ignore        如果为真，则是初始化刷取的，可以不做处理
+     */
+    public static void HandlerSystemMess(SystemMessage systemMessage, boolean ignore) {
+
+        if (ignore) {
+            return;
+        }
+
          /*圈子改名*/
         if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
             GroupClass group = (GroupClass) GroupList.getInstance().getGroup(systemMessage.getGroup_id());

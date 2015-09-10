@@ -1,7 +1,6 @@
 package com.tizi.quanzi.network;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -48,9 +47,10 @@ public class GroupSetting extends NetWorkAbs {
                         networkListener.onOK(null);
                     }
                 } else {
-                    Log.e(TAG, "Error");
-                    Toast.makeText(mContext, "Error", Toast.LENGTH_LONG).show();
-                    networkListener.onError("");
+                    Log.e(TAG, onlySuccess.getMsg());
+                    if (networkListener != null) {
+                        networkListener.onError(onlySuccess.getMsg());
+                    }
                 }
             }
         };

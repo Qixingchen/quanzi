@@ -23,6 +23,7 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.main.MainActivity;
@@ -113,6 +114,9 @@ public class QuanziSetFragment extends BaseFragment {
                                     group.Name = name;
                                     GroupList.getInstance().updateGroup(group);
                                     quanziName.setText(name);
+
+                                    //后台更新
+                                    GroupSetting.getInstance(mContext).ChangeName(group.ID, group.Name);
 
                                 }
                             }).setNegativeButton("取消", null).show();

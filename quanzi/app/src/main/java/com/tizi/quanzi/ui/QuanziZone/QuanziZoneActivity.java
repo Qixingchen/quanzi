@@ -92,4 +92,10 @@ public class QuanziZoneActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        quanziIntroduceFragment.onActivityResult(requestCode, resultCode, data);
+    }
 }

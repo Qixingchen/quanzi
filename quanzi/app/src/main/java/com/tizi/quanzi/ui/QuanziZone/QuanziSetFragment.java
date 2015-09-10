@@ -74,18 +74,19 @@ public class QuanziSetFragment extends BaseFragment {
             return;
         }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        LayoutInflater inflater = mActivity.getLayoutInflater();
-        final View layout = inflater.inflate(R.layout.one_line_dialog,
-                (ViewGroup) mActivity.findViewById(R.id.one_line_dialog));
-        final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
-        final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
 
         if (groupUserInfo != null) {
             quanziName.setText(group.Name);
             quanziName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    LayoutInflater inflater = mActivity.getLayoutInflater();
+                    final View layout = inflater.inflate(R.layout.one_line_dialog,
+                            (ViewGroup) mActivity.findViewById(R.id.one_line_dialog));
+                    final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
+                    final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
 
                     title.setText("输入新的圈子名称");
                     input.setHint("圈子名称");

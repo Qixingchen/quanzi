@@ -69,7 +69,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         final Dyns.DynsEntity dyns = dynsList.get(position);
         // TODO: 15/8/20 getUserAvatar
         //        holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.createUser,
-        holder.weibo_avatar_NetworkImageView.setImageUrl("http://gravatar.duoshuo.com/avatar/6727fb208dd4a54b0eac56f8f6142cda?s=500",
+        holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.icon,
                 GetVolley.getmInstance(mContext).getImageLoader());
         holder.userNameTextView.setText(dyns.nickName);
         holder.contentTextView.setText(dyns.content);

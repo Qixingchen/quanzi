@@ -1,7 +1,10 @@
 package com.tizi.quanzi.ui.QuanziZone;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,21 +19,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.SaveCallback;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.DynsAdapter;
 import com.tizi.quanzi.adapter.GroupUserAdapter;
 import com.tizi.quanzi.adapter.GroupZonePagerAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.GroupUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.QuaryDynamic;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
+import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
+
+import java.io.IOException;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -50,10 +61,13 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private DynsAdapter dynsAdapter;
     private RecyclerView.LayoutManager groupUsersLayoutManager;
     private RecyclerView.LayoutManager groupDynsLayoutManager;
+    private FloatingActionButton changeGroupImageFAB;
     private GroupUserInfo groupUserInfo;
     private GroupClass groupClass;
     private boolean hasMoreToGet = true;
     private int lastIndex = 0;
+
+    private RequreForImage requreForImage;
 
 
     public QuanziIntroduceFragment() {
@@ -81,6 +95,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupUsersRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_users_item_recycler_view);
         groupDynsRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_dyns_item_recycler_view);
         toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
+        changeGroupImageFAB = (FloatingActionButton) view.findViewById(R.id.change_image_fab);
     }
 
     @Override
@@ -134,6 +149,13 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
         groupUsersRecyclerView.setLayoutManager(groupUsersLayoutManager);
+        changeGroupImageFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requreForImage = new RequreForImage(mActivity);
+                requreForImage.showDialogAndCallIntent("选择圈子照片");
+            }
+        });
     }
 
     /**
@@ -181,4 +203,43 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 .getGroupDynamic(groupID, String.valueOf(lastIndex));
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            String filepath = requreForImage.ZipedFilePathFromIntent(data);
+
+            savePhotoToLC(filepath);
+        }
+    }
+
+    /**
+     * 将图片储存到LeanCloud
+     *
+     * @param filepath 图片地址
+     */
+    private void savePhotoToLC(String filepath) {
+        AVFile file = null;
+        try {
+            file = AVFile.withAbsoluteLocalPath(AppStaticValue.getUserID() + "face.jpg",
+                    filepath);
+            final AVFile finalFile = file;
+            file.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e != null) {
+                        //上传失败
+                    } else {
+                        String photoUri = finalFile.getUrl();
+                        zoneBackgroundImageView.setImageUrl(photoUri, GetVolley.getmInstance(mContext).getImageLoader());
+                        GroupSetting.getInstance(mContext).changeIcon(groupClass.ID, photoUri);
+                        groupClass.Face = photoUri;
+                        GroupList.getInstance().updateGroup(groupClass);
+                    }
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

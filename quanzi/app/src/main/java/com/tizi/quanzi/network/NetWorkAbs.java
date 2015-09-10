@@ -5,16 +5,21 @@ import android.content.Context;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
-import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
 
 /**
  * Created by qixingchen on 15/8/20.
  * 网络请求抽象类 未完成
- * 需要实现 public static GroupSetting getInstance(Context context)
+ * 需要实现 public static XXXX getInstance(Context context)
+ * 创造函数
+ * private XXXX() {
+ * gson = new Gson();
+ * mOKListener = makeOkListener();
+ * mErrorListener = makeErrorListener();
+ * }
  * 请求具体
  */
-public abstract class NetWorkAbs<T extends OnlySuccess> {
+public abstract class NetWorkAbs {
     protected static Context mContext;
     protected Gson gson;
 

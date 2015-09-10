@@ -70,31 +70,8 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     chatMessage.ConversationId, ChatMessage.getContentText(chatMessage), chatMessage.create_time);
         } catch (ClassFormatError error) {
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
-
-            // TODO: 15/8/25 do systemMessage
-
-            /*圈子改名*/
-            if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
-                GroupClass group = (GroupClass) GroupList.getInstance().getGroup(systemMessage.getGroup_id());
-                if (group != null) {
-                    Log.i(TAG, group.Name + "更名为" + systemMessage.getContent());
-                    group.Name = systemMessage.getContent();
-                    GroupList.getInstance().updateGroup(group);
-                }
-                //不必加入数据库
-                return;
-            }
-
-            /*圈子解散*/
-            if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_delete) {
-
-                GroupList.getInstance().deleteGroup(systemMessage.getGroup_id());
-                systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
-            }
-            PrivateMessPairList.getInstance().addGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
-            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+            HandlerSystemMess(systemMessage);
         }
-
     }
 
     /**
@@ -131,6 +108,29 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
     }
 
     private OnMessage onMessage;
+
+    public static void HandlerSystemMess(SystemMessage systemMessage) {
+         /*圈子改名*/
+        if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
+            GroupClass group = (GroupClass) GroupList.getInstance().getGroup(systemMessage.getGroup_id());
+            if (group != null) {
+                Log.i(TAG, group.Name + "更名为" + systemMessage.getContent());
+                group.Name = systemMessage.getContent();
+                GroupList.getInstance().updateGroup(group);
+            }
+            //不必加入数据库
+            return;
+        }
+
+            /*圈子解散*/
+        if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_delete) {
+
+            GroupList.getInstance().deleteGroup(systemMessage.getGroup_id());
+            systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
+        }
+        PrivateMessPairList.getInstance().addGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
+        DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+    }
 
 
     //消息接收器回调接口

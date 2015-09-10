@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.network.UserInfoSetting;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.io.IOException;
@@ -152,7 +153,6 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     return;
                 }
                 Log.i(TAG, "定位中");
-
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
 
                 break;
@@ -177,7 +177,9 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
             Log.i(TAG, "定位完成");
             try {
                 List<Address> address = new Geocoder(mContext).getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                userLocationTextView.setText(address.get(0).getAdminArea() + address.get(0).getLocality());
+                String area = address.get(0).getAdminArea() + address.get(0).getLocality();
+                userLocationTextView.setText(area);
+                UserInfoSetting.getInstance(mContext).changeArea(area);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -7,9 +7,9 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
+import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
-import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.SystemMessage;
 
@@ -56,12 +56,14 @@ public class FlushMess {
                     try {
                         ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage((AVIMTypedMessage) avimMessage);
                         DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-                        GroupList.getInstance().updateGroupLastMess(convID, ChatMessage.getContentText(chatMessage),
-                                chatMessage.create_time);
+                        if (flushTimes[0] == 0) {
+                            GroupList.getInstance().updateGroupLastMess(convID, ChatMessage.getContentText(chatMessage),
+                                    chatMessage.create_time);
+                        }
                     } catch (ClassFormatError formatError) {
                         SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess((AVIMTypedMessage) avimMessage);
-                        Log.w(TAG, systemMessage.toString());
-                        DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+                        //todo 与系统消息统一处理
+                        MutiTypeMsgHandler.HandlerSystemMess(systemMessage);
                     }
 
                 }

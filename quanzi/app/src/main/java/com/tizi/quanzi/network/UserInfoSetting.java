@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.google.gson.Gson;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
 
@@ -14,27 +15,60 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Created by qixingchen on 15/9/9.
- * 群设置管理－后台
+ * Created by qixingchen on 15/9/10.
+ * 用户个人信息变更
  */
-public class GroupSetting extends NetWorkAbs {
+public class UserInfoSetting extends NetWorkAbs {
 
-    public static GroupSetting getInstance(Context context) {
-        mContext = context;
+    public static UserInfoSetting getInstance(Context context) {
         if (mInstance == null) {
-            synchronized (GroupSetting.class) {
+            synchronized (UserInfoSetting.class) {
                 if (mInstance == null) {
-                    mInstance = new GroupSetting();
+                    mInstance = new UserInfoSetting();
                 }
             }
         }
-        return (GroupSetting) mInstance;
+        return (UserInfoSetting) mInstance;
     }
 
-    private GroupSetting() {
+    private UserInfoSetting() {
         gson = new Gson();
         mOKListener = makeOkListener();
         mErrorListener = makeErrorListener();
+    }
+
+    private void changeFiled(String field, String value) {
+        Map<String, String> para = new TreeMap<>();
+        para.put("field", field);
+        para.put("value", value);
+        para.put("userid", AppStaticValue.getUserID());
+
+
+        GetVolley.getmInstance(mContext).setOKListener(mOKListener).
+                setErrorListener(mErrorListener)
+                .addRequestWithSign(Request.Method.GET,
+                        mContext.getString(R.string.testbaseuri) + "/user/updateFieldF", para);
+    }
+
+
+    public void changeName(String name) {
+        changeFiled("userName", name);
+    }
+
+    public void changeSex(String sex) {
+        changeFiled("sex", sex);
+    }
+
+    public void changeFace(String uri) {
+        changeFiled("icon", uri);
+    }
+
+    public void changeSign(String sign) {
+        changeFiled("signature", sign);
+    }
+
+    public void changeArea(String area) {
+        changeFiled("area", area);
     }
 
     @Override
@@ -55,26 +89,5 @@ public class GroupSetting extends NetWorkAbs {
             }
         };
         return OKListener;
-    }
-
-    private void changeField(String groupID, String field, String value) {
-        Map<String, String> para = new TreeMap<>();
-        para.put("groupid", groupID);
-        para.put("field", field);
-        para.put("value", value);
-
-
-        GetVolley.getmInstance(mContext).setOKListener(mOKListener).
-                setErrorListener(mErrorListener)
-                .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/group/updateFieldF", para);
-    }
-
-    public void ChangeName(String groupID, String name) {
-        changeField(groupID, "groupName", name);
-    }
-
-    public void changeIcon(String groupID, String uri) {
-        changeField(groupID, "icon", uri);
     }
 }

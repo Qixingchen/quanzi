@@ -41,6 +41,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
+    @Deprecated
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = activity;

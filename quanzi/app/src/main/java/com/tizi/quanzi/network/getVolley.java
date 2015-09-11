@@ -1,7 +1,9 @@
 package com.tizi.quanzi.network;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.v4.util.LruCache;
 
 import com.android.volley.Request;
@@ -11,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 
@@ -41,8 +44,20 @@ public class GetVolley {
      *
      * @return GetVolley实例
      */
+    public static GetVolley getmInstance() {
+        getmInstance(null, makeErrorListener());
+        return mInstance;
+    }
+
+    @Deprecated
     public static GetVolley getmInstance(Context context) {
-        getmInstance(context, null, makeErrorListener());
+        getmInstance(null, makeErrorListener());
+        return mInstance;
+    }
+
+    @Deprecated
+    public static GetVolley getmInstance(Context context, Response.Listener<String> OKListener) {
+        getmInstance(OKListener, makeErrorListener());
         return mInstance;
     }
 
@@ -54,8 +69,8 @@ public class GetVolley {
      *
      * @return GetVolley实例
      */
-    public static GetVolley getmInstance(Context context, Response.Listener<String> OKListener) {
-        getmInstance(context, OKListener, makeErrorListener());
+    public static GetVolley getmInstance(Response.Listener<String> OKListener) {
+        getmInstance(OKListener, makeErrorListener());
         return mInstance;
     }
 
@@ -68,12 +83,12 @@ public class GetVolley {
      *
      * @return GetVolley实例
      */
-    public static GetVolley getmInstance(Context context, Response.Listener<String> OKListener,
+    public static GetVolley getmInstance(Response.Listener<String> OKListener,
                                          Response.ErrorListener errorListener) {
         if (mInstance == null) {
             synchronized (GetVolley.class) {
                 if (mInstance == null) {
-                    mInstance = new GetVolley(context.getApplicationContext());
+                    mInstance = new GetVolley(App.getApplication());
                 }
             }
         }
@@ -256,6 +271,7 @@ public class GetVolley {
      * 将请求串转换为UTF－8编码
      * todo 未成功
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private String convertToUTF8(String s) {
         Log.w(TAG, s);
 

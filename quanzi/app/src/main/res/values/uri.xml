@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="alibaseuri"></string>
-    <!--<string name="testbaseuri">http://120.25.232.240:8080</string>-->
-    <string name="testbaseuri">http://192.168.3.16:8080</string>
+    <string name="testbaseuri">http://120.25.232.240:8080</string>
+    <!--<string name="testbaseuri">http://192.168.3.16:8080</string>-->
 </resources>

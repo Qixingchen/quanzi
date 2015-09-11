@@ -70,7 +70,7 @@ public class GroupZonePagerAdapter extends PagerAdapter {
     public Object instantiateItem(View container, int position) {
         if (position == 0) {
 
-            mDynsItemsRecyclerView = (RecyclerView) Views[0].findViewById(R.id.dyns_item_recycler_view);
+            mDynsItemsRecyclerView = (RecyclerView) Views[0].findViewById(R.id.theme_item_recycler_view);
             mDynsItemsRecyclerView.setHasFixedSize(true);
             dynsAdapter = new DynsAdapter(null, mContext);
             mLayoutManager = new LinearLayoutManager(mContext);

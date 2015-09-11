@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/detail_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="活动详情"/>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/theme_icon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        tools:background="@drawable/face"/>
+
+    <Button
+        android:id="@+id/participate_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="报名"/>
+
+
+    <TextView
+        android:id="@+id/num_of_participants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前1100个圈子"/>
+
+</LinearLayout>

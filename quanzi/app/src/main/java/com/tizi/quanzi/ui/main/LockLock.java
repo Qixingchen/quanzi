@@ -1,7 +1,6 @@
 package com.tizi.quanzi.ui.main;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,19 +9,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.adapter.DynsAdapter;
-import com.tizi.quanzi.gson.Dyns;
-import com.tizi.quanzi.network.QuaryDynamic;
+import com.tizi.quanzi.adapter.ThemeAdapter;
+import com.tizi.quanzi.gson.Theme;
+import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.network.NetWorkAbs;
+import com.tizi.quanzi.network.ThemeActs;
+import com.tizi.quanzi.ui.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LockLock extends Fragment {
+public class LockLock extends BaseFragment {
 
-    private Activity mActivity;
-    private RecyclerView mDynsItemsRecyclerView;
-    private DynsAdapter dynsAdapter;
+    private RecyclerView mThemeItemsRecyclerView;
+    private ThemeAdapter themeAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private static LockLock mInstance;
@@ -45,32 +47,37 @@ public class LockLock extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mActivity = activity;
+    protected void findViews() {
+        mThemeItemsRecyclerView = (RecyclerView) mActivity.findViewById(R.id.theme_item_recycler_view);
+        mThemeItemsRecyclerView.setHasFixedSize(true);
+        themeAdapter = new ThemeAdapter(null, mActivity);
+        mLayoutManager = new LinearLayoutManager(mActivity);
+        mThemeItemsRecyclerView.setLayoutManager(mLayoutManager);
+        mThemeItemsRecyclerView.setAdapter(themeAdapter);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    protected void initViewsAndSetEvent() {
+        ThemeActs.getInstance(mContext).setNetworkListener(
+                new NetWorkAbs.NetworkListener() {
+                    @Override
+                    public void onOK(Object ts) {
+                        Theme theme = new Gson().fromJson((String) ts, Theme.class);
+                        if (theme.success) {
+                            for (Theme.ActsEntity act : theme.acts) {
+                                themeAdapter.addItem(act);
+                            }
+                        } else {
+                            Log.w(TAG, theme.msg);
+                        }
+                    }
 
-        mDynsItemsRecyclerView = (RecyclerView) mActivity.findViewById(R.id.dyns_item_recycler_view);
-        mDynsItemsRecyclerView.setHasFixedSize(true);
-        dynsAdapter = new DynsAdapter(null, mActivity);
-        mLayoutManager = new LinearLayoutManager(mActivity);
-        mDynsItemsRecyclerView.setLayoutManager(mLayoutManager);
-        mDynsItemsRecyclerView.setAdapter(dynsAdapter);
-
-        QuaryDynamic.getInstance().setQuaryDynamicListener(new QuaryDynamic.QuaryDynamicListener() {
-            @Override
-            public void onOK(Dyns dyns) {
-                dynsAdapter.addItems(dyns.dyns);
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        }).getQuanZiDynamic();
+                    @Override
+                    public void onError(String Message) {
+                        Log.w(TAG, Message);
+                    }
+                }
+        ).getThemes();
     }
+
 }

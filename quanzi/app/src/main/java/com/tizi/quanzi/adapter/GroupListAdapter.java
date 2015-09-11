@@ -133,7 +133,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
             groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
             lastMessTextview = (TextView) itemView.findViewById(R.id.last_mess_text_view);
             unreadCountTextview = (TextView) itemView.findViewById(R.id.unread_count);
-            //lastTimeTextview = (TextView) itemView.findViewById(R.id.last_dyns_text_view);
+            //lastTimeTextview = (TextView) view.findViewById(R.id.last_dyns_text_view);
         }
     }
 

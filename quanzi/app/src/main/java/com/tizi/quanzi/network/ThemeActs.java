@@ -57,4 +57,14 @@ public class ThemeActs extends NetWorkAbs {
                 .addRequestWithSign(Request.Method.GET,
                         mContext.getString(R.string.testbaseuri) + "/act/get", para);
     }
+
+    public void getHotDyns() {
+
+        Map<String, String> para = new TreeMap<>();
+
+        GetVolley.getmInstance().setOKListener(mOKListener).
+                setErrorListener(mErrorListener)
+                .addRequestWithSign(Request.Method.GET,
+                        mContext.getString(R.string.testbaseuri) + "/grpdyn/getHot", para);
+    }
 }

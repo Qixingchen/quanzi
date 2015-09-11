@@ -29,6 +29,12 @@
         android:id="@+id/num_of_participants"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="当前1100个圈子"/>
+        tools:text="当前1100个圈子"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/dynsViewPager"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        tools:background="@color/md_green_400"/>
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.gson.Gson;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.Theme;
+import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.network.NetWorkAbs;
+import com.tizi.quanzi.network.ThemeActs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +61,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             case 1:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.tuo_dan_zuo_zan_item, parent, false);
-                viewHolder = new TuoDanZuoZanViewHolder(v);
+                viewHolder = new TuoDanZuoZanViewHolder(v, mContext);
                 break;
             default:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.dyns_item, parent, false);
-                viewHolder = new DefaultViewHolder(v);
+                viewHolder = new DefaultViewHolder(v, mContext);
         }
         return viewHolder;
     }
@@ -77,6 +83,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             TuoDanZuoZanViewHolder tuodan = (TuoDanZuoZanViewHolder) holder;
             tuodan.participantsNum.setText(String.valueOf(acts.get(position).participantsNum));
             tuodan.detail.setText(acts.get(position).content);
+            tuodan.themeIcon.setImageUrl(acts.get(position).icon, GetVolley.getmInstance().getImageLoader());
         }
     }
 
@@ -104,8 +111,8 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      */
     public static class TuoDanZuoZanViewHolder extends DefaultViewHolder {
 
-        public TuoDanZuoZanViewHolder(View itemView) {
-            super(itemView);
+        public TuoDanZuoZanViewHolder(View itemView, Context context) {
+            super(itemView, context);
         }
     }
 
@@ -118,11 +125,15 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         protected Button participateButton;
         protected NetworkImageView themeIcon;
         protected View view;
+        protected ViewPager dynsViewPager;
 
-        public DefaultViewHolder(View itemView) {
+        protected Context mContext;
+
+        public DefaultViewHolder(View itemView, Context context) {
             super(itemView);
             this.view = itemView;
             findViews();
+            initViews();
         }
 
         protected void findViews() {
@@ -130,6 +141,56 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             themeIcon = (NetworkImageView) view.findViewById(R.id.theme_icon);
             participateButton = (Button) view.findViewById(R.id.participate_button);
             participantsNum = (TextView) view.findViewById(R.id.num_of_participants);
+            dynsViewPager = (ViewPager) view.findViewById(R.id.dynsViewPager);
+        }
+
+        protected void initViews() {
+
+            //todo test
+
+            HotDyns hotDyns = new HotDyns();
+            hotDyns.Dyns = new ArrayList<>();
+            HotDyns.DynEntity dyn = new HotDyns.DynEntity();
+            dyn.icon = "http://i.ytimg.com/vi/3btAtK3zllE/maxresdefault.jpg";
+            dyn.text = "niconiconi";
+            hotDyns.Dyns.add(dyn);
+
+            HotDyns.DynEntity dyn2 = new HotDyns.DynEntity();
+            dyn2.icon = "http://i.ytimg.com/vi/3btAtK3zllE/maxresdefault.jpg";
+            dyn2.text = "niconiconi";
+            hotDyns.Dyns.add(dyn2);
+
+            HotDyns.DynEntity dyn3 = new HotDyns.DynEntity();
+            dyn3.icon = "http://i.ytimg.com/vi/3btAtK3zllE/maxresdefault.jpg";
+            dyn3.text = "niconiconi";
+            hotDyns.Dyns.add(dyn3);
+
+            HotDynsAdapter hotDynsAdapter = new HotDynsAdapter(hotDyns.Dyns);
+            dynsViewPager.setAdapter(hotDynsAdapter);
+
+            ThemeActs.getInstance(mContext).setNetworkListener(
+                    new NetWorkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            HotDyns hotDyns = new Gson().fromJson((String) ts, HotDyns.class);
+                            hotDyns = new HotDyns();
+                            hotDyns.Dyns = new HotDyns().Dyns;
+                            HotDyns.DynEntity dyn = new HotDyns.DynEntity();
+                            dyn.icon = "http://i2.minus.com/iqHelcW4Lh80T.png";
+                            dyn.text = "niconiconi";
+                            hotDyns.Dyns.add(dyn);
+                            HotDynsAdapter hotDynsAdapter = new HotDynsAdapter(hotDyns.Dyns);
+                            dynsViewPager.setAdapter(hotDynsAdapter);
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+
+                        }
+                    }
+            );
+            //todo .getHotDyns();
+
         }
     }
 }

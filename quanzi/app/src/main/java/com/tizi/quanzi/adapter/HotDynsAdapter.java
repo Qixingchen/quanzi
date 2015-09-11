@@ -18,9 +18,9 @@ import java.util.List;
  * 热门动态
  */
 public class HotDynsAdapter extends PagerAdapter {
-    List<HotDyns.DynEntity> dyns;
+    List<HotDyns.DynsEntity> dyns;
 
-    public HotDynsAdapter(List<HotDyns.DynEntity> dyns) {
+    public HotDynsAdapter(List<HotDyns.DynsEntity> dyns) {
         this.dyns = dyns;
     }
 
@@ -44,13 +44,16 @@ public class HotDynsAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View v = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.topic_hot_dyns_item, container, false);
+        HotDyns.DynsEntity dyn = dyns.get(position);
         NetworkImageView dynPic = (NetworkImageView) v.findViewById(R.id.dyn_pic);
         TextView dynText = (TextView) v.findViewById(R.id.dyn_text);
-
-        dynPic.setImageUrl(dyns.get(position).icon, GetVolley.getmInstance().getImageLoader());
-        dynText.setText(dyns.get(position).text);
+        if (dyn.pics.size() == 0) {
+            dynPic.setImageUrl(dyn.icon, GetVolley.getmInstance().getImageLoader());
+        } else {
+            dynPic.setImageUrl(dyn.pics.get(0).url, GetVolley.getmInstance().getImageLoader());
+        }
+        dynText.setText(dyn.content);
         container.addView(v);
         return v;
-        //super.instantiateItem(container, position);
     }
 }

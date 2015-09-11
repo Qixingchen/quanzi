@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.Theme;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.NetWorkAbs;
 import com.tizi.quanzi.network.ThemeActs;
@@ -28,6 +29,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private Context mContext;
     private List<Theme.ActsEntity> acts;
+    private static final String TAG = ThemeAdapter.class.getSimpleName();
 
     public ThemeAdapter(List<Theme.ActsEntity> acts, Context mContext) {
         this.mContext = mContext;
@@ -43,7 +45,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      */
     @Override
     public int getItemViewType(int position) {
-        return 1;
+        if (position == getItemCount() - 1) {
+            //敬请期待
+            return -1;
+        } else {
+            return 1;
+        }
     }
 
     /**
@@ -58,6 +65,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         View v;
         RecyclerView.ViewHolder viewHolder;
         switch (viewType) {
+            case -1:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.hope_for_next, parent, false);
+                viewHolder = new HopeForNext(v, mContext);
+                break;
             case 1:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.tuo_dan_zuo_zan_item, parent, false);
@@ -80,10 +92,15 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (TuoDanZuoZanViewHolder.class.isInstance(holder)) {
+            Log.i(TAG, position + "is TuoDanZuoZanViewHolder");
             TuoDanZuoZanViewHolder tuodan = (TuoDanZuoZanViewHolder) holder;
             tuodan.participantsNum.setText(String.valueOf(acts.get(position).participantsNum));
             tuodan.detail.setText(acts.get(position).content);
             tuodan.themeIcon.setImageUrl(acts.get(position).icon, GetVolley.getmInstance().getImageLoader());
+            tuodan.addHotDyns(acts.get(position).id);
+        }
+        if (HopeForNext.class.isInstance(holder)) {
+            Log.i(TAG, position + "is HopeForNext");
         }
     }
 
@@ -92,7 +109,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      */
     @Override
     public int getItemCount() {
-        return acts == null ? 0 : acts.size();
+        return acts == null ? 1 : acts.size() + 1;
     }
 
     /**
@@ -104,6 +121,20 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
         acts.add(act);
         notifyDataSetChanged();
+    }
+
+    /**
+     * 敬请期待的ViewHolder
+     */
+    public static class HopeForNext extends RecyclerView.ViewHolder {
+        protected NetworkImageView icon;
+
+        public HopeForNext(View itemView, Context context) {
+            super(itemView);
+            icon = (NetworkImageView) itemView.findViewById(R.id.pic);
+
+
+        }
     }
 
     /**
@@ -133,7 +164,6 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             super(itemView);
             this.view = itemView;
             findViews();
-            initViews();
         }
 
         protected void findViews() {
@@ -144,42 +174,14 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             dynsViewPager = (ViewPager) view.findViewById(R.id.dynsViewPager);
         }
 
-        protected void initViews() {
-
-            //todo test
-
-            HotDyns hotDyns = new HotDyns();
-            hotDyns.Dyns = new ArrayList<>();
-            HotDyns.DynEntity dyn = new HotDyns.DynEntity();
-            dyn.icon = "http://i.ytimg.com/vi/3btAtK3zllE/maxresdefault.jpg";
-            dyn.text = "niconiconi";
-            hotDyns.Dyns.add(dyn);
-
-            HotDyns.DynEntity dyn2 = new HotDyns.DynEntity();
-            dyn2.icon = "http://i.ytimg.com/vi/3btAtK3zllE/maxresdefault.jpg";
-            dyn2.text = "niconiconi";
-            hotDyns.Dyns.add(dyn2);
-
-            HotDyns.DynEntity dyn3 = new HotDyns.DynEntity();
-            dyn3.icon = "http://i.ytimg.com/vi/3btAtK3zllE/maxresdefault.jpg";
-            dyn3.text = "niconiconi";
-            hotDyns.Dyns.add(dyn3);
-
-            HotDynsAdapter hotDynsAdapter = new HotDynsAdapter(hotDyns.Dyns);
-            dynsViewPager.setAdapter(hotDynsAdapter);
+        protected void addHotDyns(String themeID) {
 
             ThemeActs.getInstance(mContext).setNetworkListener(
                     new NetWorkAbs.NetworkListener() {
                         @Override
                         public void onOK(Object ts) {
                             HotDyns hotDyns = new Gson().fromJson((String) ts, HotDyns.class);
-                            hotDyns = new HotDyns();
-                            hotDyns.Dyns = new HotDyns().Dyns;
-                            HotDyns.DynEntity dyn = new HotDyns.DynEntity();
-                            dyn.icon = "http://i2.minus.com/iqHelcW4Lh80T.png";
-                            dyn.text = "niconiconi";
-                            hotDyns.Dyns.add(dyn);
-                            HotDynsAdapter hotDynsAdapter = new HotDynsAdapter(hotDyns.Dyns);
+                            HotDynsAdapter hotDynsAdapter = new HotDynsAdapter(hotDyns.dyns);
                             dynsViewPager.setAdapter(hotDynsAdapter);
                         }
 
@@ -188,8 +190,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         }
                     }
-            );
-            //todo .getHotDyns();
+            ).getHotDyns(themeID);
 
         }
     }

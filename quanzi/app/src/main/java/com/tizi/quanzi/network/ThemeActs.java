@@ -29,7 +29,11 @@ public class ThemeActs extends NetWorkAbs {
                 }
             }
         }
-        mContext = context;
+        // TODO: 15/9/11 why is null
+        if (context != null) {
+            mContext = context;
+        }
+
         return (ThemeActs) mInstance;
     }
 
@@ -58,9 +62,10 @@ public class ThemeActs extends NetWorkAbs {
                         mContext.getString(R.string.testbaseuri) + "/act/get", para);
     }
 
-    public void getHotDyns() {
+    public void getHotDyns(String themeID) {
 
         Map<String, String> para = new TreeMap<>();
+        para.put("actid", themeID);
 
         GetVolley.getmInstance().setOKListener(mOKListener).
                 setErrorListener(mErrorListener)

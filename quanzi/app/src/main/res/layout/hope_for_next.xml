@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,12 +7,22 @@
     android:orientation="vertical">
 
     <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/pic"
+        android:id="@+id/pic_bg"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:layout_marginBottom="5dp"
         android:layout_marginRight="5dp"
-        android:background="@drawable/hope_for_next"
+        android:background="@drawable/face"
         android:scaleType="centerCrop"/>
 
-</LinearLayout>
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/pic_up"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/face"
+        android:scaleType="centerCrop"/>
+
+</RelativeLayout>

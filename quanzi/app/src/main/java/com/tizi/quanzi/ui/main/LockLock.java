@@ -17,6 +17,7 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.NetWorkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,7 +51,13 @@ public class LockLock extends BaseFragment {
     protected void findViews() {
         mThemeItemsRecyclerView = (RecyclerView) mActivity.findViewById(R.id.theme_item_recycler_view);
         mThemeItemsRecyclerView.setHasFixedSize(true);
-        themeAdapter = new ThemeAdapter(null, mActivity);
+        themeAdapter = new ThemeAdapter(null, mActivity).setOnClick(new ThemeAdapter.OnClick() {
+            @Override
+            public void Participate(Theme.ActsEntity act) {
+                getParentFragment().getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, new ThemeSignUpFragment()).commit();
+            }
+        });
         mLayoutManager = new LinearLayoutManager(mActivity);
         mThemeItemsRecyclerView.setLayoutManager(mLayoutManager);
         mThemeItemsRecyclerView.setAdapter(themeAdapter);

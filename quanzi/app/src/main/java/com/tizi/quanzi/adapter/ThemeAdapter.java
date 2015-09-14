@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -30,6 +31,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
     private List<Theme.ActsEntity> acts;
     private static final String TAG = ThemeAdapter.class.getSimpleName();
+    private OnClick onClick;
 
     public ThemeAdapter(List<Theme.ActsEntity> acts, Context mContext) {
         this.mContext = mContext;
@@ -90,7 +92,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (TuoDanZuoZanViewHolder.class.isInstance(holder)) {
             Log.i(TAG, position + "is TuoDanZuoZanViewHolder");
             TuoDanZuoZanViewHolder tuodan = (TuoDanZuoZanViewHolder) holder;
@@ -98,6 +100,16 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tuodan.detail.setText(acts.get(position).content);
             tuodan.themeIcon.setImageUrl(acts.get(position).icon, GetVolley.getmInstance().getImageLoader());
             tuodan.addHotDyns(acts.get(position).id);
+            tuodan.participateButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onClick == null) {
+                        Log.w(TAG, "报名但没有回调监听:" + position);
+                        return;
+                    }
+                    onClick.Participate(acts.get(position));
+                }
+            });
         }
         if (HopeForNext.class.isInstance(holder)) {
             Log.i(TAG, position + "is HopeForNext");
@@ -123,15 +135,27 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    public ThemeAdapter setOnClick(OnClick onClick) {
+        this.onClick = onClick;
+        return this;
+    }
+
+    /**
+     * 报名监听
+     */
+    public interface OnClick {
+        void Participate(Theme.ActsEntity act);
+    }
+
     /**
      * 敬请期待的ViewHolder
      */
     public static class HopeForNext extends RecyclerView.ViewHolder {
-        protected NetworkImageView icon;
+        protected ImageView icon;
 
         public HopeForNext(View itemView, Context context) {
             super(itemView);
-            icon = (NetworkImageView) itemView.findViewById(R.id.pic);
+            icon = (ImageView) itemView.findViewById(R.id.pic);
 
 
         }

@@ -23,7 +23,7 @@ import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
-import com.tizi.quanzi.ui.QuanziZone.QuanziZoneActivity;
+import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 
 import java.util.List;
 

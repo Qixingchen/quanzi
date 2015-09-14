@@ -1,4 +1,4 @@
-package com.tizi.quanzi.ui.NewGroup;
+package com.tizi.quanzi.ui.new_group;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.tizi.quanzi.ui.QuanziZone;
+package com.tizi.quanzi.ui.quanzi_zone;
 
 import android.app.Activity;
 import android.content.Intent;

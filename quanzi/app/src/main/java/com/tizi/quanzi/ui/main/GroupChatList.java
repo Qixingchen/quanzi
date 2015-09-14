@@ -18,7 +18,7 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
-import com.tizi.quanzi.ui.NewGroup.NewGroupActivity;
+import com.tizi.quanzi.ui.new_group.NewGroupActivity;
 import com.tizi.quanzi.ui.register.RegisterActivity;
 
 import java.util.List;

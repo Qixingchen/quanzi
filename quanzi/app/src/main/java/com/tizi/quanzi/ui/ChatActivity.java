@@ -38,7 +38,7 @@ import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.ui.QuanziZone.QuanziZoneActivity;
+import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 
 import java.util.List;
 import java.util.Map;

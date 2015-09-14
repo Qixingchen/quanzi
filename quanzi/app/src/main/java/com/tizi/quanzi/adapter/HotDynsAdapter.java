@@ -4,6 +4,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class HotDynsAdapter extends PagerAdapter {
     List<HotDyns.DynsEntity> dyns;
+    private int LastCount;
 
     public HotDynsAdapter(List<HotDyns.DynsEntity> dyns) {
         this.dyns = dyns;
@@ -47,6 +49,22 @@ public class HotDynsAdapter extends PagerAdapter {
         HotDyns.DynsEntity dyn = dyns.get(position);
         NetworkImageView dynPic = (NetworkImageView) v.findViewById(R.id.dyn_pic);
         TextView dynText = (TextView) v.findViewById(R.id.dyn_text);
+        LinearLayout pointGroup = (LinearLayout) v.findViewById(R.id.point_group);
+
+        for (int i = 0; i < getCount(); i++) {
+            View view = new View(container.getContext());
+            view.setBackgroundResource(R.drawable.point_background);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(10, 10);
+            params.leftMargin = 10;
+            if (position != i) {
+                view.setEnabled(false);
+            } else {
+                view.setEnabled(true);
+            }
+            view.setLayoutParams(params);
+            pointGroup.addView(view);// 向线性布局中添加点
+        }
+
         if (dyn.pics.size() == 0) {
             dynPic.setImageUrl(dyn.icon, GetVolley.getmInstance().getImageLoader());
         } else {

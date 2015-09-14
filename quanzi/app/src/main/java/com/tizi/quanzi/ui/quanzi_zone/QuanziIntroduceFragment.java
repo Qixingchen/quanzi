@@ -104,6 +104,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         groupDynsRecyclerView.setHasFixedSize(true);
         dynsAdapter = new DynsAdapter(null, mActivity);
+        lastIndex = 0;
         dynsAdapter.setNeedMore(new DynsAdapter.NeedMore() {
             @Override
             public void needMore() {
@@ -155,6 +156,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 requreForImage.showDialogAndCallIntent("选择圈子照片");
             }
         });
+        showGroupInfo();
     }
 
     /**
@@ -163,26 +165,34 @@ public class QuanziIntroduceFragment extends BaseFragment {
     public void setGroupInfo(GroupUserInfo groupUserInfo, final GroupClass groupClass) {
         this.groupUserInfo = groupUserInfo;
         this.groupClass = groupClass;
-
-        collapsingtoolbar.setTitle(groupClass.Name);
-
         boolean isCreate = groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0;
         if (groupUserAdapter != null) {
             groupUserAdapter.setMemlist(groupUserInfo.memlist);
             groupUserAdapter.setIsCreater(isCreate);
             groupUserAdapter.setGroupID(groupClass.ID);
         }
-        groupUsersRecyclerView.getLayoutParams().height = (int) (105 * GetThumbnailsUri.getDpi(mActivity)
-                * ((groupUserInfo.memlist.size() / 6) + 1));
-        Log.i(TAG, "groupUsersLayoutManager Heigh:" + groupUsersLayoutManager.getHeight());
-        Picasso.with(mActivity).load(groupClass.Face)
-                .resize(GetThumbnailsUri.getPXs(mActivity, 120),
-                        GetThumbnailsUri.getPXs(mActivity, 120))
-                .into(groupFaceImageView);
-        zoneBackgroundImageView.setImageUrl(groupClass.background, GetVolley.getmInstance(mActivity).getImageLoader());
-        zoneSignTextview.setText("签名是：" + groupClass.Notice);
-        quaryMore(groupClass.ID, lastIndex);
-        lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
+        showGroupInfo();
+
+    }
+
+    private void showGroupInfo() {
+        if (groupClass != null) {
+            collapsingtoolbar.setTitle(groupClass.Name);
+            Picasso.with(mActivity).load(groupClass.Face)
+                    .resize(GetThumbnailsUri.getPXs(mActivity, 120),
+                            GetThumbnailsUri.getPXs(mActivity, 120))
+                    .into(groupFaceImageView);
+            zoneBackgroundImageView.setImageUrl(groupClass.background,
+                    GetVolley.getmInstance(mActivity).getImageLoader());
+            zoneSignTextview.setText("签名是：" + groupClass.Notice);
+            quaryMore(groupClass.ID, lastIndex);
+            lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
+        }
+        if (groupUserInfo != null) {
+            groupUsersRecyclerView.getLayoutParams().height = (int) (105 * GetThumbnailsUri.getDpi(mActivity)
+                    * ((groupUserInfo.memlist.size() / 6) + 1));
+        }
+
     }
 
     private void quaryMore(String groupID, int lastIndex) {

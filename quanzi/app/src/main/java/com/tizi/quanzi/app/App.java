@@ -63,6 +63,7 @@ public class App extends Application {
 
     /**
      * Building Apps with Over 65K Methods
+     * todo https://developer.android.com/intl/zh-cn/tools/help/proguard.html
      */
     @Override
     protected void attachBaseContext(Context context) {

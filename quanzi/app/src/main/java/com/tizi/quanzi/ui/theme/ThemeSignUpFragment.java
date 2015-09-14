@@ -22,6 +22,26 @@ public class ThemeSignUpFragment extends BaseFragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ThemeSignUpGroupAdapter themeSignUpGroupAdapter;
 
+    private static final String ACT_ID = "actID";
+    private String actID;
+
+    public static ThemeSignUpFragment newInstance(String actID) {
+        ThemeSignUpFragment fragment = new ThemeSignUpFragment();
+        Bundle args = new Bundle();
+        args.putString(ACT_ID, actID);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            actID = getArguments().getString(ACT_ID);
+        }
+
+    }
+
 
     public ThemeSignUpFragment() {
         // Required empty public constructor
@@ -42,7 +62,7 @@ public class ThemeSignUpFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-        themeSignUpGroupAdapter = new ThemeSignUpGroupAdapter(GroupList.getInstance().getGroupList(), mActivity);
+        themeSignUpGroupAdapter = new ThemeSignUpGroupAdapter(GroupList.getInstance().getGroupList(), mActivity, actID);
         mGroupListRecyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(mActivity, 3);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);

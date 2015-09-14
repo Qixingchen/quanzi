@@ -28,8 +28,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         findViews();
         initViewsAndSetEvent();
     }

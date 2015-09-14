@@ -55,7 +55,7 @@ public class LockLock extends BaseFragment {
             @Override
             public void Participate(Theme.ActsEntity act) {
                 getParentFragment().getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, new ThemeSignUpFragment()).commit();
+                        .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id)).commit();
             }
         });
         mLayoutManager = new LinearLayoutManager(mActivity);

@@ -72,4 +72,16 @@ public class ThemeActs extends NetWorkAbs {
                 .addRequestWithSign(Request.Method.GET,
                         mContext.getString(R.string.testbaseuri) + "/grpdyn/getHot", para);
     }
+
+    public void signUP(String actID, String groupID, int flag) {
+        Map<String, String> para = new TreeMap<>();
+        para.put("actid", actID);
+        para.put("grpid", groupID);
+        para.put("flag", String.valueOf(flag));
+
+        GetVolley.getmInstance().setOKListener(mOKListener).
+                setErrorListener(mErrorListener)
+                .addRequestWithSign(Request.Method.GET,
+                        mContext.getString(R.string.testbaseuri) + "/act/sign", para);
+    }
 }

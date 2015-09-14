@@ -4,14 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="20dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:layout_height="400dp">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/dyn_pic"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         tools:background="@drawable/face"/>
+
+    <LinearLayout
+        android:id="@+id/point_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:background="@color/md_red_300"
+        tools:layout_height="15dp"
+        tools:layout_width="60dp"/>
 
     <TextView
         android:id="@+id/dyn_text"
@@ -22,13 +34,5 @@
         1222
         1222
         1222"/>
-
-    <LinearLayout
-        android:id="@+id/point_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"/>
 
 </LinearLayout>

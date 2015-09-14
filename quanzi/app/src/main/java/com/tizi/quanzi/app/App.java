@@ -1,6 +1,8 @@
 package com.tizi.quanzi.app;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -35,7 +37,7 @@ public class App extends Application {
         appStaticValue = new AppStaticValue();
         //泄露监视器
         //LeakCanary.install(this);
-//        CrashWoodpecker.fly().to(this);
+        //        CrashWoodpecker.fly().to(this);
 
         //AVAnalytics.setAnalyticsEnabled(false);
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
@@ -57,6 +59,15 @@ public class App extends Application {
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
+    }
+
+    /**
+     * Building Apps with Over 65K Methods
+     */
+    @Override
+    protected void attachBaseContext(Context context) {
+        super.attachBaseContext(context);
+        MultiDex.install(this);
     }
 
 

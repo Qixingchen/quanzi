@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ThemeAdapter;
 import com.tizi.quanzi.gson.Theme;
@@ -69,7 +68,7 @@ public class LockLock extends BaseFragment {
                 new NetWorkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {
-                        Theme theme = new Gson().fromJson((String) ts, Theme.class);
+                        Theme theme = (Theme) ts;
                         if (theme.success) {
                             for (Theme.ActsEntity act : theme.acts) {
                                 themeAdapter.addItem(act);

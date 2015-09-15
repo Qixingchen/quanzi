@@ -90,5 +90,8 @@ dependencies {
     //    compile 'io.reactivex:rxandroid:1.0.1'
     //lamdba
     //    retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.0.4'
+    //retrofit
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
 
 }

@@ -6,9 +6,16 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.google.gson.Gson;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.gson.OnlySuccess;
+import com.tizi.quanzi.gson.Theme;
+import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.tool.Tool;
 
 import java.util.Map;
 import java.util.TreeMap;
+
+import retrofit.Call;
+import retrofit.Callback;
 
 /**
  * Created by qixingchen on 15/9/11.
@@ -55,12 +62,25 @@ public class ThemeActs extends NetWorkAbs {
     }
 
     public void getThemes() {
-        Map<String, String> para = new TreeMap<>();
 
-        GetVolley.getmInstance().setOKListener(mOKListener).
-                setErrorListener(mErrorListener)
-                .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/act/get", para);
+        RetrofitAPI.Themes themeService = RetrofitNetwork.retrofit.create(RetrofitAPI.Themes.class);
+        final Call<Theme> themeCall = themeService.getThemes(Tool.getSignMap());
+
+        themeCall.enqueue(new Callback<Theme>() {
+            @Override
+            public void onResponse(retrofit.Response<Theme> response) {
+                checkIsSuccess(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.w(TAG, t.getMessage());
+                if (networkListener != null) {
+                    networkListener.onError(t.getMessage());
+                }
+            }
+        });
+
     }
 
     public void getHotDyns(String themeID) {
@@ -75,14 +95,38 @@ public class ThemeActs extends NetWorkAbs {
     }
 
     public void signUP(String actID, String groupID, int flag) {
-        Map<String, String> para = new TreeMap<>();
-        para.put("actid", actID);
-        para.put("grpid", groupID);
-        para.put("flag", String.valueOf(flag));
+        RetrofitAPI.Themes themeService = RetrofitNetwork.retrofit.create(RetrofitAPI.Themes.class);
+        final Call<OnlySuccess> themeCall = themeService.signUp(actID, groupID, flag, Tool.getSignMap());
 
-        GetVolley.getmInstance().setOKListener(mOKListener).
-                setErrorListener(mErrorListener)
-                .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/act/sign", para);
+        themeCall.enqueue(new Callback<OnlySuccess>() {
+            @Override
+            public void onResponse(retrofit.Response<OnlySuccess> response) {
+                checkIsSuccess(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.w(TAG, t.getMessage());
+                if (networkListener != null) {
+                    networkListener.onError(t.getMessage());
+                }
+            }
+        });
+    }
+
+
+    private void checkIsSuccess(retrofit.Response<? extends OnlySuccess> response) {
+        if (response.isSuccess() && response.body().success) {
+            Log.i(TAG, "success");
+            if (networkListener != null) {
+                networkListener.onOK(response.body());
+            }
+        } else {
+            String mess = response.isSuccess() ? response.body().msg : response.message();
+            Log.w(TAG, mess);
+            if (networkListener != null) {
+                networkListener.onError(mess);
+            }
+        }
     }
 }

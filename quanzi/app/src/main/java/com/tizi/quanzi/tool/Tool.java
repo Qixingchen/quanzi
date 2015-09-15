@@ -4,7 +4,13 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by qixingchen on 15/7/20.
@@ -56,5 +62,50 @@ public class Tool {
      */
     public static boolean isGuest() {
         return MyUserInfo.getInstance().getUserInfo().getAccount().compareTo(StaticField.GuestUser.Account) == 0;
+    }
+
+    /**
+     * 获取签名MAP
+     */
+    public static Map<String, String> getSignMap() {
+        Map<String, String> para = new TreeMap<>();
+        para.put("ts", String.valueOf(System.currentTimeMillis() / 1000L));
+        para.put("uid", AppStaticValue.getUserID());
+        para.put("sign", getSignString(para.get("ts"), AppStaticValue.getUserID()));
+        return para;
+    }
+
+    /**
+     * 获取签名串
+     * Token 将从App.getUserToken() 加载
+     *
+     * @param ts     签名串的ts
+     * @param userid 签名串的Userid
+     *
+     * @return sign的值
+     */
+    private static String getSignString(String ts, String userid) {
+
+        String para = "ts=" + ts + "&uid=" + userid;
+        para += AppStaticValue.getUserToken();
+
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        assert md != null;
+        byte[] Md5 = md.digest(para.getBytes());
+        StringBuffer stringBuffer = new StringBuffer();
+        for (byte b : Md5) {
+            int bt = b & 0xff;
+            if (bt < 16) {
+                stringBuffer.append(0);
+            }
+            stringBuffer.append(Integer.toHexString(bt));
+        }
+        String sign = stringBuffer.toString();
+        return sign;
     }
 }

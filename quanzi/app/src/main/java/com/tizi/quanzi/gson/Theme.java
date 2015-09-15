@@ -8,7 +8,7 @@ import java.util.List;
  * Created by qixingchen on 15/9/11.
  * 主题活动
  */
-public class Theme {
+public class Theme extends OnlySuccess {
 
 
     /**
@@ -16,10 +16,10 @@ public class Theme {
      * success : true
      */
 
-    @SerializedName("msg")
-    public String msg;
-    @SerializedName("success")
-    public boolean success;
+//    @SerializedName("msg")
+//    public String msg;
+//    @SerializedName("success")
+//    public boolean success;
     @SerializedName("acts")
     public List<ActsEntity> acts;
 

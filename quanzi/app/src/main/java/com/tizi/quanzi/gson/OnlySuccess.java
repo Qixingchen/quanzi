@@ -9,8 +9,8 @@ public class OnlySuccess {
     /**
      * success : true
      */
-    private boolean success;
-    private String msg;
+    public boolean success;
+    public String msg;
 
 
     public String getMsg() {

@@ -52,7 +52,6 @@ public class FindUser {
         mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                // TODO: 15/9/3 add json
                 OtherUserInfo otherUserInfo = gson.fromJson(response, OtherUserInfo.class);
                 if (otherUserInfo.success) {
                     if (findUserListener != null) {

@@ -48,7 +48,6 @@ public class AppStaticValue {
     private static SharedPreferences groupNotifipreferences;
     private static SharedPreferences preferences;
     private static String UserToken = "";
-    //todo 本地储存 UserAccount
     private static String UserID = "";
     private static String UserPhone = "";
 

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
@@ -22,6 +23,8 @@ public class MainActivity extends BaseActivity {
     private MainFragment mainFragment;
     private PrivateMessageFragment privateMessageFragment;
     private UserInfoSetFragment userInfoSetFragment;
+    private static final String toolBarName = "圈子";
+    private static final String netWorkChangeName = "MainActivity";
 
     //toolbar
     private Toolbar toolbar;
@@ -47,24 +50,24 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void setViewEvent() {
-        //Drawable logo = getDrawable(R.drawable.face);
-        //toolbar.setLogo(R.drawable.face);
-        //        for (int i = 0; i < toolbar.getChildCount(); i++) {
-        //            View child = toolbar.getChildAt(i);
-        //            if (child != null)
-        //                if (child.getClass() == ImageView.class) {
-        //                    ImageView iv2 = (ImageView) child;
-        //                    if (iv2.getDrawable() == logo) {
-        //                        iv2.setAdjustViewBounds(true);
-        //                    }
-        //                }
-        //        }
+        MyAVIMClientEventHandler.getInstance().addChange(netWorkChangeName, new MyAVIMClientEventHandler.OnConnectionChange() {
+            @Override
+            public void onPaused() {
+                toolbar.setTitle("等待网络");
+            }
+
+            @Override
+            public void onResume() {
+                toolbar.setTitle(toolBarName);
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //        mViewPager.removeOnPageChangeListener(getOnPageChangeListener());
+        MyAVIMClientEventHandler.getInstance().removeChange(netWorkChangeName);
     }
 
     @Override

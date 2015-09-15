@@ -139,7 +139,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
             }
         });
-        //todo creater
 
         groupUserAdapter = new GroupUserAdapter(mActivity,
                 groupUserInfo == null ? null : groupUserInfo.memlist,

@@ -52,11 +52,9 @@ public class SendMessage {
     private static Map<String, Object> setMessAttr(String userID, String userName, String userIcon, String groupID,
                                                    int ChatBothUserType) {
         Map<String, Object> attr = new TreeMap<>();
-        // TODO: 15/8/14 add username userIcon
         attr.put(StaticField.ChatMessAttrName.userName, userName);
         attr.put(StaticField.ChatMessAttrName.userIcon, userIcon);
         attr.put(StaticField.ChatMessAttrName.userID, userID);
-        // TODO: 15/8/17 groupID
         attr.put(StaticField.ChatMessAttrName.groupID, groupID);
         attr.put(StaticField.ChatMessAttrName.type, ChatBothUserType);
         attr.put(StaticField.ChatMessAttrName.IS_SYS_MESS,

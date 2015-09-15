@@ -133,9 +133,6 @@ public class ChatMessFormatFromAVIM {
                 ((AVIMTextMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
         chatMessage.groupID = (String)
                 ((AVIMTextMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
-        // todo chatMessage.local_path
-        // todo chatMessage.url
-        // todo chatMessage.voice_duration
         return chatMessage;
     }
 

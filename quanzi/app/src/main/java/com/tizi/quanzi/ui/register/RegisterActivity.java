@@ -37,16 +37,16 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.register_fragment, register1StepFragment).commit();
 
-//        //todo: 测试用，跳过了验证码
-//        Register2stepFragment register2stepFragment = new Register2stepFragment();
-//        register2stepFragment.setNextStep(this);
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.register_fragment, register2stepFragment).commit();
-//
-//        completeUesrInfo = new CompleteUesrInfo();
-//        completeUesrInfo.setAllDone(this);
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.register_fragment, completeUesrInfo).commit();
+        //        //todo: 测试用，跳过了验证码
+        //        Register2stepFragment register2stepFragment = new Register2stepFragment();
+        //        register2stepFragment.setNextStep(this);
+        //        getSupportFragmentManager().beginTransaction()
+        //                .replace(R.id.register_fragment, register2stepFragment).commit();
+        //
+        //        completeUesrInfo = new CompleteUesrInfo();
+        //        completeUesrInfo.setAllDone(this);
+        //        getSupportFragmentManager().beginTransaction()
+        //                .replace(R.id.register_fragment, completeUesrInfo).commit();
     }
 
 
@@ -118,8 +118,7 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
         para.put("account", phoneNumber);
         para.put("password", GetPassword.fullHash(password));
         para.put("username", userName);
-        //todo 判断性别
-        para.put("sex", "0");
+        para.put("sex", String.valueOf(sex));
         para.put("icon", faceUri);
         AppStaticValue.setUserToken(AppStaticValue.getUserID());
         GetVolley.getmInstance(this, listener).addPostRequestWithSign(Request.Method.POST, baseuri, para);

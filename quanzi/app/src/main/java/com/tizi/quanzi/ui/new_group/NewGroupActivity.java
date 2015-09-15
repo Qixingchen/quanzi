@@ -83,7 +83,6 @@ public class NewGroupActivity extends BaseActivity {
                 newGroupStep2Fragment.setAns(ans);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, newGroupStep2Fragment).commit();
-                // TODO: 15/8/31 send to Server
                 String GroupName = ans.groupName;
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
@@ -107,7 +106,6 @@ public class NewGroupActivity extends BaseActivity {
                                 // TODO: 15/9/1 on error
                             }
                         }
-                        //todo add Group
                 ).NewAGroup(GroupName, icon, notice, userID, tag, convID);
 
             }

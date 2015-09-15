@@ -67,8 +67,6 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     @Override
     public void onBindViewHolder(DynsViewHolder holder, int position) {
         final Dyns.DynsEntity dyns = dynsList.get(position);
-        // TODO: 15/8/20 getUserAvatar
-        //        holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.createUser,
         holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.icon,
                 GetVolley.getmInstance(mContext).getImageLoader());
         holder.userNameTextView.setText(dyns.nickName);

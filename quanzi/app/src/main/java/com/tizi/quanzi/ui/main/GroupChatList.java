@@ -48,7 +48,6 @@ public class GroupChatList extends BaseFragment {
      *
      * @return A new instance of fragment GroupChatList.
      */
-    // TODO: Rename and change types and number of parameters
     public static GroupChatList newInstance(String param1, String param2) {
         GroupChatList fragment = new GroupChatList();
         Bundle args = new Bundle();

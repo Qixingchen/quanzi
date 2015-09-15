@@ -19,6 +19,7 @@ import java.util.TreeMap;
  * 用户个人信息变更
  */
 public class UserInfoSetting extends NetWorkAbs {
+    private static UserInfoSetting mInstance;
 
     public static UserInfoSetting getInstance(Context context) {
         if (mInstance == null) {
@@ -28,7 +29,7 @@ public class UserInfoSetting extends NetWorkAbs {
                 }
             }
         }
-        return (UserInfoSetting) mInstance;
+        return mInstance;
     }
 
     private UserInfoSetting() {

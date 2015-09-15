@@ -28,15 +28,13 @@ import com.tizi.quanzi.log.Log;
  * 请求具体
  */
 public abstract class NetWorkAbs {
-    protected static Context mContext;
     protected Gson gson;
+    protected static Context mContext;
 
-    protected static Response.Listener<String> mOKListener;
-    protected static Response.ErrorListener mErrorListener;
+    protected Response.Listener<String> mOKListener;
+    protected Response.ErrorListener mErrorListener;
     protected final String TAG = this.getClass().getSimpleName();
     protected NetworkListener networkListener;
-
-    protected static NetWorkAbs mInstance;
 
     protected Response.ErrorListener makeErrorListener() {
         Response.ErrorListener errorListener = new Response.ErrorListener() {

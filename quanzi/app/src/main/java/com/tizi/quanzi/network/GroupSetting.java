@@ -17,6 +17,7 @@ import java.util.TreeMap;
  * 群设置管理－后台
  */
 public class GroupSetting extends NetWorkAbs {
+    private static GroupSetting mInstance;
 
     public static GroupSetting getInstance(Context context) {
         mContext = context;

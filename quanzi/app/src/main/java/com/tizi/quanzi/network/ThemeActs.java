@@ -14,6 +14,7 @@ import java.util.TreeMap;
  * Created by qixingchen on 15/9/11.
  */
 public class ThemeActs extends NetWorkAbs {
+    private static ThemeActs mInstance;
 
     private ThemeActs() {
         gson = new Gson();
@@ -34,12 +35,12 @@ public class ThemeActs extends NetWorkAbs {
             mContext = context;
         }
 
-        return (ThemeActs) mInstance;
+        return mInstance;
     }
 
     public ThemeActs setNetworkListener(NetworkListener networkListener) {
         this.networkListener = networkListener;
-        return (ThemeActs) mInstance;
+        return mInstance;
     }
 
     @Override

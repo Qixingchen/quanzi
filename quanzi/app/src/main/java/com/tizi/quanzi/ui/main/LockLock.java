@@ -13,7 +13,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ThemeAdapter;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.network.NetWorkAbs;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
@@ -64,8 +64,8 @@ public class LockLock extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-        ThemeActs.getInstance(mContext).setNetworkListener(
-                new NetWorkAbs.NetworkListener() {
+        ThemeActs.getNewInstance(mContext).setNetworkListener(
+                new RetrofitNetworkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {
                         Theme theme = (Theme) ts;

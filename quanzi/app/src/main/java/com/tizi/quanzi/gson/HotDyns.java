@@ -8,7 +8,7 @@ import java.util.List;
  * Created by qixingchen on 15/9/11.
  * 热门动态
  */
-public class HotDyns {
+public class HotDyns extends OnlySuccess {
 
 
     /**
@@ -16,10 +16,6 @@ public class HotDyns {
      * success : true
      */
 
-    @SerializedName("msg")
-    public String msg;
-    @SerializedName("success")
-    public boolean success;
     @SerializedName("dyns")
     public List<DynsEntity> dyns;
 

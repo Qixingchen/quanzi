@@ -16,10 +16,6 @@ public class Theme extends OnlySuccess {
      * success : true
      */
 
-//    @SerializedName("msg")
-//    public String msg;
-//    @SerializedName("success")
-//    public boolean success;
     @SerializedName("acts")
     public List<ActsEntity> acts;
 

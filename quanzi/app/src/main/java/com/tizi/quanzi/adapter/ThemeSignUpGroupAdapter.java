@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.network.NetWorkAbs;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 
@@ -66,7 +66,8 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
                     @Override
                     public void onClick(View v) {
                         holder.progressBar.setVisibility(View.VISIBLE);
-                        ThemeActs.getInstance(mContext).setNetworkListener(new NetWorkAbs.NetworkListener() {
+
+                        ThemeActs.getNewInstance(mContext).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                             @Override
                             public void onOK(Object ts) {
                                 //todo 加长延迟时间

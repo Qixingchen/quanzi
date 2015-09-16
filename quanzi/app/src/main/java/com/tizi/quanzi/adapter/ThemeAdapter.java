@@ -11,13 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
-import com.tizi.quanzi.network.NetWorkAbs;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 
 import java.util.ArrayList;
@@ -200,11 +199,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         protected void addHotDyns(String themeID) {
 
-            ThemeActs.getInstance(mContext).setNetworkListener(
-                    new NetWorkAbs.NetworkListener() {
+            ThemeActs.getNewInstance(mContext).setNetworkListener(
+                    new RetrofitNetworkAbs.NetworkListener() {
                         @Override
                         public void onOK(Object ts) {
-                            HotDyns hotDyns = new Gson().fromJson((String) ts, HotDyns.class);
+                            HotDyns hotDyns = (HotDyns) ts;
                             HotDynsAdapter hotDynsAdapter = new HotDynsAdapter(hotDyns.dyns);
                             dynsViewPager.setAdapter(hotDynsAdapter);
                         }
@@ -213,9 +212,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         public void onError(String Message) {
 
                         }
-                    }
-            ).getHotDyns(themeID);
-
+                    }).getHotDyns(themeID);
         }
     }
 }

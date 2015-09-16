@@ -9,8 +9,8 @@ import retrofit.Retrofit;
  * Retrofit
  */
 public class RetrofitNetwork {
-    //private static final String URL = "http://120.25.232.240:8080";
-    private static final String URL = "http://192.168.3.16:8080";
+    private static final String URL = "http://120.25.232.240:8080";
+    //    private static final String URL = "http://192.168.3.16:8080";
 
     public static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(URL)

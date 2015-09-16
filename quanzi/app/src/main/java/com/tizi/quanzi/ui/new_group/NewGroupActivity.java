@@ -12,6 +12,7 @@ import com.tizi.quanzi.chat.NewAVIMConversation;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuaryGroup;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
@@ -87,10 +88,13 @@ public class NewGroupActivity extends BaseActivity {
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
                 String userID = AppStaticValue.getUserID(), tag = "[{}]";
-                AddOrQuaryGroup.getInstance().setNewGroupListener(
-                        new AddOrQuaryGroup.NewGroupListener() {
+
+                AddOrQuaryGroup.getNewInstance().setNetworkListener(
+                        new RetrofitNetworkAbs.NetworkListener() {
                             @Override
-                            public void onOK(GroupClass groupClass) {
+                            public void onOK(Object ts) {
+                                GroupClass groupClass = (GroupClass) ts;
+
                                 groupClass.Name = ans.groupName;
                                 groupClass.Face = ans.groupFaceUri;
                                 groupClass.Type = StaticField.ChatBothUserType.GROUP;
@@ -102,11 +106,12 @@ public class NewGroupActivity extends BaseActivity {
                             }
 
                             @Override
-                            public void onError() {
-                                // TODO: 15/9/1 on error
+                            public void onError(String Message) {
+
                             }
-                        }
-                ).NewAGroup(GroupName, icon, notice, userID, tag, convID);
+                        })
+                        .NewAGroup(GroupName, icon, notice, userID, tag, convID);
+
 
             }
             return true;

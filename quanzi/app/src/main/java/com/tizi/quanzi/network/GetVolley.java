@@ -26,6 +26,7 @@ import java.util.Map;
  * Created by qixingchen on 15/7/13.
  * volley 网络交互
  */
+@Deprecated
 public class GetVolley {
 
     private static GetVolley mInstance;

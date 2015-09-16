@@ -85,4 +85,6 @@ public class App extends Application {
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
     }
+
+
 }

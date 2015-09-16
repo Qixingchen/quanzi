@@ -11,7 +11,7 @@ import android.view.View;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.network.QuaryDynamic;
+import com.tizi.quanzi.network.DynamicAct;
 
 /**
  * Created by qixingchen on 15/8/26.
@@ -77,7 +77,7 @@ public class GroupZonePagerAdapter extends PagerAdapter {
             mDynsItemsRecyclerView.setLayoutManager(mLayoutManager);
             mDynsItemsRecyclerView.setAdapter(dynsAdapter);
 
-            QuaryDynamic.getInstance().setQuaryDynamicListener(new QuaryDynamic.QuaryDynamicListener() {
+            DynamicAct.getNewInstance().setQuaryDynamicListener(new DynamicAct.QuaryDynamicListener() {
                 @Override
                 public void onOK(Dyns dyns) {
                     dynsAdapter.addItems(dyns.dyns);

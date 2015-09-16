@@ -1,7 +1,5 @@
 package com.tizi.quanzi.network;
 
-import android.content.Context;
-
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
 
@@ -11,7 +9,6 @@ import com.tizi.quanzi.log.Log;
  */
 public abstract class RetrofitNetworkAbs {
 
-    protected Context mContext;
     protected final String TAG = this.getClass().getSimpleName();
     protected NetworkListener networkListener;
 
@@ -35,18 +32,20 @@ public abstract class RetrofitNetworkAbs {
      *
      * @param response retrofit 的 response
      */
-    protected void myOnResponse(retrofit.Response<? extends OnlySuccess> response) {
+    protected boolean myOnResponse(retrofit.Response<? extends OnlySuccess> response) {
         if (response.isSuccess() && response.body().success) {
             Log.i(TAG, "success");
             if (networkListener != null) {
                 networkListener.onOK(response.body());
             }
+            return true;
         } else {
             String mess = response.isSuccess() ? response.body().msg : response.message();
             Log.w(TAG, mess);
             if (networkListener != null) {
                 networkListener.onError(mess);
             }
+            return false;
         }
     }
 
@@ -60,4 +59,19 @@ public abstract class RetrofitNetworkAbs {
             networkListener.onError(t.getMessage());
         }
     }
+
+    // TODO: 15/9/16 how to abstract
+    //    protected <T extends OnlySuccess>Callback<T> getCallback() {
+    //        return new Callback<T>() {
+    //            @Override
+    //            public void onResponse(T response) {
+    //                myOnResponse(response);
+    //            }
+    //
+    //            @Override
+    //            public void onFailure(Throwable t) {
+    //                myOnFailure(t);
+    //            }
+    //        };
+    //    }
 }

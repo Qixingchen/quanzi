@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
 
 import java.util.Map;
@@ -46,10 +46,10 @@ public class UserManageInGroup {
         mOKListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                GroupUserInfo groupUserInfo = gson.fromJson(response, GroupUserInfo.class);
-                if (groupUserInfo.success) {
+                GroupAllInfo groupAllInfo = gson.fromJson(response, GroupAllInfo.class);
+                if (groupAllInfo.success) {
                     if (ManageGroupListener != null) {
-                        ManageGroupListener.onOK(groupUserInfo);
+                        ManageGroupListener.onOK(groupAllInfo);
                     }
                 } else {
                     Log.e(TAG, "Error");
@@ -122,7 +122,7 @@ public class UserManageInGroup {
         /**
          * 成功回调
          */
-        void onOK(GroupUserInfo groupUserInfo);
+        void onOK(GroupAllInfo groupAllInfo);
 
         void onError(String errorMessage);
     }

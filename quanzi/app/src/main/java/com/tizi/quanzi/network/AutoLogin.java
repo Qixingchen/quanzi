@@ -2,58 +2,37 @@ package com.tizi.quanzi.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.tizi.quanzi.Intent.StartMainActivity;
-import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.gson.Login;
-import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 
-import java.util.Map;
-import java.util.TreeMap;
+import retrofit.Callback;
 
 /**
  * Created by qixingchen on 15/7/23.
  * 登陆
  * todo 获取本地ts与服务器的差
  */
-public class AutoLogin {
-    private static Context mContext;
+public class AutoLogin extends RetrofitNetworkAbs {
     private static SharedPreferences preferences;
-    private static AutoLogin mInstance;
 
-    private static Response.Listener<String> mOKListener;
-    private static Response.ErrorListener mErrorListener;
+    private RetrofitAPI.UserAccount userAccountService = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
 
-    private static onLogin onLogin;
+    public static AutoLogin getNewInstance() {
 
-    public static AutoLogin getInstance() {
-        if (mInstance == null) {
-            synchronized (AutoLogin.class) {
-                if (mInstance == null) {
-                    mInstance = new AutoLogin(App.getApplication());
-                }
-            }
-        }
-        return mInstance;
+        return new AutoLogin();
     }
 
-    private AutoLogin(Context mContext) {
-        AutoLogin.mContext = mContext;
-        preferences = mContext.getSharedPreferences(
+    private AutoLogin() {
+        preferences = App.getApplication().getSharedPreferences(
                 StaticField.TokenPreferences.TOKENFILE, Context.MODE_PRIVATE);
-        makeErrorListener();
-        makeOKListener();
     }
 
     /**
@@ -98,52 +77,25 @@ public class AutoLogin {
      * 使用给予的账号密码登陆
      */
     public void loginRaw(String account, String password) {
-        Map<String, String> loginPara = new TreeMap<>();
-        loginPara.put("account", account);
-        loginPara.put("password", password);
-        GetVolley.getmInstance(mContext).setOKListener(mOKListener).
-                setErrorListener(mErrorListener)
-                .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/applogin/loginF", loginPara);
-    }
 
-
-    private AutoLogin makeErrorListener() {
-        mErrorListener = new Response.ErrorListener() {
+        userAccountService.login(account, password, Tool.getSignMap()).enqueue(new Callback<Login>() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("自动登录", error.getMessage());
-                if (onLogin != null) {
-                    onLogin.error(error.getMessage());
-                }
-            }
-        };
-        return mInstance;
-    }
-
-    private AutoLogin makeOKListener() {
-        AutoLogin.mOKListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Login login = gson.fromJson(response, Login.class);
-                if (login.isSuccess()) {
+            public void onResponse(retrofit.Response<Login> response) {
+                if (myOnResponse(response)) {
+                    Login login = response.body();
                     setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     PrivateMessPairList.getInstance().getGroupsFromDataBase();
-                    StartMainActivity.startByLoginGroup(login.getGroup(), mContext);
-                    if (onLogin != null) {
-                        onLogin.Success(login);
-                    }
-                } else {
-                    Toast.makeText(mContext, login.getMsg(), Toast.LENGTH_LONG).show();
-                    if (onLogin != null) {
-                        onLogin.error(login.getMsg());
-                    }
+                    StartMainActivity.startByLoginGroup(login.getGroup(), App.getApplication());
                 }
             }
-        };
-        return mInstance;
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+
     }
 
     /**
@@ -153,23 +105,19 @@ public class AutoLogin {
      * @param ID    userID
      * @param Token userToken
      */
-    public static AutoLogin setUserInfo(String phone, String ID, String Token) {
+    public static void setUserInfo(String phone, String ID, String Token) {
         AppStaticValue.setUserToken(Token);
         AppStaticValue.setUserID(ID);
         AppStaticValue.setUserPhone(phone);
         AppStaticValue.setDataBaseHelper(ID);
         AppStaticValue.getNewImClient(ID);
-        return mInstance;
     }
 
-    public AutoLogin setOnLogin(AutoLogin.onLogin onLogin) {
-        AutoLogin.onLogin = onLogin;
-        return mInstance;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public AutoLogin setNetworkListener(NetworkListener networkListener) {
+        return this.setNetworkListener(networkListener, this);
     }
 
-    public interface onLogin {
-        void Success(Login login);
-
-        void error(String errorMess);
-    }
 }

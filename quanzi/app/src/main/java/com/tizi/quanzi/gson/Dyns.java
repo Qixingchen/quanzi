@@ -8,18 +8,13 @@ import java.util.List;
  * Created by qixingchen on 15/8/19.
  * 动态
  */
-public class Dyns {
+public class Dyns extends OnlySuccess {
 
 
     /**
      * msg : null
      * success : true
      */
-
-    @SerializedName("msg")
-    public String msg;
-    @SerializedName("success")
-    public boolean success;
     @SerializedName("dyns")
     public List<DynsEntity> dyns;
 

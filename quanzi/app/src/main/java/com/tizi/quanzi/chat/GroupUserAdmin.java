@@ -11,7 +11,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
-import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.UserManageInGroup;
@@ -156,7 +156,7 @@ public class GroupUserAdmin {
         UserManageInGroup.getInstance().setManageGroupListener(
                 new UserManageInGroup.ManageGroupListener() {
                     @Override
-                    public void onOK(GroupUserInfo groupUserInfo) {
+                    public void onOK(GroupAllInfo groupAllInfo) {
                         if (onResult != null) {
                             onResult.OK();
                         }
@@ -184,7 +184,7 @@ public class GroupUserAdmin {
         UserManageInGroup.getInstance().setManageGroupListener(
                 new UserManageInGroup.ManageGroupListener() {
                     @Override
-                    public void onOK(GroupUserInfo groupUserInfo) {
+                    public void onOK(GroupAllInfo groupAllInfo) {
                         Log.i(TAG, "后台 发送成功");
                         if (onResult != null) {
                             onResult.OK();
@@ -239,8 +239,8 @@ public class GroupUserAdmin {
         UserManageInGroup.getInstance().setManageGroupListener(
                 new UserManageInGroup.ManageGroupListener() {
                     @Override
-                    public void onOK(GroupUserInfo groupUserInfo) {
-                        GroupClass groupClass = GroupClass.getGroupByGroupUserInfo(groupUserInfo, groupID, convID);
+                    public void onOK(GroupAllInfo groupAllInfo) {
+                        GroupClass groupClass = GroupClass.getGroupByGroupUserInfo(groupAllInfo, groupID, convID);
                         GroupList.getInstance().addGroup(groupClass);
                         List<String> clientIds = new ArrayList<>();
                         clientIds.add(AppStaticValue.getUserID());

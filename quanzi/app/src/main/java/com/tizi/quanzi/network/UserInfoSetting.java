@@ -1,54 +1,34 @@
 package com.tizi.quanzi.network;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.google.gson.Gson;
-import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.OnlySuccess;
-import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.tool.Tool;
 
-import java.util.Map;
-import java.util.TreeMap;
+import retrofit.Callback;
 
 /**
  * Created by qixingchen on 15/9/10.
  * 用户个人信息变更
  */
-public class UserInfoSetting extends NetWorkAbs {
-    private static UserInfoSetting mInstance;
+public class UserInfoSetting extends RetrofitNetworkAbs {
 
-    public static UserInfoSetting getInstance(Context context) {
-        if (mInstance == null) {
-            synchronized (UserInfoSetting.class) {
-                if (mInstance == null) {
-                    mInstance = new UserInfoSetting();
-                }
-            }
-        }
-        return mInstance;
+    public static UserInfoSetting getNewInstance() {
+        return new UserInfoSetting();
     }
 
-    private UserInfoSetting() {
-        gson = new Gson();
-        mOKListener = makeOkListener();
-        mErrorListener = makeErrorListener();
-    }
+    private RetrofitAPI.UserAccount userAccountSer = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
 
     private void changeFiled(String field, String value) {
-        Map<String, String> para = new TreeMap<>();
-        para.put("field", field);
-        para.put("value", value);
-        para.put("userid", AppStaticValue.getUserID());
+        userAccountSer.changeUserInfo(field, value, Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
+            @Override
+            public void onResponse(retrofit.Response<OnlySuccess> response) {
+                myOnResponse(response);
+            }
 
-
-        GetVolley.getmInstance(mContext).setOKListener(mOKListener).
-                setErrorListener(mErrorListener)
-                .addRequestWithSign(Request.Method.GET,
-                        mContext.getString(R.string.testbaseuri) + "/user/updateFieldF", para);
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
     }
 
 
@@ -72,23 +52,9 @@ public class UserInfoSetting extends NetWorkAbs {
         changeFiled("area", area);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected Response.Listener<String> makeOkListener() {
-        Response.Listener<String> OKListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                OnlySuccess onlySuccess = gson.fromJson(response, OnlySuccess.class);
-                if (onlySuccess.isSuccess()) {
-                    if (networkListener != null) {
-                        networkListener.onOK(null);
-                    }
-                } else {
-                    Log.e(TAG, "Error");
-                    Toast.makeText(mContext, "Error", Toast.LENGTH_LONG).show();
-                    networkListener.onError("");
-                }
-            }
-        };
-        return OKListener;
+    public UserInfoSetting setNetworkListener(NetworkListener networkListener) {
+        return setNetworkListener(networkListener, this);
     }
 }

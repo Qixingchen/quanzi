@@ -13,16 +13,14 @@ import retrofit.Response;
 
 /**
  * Created by qixingchen on 15/9/11.
- * 主题相关网络接口
+ *
  */
 public class ThemeActs extends RetrofitNetworkAbs {
 
-    private static Context context;
     private RetrofitAPI.Themes themeService = RetrofitNetwork.retrofit.create(RetrofitAPI.Themes.class);
 
 
-    private ThemeActs(Context context) {
-        mContext = context;
+    private ThemeActs() {
     }
 
     /**
@@ -31,7 +29,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
      * @return 新的实例
      */
     public static ThemeActs getNewInstance(Context context) {
-        return new ThemeActs(context);
+        return new ThemeActs();
     }
 
     public void getThemes() {

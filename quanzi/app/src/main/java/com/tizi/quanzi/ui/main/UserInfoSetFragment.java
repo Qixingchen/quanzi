@@ -179,7 +179,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 List<Address> address = new Geocoder(mContext).getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 String area = address.get(0).getAdminArea() + address.get(0).getLocality();
                 userLocationTextView.setText(area);
-                UserInfoSetting.getInstance(mContext).changeArea(area);
+                UserInfoSetting.getNewInstance(mContext).changeArea(area);
             } catch (IOException e) {
                 e.printStackTrace();
             }

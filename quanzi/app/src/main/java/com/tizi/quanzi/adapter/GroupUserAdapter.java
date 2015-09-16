@@ -18,7 +18,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
@@ -34,12 +34,12 @@ import java.util.List;
 public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.GroupUserViewHolder> {
 
     private Context mContext;
-    private List<GroupUserInfo.MemlistEntity> memlist;
+    private List<GroupAllInfo.MemlistEntity> memlist;
     private boolean isCreater;
     private String groupID;
     private static final String TAG = GroupUserAdapter.class.getSimpleName();
 
-    public GroupUserAdapter(Context mContext, @Nullable List<GroupUserInfo.MemlistEntity> memlist, boolean isCreater) {
+    public GroupUserAdapter(Context mContext, @Nullable List<GroupAllInfo.MemlistEntity> memlist, boolean isCreater) {
         this.mContext = mContext;
         this.memlist = memlist;
         this.isCreater = isCreater;
@@ -83,7 +83,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             });
 
         } else if (position < memlist.size()) {
-            final GroupUserInfo.MemlistEntity mem = memlist.get(position);
+            final GroupAllInfo.MemlistEntity mem = memlist.get(position);
             holder.weibo_avatar_NetworkImageView.setImageUrl(mem.icon,
                     GetVolley.getmInstance(mContext).getImageLoader());
             if (isCreater) {
@@ -109,7 +109,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
     /**
      * 设置memlist
      */
-    public void setMemlist(List<GroupUserInfo.MemlistEntity> memlist) {
+    public void setMemlist(List<GroupAllInfo.MemlistEntity> memlist) {
         this.memlist = memlist;
         notifyDataSetChanged();
     }

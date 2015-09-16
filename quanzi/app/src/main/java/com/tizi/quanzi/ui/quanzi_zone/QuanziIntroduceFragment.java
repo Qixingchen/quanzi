@@ -30,12 +30,12 @@ import com.tizi.quanzi.adapter.GroupZonePagerAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Dyns;
-import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.GroupSetting;
-import com.tizi.quanzi.network.QuaryDynamic;
+import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
@@ -62,7 +62,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private RecyclerView.LayoutManager groupUsersLayoutManager;
     private RecyclerView.LayoutManager groupDynsLayoutManager;
     private FloatingActionButton changeGroupImageFAB;
-    private GroupUserInfo groupUserInfo;
+    private GroupAllInfo groupAllInfo;
     private GroupClass groupClass;
     private boolean hasMoreToGet = true;
     private int lastIndex = 0;
@@ -141,7 +141,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         });
 
         groupUserAdapter = new GroupUserAdapter(mActivity,
-                groupUserInfo == null ? null : groupUserInfo.memlist,
+                groupAllInfo == null ? null : groupAllInfo.memlist,
                 groupClass != null && groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0);
         groupUsersLayoutManager = new GridLayoutManager(mActivity, 6);
         Log.i(TAG, "groupUsersLayoutManager Heigh:" + groupUsersLayoutManager.getHeight());
@@ -161,12 +161,12 @@ public class QuanziIntroduceFragment extends BaseFragment {
     /**
      * 设置群的信息
      */
-    public void setGroupInfo(GroupUserInfo groupUserInfo, final GroupClass groupClass) {
-        this.groupUserInfo = groupUserInfo;
+    public void setGroupInfo(GroupAllInfo groupAllInfo, final GroupClass groupClass) {
+        this.groupAllInfo = groupAllInfo;
         this.groupClass = groupClass;
         boolean isCreate = groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0;
         if (groupUserAdapter != null) {
-            groupUserAdapter.setMemlist(groupUserInfo.memlist);
+            groupUserAdapter.setMemlist(groupAllInfo.memlist);
             groupUserAdapter.setIsCreater(isCreate);
             groupUserAdapter.setGroupID(groupClass.ID);
         }
@@ -187,16 +187,16 @@ public class QuanziIntroduceFragment extends BaseFragment {
             quaryMore(groupClass.ID, lastIndex);
             lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
         }
-        if (groupUserInfo != null) {
+        if (groupAllInfo != null) {
             groupUsersRecyclerView.getLayoutParams().height = (int) (105 * GetThumbnailsUri.getDpi(mActivity)
-                    * ((groupUserInfo.memlist.size() / 6) + 1));
+                    * ((groupAllInfo.memlist.size() / 6) + 1));
         }
 
     }
 
     private void quaryMore(String groupID, int lastIndex) {
         Log.i(TAG, "查询群动态 lastIndex=" + lastIndex);
-        QuaryDynamic.getInstance().setQuaryDynamicListener(new QuaryDynamic.QuaryDynamicListener() {
+        DynamicAct.getNewInstance().setQuaryDynamicListener(new DynamicAct.QuaryDynamicListener() {
             @Override
             public void onOK(Dyns dyns) {
                 dynsAdapter.addItems(dyns.dyns);

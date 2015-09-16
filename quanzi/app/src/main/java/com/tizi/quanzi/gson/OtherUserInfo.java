@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by qixingchen on 15/9/3.
  */
-public class OtherUserInfo {
+public class OtherUserInfo extends OnlySuccess {
 
 
     /**
@@ -33,6 +33,4 @@ public class OtherUserInfo {
     public Object bg;
     @SerializedName("userName")
     public String userName;
-    @SerializedName("success")
-    public boolean success;
 }

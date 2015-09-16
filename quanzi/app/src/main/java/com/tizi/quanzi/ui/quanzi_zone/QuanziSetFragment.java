@@ -20,7 +20,7 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GroupSetting;
@@ -37,15 +37,15 @@ public class QuanziSetFragment extends BaseFragment {
     private TextView quanziName, quanziTag, quanziSign, deleteMess;
     private Switch messNotifiSwitch;
     private Button exitQuanzi;
-    private GroupUserInfo groupUserInfo;
+    private GroupAllInfo groupAllInfo;
 
 
     public QuanziSetFragment() {
         // Required empty public constructor
     }
 
-    public void setGroupUserInfo(GroupUserInfo groupUserInfo) {
-        this.groupUserInfo = groupUserInfo;
+    public void setGroupAllInfo(GroupAllInfo groupAllInfo) {
+        this.groupAllInfo = groupAllInfo;
     }
 
 
@@ -69,14 +69,14 @@ public class QuanziSetFragment extends BaseFragment {
 
     @Override
     public void initViewsAndSetEvent() {
-        final GroupClass group = (GroupClass) GroupList.getInstance().getGroup(groupUserInfo.groupNo);
+        final GroupClass group = (GroupClass) GroupList.getInstance().getGroup(groupAllInfo.groupNo);
         if (group == null) {
             Log.e(TAG, "group 获取失败");
             return;
         }
 
 
-        if (groupUserInfo != null) {
+        if (groupAllInfo != null) {
             quanziName.setText(group.Name);
             quanziName.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -122,7 +122,7 @@ public class QuanziSetFragment extends BaseFragment {
                             }).setNegativeButton("取消", null).show();
                 }
             });
-            quanziSign.setText(groupUserInfo.groupName);
+            quanziSign.setText(groupAllInfo.groupName);
 
             if (group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
                 exitQuanzi.setText("解散圈子");
@@ -170,7 +170,7 @@ public class QuanziSetFragment extends BaseFragment {
                                               @Override
                                               public void onClick(View v) {
                                                   AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                                                  final GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupUserInfo.groupNo);
+                                                  final GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupAllInfo.groupNo);
                                                   if (groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
                                                       builder.setTitle("确认解散这个圈子么？");
                                                       builder.setPositiveButton("解散", new DialogInterface.OnClickListener() {

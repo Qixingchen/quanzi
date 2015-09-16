@@ -8,7 +8,7 @@ import java.util.List;
  * Created by qixingchen on 15/7/21.
  * 登陆
  */
-public class Login {
+public class Login extends OnlySuccess {
 
     /**
      * msg : null
@@ -16,10 +16,6 @@ public class Login {
      * user :
      */
 
-    @SerializedName("msg")
-    private String msg;
-    @SerializedName("success")
-    private boolean success;
     @SerializedName("user")
     private UserEntity user;
     @SerializedName("group")

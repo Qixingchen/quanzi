@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         //分析GCM分布
         GetGMSStatue.haveGMS(this);
-        AutoLogin.getInstance().loginFromPrefer();
+        AutoLogin.getNewInstance().loginFromPrefer();
         this.newaccount = (TextView) findViewById(R.id.new_account);
         this.passwordInputLayout = (TextInputLayout) findViewById(R.id.passwordInputLayout);
         this.phoneNumberInputLayout = (TextInputLayout) findViewById(R.id.phoneNumberInputLayout);
@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.guest_user_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AutoLogin.getInstance().loginRaw(StaticField.GuestUser.Account, StaticField.GuestUser.PassWord);
+                AutoLogin.getNewInstance().loginRaw(StaticField.GuestUser.Account, StaticField.GuestUser.PassWord);
             }
         });
 
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AppStaticValue.setUserPhone(phoneNumberEditText.getText().toString());
                 String password = passwordEditText.getText().toString();
-                AutoLogin.getInstance()
+                AutoLogin.getNewInstance()
                         .setOnLogin(new AutoLogin.onLogin() {
                             @Override
                             public void Success(Login login) {

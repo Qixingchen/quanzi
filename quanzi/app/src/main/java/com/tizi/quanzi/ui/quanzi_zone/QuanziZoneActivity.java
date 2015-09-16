@@ -7,9 +7,10 @@ import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuaryGroup;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.BaseActivity;
 
 /**
@@ -19,7 +20,7 @@ public class QuanziZoneActivity extends BaseActivity {
 
     private QuanziIntroduceFragment quanziIntroduceFragment;
     private QuanziSetFragment quanziSetFragment;
-    private GroupUserInfo mGroupUserInfo;
+    private GroupAllInfo mGroupAllInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +44,21 @@ public class QuanziZoneActivity extends BaseActivity {
         Intent intent = getIntent();
         final String convID = intent.getStringExtra("conversation");
         final String GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
-        AddOrQuaryGroup.getInstance().setQueryListener(new AddOrQuaryGroup.QueryGroupListener() {
+        AddOrQuaryGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
-            public void OK(GroupUserInfo groupUserInfo) {
-                mGroupUserInfo = groupUserInfo;
+            public void onOK(Object ts) {
+                GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
+
+                mGroupAllInfo = groupAllInfo;
                 if (quanziIntroduceFragment != null) {
-                    mGroupUserInfo.groupNo = GroupID;
-                    quanziIntroduceFragment.setGroupInfo(groupUserInfo, (GroupClass) GroupList.getInstance().getGroup(GroupID));
+                    mGroupAllInfo.groupNo = GroupID;
+                    quanziIntroduceFragment.setGroupInfo(
+                            groupAllInfo, (GroupClass) GroupList.getInstance().getGroup(GroupID));
                 }
             }
 
             @Override
-            public void Error(String Mess) {
+            public void onError(String Message) {
 
             }
         }).queryGroup(GroupID);
@@ -83,7 +87,7 @@ public class QuanziZoneActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             quanziSetFragment = new QuanziSetFragment();
-            quanziSetFragment.setGroupUserInfo(mGroupUserInfo);
+            quanziSetFragment.setGroupAllInfo(mGroupAllInfo);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment, quanziSetFragment)
                     .addToBackStack("quanziSetFragment").commit();

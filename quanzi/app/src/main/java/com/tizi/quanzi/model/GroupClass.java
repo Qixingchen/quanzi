@@ -3,7 +3,7 @@ package com.tizi.quanzi.model;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.gson.GroupUserInfo;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.Login;
 
 import java.io.Serializable;
@@ -81,20 +81,20 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
     }
 
     /**
-     * 将 GroupUserInfo 转换为 GroupClass
+     * 将 GroupAllInfo 转换为 GroupClass
      *
-     * @param groupUserInfo 须转换的 GroupUserInfo {@link GroupUserInfo}
+     * @param groupAllInfo 须转换的 GroupAllInfo {@link GroupAllInfo}
      *
      * @return 转换完成的 GroupClass
      */
     @Deprecated
-    public static GroupClass getGroupByGroupUserInfo(GroupUserInfo groupUserInfo, String groupID,
+    public static GroupClass getGroupByGroupUserInfo(GroupAllInfo groupAllInfo, String groupID,
                                                      String convId) {
         GroupClass groupClass = new GroupClass();
         groupClass.ID = groupID;
-        groupClass.Name = groupUserInfo.groupName;
-        groupClass.Face = groupUserInfo.icon;
-        groupClass.Type = Integer.valueOf(groupUserInfo.type);
+        groupClass.Name = groupAllInfo.groupName;
+        groupClass.Face = groupAllInfo.icon;
+        groupClass.Type = Integer.valueOf(groupAllInfo.type);
         groupClass.Notice = "";
         groupClass.convId = convId;
         groupClass.validation = true;

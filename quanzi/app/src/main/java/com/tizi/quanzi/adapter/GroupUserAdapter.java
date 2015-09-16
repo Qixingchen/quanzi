@@ -23,6 +23,7 @@ import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 
 import java.util.List;
@@ -143,36 +144,34 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                     public void onClick(DialogInterface dialog, int which) {
                         final String convID = GroupList.getInstance().getGroup(groupid).convId;
 
-                        FindUser.getInstance().setFindUserListener(
-                                new FindUser.FindUserListener() {
-                                    @Override
-                                    public void onOK(OtherUserInfo otherUserInfo) {
-                                        GroupUserAdmin.getInstance(mContext)
-                                                .setOnResult(new GroupUserAdmin.OnResult() {
-                                                    @Override
-                                                    public void OK() {
-                                                        Toast.makeText(mContext, "添加请求发送成功", Toast.LENGTH_LONG).show();
-                                                        Log.i(TAG, "添加请求发送成功");
-                                                    }
+                        FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                            @Override
+                            public void onOK(Object ts) {
+                                OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                                GroupUserAdmin.getInstance(mContext)
+                                        .setOnResult(new GroupUserAdmin.OnResult() {
+                                            @Override
+                                            public void OK() {
+                                                Toast.makeText(mContext, "添加请求发送成功", Toast.LENGTH_LONG).show();
+                                                Log.i(TAG, "添加请求发送成功");
+                                            }
 
-                                                    @Override
-                                                    public void error(String errorMessage) {
-                                                        Toast.makeText(mContext, "添加失败" + errorMessage
-                                                                , Toast.LENGTH_LONG).show();
-                                                        Log.w(TAG, "添加失败" + errorMessage);
-                                                    }
-                                                })
-                                                .addMember(convID, groupid, otherUserInfo.id);
-                                    }
+                                            @Override
+                                            public void error(String errorMessage) {
+                                                Toast.makeText(mContext, "添加失败" + errorMessage
+                                                        , Toast.LENGTH_LONG).show();
+                                                Log.w(TAG, "添加失败" + errorMessage);
+                                            }
+                                        })
+                                        .addMember(convID, groupid, otherUserInfo.id);
+                            }
 
-                                    @Override
-                                    public void onError(String errorMessage) {
-                                        Toast.makeText(mContext, "添加失败,查找用户失败：" + errorMessage
-                                                , Toast.LENGTH_LONG).show();
-                                        Log.w(TAG, "添加失败,查找用户失败：" + errorMessage);
-                                    }
-                                }
-                        ).finduser(userid.getText().toString());
+                            @Override
+                            public void onError(String Message) {
+                                Toast.makeText(mContext, "添加失败,查找用户失败：" + Message
+                                        , Toast.LENGTH_LONG).show();
+                            }
+                        }).finduser(userid.getText().toString());
 
 
                     }

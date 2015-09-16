@@ -36,6 +36,7 @@ import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.DynamicAct;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
@@ -196,9 +197,10 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
     private void quaryMore(String groupID, int lastIndex) {
         Log.i(TAG, "查询群动态 lastIndex=" + lastIndex);
-        DynamicAct.getNewInstance().setQuaryDynamicListener(new DynamicAct.QuaryDynamicListener() {
+        DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
-            public void onOK(Dyns dyns) {
+            public void onOK(Object ts) {
+                Dyns dyns = (Dyns) ts;
                 dynsAdapter.addItems(dyns.dyns);
                 if (dyns.dyns.size() != StaticField.MessageQueryLimit.DynamicLimit) {
                     hasMoreToGet = false;
@@ -207,11 +209,10 @@ public class QuanziIntroduceFragment extends BaseFragment {
             }
 
             @Override
-            public void onError() {
-                Log.e(TAG, "加载群动态失败");
+            public void onError(String Message) {
+
             }
-        })
-                .getGroupDynamic(groupID, String.valueOf(lastIndex));
+        }).getGroupDynamic("", groupID, lastIndex);
     }
 
     @Override
@@ -243,7 +244,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                     } else {
                         String photoUri = finalFile.getUrl();
                         zoneBackgroundImageView.setImageUrl(photoUri, GetVolley.getmInstance(mContext).getImageLoader());
-                        GroupSetting.getInstance(mContext).changeIcon(groupClass.ID, photoUri);
+                        GroupSetting.getInstance().changeIcon(groupClass.ID, photoUri);
                         groupClass.Face = photoUri;
                         GroupList.getInstance().updateGroup(groupClass);
                     }

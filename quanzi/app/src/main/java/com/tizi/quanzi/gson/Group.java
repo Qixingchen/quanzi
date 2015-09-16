@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @see com.tizi.quanzi.model.GroupClass
  */
-public class Group {
+public class Group extends OnlySuccess {
 
     /**
      * groupId : HTDM0048c5d946c3ccae4985981f757d55f743d1

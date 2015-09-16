@@ -51,7 +51,7 @@ public class QuanziZoneActivity extends BaseActivity {
 
                 mGroupAllInfo = groupAllInfo;
                 if (quanziIntroduceFragment != null) {
-                    mGroupAllInfo.groupNo = GroupID;
+                    mGroupAllInfo.group.groupNo = GroupID;
                     quanziIntroduceFragment.setGroupInfo(
                             groupAllInfo, (GroupClass) GroupList.getInstance().getGroup(GroupID));
                 }

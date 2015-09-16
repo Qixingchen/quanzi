@@ -3,9 +3,11 @@ package com.tizi.quanzi.network;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.gson.GroupAllInfo;
-import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.tool.Tool;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -47,20 +49,26 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
      */
     public void NewAGroup(String GroupName, String icon, String notice, String userID, String tag, String convid) {
 
-        final Call<OnlySuccess> addgroup = groupService.addGroup(GroupName, tag, icon, notice,
-                AppStaticValue.getUserID(), convid, Tool.getSignMap());
+        try {
+            String encodedTAG = URLEncoder.encode(tag, "UTF-8");
+            final Call<GroupAllInfo> addgroup = groupService.addGroup(GroupName, encodedTAG, icon, notice,
+                    AppStaticValue.getUserID(), convid, Tool.getSignMap());
 
-        addgroup.enqueue(new Callback<OnlySuccess>() {
-            @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response) {
-                myOnResponse(response);
-            }
+            addgroup.enqueue(new Callback<GroupAllInfo>() {
+                @Override
+                public void onResponse(retrofit.Response<GroupAllInfo> response) {
+                    myOnResponse(response);
+                }
 
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    myOnFailure(t);
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

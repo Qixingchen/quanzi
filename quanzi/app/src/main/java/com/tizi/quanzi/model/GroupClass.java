@@ -92,9 +92,9 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
                                                      String convId) {
         GroupClass groupClass = new GroupClass();
         groupClass.ID = groupID;
-        groupClass.Name = groupAllInfo.groupName;
-        groupClass.Face = groupAllInfo.icon;
-        groupClass.Type = Integer.valueOf(groupAllInfo.type);
+        groupClass.Name = groupAllInfo.group.groupName;
+        groupClass.Face = groupAllInfo.group.icon;
+        groupClass.Type = Integer.valueOf(groupAllInfo.group.type);
         groupClass.Notice = "";
         groupClass.convId = convId;
         groupClass.validation = true;

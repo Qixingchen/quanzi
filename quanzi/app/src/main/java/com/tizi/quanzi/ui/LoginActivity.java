@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.AutoLogin;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
@@ -74,24 +74,23 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AppStaticValue.setUserPhone(phoneNumberEditText.getText().toString());
                 String password = passwordEditText.getText().toString();
-                AutoLogin.getNewInstance()
-                        .setOnLogin(new AutoLogin.onLogin() {
-                            @Override
-                            public void Success(Login login) {
-                                //储存密码
-                                SharedPreferences preferences =
-                                        getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
-                                                MODE_PRIVATE);
-                                preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,
-                                        GetPassword.preHASH(passwordEditText.getText().toString())).apply();
-                            }
+                AutoLogin.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                    @Override
+                    public void onOK(Object ts) {
+                        //储存密码
+                        SharedPreferences preferences =
+                                getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
+                                        MODE_PRIVATE);
+                        preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,
+                                GetPassword.preHASH(passwordEditText.getText().toString())).apply();
+                    }
 
-                            @Override
-                            public void error(String errorMess) {
-                                Snackbar.make(findViewById(R.id.LoginLayout), "网络错误", Snackbar.LENGTH_LONG).show();
-                            }
-                        })
-                        .loginFromPrePassword(GetPassword.preHASH(password));
+                    @Override
+                    public void onError(String Message) {
+                        Snackbar.make(findViewById(R.id.LoginLayout), "网络错误" + Message,
+                                Snackbar.LENGTH_LONG).show();
+                    }
+                }).loginFromPrePassword(GetPassword.preHASH(password));
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {

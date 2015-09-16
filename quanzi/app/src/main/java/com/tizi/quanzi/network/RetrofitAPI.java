@@ -55,9 +55,9 @@ public interface RetrofitAPI {
 
     interface Group {
         @POST("/group/createF")
-        Call<OnlySuccess> addGroup(
+        Call<GroupAllInfo> addGroup(
                 @Query("groupname") String groupName,
-                @Query("grouptags") String groupTags,
+                @Query(value = "grouptags", encoded = true) String groupTags,
                 @Query("icon") String icon,
                 @Query("notice") String notice,
                 @Query("userid") String userID,// TODO: 15/9/16 delete

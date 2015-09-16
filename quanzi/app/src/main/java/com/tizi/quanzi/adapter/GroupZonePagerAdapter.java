@@ -10,13 +10,14 @@ import android.view.View;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
-import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.DynamicAct;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 
 /**
  * Created by qixingchen on 15/8/26.
  * 群空间 参与与相册 PagerAdapter
  */
+@Deprecated
 public class GroupZonePagerAdapter extends PagerAdapter {
 
 
@@ -77,17 +78,19 @@ public class GroupZonePagerAdapter extends PagerAdapter {
             mDynsItemsRecyclerView.setLayoutManager(mLayoutManager);
             mDynsItemsRecyclerView.setAdapter(dynsAdapter);
 
-            DynamicAct.getNewInstance().setQuaryDynamicListener(new DynamicAct.QuaryDynamicListener() {
+            DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                 @Override
-                public void onOK(Dyns dyns) {
+                public void onOK(Object ts) {
+                    Dyns dyns = (Dyns) ts;
                     dynsAdapter.addItems(dyns.dyns);
                 }
 
                 @Override
-                public void onError() {
-                    Log.e(TAG, "加载群动态失败");
+                public void onError(String Message) {
+
                 }
-            }).getQuanZiDynamic();
+            }).getGroupDynamic("", "", 1);
+
         }
         ((ViewPager) container).addView(Views[position], 0);
         return Views[position];

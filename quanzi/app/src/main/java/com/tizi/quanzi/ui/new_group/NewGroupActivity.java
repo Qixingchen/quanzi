@@ -10,6 +10,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.NewAVIMConversation;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuaryGroup;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
@@ -93,8 +94,10 @@ public class NewGroupActivity extends BaseActivity {
                         new RetrofitNetworkAbs.NetworkListener() {
                             @Override
                             public void onOK(Object ts) {
-                                GroupClass groupClass = (GroupClass) ts;
+                                GroupAllInfo group = (GroupAllInfo) ts;
 
+                                GroupClass groupClass = new GroupClass();
+                                groupClass.ID = group.group.id;
                                 groupClass.Name = ans.groupName;
                                 groupClass.Face = ans.groupFaceUri;
                                 groupClass.Type = StaticField.ChatBothUserType.GROUP;

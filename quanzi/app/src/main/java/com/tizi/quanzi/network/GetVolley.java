@@ -41,7 +41,7 @@ public class GetVolley {
 
     private GetVolley(Context context) {
         mCtx = context;
-        mRequestQueue = getRequestQueue();
+        mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
 
         mImageLoader = new ImageLoader(mRequestQueue,
                 new ImageLoader.ImageCache() {
@@ -58,13 +58,6 @@ public class GetVolley {
                         cache.put(url, bitmap);
                     }
                 });
-    }
-
-    private RequestQueue getRequestQueue() {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
-        }
-        return mRequestQueue;
     }
 
     public ImageLoader getImageLoader() {

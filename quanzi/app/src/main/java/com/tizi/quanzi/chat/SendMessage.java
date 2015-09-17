@@ -23,6 +23,7 @@ import java.util.TreeMap;
 
 /**
  * Created by qixingchen on 15/9/2.
+ * 发送信息的调用接口
  */
 public class SendMessage {
     private SendMessage mInstance;

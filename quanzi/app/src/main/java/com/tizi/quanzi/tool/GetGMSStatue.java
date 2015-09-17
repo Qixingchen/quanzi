@@ -31,13 +31,13 @@ public class GetGMSStatue {
 //                AVAnalytics.onEvent(mactivity, "GMStatue", String.valueOf(resultCode));
 //                AVAnalytics.onEvent(mactivity, "GMStatue-" + String.valueOf(resultCode));
             } else {
-                Log.w("GMS状态", "This device is not supported.");
+                Log.i("GMS状态", "This device is not supported.");
 //                AVAnalytics.onEvent(mactivity, "GMStatue", "NotSupported");
 //                AVAnalytics.onEvent(mactivity, "GMStatue-" + "NotSupported");
             }
             return false;
         }
-        Log.w("GMS状态", "This device is supported.");
+        Log.i("GMS状态", "This device is supported.");
 //        AVAnalytics.onEvent(mactivity, "GMStatue", "Supported!");
 //        AVAnalytics.onEvent(mactivity, "GMStatue-" + "Supported");
         return true;

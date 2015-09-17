@@ -19,7 +19,8 @@ import com.tizi.quanzi.tool.Tool;
 import java.util.List;
 
 /**
- * Created by qixingchen on 15/7/20. 聊天记录Adapter
+ * Created by qixingchen on 15/7/20.
+ * 聊天记录Adapter
  */
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHolder> {

@@ -27,9 +27,6 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
 
     private RetrofitAPI.Group groupService = RetrofitNetwork.retrofit.create(RetrofitAPI.Group.class);
 
-    private AddOrQuaryGroup() {
-    }
-
     public static AddOrQuaryGroup getNewInstance() {
         return new AddOrQuaryGroup();
     }

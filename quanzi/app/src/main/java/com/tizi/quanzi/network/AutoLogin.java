@@ -26,7 +26,6 @@ public class AutoLogin extends RetrofitNetworkAbs {
     private RetrofitAPI.UserAccount userAccountService = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
 
     public static AutoLogin getNewInstance() {
-
         return new AutoLogin();
     }
 
@@ -60,6 +59,7 @@ public class AutoLogin extends RetrofitNetworkAbs {
     public void loginFromPrePassword(String PrePassword) {
         preferences.edit().putString(StaticField.TokenPreferences.PASSWORD, PrePassword).apply();
         String RawPassword;
+        // TODO: 15/9/17 delete test account
         if (AppStaticValue.getUserPhone().compareTo("1") == 0) {
             RawPassword = "96e79218965eb72c92a549dd5a330112";
         } else if (AppStaticValue.getUserPhone().compareTo("2") == 0) {

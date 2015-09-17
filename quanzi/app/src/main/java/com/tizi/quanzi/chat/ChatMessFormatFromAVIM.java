@@ -31,7 +31,7 @@ public class ChatMessFormatFromAVIM {
      * @throws ClassFormatError 消息为系统消息
      */
     public static ChatMessage ChatMessageFromAVMessage(AVIMTypedMessage message) throws ClassFormatError {
-        String TAG = "Tool类 消息类型转换";
+        String TAG = "ChatMessFormatFromAVIM";
         ChatMessage chatMessage;
         if (message.getMessageType() == AVIMReservedMessageType.TextMessageType.getType()) {
             /*判断是否为系统消息*/
@@ -44,22 +44,22 @@ public class ChatMessFormatFromAVIM {
             } catch (Exception ignored) {//旧信息无此项目
             }
             chatMessage = textChatMessageFromAVMessage(message);
-            Log.w(TAG, "文本消息:");
+            Log.i(TAG, "文本消息:");
         } else if (message.getMessageType() == AVIMReservedMessageType.ImageMessageType.getType()) {
             chatMessage = imageChatMessageFromAVMessage(message);
-            Log.w(TAG, "图片消息。");
+            Log.i(TAG, "图片消息。");
         } else if (message.getMessageType() == AVIMReservedMessageType.AudioMessageType.getType()) {
             chatMessage = voiceChatMessageFromAVMessage(message);
-            Log.w(TAG, "音频消息。");
+            Log.i(TAG, "音频消息。");
         } else if (message.getMessageType() == AVIMReservedMessageType.VideoMessageType.getType()) {
             chatMessage = vedioChatMessageFromAVMessage(message);
-            Log.w(TAG, "视频消息");
+            Log.i(TAG, "视频消息");
         } else if (message.getMessageType() == AVIMReservedMessageType.LocationMessageType.getType()) {
             chatMessage = locationChatMessageFromAVMessage(message);
-            Log.w(TAG, "地理消息");
+            Log.i(TAG, "地理消息");
         } else {
             chatMessage = textChatMessageFromAVMessage(message);
-            Log.e(TAG, "未知类型消息");
+            Log.i(TAG, "未知类型消息");
         }
         Log.w(TAG, chatMessage.toString());
         return chatMessage;

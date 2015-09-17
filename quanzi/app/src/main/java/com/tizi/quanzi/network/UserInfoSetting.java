@@ -18,6 +18,12 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
 
     private RetrofitAPI.UserAccount userAccountSer = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
 
+    /**
+     * 更改用户的资料
+     *
+     * @param field 需更改的字段名称
+     * @param value 更改值
+     */
     private void changeFiled(String field, String value) {
 
         value = Tool.getUTF_8String(value);
@@ -35,23 +41,37 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
         });
     }
 
-
+    /**
+     * 更改用户的昵称
+     */
     public void changeName(String name) {
         changeFiled("userName", name);
     }
 
+    /**
+     * 更改用户性别
+     */
     public void changeSex(String sex) {
         changeFiled("sex", sex);
     }
 
+    /**
+     * 更改用户头像；
+     */
     public void changeFace(String uri) {
         changeFiled("icon", uri);
     }
 
+    /**
+     * 更改用户签名
+     */
     public void changeSign(String sign) {
         changeFiled("signature", sign);
     }
 
+    /**
+     * 更改用户地区
+     */
     public void changeArea(String area) {
         changeFiled("area", area);
     }

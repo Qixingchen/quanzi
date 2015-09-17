@@ -114,6 +114,7 @@ public class StaticField {
         public final static int SysMess = 2;
     }
 
+    /*游客的账号和密码*/
     public static class GuestUser {
         public final static String Account = "guest";
         public final static String PassWord = "1a100d2c0dab19ce3ceb5881a0a1fdaad01296d7554868d4430e7d73762f379e";

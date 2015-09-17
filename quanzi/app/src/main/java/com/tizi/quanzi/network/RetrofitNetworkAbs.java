@@ -20,7 +20,7 @@ public abstract class RetrofitNetworkAbs {
 
     public abstract <T extends RetrofitNetworkAbs> T setNetworkListener(NetworkListener networkListener);
 
-    // TODO: 15/9/17 T
+    // TODO: 15/9/17 T 抽象
     public interface NetworkListener<T extends Object> {
         // TODO: 15/8/20 why
         void onOK(T ts);
@@ -32,6 +32,8 @@ public abstract class RetrofitNetworkAbs {
      * 检查Response是否成功
      *
      * @param response retrofit 的 response
+     *
+     * @return 是否成功
      */
     protected boolean myOnResponse(retrofit.Response<? extends OnlySuccess> response) {
         if (response.isSuccess() && response.body().success) {

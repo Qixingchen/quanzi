@@ -264,7 +264,7 @@ public class GroupUserAdmin {
             }
         }).acceptJoinGroup(groupID, AppStaticValue.getUserID());
 
-        List<String> userIds = new ArrayList<String>();
+        List<String> userIds = new ArrayList<>();
         userIds.add(AppStaticValue.getUserID());
         AppStaticValue.getImClient().getConversation(convID).addMembers(userIds, new AVIMConversationCallback() {
             @Override

@@ -2,6 +2,7 @@ package com.tizi.quanzi.tool;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 
 import com.tizi.quanzi.app.AppStaticValue;
@@ -122,5 +123,32 @@ public class Tool {
             e.printStackTrace();
         }
         return encoded;
+    }
+
+    /**
+     * 手机号码转换
+     * 去除所有的 － 和“ ”
+     * 去除＋86
+     * 取最后11位
+     * 如果不是手机号，则返回null
+     *
+     * @param phoneNum 需处理的手机号
+     *
+     * @return 处理后的手机号，如不是手机号，则返回null
+     */
+    @Nullable
+    public static String getPhoneNum(String phoneNum) {
+        String ans = phoneNum.replaceAll("-", "");
+        ans = ans.replaceAll(" ", "");
+        ans = ans.replaceFirst("/+86", "");
+        if (ans.length() > 11) {
+            int len = ans.length();
+            ans = ans.substring(len - 11);
+        }
+        if (ans.length() == 11 && ans.startsWith("1")) {
+            return ans;
+        } else {
+            return null;
+        }
     }
 }

@@ -13,7 +13,6 @@ import retrofit.Response;
 
 /**
  * Created by qixingchen on 15/9/11.
- *
  */
 public class ThemeActs extends RetrofitNetworkAbs {
 
@@ -32,6 +31,9 @@ public class ThemeActs extends RetrofitNetworkAbs {
         return new ThemeActs();
     }
 
+    /**
+     * 获取活动
+     */
     public void getThemes() {
 
         final Call<Theme> themeCall = themeService.getThemes(Tool.getSignMap());
@@ -50,6 +52,11 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
     }
 
+    /**
+     * 获取指定活动的热门评论
+     *
+     * @param themeID 活动的ID
+     */
     public void getHotDyns(String themeID) {
 
         final Call<HotDyns> hotDynsCall = themeService.getHotDyns(themeID, Tool.getSignMap());
@@ -67,6 +74,13 @@ public class ThemeActs extends RetrofitNetworkAbs {
         });
     }
 
+    /**
+     * (取消)报名参加指定活动
+     *
+     * @param actID   活动ID
+     * @param groupID 群ID
+     * @param flag    报名：1 取消报名：0
+     */
     public void signUP(String actID, String groupID, int flag) {
 
         final Call<OnlySuccess> themeCall = themeService.signUp(actID, groupID, flag, Tool.getSignMap());

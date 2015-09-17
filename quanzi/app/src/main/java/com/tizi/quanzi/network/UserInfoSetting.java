@@ -1,5 +1,6 @@
 package com.tizi.quanzi.network;
 
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.tool.Tool;
 
@@ -18,7 +19,10 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
     private RetrofitAPI.UserAccount userAccountSer = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
 
     private void changeFiled(String field, String value) {
-        userAccountSer.changeUserInfo(field, value, Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
+
+        value = Tool.getUTF_8String(value);
+        userAccountSer.changeUserInfo(field, value, AppStaticValue.getUserID(),
+                Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
             @Override
             public void onResponse(retrofit.Response<OnlySuccess> response) {
                 myOnResponse(response);

@@ -2,6 +2,7 @@ package com.tizi.quanzi.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.support.multidex.MultiDex;
 
 import com.avos.avoscloud.AVOSCloud;
@@ -12,6 +13,7 @@ import com.facebook.stetho.Stetho;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
+import com.tizi.quanzi.log.Log;
 
 //import me.drakeet.library.CrashWoodpecker;
 
@@ -59,6 +61,22 @@ public class App extends Application {
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
+        //test build
+
+        Log.i("BOARD", Build.BOARD);
+        Log.i("SDK", Build.VERSION.SDK);
+        Log.i("DEVICE", Build.DEVICE);
+        Log.i("DISPLAY", Build.DISPLAY);
+        Log.i("ID", Build.ID);
+        Log.i("PRODUCT", Build.PRODUCT);
+        Log.i("CPU_ABI", Build.CPU_ABI);
+        Log.i("MANUFACTURER", Build.MANUFACTURER);
+        Log.i("MODEL", Build.MODEL);
+        Log.i("BOOTLOADER", Build.BOOTLOADER);
+        Log.i("RADIO", Build.RADIO);
+        Log.i("HARDWARE", Build.HARDWARE);
+        Log.i("SERIAL", Build.SERIAL);
+        Log.i("TYPE", Build.TYPE);
     }
 
     /**

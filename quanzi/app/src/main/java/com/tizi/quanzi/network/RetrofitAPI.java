@@ -95,8 +95,9 @@ public interface RetrofitAPI {
                 @QueryMap Map<String, String> signMap);
 
         @POST("/group/exitGroupF")
-        Call<OnlySuccess> exitGroup(
+        Call<OnlySuccess> exitOrDeleteMember(
                 @Query("groupid") String groupID,
+                @Query("userid") String exitUserID,
                 @QueryMap Map<String, String> signMap);
 
         @POST("/group/dropGroupF")
@@ -194,7 +195,8 @@ public interface RetrofitAPI {
                 @Query("icon") String icon,
                 @Query("clienttype") String clientType,
                 @Query("clientversion") String clientVersion,
-                @Query("clientmac") String clientMAC);
+                @Query("clientmac") String clientMAC,
+                @QueryMap Map<String, String> signMap);
 
         @POST("/applogin/updatePassF")
         Call<OnlySuccess> changePassword(
@@ -210,7 +212,8 @@ public interface RetrofitAPI {
         @POST("/user/updateFieldF")
         Call<OnlySuccess> changeUserInfo(
                 @Query("field") String field,
-                @Query("value") String value,
+                @Query(value = "value", encoded = true) String value,
+                @Query("userid") String userID,
                 @QueryMap Map<String, String> signMap);
 
 

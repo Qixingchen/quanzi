@@ -109,7 +109,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                 holder.contantImageView.getLayoutParams().width = imagePix[1];
                 holder.contantImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
                                 chatMessage.url, imagePix[0], imagePix[1]),
-                        GetVolley.getmInstance(mContext).getImageLoader());
+                        GetVolley.getmInstance().getImageLoader());
                 holder.contantImageView.setVisibility(View.VISIBLE);
                 break;
             case StaticField.ChatContantType.VOICE:
@@ -139,7 +139,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
         /*设置头像*/
         holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
                         chatMessage.chatImage, 48 * 3, 48 * 3),
-                GetVolley.getmInstance(mContext).getImageLoader());
+                GetVolley.getmInstance().getImageLoader());
 
         String time = FriendTime.FriendlyDate(chatMessage.create_time);
         holder.chatTime.setText(time);

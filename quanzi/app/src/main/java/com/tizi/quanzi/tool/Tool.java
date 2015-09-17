@@ -7,6 +7,8 @@ import android.util.DisplayMetrics;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -107,5 +109,18 @@ public class Tool {
         }
         String sign = stringBuffer.toString();
         return sign;
+    }
+
+    /**
+     * utf-8 转换
+     */
+    public static String getUTF_8String(String value) {
+        String encoded = "";
+        try {
+            encoded = URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {//only for api 21-
+            e.printStackTrace();
+        }
+        return encoded;
     }
 }

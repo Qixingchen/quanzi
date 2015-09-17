@@ -14,6 +14,7 @@ import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.UserManageInGroup;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -153,24 +154,21 @@ public class GroupUserAdmin {
 
 
         //后台删除
-        UserManageInGroup.getInstance().setManageGroupListener(
-                new UserManageInGroup.ManageGroupListener() {
-                    @Override
-                    public void onOK(GroupAllInfo groupAllInfo) {
-                        if (onResult != null) {
-                            onResult.OK();
-                        }
-                    }
+        UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                if (onResult != null) {
+                    onResult.OK();
+                }
+            }
 
-                    @Override
-                    public void onError(String errorMessage) {
-                        Log.w(TAG, "后台删除好友失败" + errorMessage);
-                        if (onResult != null) {
-                            onResult.error("后台删除好友失败");
-                        }
-                    }
-
-                }).deleteUser(groupID, userID);
+            @Override
+            public void onError(String Message) {
+                if (onResult != null) {
+                    onResult.error("后台删除好友失败:" + Message);
+                }
+            }
+        }).deleteUser(groupID, userID);
     }
 
     /**
@@ -181,24 +179,21 @@ public class GroupUserAdmin {
      */
     public void deleteGroup(String convID, String groupID) {
         //后台
-        UserManageInGroup.getInstance().setManageGroupListener(
-                new UserManageInGroup.ManageGroupListener() {
-                    @Override
-                    public void onOK(GroupAllInfo groupAllInfo) {
-                        Log.i(TAG, "后台 发送成功");
-                        if (onResult != null) {
-                            onResult.OK();
-                        }
-                    }
-
-                    @Override
-                    public void onError(String errorMessage) {
-                        if (onResult != null) {
-                            onResult.error(errorMessage);
-                        }
-                    }
+        UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                if (onResult != null) {
+                    onResult.OK();
                 }
-        ).deleteGroup(groupID);
+            }
+
+            @Override
+            public void onError(String Message) {
+                if (onResult != null) {
+                    onResult.error("后台删除好友失败:" + Message);
+                }
+            }
+        }).deleteGroup(groupID);
 
         //LC
         Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.GROUP);
@@ -236,41 +231,39 @@ public class GroupUserAdmin {
         if (!isAccept) {
             return;
         }
-        UserManageInGroup.getInstance().setManageGroupListener(
-                new UserManageInGroup.ManageGroupListener() {
+        UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
+                GroupClass groupClass = GroupClass.getGroupByGroupUserInfo(groupAllInfo, groupID, convID);
+                GroupList.getInstance().addGroup(groupClass);
+                List<String> clientIds = new ArrayList<>();
+                clientIds.add(AppStaticValue.getUserID());
+                AppStaticValue.getImClient().getConversation(convID).addMembers(clientIds, new AVIMConversationCallback() {
                     @Override
-                    public void onOK(GroupAllInfo groupAllInfo) {
-                        GroupClass groupClass = GroupClass.getGroupByGroupUserInfo(groupAllInfo, groupID, convID);
-                        GroupList.getInstance().addGroup(groupClass);
-                        List<String> clientIds = new ArrayList<>();
-                        clientIds.add(AppStaticValue.getUserID());
-                        AppStaticValue.getImClient().getConversation(convID).addMembers(clientIds, new AVIMConversationCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                if (e != null) {
-                                    Log.w(TAG, "LC addMembers err:" + e.getMessage());
-                                    if (onResult != null) {
-                                        onResult.error("LC addMembers err:" + e.getMessage());
-                                    }
-                                } else {
-                                    if (onResult != null) {
-                                        onResult.OK();
-                                    }
-                                }
+                    public void done(AVException e) {
+                        if (e != null) {
+                            Log.w(TAG, "LC addMembers err:" + e.getMessage());
+                            if (onResult != null) {
+                                onResult.error("LC addMembers err:" + e.getMessage());
                             }
-                        });
-
-                    }
-
-                    @Override
-                    public void onError(String ErrorMessage) {
-                        Log.w(TAG, "后台失败" + ErrorMessage);
-                        if (onResult != null) {
-                            onResult.error("后台失败" + ErrorMessage);
+                        } else {
+                            if (onResult != null) {
+                                onResult.OK();
+                            }
                         }
                     }
+                });
+            }
+
+            @Override
+            public void onError(String Message) {
+                if (onResult != null) {
+                    onResult.error("后台失败" + Message);
                 }
-        ).acceptJoinGroup(groupID, AppStaticValue.getUserID());
+            }
+        }).acceptJoinGroup(groupID, AppStaticValue.getUserID());
+
         List<String> userIds = new ArrayList<String>();
         userIds.add(AppStaticValue.getUserID());
         AppStaticValue.getImClient().getConversation(convID).addMembers(userIds, new AVIMConversationCallback() {

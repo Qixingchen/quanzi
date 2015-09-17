@@ -86,7 +86,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         } else if (position < memlist.size()) {
             final GroupAllInfo.MemlistEntity mem = memlist.get(position);
             holder.weibo_avatar_NetworkImageView.setImageUrl(mem.icon,
-                    GetVolley.getmInstance(mContext).getImageLoader());
+                    GetVolley.getmInstance().getImageLoader());
             if (isCreater) {
                 holder.weibo_avatar_NetworkImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override

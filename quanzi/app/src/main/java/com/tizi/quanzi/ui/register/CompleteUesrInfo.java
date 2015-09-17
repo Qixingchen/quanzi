@@ -153,7 +153,7 @@ public class CompleteUesrInfo extends Fragment {
                     } else {
                         String photoUri = finalFile.getThumbnailUrl(false, 200, 200);
                         UserPhotoImageView.setImageUrl(photoUri,
-                                GetVolley.getmInstance(mActivity).getImageLoader());
+                                GetVolley.getmInstance().getImageLoader());
                         photoOnlineUri = photoUri;
                     }
                 }

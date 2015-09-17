@@ -68,7 +68,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     public void onBindViewHolder(DynsViewHolder holder, int position) {
         final Dyns.DynsEntity dyns = dynsList.get(position);
         holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.icon,
-                GetVolley.getmInstance(mContext).getImageLoader());
+                GetVolley.getmInstance().getImageLoader());
         holder.userNameTextView.setText(dyns.nickName);
         holder.contentTextView.setText(dyns.content);
         holder.dateTextView.setText(dyns.createTime);
@@ -77,7 +77,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         int picsNum = dyns.pics.size();
         for (int i = 0; i < picsNum; i++) {
             holder.weibo_pics_NetworkImageView[i].setImageUrl(dyns.pics.get(i).url,
-                    GetVolley.getmInstance(mContext).getImageLoader());
+                    GetVolley.getmInstance().getImageLoader());
         }
         holder.setPicUnvisable(picsNum);
         if (position == dynsList.size() - 1) {

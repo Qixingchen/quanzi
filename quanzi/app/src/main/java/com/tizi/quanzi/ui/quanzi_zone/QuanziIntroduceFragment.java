@@ -183,7 +183,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                             GetThumbnailsUri.getPXs(mActivity, 120))
                     .into(groupFaceImageView);
             zoneBackgroundImageView.setImageUrl(groupClass.background,
-                    GetVolley.getmInstance(mActivity).getImageLoader());
+                    GetVolley.getmInstance().getImageLoader());
             zoneSignTextview.setText("签名是：" + groupClass.Notice);
             quaryMore(groupClass.ID, lastIndex);
             lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
@@ -243,7 +243,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                         //上传失败
                     } else {
                         String photoUri = finalFile.getUrl();
-                        zoneBackgroundImageView.setImageUrl(photoUri, GetVolley.getmInstance(mContext).getImageLoader());
+                        zoneBackgroundImageView.setImageUrl(photoUri, GetVolley.getmInstance().getImageLoader());
                         GroupSetting.getInstance().changeIcon(groupClass.ID, photoUri);
                         groupClass.Face = photoUri;
                         GroupList.getInstance().updateGroup(groupClass);

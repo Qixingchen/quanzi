@@ -57,7 +57,7 @@ public class NewGroupStep2Fragment extends Fragment {
     public void onStart() {
         super.onStart();
         ((NetworkImageView) mActivity.findViewById(R.id.group_face_image_view)).setImageUrl(
-                ans.groupFaceUri, GetVolley.getmInstance(mActivity).getImageLoader());
+                ans.groupFaceUri, GetVolley.getmInstance().getImageLoader());
         ((TextView) mActivity.findViewById(R.id.group_name_text_view)).setText(ans.groupName);
         List<LabeledIntent> intents = GetShareIntent.onShareClick(mActivity);
 

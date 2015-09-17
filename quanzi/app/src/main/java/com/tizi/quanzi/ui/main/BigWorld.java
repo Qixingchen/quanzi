@@ -90,7 +90,7 @@ public class BigWorld extends BaseFragment {
     protected void initViewsAndSetEvent() {
         Login.UserEntity userInfo = MyUserInfo.getInstance().getUserInfo();
         userFace.setImageUrl(userInfo.getIcon(),
-                GetVolley.getmInstance(mActivity).getImageLoader());
+                GetVolley.getmInstance().getImageLoader());
         userName.setText(userInfo.getUserName());
 
         if (userInfo.getSex() == 1) {

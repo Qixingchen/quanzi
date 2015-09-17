@@ -21,22 +21,6 @@ public class Login extends OnlySuccess {
     @SerializedName("group")
     private List<GroupEntity> group;
 
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
     public UserEntity getUser() {
         return user;
     }

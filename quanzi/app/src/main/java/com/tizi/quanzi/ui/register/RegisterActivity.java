@@ -1,21 +1,32 @@
 package com.tizi.quanzi.ui.register;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
+import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.network.AutoLogin;
+import com.tizi.quanzi.network.RetrofitAPI;
+import com.tizi.quanzi.network.RetrofitNetwork;
+import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
+import com.tizi.quanzi.tool.Tool;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.Response;
 
 
 public class RegisterActivity extends AppCompatActivity implements Register1stepFragment.NextStep,
@@ -25,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
     private String password;
 
     private CompleteUesrInfo completeUesrInfo;
+    private Context context = this;
 
     private final static String TAG = RegisterActivity.class.getSimpleName();
 
@@ -107,27 +119,40 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
      */
     @Override
     public void CompUserInfoOK(String userName, int sex, String faceUri) {
-        Response.Listener<String> listener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e(TAG, response);
-            }
-        };
-        String baseuri = getString(R.string.testbaseuri) + "/applogin/regF";
-        Map<String, String> para = new TreeMap();
-        para.put("account", phoneNumber);
-        para.put("password", GetPassword.fullHash(password));
-        para.put("username", userName);
-        para.put("sex", String.valueOf(sex));
-        para.put("icon", faceUri);
+
         AppStaticValue.setUserToken(AppStaticValue.getUserID());
-        GetVolley.getmInstance(this, listener).addPostRequestWithSign(Request.Method.POST, baseuri, para);
+        RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class).register(phoneNumber, userName,
+                GetPassword.fullHash(password), String.valueOf(sex), faceUri, "2",
+                String.valueOf(Build.VERSION.SDK_INT) + " GMS:" + GetGMSStatue.haveGMS(this)
+                , Build.MODEL + "  " + Build.DEVICE, Tool.getSignMap()).enqueue(new Callback<Login>() {
+            @Override
+            public void onResponse(Response<Login> response) {
+                if (response.isSuccess() && response.body().isSuccess()) {
+                    Login login = response.body();
+                    AutoLogin.setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(),
+                            login.getUser().getToken());
+                    MyUserInfo.getInstance().setUserInfo(login.getUser());
+                    PrivateMessPairList.getInstance().getGroupsFromDataBase();
+                    List<Login.GroupEntity> groups = new ArrayList<>();
+                    StartMainActivity.startByLoginGroup(groups, context);
+                } else {
+                    String mess = response.isSuccess() ? response.body().msg : response.message();
+                    Log.w(TAG, mess);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.w(TAG, t.getMessage());
+            }
+        });
+
     }
 
     /**
      * 选图 拍照返回值
      *
-     * @see CompleteUesrInfo.onIntentResult
+     * @see CompleteUesrInfo
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

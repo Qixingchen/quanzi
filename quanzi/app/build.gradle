@@ -93,5 +93,7 @@ dependencies {
     //retrofit
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
+    //okHttp
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
 
 }

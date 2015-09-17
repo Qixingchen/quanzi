@@ -20,9 +20,10 @@ public abstract class RetrofitNetworkAbs {
 
     public abstract <T extends RetrofitNetworkAbs> T setNetworkListener(NetworkListener networkListener);
 
-    public interface NetworkListener {
+    // TODO: 15/9/17 T
+    public interface NetworkListener<T extends Object> {
         // TODO: 15/8/20 why
-        void onOK(Object ts);
+        void onOK(T ts);
 
         void onError(String Message);
     }

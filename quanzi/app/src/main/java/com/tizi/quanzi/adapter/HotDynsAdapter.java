@@ -45,7 +45,7 @@ public class HotDynsAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View v = LayoutInflater.from(container.getContext())
-                .inflate(R.layout.topic_hot_dyns_item, container, false);
+                .inflate(R.layout.item_topic_hot_dyns, container, false);
         HotDyns.DynsEntity dyn = dyns.get(position);
         NetworkImageView dynPic = (NetworkImageView) v.findViewById(R.id.dyn_pic);
         TextView dynText = (TextView) v.findViewById(R.id.dyn_text);

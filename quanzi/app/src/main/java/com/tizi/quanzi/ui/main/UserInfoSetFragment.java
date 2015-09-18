@@ -96,7 +96,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
         LayoutInflater inflater = mActivity.getLayoutInflater();
-        final View layout = inflater.inflate(R.layout.one_line_dialog,
+        final View layout = inflater.inflate(R.layout.dialog_one_line,
                 (ViewGroup) mActivity.findViewById(R.id.one_line_dialog));
         final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
         TextView title = (TextView) layout.findViewById(R.id.dialog_title);

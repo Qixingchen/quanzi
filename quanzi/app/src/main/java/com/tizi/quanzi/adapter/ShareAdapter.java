@@ -41,7 +41,7 @@ public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.share_item, parent, false);
+                .inflate(R.layout.item_share, parent, false);
         // set the view's size, margins, paddings and layout parameters
         MyViewHolder vh = new MyViewHolder(v);
         return vh;

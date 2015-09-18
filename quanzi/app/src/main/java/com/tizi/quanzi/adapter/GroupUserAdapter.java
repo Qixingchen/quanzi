@@ -132,7 +132,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         final Activity activity = AppStaticValue.getActivity(QuanziZoneActivity.class.getSimpleName());
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         LayoutInflater inflater = activity.getLayoutInflater();
-        final View layout = inflater.inflate(R.layout.one_line_dialog,
+        final View layout = inflater.inflate(R.layout.dialog_one_line,
                 (ViewGroup) activity.findViewById(R.id.one_line_dialog));
         final EditText userid = (EditText) layout.findViewById(R.id.dialog_edit_text);
         TextView title = (TextView) layout.findViewById(R.id.dialog_title);

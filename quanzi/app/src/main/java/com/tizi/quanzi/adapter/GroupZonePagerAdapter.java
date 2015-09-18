@@ -32,8 +32,8 @@ public class GroupZonePagerAdapter extends PagerAdapter {
     public GroupZonePagerAdapter(Context context) {
         mContext = context;
         LayoutInflater Inflater = LayoutInflater.from(context);
-        Views[0] = Inflater.inflate(R.layout.group_zone_dyns_item, null);
-        Views[1] = Inflater.inflate(R.layout.group_zone_dyns_item, null);
+        Views[0] = Inflater.inflate(R.layout.item_group_zone_dyns, null);
+        Views[1] = Inflater.inflate(R.layout.item_group_zone_dyns, null);
     }
 
     /**

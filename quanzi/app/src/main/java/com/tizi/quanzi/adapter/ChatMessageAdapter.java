@@ -69,17 +69,17 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
         switch (viewType) {
             case StaticField.ChatFrom.OTHER:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.ohter_chat_item, parent, false);
+                        .inflate(R.layout.item_ohter_chat, parent, false);
                 vh = new OtherMessViewHolder(v);
                 break;
             case StaticField.ChatFrom.ME:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.my_chat_item, parent, false);
+                        .inflate(R.layout.item_my_chat, parent, false);
                 vh = new MyMessViewHolder(v);
                 break;
             default:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.ohter_chat_item, parent, false);
+                        .inflate(R.layout.item_ohter_chat, parent, false);
                 vh = new OtherMessViewHolder(v);
         }
 

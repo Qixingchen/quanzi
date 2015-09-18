@@ -3,7 +3,6 @@ package com.tizi.quanzi.ui.main;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import com.tizi.quanzi.adapter.PrivateMessageAdapter;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.ArrayList;
@@ -54,6 +54,10 @@ public class PrivateMessageFragment extends BaseFragment {
         List<SystemMessage> systemMessages = DBAct.getInstance().quaryAllSysMess();
         List<PrivateMessPair> privateMessPairs = new ArrayList<>();
         for (SystemMessage systemMessage : systemMessages) {
+            // TODO: 15/9/18 筛选无需显示的消息
+            if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
+                continue;
+            }
             privateMessPairs.add(PrivateMessPair.PriMessFromSystemMess(systemMessage));
         }
         privateMessageAdapter = new PrivateMessageAdapter(privateMessPairs, mActivity,

@@ -29,8 +29,8 @@
                 android:layout_width="@dimen/group_face"
                 android:layout_height="@dimen/group_face"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginTop="4dp"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 app:border_color="#00000000"
                 app:border_width="2dp"
                 tools:background="@drawable/face"/>
@@ -67,9 +67,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:maxLines="1"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/normal_text_size"
-                tools:text="lastCommit"/>
+                tools:text="lastCommit
+                11
+                11"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -19,11 +19,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
@@ -34,7 +31,6 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
-import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
@@ -57,7 +53,6 @@ public class ChatActivity extends BaseActivity {
     private android.widget.ImageButton SendButton;
     private String CONVERSATION_ID = "";
     private AVIMConversation conversation;
-    private AVIMMessagesQueryCallback avimMessagesQueryCallback;
     private RequreForImage requreForImage;
     private RecodeAudio recodeAudio;
     private int ChatType;
@@ -168,14 +163,8 @@ public class ChatActivity extends BaseActivity {
         ChatSwipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ChatMessage oldestChatMess = DBAct.getInstance().queryOldestMessage(CONVERSATION_ID);
-                // TODO: 15/8/19 保持位置或者自动加在旧消息
-                if (oldestChatMess != null) {
-                    conversation.queryMessages(oldestChatMess.messID, oldestChatMess.create_time,
-                            QueryLimit, avimMessagesQueryCallback);
-                } else {
-                    conversation.queryMessages(QueryLimit, avimMessagesQueryCallback);
-                }
+                ChatSwipeToRefresh.setRefreshing(false);
+                // TODO: 15/9/18 fresh from database
             }
         });
 
@@ -329,7 +318,7 @@ public class ChatActivity extends BaseActivity {
     /*聊天消息回调接口*/
     private void setMessageCallback() {
 
-        //富文本简体
+        //富文本解析
         MutiTypeMsgHandler.getInstance().setOnMessage(new MutiTypeMsgHandler.OnMessage() {
             /**
              * 收到消息，加入列表
@@ -356,30 +345,6 @@ public class ChatActivity extends BaseActivity {
                 chatMessageAdapter.addOrUpdateMessage(chatMessage);
             }
         });
-
-        //聊天消息获取回调
-        avimMessagesQueryCallback = new AVIMMessagesQueryCallback() {
-            @Override
-            public void done(List<AVIMMessage> list, AVException e) {
-                if (e != null) {
-                    e.printStackTrace();
-                    ChatSwipeToRefresh.setRefreshing(false);
-                    return;
-                }
-                for (AVIMMessage avimMessage : list) {
-                    try {
-                        ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage((AVIMTypedMessage) avimMessage);
-                        DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-                        chatMessageAdapter.addOrUpdateMessage(chatMessage);
-                    } catch (ClassFormatError formatError) {
-                        SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess((AVIMTypedMessage) avimMessage);
-                        Log.w(TAG, systemMessage.toString());
-                        DBAct.getInstance().addOrReplaceSysMess(systemMessage);
-                    }
-                }
-                ChatSwipeToRefresh.setRefreshing(false);
-            }
-        };
     }
 
     /**

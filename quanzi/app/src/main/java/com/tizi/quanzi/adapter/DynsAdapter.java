@@ -51,7 +51,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     @Override
     public DynsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.dyns_item, parent, false);
+                .inflate(R.layout.item_dyns, parent, false);
         // set the view's size, margins, paddings and layout parameters
         DynsViewHolder vh = new DynsViewHolder(v);
         return vh;
@@ -83,7 +83,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
             holder.weibo_pics_NetworkImageView[i].setImageUrl(dyns.pics.get(i).url,
                     GetVolley.getmInstance().getImageLoader());
         }
-        holder.setPicUnvisable(picsNum);
+        holder.setPicVisbility(picsNum);
         if (position == dynsList.size() - 1) {
             if (needMore != null) {
                 needMore.needMore();
@@ -163,15 +163,19 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         }
 
         /**
+         * 将需要的图片设置为可见
          * 将多余的图片设置成不可见
          * 如果没有图片，则将 weibo_pics_linearLayout 也设置为不可见
          *
          * @param picsNum 图片数量
          */
-        public void setPicUnvisable(int picsNum) {
+        public void setPicVisbility(int picsNum) {
             if (picsNum == 0) {
                 weibo_pics_linearLayout.setVisibility(View.GONE);
                 return;
+            }
+            for (int i = 0; i < picsNum; i++) {
+                weibo_pics_NetworkImageView[i].setVisibility(View.VISIBLE);
             }
             for (int i = picsNum; i < 9; i++) {
                 weibo_pics_NetworkImageView[i].setVisibility(View.GONE);

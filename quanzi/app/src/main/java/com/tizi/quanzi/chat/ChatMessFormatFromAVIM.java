@@ -61,7 +61,7 @@ public class ChatMessFormatFromAVIM {
             chatMessage = textChatMessageFromAVMessage(message);
             Log.i(TAG, "未知类型消息");
         }
-        Log.w(TAG, chatMessage.toString());
+        Log.i(TAG, chatMessage.toString());
         return chatMessage;
     }
 
@@ -105,6 +105,7 @@ public class ChatMessFormatFromAVIM {
     }
 
     /*转换位置消息*/
+    @Deprecated
     private static ChatMessage locationChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.TEXT;

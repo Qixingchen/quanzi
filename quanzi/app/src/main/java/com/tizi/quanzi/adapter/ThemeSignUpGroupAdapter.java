@@ -46,7 +46,7 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
     @Override
     public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.theme_sign_up_group_item, parent, false);
+                .inflate(R.layout.item_theme_sign_up_group, parent, false);
         return new GroupViewHolder(v);
     }
 

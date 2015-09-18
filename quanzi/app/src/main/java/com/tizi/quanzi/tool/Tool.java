@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.ApiInfoGson;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.ApiInfo;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 
@@ -24,6 +25,8 @@ import java.util.TreeMap;
  * 工具类
  */
 public class Tool {
+
+    private static final String TAG = Tool.class.getSimpleName();
 
     /**
      * 检查是否存在SDCard
@@ -167,6 +170,7 @@ public class Tool {
                 ApiInfoGson apiInfo = (ApiInfoGson) ts;
                 long afterMS = Calendar.getInstance().getTimeInMillis();
                 AppStaticValue.timeAddtion = Long.parseLong(apiInfo.info.time) - beforeMS - (afterMS - beforeMS) / 2;
+                Log.i("时间差：", String.valueOf(AppStaticValue.timeAddtion));
             }
 
             @Override

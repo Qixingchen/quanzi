@@ -80,12 +80,12 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<PriavteMessAbsVi
         switch (viewType) {
             case StaticField.ChatFrom.OTHER:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.private_mess_item, parent, false);
+                        .inflate(R.layout.item_private_mess, parent, false);
                 vh = new SystemMessViewHolder(v);
                 break;
             default:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.private_mess_item, parent, false);
+                        .inflate(R.layout.item_private_mess, parent, false);
                 vh = new SystemMessViewHolder(v);
         }
 

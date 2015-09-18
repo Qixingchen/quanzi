@@ -68,17 +68,17 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         switch (viewType) {
             case -1:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.hope_for_next, parent, false);
+                        .inflate(R.layout.item_hope_for_next, parent, false);
                 viewHolder = new HopeForNext(v, mContext);
                 break;
             case 1:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.tuo_dan_zuo_zan_item, parent, false);
+                        .inflate(R.layout.item_tuo_dan_zuo_zan, parent, false);
                 viewHolder = new TuoDanZuoZanViewHolder(v, mContext);
                 break;
             default:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.dyns_item, parent, false);
+                        .inflate(R.layout.item_dyns, parent, false);
                 viewHolder = new DefaultViewHolder(v, mContext);
         }
         return viewHolder;

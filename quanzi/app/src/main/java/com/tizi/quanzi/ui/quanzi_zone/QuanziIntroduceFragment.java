@@ -219,9 +219,12 @@ public class QuanziIntroduceFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            String filepath = requreForImage.ZipedFilePathFromIntent(data);
-
-            savePhotoToLC(filepath);
+            switch (requestCode) {
+                case StaticField.PermissionRequestCode.requreForImage:
+                    String filepath = requreForImage.ZipedFilePathFromIntent(data);
+                    savePhotoToLC(filepath);
+                    break;
+            }
         }
     }
 

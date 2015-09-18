@@ -174,7 +174,7 @@ public interface RetrofitAPI {
 
         @POST("/user/findByContact")
         Call<ContantUsers> findContactUser(
-                @Query("mobiles") String mpbiles,
+                @Query(value = "mobiles",encoded = true) String mpbiles,
                 @QueryMap Map<String, String> signMap);
     }
 

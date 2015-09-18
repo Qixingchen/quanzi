@@ -99,6 +99,7 @@ public class StaticField {
         public final static int requreForImage = 1;
         public final static int RECORD_AUDIO = 2;
         public final static int userInfoSetFragment = 3;
+        public final static int addContactUsers = 4;
     }
 
     /*消息刷新数量*/

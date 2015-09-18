@@ -12,7 +12,6 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.ApiInfo;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -124,11 +123,11 @@ public class Tool {
      */
     public static String getUTF_8String(String value) {
         String encoded = "";
-        try {
-            encoded = URLEncoder.encode(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {//only for api 21-
-            e.printStackTrace();
-        }
+//        try {
+            encoded = URLEncoder.encode(value);
+//        } catch (UnsupportedEncodingException e) {//only for api 21-
+//            e.printStackTrace();
+//        }
         return encoded;
     }
 

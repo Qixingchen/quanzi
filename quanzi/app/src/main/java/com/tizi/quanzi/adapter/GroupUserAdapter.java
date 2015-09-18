@@ -1,16 +1,18 @@
 package com.tizi.quanzi.adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -18,12 +20,13 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.GroupAllInfo;
-import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 
 import java.util.List;
@@ -129,25 +132,34 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      * @param groupid 当前组ID
      */
     private void addUser(final String groupid) {
-        final Activity activity = AppStaticValue.getActivity(QuanziZoneActivity.class.getSimpleName());
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        LayoutInflater inflater = activity.getLayoutInflater();
-        final View layout = inflater.inflate(R.layout.dialog_one_line,
-                (ViewGroup) activity.findViewById(R.id.one_line_dialog));
-        final EditText userid = (EditText) layout.findViewById(R.id.dialog_edit_text);
-        TextView title = (TextView) layout.findViewById(R.id.dialog_title);
-        title.setText("输入好友的账号");
-        userid.setHint("账号");
-        builder.setTitle("添加好友").setView(layout)
-                .setPositiveButton("添加", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final String convID = GroupList.getInstance().getGroup(groupid).convId;
 
-                        FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+        final Activity activity = AppStaticValue.getActivity(QuanziZoneActivity.class.getSimpleName());
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            int code = StaticField.PermissionRequestCode.addContactUsers;
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CONTACTS}, code);
+            return;
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        final View layout = inflater.inflate(R.layout.dialog_invite_list,
+                (ViewGroup) activity.findViewById(R.id.dialog_invite_list));
+
+        final RecyclerView phoneList = (RecyclerView) layout.findViewById(R.id.invite_item_recycler_view);
+        phoneList.setLayoutManager(new LinearLayoutManager(activity));
+
+        FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                ContantUsers users = (ContantUsers) ts;
+                InviteListAdapter inviteListAdapter = new InviteListAdapter(users.mobiles, activity,
+                        new InviteListAdapter.OnAddUser() {
                             @Override
-                            public void onOK(Object ts) {
-                                OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            public void add(String userID) {
+                                final String convID = GroupList.getInstance().getGroup(groupid).convId;
+
                                 GroupUserAdmin.getInstance(mContext)
                                         .setOnResult(new GroupUserAdmin.OnResult() {
                                             @Override
@@ -163,19 +175,18 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                                                 Log.w(TAG, "添加失败" + errorMessage);
                                             }
                                         })
-                                        .addMember(convID, groupid, otherUserInfo.id);
+                                        .addMember(convID, groupid, userID);
                             }
+                        });
+                phoneList.setAdapter(inviteListAdapter);
+                builder.setView(layout).show();
+            }
 
-                            @Override
-                            public void onError(String Message) {
-                                Toast.makeText(mContext, "添加失败,查找用户失败：" + Message
-                                        , Toast.LENGTH_LONG).show();
-                            }
-                        }).finduser(userid.getText().toString());
+            @Override
+            public void onError(String Message) {
 
-
-                    }
-                }).setNegativeButton("取消", null).show();
+            }
+        }).findContactUsers();
     }
 
     /**
@@ -232,4 +243,5 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             FindViewByID(v);
         }
     }
+
 }

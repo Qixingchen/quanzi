@@ -1,9 +1,18 @@
 package com.tizi.quanzi.network;
 
+import com.google.gson.Gson;
+import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.OtherUserInfo;
+import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.tool.ReadContact;
 import com.tizi.quanzi.tool.Tool;
+import com.tizi.quanzi.ui.main.MainActivity;
+
+import java.util.List;
 
 import retrofit.Callback;
+import retrofit.Response;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -36,6 +45,27 @@ public class FindUser extends RetrofitNetworkAbs {
             }
         });
         return this;
+    }
+
+    public void findContactUsers() {
+        // TODO: 15/9/18 activity
+        List<ReadContact.Mobiles> mobilesList = ReadContact.readContact(
+                AppStaticValue.getActivity(MainActivity.class.getSimpleName()));
+
+        String mobileString = new Gson().toJson(mobilesList);
+        Log.i(TAG, mobileString);
+        findUserService.findContactUser(Tool.getUTF_8String(mobileString),
+                Tool.getSignMap()).enqueue(new Callback<ContantUsers>() {
+            @Override
+            public void onResponse(Response<ContantUsers> response) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

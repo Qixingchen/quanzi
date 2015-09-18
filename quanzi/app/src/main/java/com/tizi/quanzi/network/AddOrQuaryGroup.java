@@ -16,6 +16,7 @@ import retrofit.Response;
  *
  * @see GroupClass
  * @see Group
+ * @see com.tizi.quanzi.network.RetrofitAPI.Group
  */
 public class AddOrQuaryGroup extends RetrofitNetworkAbs {
 

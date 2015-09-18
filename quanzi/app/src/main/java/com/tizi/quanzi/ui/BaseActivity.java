@@ -1,5 +1,6 @@
 package com.tizi.quanzi.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -11,9 +12,13 @@ import com.tizi.quanzi.app.AppStaticValue;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    @Override
+    protected Context mContext;
+    protected final String TAG = this.getClass().getSimpleName();
+
+
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
+        mContext = this;
         findView();
         initView();
         setViewEvent();

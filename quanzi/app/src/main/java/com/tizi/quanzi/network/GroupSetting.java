@@ -8,6 +8,7 @@ import retrofit.Callback;
 /**
  * Created by qixingchen on 15/9/9.
  * 群设置管理－后台
+ * @see com.tizi.quanzi.network.RetrofitAPI.Group
  */
 public class GroupSetting extends RetrofitNetworkAbs {
 

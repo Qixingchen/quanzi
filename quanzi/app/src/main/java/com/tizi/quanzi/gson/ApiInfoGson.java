@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by qixingchen on 15/9/16.
  */
-public class ApiInfo extends OnlySuccess {
+public class ApiInfoGson {
 
     @SerializedName("info")
     public InfoEntity info;

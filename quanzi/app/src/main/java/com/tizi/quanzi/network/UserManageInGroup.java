@@ -10,6 +10,8 @@ import retrofit.Response;
 /**
  * Created by qixingchen on 15/9/2.
  * 成员管理后台调用
+ *
+ * @see com.tizi.quanzi.network.RetrofitAPI.GroupMember
  */
 public class UserManageInGroup extends RetrofitNetworkAbs {
 

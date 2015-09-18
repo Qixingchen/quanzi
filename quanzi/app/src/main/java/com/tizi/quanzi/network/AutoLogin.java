@@ -19,6 +19,8 @@ import retrofit.Callback;
  * Created by qixingchen on 15/7/23.
  * 登陆
  * todo 获取本地ts与服务器的差
+ *
+ * @see com.tizi.quanzi.network.RetrofitAPI.UserAccount
  */
 public class AutoLogin extends RetrofitNetworkAbs {
     private static SharedPreferences preferences;

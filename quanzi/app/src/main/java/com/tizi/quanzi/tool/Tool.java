@@ -7,11 +7,15 @@ import android.util.DisplayMetrics;
 
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.ApiInfoGson;
+import com.tizi.quanzi.network.ApiInfo;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -150,5 +154,25 @@ public class Tool {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 刷新时间差
+     */
+    public static void flushTimeDifference() {
+        final long beforeMS = Calendar.getInstance().getTimeInMillis();
+        ApiInfo.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                ApiInfoGson apiInfo = (ApiInfoGson) ts;
+                long afterMS = Calendar.getInstance().getTimeInMillis();
+                AppStaticValue.timeAddtion = Long.parseLong(apiInfo.info.time) - beforeMS - (afterMS - beforeMS) / 2;
+            }
+
+            @Override
+            public void onError(String Message) {
+
+            }
+        }).getAPiinfo();
     }
 }

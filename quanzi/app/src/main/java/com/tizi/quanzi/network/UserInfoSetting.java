@@ -9,6 +9,8 @@ import retrofit.Callback;
 /**
  * Created by qixingchen on 15/9/10.
  * 用户个人信息变更
+ *
+ * @see com.tizi.quanzi.network.RetrofitAPI.UserAccount
  */
 public class UserInfoSetting extends RetrofitNetworkAbs {
 

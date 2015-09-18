@@ -29,7 +29,7 @@ public class AppStaticValue {
         UserToken = preferences.getString(StaticField.TokenPreferences.USERTOKEN, "");
         UserPhone = preferences.getString(StaticField.TokenPreferences.USERPHONE, "");
 
-        groupNotifipreferences = application.getSharedPreferences(UserID + "GroupNotifi",
+        groupNotifiPreferences = application.getSharedPreferences(UserID + "GroupNotifi",
                 App.MODE_PRIVATE);
 
         if (UserID.compareTo("") != 0) {
@@ -45,7 +45,7 @@ public class AppStaticValue {
     private static Application application;
 
     //偏好储存
-    private static SharedPreferences groupNotifipreferences;
+    private static SharedPreferences groupNotifiPreferences;
     private static SharedPreferences preferences;
     private static String UserToken = "";
     private static String UserID = "";
@@ -57,6 +57,9 @@ public class AppStaticValue {
     //数据库
     private static DataBaseHelper db;
     private static SQLiteDatabase db1;
+
+    //时间差
+    public static long timeAddtion = 0;
 
     /* 设置数据库*/
     public static void setDataBaseHelper(String userID) {
@@ -95,8 +98,8 @@ public class AppStaticValue {
         return preferences.getString(Name, "");
     }
 
-    public static SharedPreferences getGroupNotifipreferences() {
-        return groupNotifipreferences;
+    public static SharedPreferences getGroupNotifiPreferences() {
+        return groupNotifiPreferences;
     }
 
     public static void setPrefer(String name, String vaule) {

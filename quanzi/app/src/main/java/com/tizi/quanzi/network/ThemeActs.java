@@ -13,6 +13,9 @@ import retrofit.Response;
 
 /**
  * Created by qixingchen on 15/9/11.
+ * 主题相关后台
+ *
+ * @see com.tizi.quanzi.network.RetrofitAPI.Themes
  */
 public class ThemeActs extends RetrofitNetworkAbs {
 

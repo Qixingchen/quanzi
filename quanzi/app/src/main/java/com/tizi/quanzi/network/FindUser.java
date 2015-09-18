@@ -8,6 +8,8 @@ import retrofit.Callback;
 /**
  * Created by qixingchen on 15/9/3.
  * 通过account查询用户
+ *
+ * @see com.tizi.quanzi.network.RetrofitAPI.FindUser
  */
 public class FindUser extends RetrofitNetworkAbs {
 

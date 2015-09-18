@@ -1,7 +1,7 @@
 package com.tizi.quanzi.network;
 
+import com.tizi.quanzi.gson.ApiInfoGson;
 import com.tizi.quanzi.gson.ContantUsers;
-import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.gson.HotDyns;
@@ -120,7 +120,7 @@ public interface RetrofitAPI {
 
     }
 
-    interface dyns {
+    interface Dyns {
         @POST("/grpdyn/addF")
         Call<OnlySuccess> addDyn(
                 @Query("actid") String themeID,
@@ -134,7 +134,7 @@ public interface RetrofitAPI {
                 @QueryMap Map<String, String> signMap);
 
         @POST("/grpdyn/findF")
-        Call<Dyns> findDyns(
+        Call<com.tizi.quanzi.gson.Dyns> findDyns(
                 @Query("actid") String actID,
                 @Query("grpid") String groupID,
                 @Query("start") int start,
@@ -179,8 +179,8 @@ public interface RetrofitAPI {
     }
 
     interface ApiInfo {
-        @POST("appinfo/info")
-        Call<ApiInfo> getApiVer();
+        @POST("apiinfo/info")
+        Call<ApiInfoGson> getApiVer();
         // TODO: 15/9/16 on login and on time change
         //http://stackoverflow.com/questions/5481386/date-and-time-change-listener-in-android
     }

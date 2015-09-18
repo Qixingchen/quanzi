@@ -28,7 +28,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
 
     public void setNeedNotifi(Boolean needNotifi, boolean NeedWrite) {
         if (NeedWrite) {
-            AppStaticValue.getGroupNotifipreferences().edit().putBoolean(ID, needNotifi).apply();
+            AppStaticValue.getGroupNotifiPreferences().edit().putBoolean(ID, needNotifi).apply();
         }
         this.needNotifi = needNotifi;
     }
@@ -75,7 +75,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
             groupClass.lastMessTime = 0;
             groupClass.UnreadCount = 0;
         }
-        groupClass.needNotifi = AppStaticValue.getGroupNotifipreferences().getBoolean(groupClass.ID, true);
+        groupClass.needNotifi = AppStaticValue.getGroupNotifiPreferences().getBoolean(groupClass.ID, true);
 
         return groupClass;
     }

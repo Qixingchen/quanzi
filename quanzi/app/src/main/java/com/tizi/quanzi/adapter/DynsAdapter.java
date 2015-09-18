@@ -75,6 +75,10 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         holder.attitudesTextView.setText(String.valueOf(dyns.zan));
         holder.commentsTextView.setText(String.valueOf(dyns.commentNum));
         int picsNum = dyns.pics.size();
+        // TODO: 15/9/18 if >9 仅显示前9张
+        if (picsNum > 9) {
+            picsNum = 9;
+        }
         for (int i = 0; i < picsNum; i++) {
             holder.weibo_pics_NetworkImageView[i].setImageUrl(dyns.pics.get(i).url,
                     GetVolley.getmInstance().getImageLoader());

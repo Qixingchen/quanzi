@@ -56,7 +56,7 @@ public class ThemeSignUpFragment extends BaseFragment {
     }
 
     @Override
-    protected void findViews() {
+    protected void findViews(View view) {
         mGroupListRecyclerView = (RecyclerView) view.findViewById(R.id.group_item_recycler_view);
     }
 

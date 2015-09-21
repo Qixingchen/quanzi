@@ -44,7 +44,7 @@ public class PrivateMessageFragment extends BaseFragment {
     }
 
     @Override
-    protected void findViews() {
+    protected void findViews(View view) {
 
     }
 

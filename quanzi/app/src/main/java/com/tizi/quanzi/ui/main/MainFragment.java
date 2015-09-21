@@ -26,9 +26,9 @@ public class MainFragment extends BaseFragment {
     }
 
     @Override
-    protected void findViews() {
-        TabLayout tabLayout = (TabLayout) mActivity.findViewById(R.id.main_tab_layout);
-        mViewPager = (ViewPager) mActivity.findViewById(R.id.viewpager);
+    protected void findViews(View view) {
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.main_tab_layout);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mainFragmentPagerAdapter = new MainFragmentPagerAdapter(this.getChildFragmentManager(), mActivity);
         mViewPager.setAdapter(mainFragmentPagerAdapter);
         mViewPager.addOnPageChangeListener(getOnPageChangeListener());

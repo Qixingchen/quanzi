@@ -26,4 +26,5 @@
     <string name="complete">完成</string>
     <string name="isFirstRun">isFirstRun</string>
     <string name="private_message">私信</string>
+    <string name="title_activity_gallery">GalleryActivity</string>
 </resources>

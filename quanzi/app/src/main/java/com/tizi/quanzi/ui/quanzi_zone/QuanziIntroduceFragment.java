@@ -81,20 +81,20 @@ public class QuanziIntroduceFragment extends BaseFragment {
     }
 
     @Override
-    protected void findViews() {
-        zoneBackgroundImageView = (NetworkImageView) mActivity.findViewById(R.id.zoneBackground);
-        groupFaceImageView = (ImageView) mActivity.findViewById(R.id.gruop_face);
-        zoneSignTextview = (TextView) mActivity.findViewById(R.id.zoneSign);
+    protected void findViews(View view) {
+        zoneBackgroundImageView = (NetworkImageView) view.findViewById(R.id.zoneBackground);
+        groupFaceImageView = (ImageView) view.findViewById(R.id.gruop_face);
+        zoneSignTextview = (TextView) view.findViewById(R.id.zoneSign);
 
         collapsingtoolbar =
-                (CollapsingToolbarLayout) mActivity.findViewById(R.id.collapsing_toolbar);
+                (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         //crash is know issue at https://code.google.com/p/android/issues/detail?id=183166
-        //        viewPager = (ViewPager) mActivity.findViewById(R.id.detail_viewpager);
+        //        viewPager = (ViewPager) view.findViewById(R.id.detail_viewpager);
         //        groupZonePagerAdapter = new GroupZonePagerAdapter(mActivity);
         //        viewPager.setAdapter(groupZonePagerAdapter);
-        groupUsersRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_users_item_recycler_view);
-        groupDynsRecyclerView = (RecyclerView) mActivity.findViewById(R.id.group_dyns_item_recycler_view);
-        toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
+        groupUsersRecyclerView = (RecyclerView) view.findViewById(R.id.group_users_item_recycler_view);
+        groupDynsRecyclerView = (RecyclerView) view.findViewById(R.id.group_dyns_item_recycler_view);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         changeGroupImageFAB = (FloatingActionButton) view.findViewById(R.id.change_image_fab);
     }
 

@@ -24,13 +24,13 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
-
+        findViews(view);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        findViews();
+
         initViewsAndSetEvent();
     }
 
@@ -47,7 +47,7 @@ public abstract class BaseFragment extends Fragment {
         mActivity = activity;
     }
 
-    protected abstract void findViews();
+    protected abstract void findViews(View view);
 
     protected abstract void initViewsAndSetEvent();
 }

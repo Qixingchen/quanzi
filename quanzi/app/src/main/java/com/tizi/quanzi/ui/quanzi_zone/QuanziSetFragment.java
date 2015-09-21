@@ -57,13 +57,13 @@ public class QuanziSetFragment extends BaseFragment {
     }
 
     @Override
-    public void findViews() {
-        quanziName = (TextView) mActivity.findViewById(R.id.quanzi_name);
-        quanziTag = (TextView) mActivity.findViewById(R.id.quanzi_tag);
-        quanziSign = (TextView) mActivity.findViewById(R.id.quanzi_sign);
-        deleteMess = (TextView) mActivity.findViewById(R.id.delete_mess);
-        messNotifiSwitch = (Switch) mActivity.findViewById(R.id.mess_notifi_switch);
-        exitQuanzi = (Button) mActivity.findViewById(R.id.exit_quanzi);
+    public void findViews(View view) {
+        quanziName = (TextView) view.findViewById(R.id.quanzi_name);
+        quanziTag = (TextView) view.findViewById(R.id.quanzi_tag);
+        quanziSign = (TextView) view.findViewById(R.id.quanzi_sign);
+        deleteMess = (TextView) view.findViewById(R.id.delete_mess);
+        messNotifiSwitch = (Switch) view.findViewById(R.id.mess_notifi_switch);
+        exitQuanzi = (Button) view.findViewById(R.id.exit_quanzi);
 
     }
 

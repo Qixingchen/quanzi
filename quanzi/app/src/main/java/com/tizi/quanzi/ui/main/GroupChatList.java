@@ -89,7 +89,7 @@ public class GroupChatList extends BaseFragment {
     }
 
     @Override
-    protected void findViews() {
+    protected void findViews(View view) {
 
     }
 

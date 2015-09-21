@@ -76,14 +76,14 @@ public class BigWorld extends BaseFragment {
 
 
     @Override
-    protected void findViews() {
-        userFace = (NetworkImageView) mActivity.findViewById(R.id.userFace);
-        userName = (TextView) mActivity.findViewById(R.id.userName);
-        userSex = (ImageView) mActivity.findViewById(R.id.userSex);
-        userSign = (TextView) mActivity.findViewById(R.id.userSign);
-        Share = mActivity.findViewById(R.id.share);
-        Setting = mActivity.findViewById(R.id.setting);
-        userInfoLayout = mActivity.findViewById(R.id.userInfoLayout);
+    protected void findViews(View view) {
+        userFace = (NetworkImageView) view.findViewById(R.id.userFace);
+        userName = (TextView) view.findViewById(R.id.userName);
+        userSex = (ImageView) view.findViewById(R.id.userSex);
+        userSign = (TextView) view.findViewById(R.id.userSign);
+        Share = view.findViewById(R.id.share);
+        Setting = view.findViewById(R.id.setting);
+        userInfoLayout = view.findViewById(R.id.userInfoLayout);
     }
 
     @Override

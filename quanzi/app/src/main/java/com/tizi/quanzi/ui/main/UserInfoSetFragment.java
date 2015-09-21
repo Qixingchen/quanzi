@@ -65,7 +65,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
-    protected void findViews() {
+    protected void findViews(View view) {
         view.findViewById(R.id.userFace).setOnClickListener(this);
         userFaceTextView = (TextView) view.findViewById(R.id.userFaceTextView);
         view.findViewById(R.id.userName).setOnClickListener(this);

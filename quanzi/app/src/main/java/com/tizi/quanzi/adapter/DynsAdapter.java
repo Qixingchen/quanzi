@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
@@ -65,7 +66,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
      * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(DynsViewHolder holder, int position) {
+    public void onBindViewHolder(DynsViewHolder holder, final int position) {
         final Dyns.DynsEntity dyns = dynsList.get(position);
         holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.icon,
                 GetVolley.getmInstance().getImageLoader());
@@ -82,6 +83,13 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         for (int i = 0; i < picsNum; i++) {
             holder.weibo_pics_NetworkImageView[i].setImageUrl(dyns.pics.get(i).url,
                     GetVolley.getmInstance().getImageLoader());
+            holder.weibo_pics_NetworkImageView[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    StartGalleryActivity.startByStringList(getPicsInfo(position), mContext);
+
+                }
+            });
         }
         holder.setPicVisbility(picsNum);
         if (position == dynsList.size() - 1) {
@@ -91,6 +99,21 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
                 Log.w(TAG, "needMore 回调为空");
             }
         }
+    }
+
+    /**
+     * 获取图片uri List
+     *
+     * @param position Dyns位置
+     *
+     * @return pic uri List
+     */
+    private ArrayList<String> getPicsInfo(int position) {
+        ArrayList<String> pics = new ArrayList<>();
+        for (Dyns.DynsEntity.PicsEntity picsEntity : dynsList.get(position).pics) {
+            pics.add(picsEntity.url);
+        }
+        return pics;
     }
 
     /**
@@ -179,6 +202,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
             }
             for (int i = picsNum; i < 9; i++) {
                 weibo_pics_NetworkImageView[i].setVisibility(View.GONE);
+                weibo_pics_NetworkImageView[i].setOnClickListener(null);
             }
         }
 

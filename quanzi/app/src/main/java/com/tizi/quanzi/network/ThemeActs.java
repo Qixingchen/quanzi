@@ -2,6 +2,7 @@ package com.tizi.quanzi.network;
 
 import android.content.Context;
 
+import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.gson.Theme;
@@ -75,6 +76,26 @@ public class ThemeActs extends RetrofitNetworkAbs {
                 myOnFailure(t);
             }
         });
+    }
+
+    /**
+     * 获取自己已经参加活动的群
+     *
+     * @param themeID 活动ID
+     */
+    public void getMySignedGroups(String themeID) {
+        themeService.querySignedGroup(themeID, Tool.getSignMap())
+                .enqueue(new Callback<GroupIDs>() {
+                    @Override
+                    public void onResponse(Response<GroupIDs> response) {
+                        myOnResponse(response);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        myOnFailure(t);
+                    }
+                });
     }
 
     /**

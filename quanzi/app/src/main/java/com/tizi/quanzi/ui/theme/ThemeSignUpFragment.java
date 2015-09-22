@@ -11,19 +11,28 @@ import android.view.ViewGroup;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ThemeSignUpGroupAdapter;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.GroupIDs;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.ui.BaseFragment;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 报名参与活动
  */
 public class ThemeSignUpFragment extends BaseFragment {
 
+    private static final String ACT_ID = "actID";
     private RecyclerView mGroupListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private ThemeSignUpGroupAdapter themeSignUpGroupAdapter;
-
-    private static final String ACT_ID = "actID";
     private String actID;
+
+    public ThemeSignUpFragment() {
+        // Required empty public constructor
+    }
 
     public static ThemeSignUpFragment newInstance(String actID) {
         ThemeSignUpFragment fragment = new ThemeSignUpFragment();
@@ -41,12 +50,6 @@ public class ThemeSignUpFragment extends BaseFragment {
         }
 
     }
-
-
-    public ThemeSignUpFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +70,23 @@ public class ThemeSignUpFragment extends BaseFragment {
         mLayoutManager = new GridLayoutManager(mActivity, 3);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
         mGroupListRecyclerView.setAdapter(themeSignUpGroupAdapter);
+
+        ThemeActs.getNewInstance(getActivity()).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                GroupIDs groupIDs = (GroupIDs) ts;
+                Map<String, Boolean> signedGroup = new TreeMap<>();
+                for (String groupid : groupIDs.grpids) {
+                    signedGroup.put(groupid, true);
+                }
+                themeSignUpGroupAdapter.setGroupsSignedIn(signedGroup);
+            }
+
+            @Override
+            public void onError(String Message) {
+
+            }
+        }).getMySignedGroups(actID);
     }
 
 

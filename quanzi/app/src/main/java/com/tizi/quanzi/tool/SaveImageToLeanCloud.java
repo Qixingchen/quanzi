@@ -13,16 +13,16 @@ import java.io.IOException;
  */
 public class SaveImageToLeanCloud {
 
-    private GetImageUri getImageUri;
     private static final String TAG = SaveImageToLeanCloud.class.getSimpleName();
+    private GetImageUri getImageUri;
+
+    public static SaveImageToLeanCloud getNewInstance() {
+        return new SaveImageToLeanCloud();
+    }
 
     public SaveImageToLeanCloud setGetImageUri(GetImageUri getImageUri) {
         this.getImageUri = getImageUri;
         return this;
-    }
-
-    public static SaveImageToLeanCloud getNewInstance() {
-        return new SaveImageToLeanCloud();
     }
 
     /**
@@ -67,7 +67,7 @@ public class SaveImageToLeanCloud {
      * @param maxHei   获取的图片链接最大高度
      */
     public void savePhoto(final String filePath, final String fileName, final int maxWei, final int maxHei) {
-        AVFile file = null;
+        AVFile file;
         try {
             file = AVFile.withAbsoluteLocalPath(fileName, filePath);
             final AVFile finalFile = file;
@@ -80,7 +80,7 @@ public class SaveImageToLeanCloud {
                             getImageUri.onResult(null, false);
                         }
                     } else {
-                        String photoUri = "";
+                        String photoUri;
                         if (maxWei != 0) {
                             photoUri = finalFile.getThumbnailUrl(false, maxWei, maxHei);
                         } else {
@@ -100,13 +100,19 @@ public class SaveImageToLeanCloud {
         }
     }
 
-
-    public interface GetImageUri {
-        void onResult(String uri, boolean success);
-    }
-
+    /**
+     * 从图片地址获取文件名
+     *
+     * @param filePath 文件地址
+     *
+     * @return 文件名
+     */
     private String getFileName(String filePath) {
         int last = filePath.lastIndexOf("/");
         return filePath.substring(last + 1);
+    }
+
+    public interface GetImageUri {
+        void onResult(String uri, boolean success);
     }
 }

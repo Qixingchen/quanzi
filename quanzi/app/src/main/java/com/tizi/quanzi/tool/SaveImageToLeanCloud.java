@@ -13,30 +13,18 @@ import java.io.IOException;
  */
 public class SaveImageToLeanCloud {
 
-<<<<<<< HEAD
-    private GetImageUri getImageUri;
-    private static final String TAG = SaveImageToLeanCloud.class.getSimpleName();
-=======
     private static final String TAG = SaveImageToLeanCloud.class.getSimpleName();
     private GetImageUri getImageUri;
 
     public static SaveImageToLeanCloud getNewInstance() {
         return new SaveImageToLeanCloud();
     }
->>>>>>> origin/master
 
     public SaveImageToLeanCloud setGetImageUri(GetImageUri getImageUri) {
         this.getImageUri = getImageUri;
         return this;
     }
 
-<<<<<<< HEAD
-    public static SaveImageToLeanCloud getNewInstance() {
-        return new SaveImageToLeanCloud();
-    }
-
-=======
->>>>>>> origin/master
     /**
      * 将图片储存到LeanCloud
      * 图片名称使用文件名
@@ -79,11 +67,7 @@ public class SaveImageToLeanCloud {
      * @param maxHei   获取的图片链接最大高度
      */
     public void savePhoto(final String filePath, final String fileName, final int maxWei, final int maxHei) {
-<<<<<<< HEAD
-        AVFile file = null;
-=======
         AVFile file;
->>>>>>> origin/master
         try {
             file = AVFile.withAbsoluteLocalPath(fileName, filePath);
             final AVFile finalFile = file;
@@ -96,11 +80,8 @@ public class SaveImageToLeanCloud {
                             getImageUri.onResult(null, false);
                         }
                     } else {
-<<<<<<< HEAD
-                        String photoUri = "";
-=======
                         String photoUri;
->>>>>>> origin/master
+
                         if (maxWei != 0) {
                             photoUri = finalFile.getThumbnailUrl(false, maxWei, maxHei);
                         } else {
@@ -119,14 +100,6 @@ public class SaveImageToLeanCloud {
             }
         }
     }
-
-<<<<<<< HEAD
-
-    public interface GetImageUri {
-        void onResult(String uri, boolean success);
-    }
-
-=======
     /**
      * 从图片地址获取文件名
      *
@@ -134,16 +107,12 @@ public class SaveImageToLeanCloud {
      *
      * @return 文件名
      */
->>>>>>> origin/master
     private String getFileName(String filePath) {
         int last = filePath.lastIndexOf("/");
         return filePath.substring(last + 1);
     }
-<<<<<<< HEAD
-=======
 
     public interface GetImageUri {
         void onResult(String uri, boolean success);
     }
->>>>>>> origin/master
 }

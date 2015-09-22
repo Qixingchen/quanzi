@@ -29,6 +29,7 @@ import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.UserInfoSetting;
 import com.tizi.quanzi.tool.RequreForImage;
+import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.io.IOException;
@@ -45,17 +46,47 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     private TextView userSexTextView;
     private TextView userAgeTextView;
     private TextView userLocationTextView;
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            //your code here
+            Log.i(TAG, "定位完成");
+            try {
+                List<Address> address = new Geocoder(mContext).getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                String area = address.get(0).getAdminArea() + address.get(0).getLocality();
+                userLocationTextView.setText(area);
+                UserInfoSetting.getNewInstance().changeArea(area);
+                MyUserInfo.getInstance().getUserInfo().setArea(area);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
     private TextView userSignTextView;
     private Calendar calendar = Calendar.getInstance();
     private LocationManager locationManager;
-
     private RequreForImage requreForImage;
 
 
     public UserInfoSetFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,26 +149,35 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         userNameTextView.setText(input.getText().toString());
+                        UserInfoSetting.getNewInstance().changeName(input.getText().toString());
+                        MyUserInfo.getInstance().getUserInfo().setUserName(input.getText().toString());
                     }
                 });
                 builder.setTitle("修改昵称").show();
                 break;
             case R.id.userSex:
+                final int[] position = {0};
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(mActivity);
                 builder2.setSingleChoiceItems(new String[]{"男", "女"}, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                userSexTextView.setText("男");
+                                position[0] = 0;
                                 break;
                             case 1:
-                                userSexTextView.setText("女");
+                                position[0] = 1;
                                 break;
                         }
                     }
-                }).setTitle("选择性别")
-                        .setPositiveButton("确定", null).show();
+                }).setTitle("选择性别").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        UserInfoSetting.getNewInstance().changeSex(String.valueOf(position[0]));
+                        userSexTextView.setText(String.valueOf(position[0]));
+                        MyUserInfo.getInstance().getUserInfo().setSex(position[0]);
+                    }
+                }).show();
                 break;
             case R.id.userAge:
                 new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
@@ -165,6 +205,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         userSignTextView.setText(input.getText().toString());
+                        UserInfoSetting.getNewInstance().changeSign(input.getText().toString());
+                        MyUserInfo.getInstance().getUserInfo().setSignature(input.getText().toString());
                     }
                 });
                 builder.setTitle("修改签名").show();
@@ -172,44 +214,20 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(final Location location) {
-            //your code here
-            Log.i(TAG, "定位完成");
-            try {
-                List<Address> address = new Geocoder(mContext).getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                String area = address.get(0).getAdminArea() + address.get(0).getLocality();
-                userLocationTextView.setText(area);
-                UserInfoSetting.getNewInstance().changeArea(area);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG,"头像获取");
+        Log.i(TAG, "头像获取");
         if (resultCode == Activity.RESULT_OK) {
             String ans = requreForImage.ZipedFilePathFromIntent(data);
-            userFaceTextView.setText(ans);
+            SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+                @Override
+                public void onResult(String uri, boolean success) {
+                    if (success) {
+                        userFaceTextView.setText(uri);
+                        MyUserInfo.getInstance().getUserInfo().setIcon(uri);
+                    }
+                }
+            }).savePhoto(ans, MyUserInfo.getInstance().getUserInfo().getId() + "face.jpg", 200, 200);
         }
     }
 }

@@ -13,15 +13,10 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.SaveCallback;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.RequreForImage;
-
-import java.io.IOException;
+import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 
 /**
  * 用户填写个人信息界面
@@ -120,7 +115,17 @@ public class CompleteUesrInfo extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             String filePath = requreForImage.ZipedFilePathFromIntent(data);
             if (filePath != null) {
-                savePhoto(filePath);
+                SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+                    @Override
+                    public void onResult(String uri, boolean success) {
+                        if (!success) {
+                            return;
+                        }
+                        UserPhotoImageView.setImageUrl(uri,
+                                GetVolley.getmInstance().getImageLoader());
+                        photoOnlineUri = uri;
+                    }
+                }).savePhoto(filePath, 200, 200);
             }
         }
     }
@@ -134,32 +139,4 @@ public class CompleteUesrInfo extends Fragment {
         requreForImage.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    /**
-     * 将图片储存到LeanCloud
-     *
-     * @param filepath 图片地址
-     */
-    private void savePhoto(String filepath) {
-        AVFile file = null;
-        try {
-            file = AVFile.withAbsoluteLocalPath(AppStaticValue.getUserID() + "face.jpg",
-                    filepath);
-            final AVFile finalFile = file;
-            file.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e != null) {
-                        //上传失败
-                    } else {
-                        String photoUri = finalFile.getThumbnailUrl(false, 200, 200);
-                        UserPhotoImageView.setImageUrl(photoUri,
-                                GetVolley.getmInstance().getImageLoader());
-                        photoOnlineUri = photoUri;
-                    }
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

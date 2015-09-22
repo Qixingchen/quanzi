@@ -2,11 +2,13 @@ package com.tizi.quanzi.ui.main;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -26,6 +28,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.UserInfoSetting;
+import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.io.IOException;
@@ -45,6 +48,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     private TextView userSignTextView;
     private Calendar calendar = Calendar.getInstance();
     private LocationManager locationManager;
+
+    private RequreForImage requreForImage;
 
 
     public UserInfoSetFragment() {
@@ -104,37 +109,35 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         switch (view.getId()) {
             case R.id.userFace:
-                title.setText("输入好友的账号");
-                input.setHint("账号");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        userFaceTextView.setText(input.getText().toString());
-                    }
-                });
-                builder.setTitle("添加好友").show();
+                requreForImage = new RequreForImage(getActivity());
+                requreForImage.showDialogAndCallIntent("选择头像");
                 break;
             case R.id.userName:
-                title.setText("输入好友的账号");
-                input.setHint("账号");
+                input.setHint("输入昵称");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         userNameTextView.setText(input.getText().toString());
                     }
                 });
-                builder.setTitle("添加好友").show();
+                builder.setTitle("修改昵称").show();
                 break;
             case R.id.userSex:
-                title.setText("输入好友的账号");
-                input.setHint("账号");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(mActivity);
+                builder2.setSingleChoiceItems(new String[]{"男", "女"}, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        userSexTextView.setText(input.getText().toString());
+                        switch (which) {
+                            case 0:
+                                userSexTextView.setText("男");
+                                break;
+                            case 1:
+                                userSexTextView.setText("女");
+                                break;
+                        }
                     }
-                });
-                builder.setTitle("添加好友").show();
+                }).setTitle("选择性别")
+                        .setPositiveButton("确定", null).show();
                 break;
             case R.id.userAge:
                 new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
@@ -157,15 +160,14 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
                 break;
             case R.id.userSign:
-                title.setText("输入好友的账号");
-                input.setHint("账号");
+                input.setHint("输入签名");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         userSignTextView.setText(input.getText().toString());
                     }
                 });
-                builder.setTitle("添加好友").show();
+                builder.setTitle("修改签名").show();
                 break;
         }
     }
@@ -202,6 +204,13 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         }
     };
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG,"头像获取");
+        if (resultCode == Activity.RESULT_OK) {
+            String ans = requreForImage.ZipedFilePathFromIntent(data);
+            userFaceTextView.setText(ans);
+        }
+    }
 }
 

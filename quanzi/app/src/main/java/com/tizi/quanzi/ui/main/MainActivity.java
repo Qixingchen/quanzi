@@ -1,6 +1,7 @@
 package com.tizi.quanzi.ui.main;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -129,5 +130,14 @@ public class MainActivity extends BaseActivity {
         userInfoSetFragment = new UserInfoSetFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, userInfoSetFragment).addToBackStack("userInfoSetFragment").commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (userInfoSetFragment == null){
+            return;
+        }
+        userInfoSetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -83,10 +83,11 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         for (int i = 0; i < picsNum; i++) {
             holder.weibo_pics_NetworkImageView[i].setImageUrl(dyns.pics.get(i).url,
                     GetVolley.getmInstance().getImageLoader());
+            final int finalI = i;
             holder.weibo_pics_NetworkImageView[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    StartGalleryActivity.startByStringList(getPicsInfo(position), mContext);
+                    StartGalleryActivity.startByStringList(getPicsInfo(position), finalI, mContext);
 
                 }
             });

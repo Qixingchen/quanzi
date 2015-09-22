@@ -1,15 +1,19 @@
 package com.tizi.quanzi.adapter;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.tool.TouchImageView;
+import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.tool.GetThumbnailsUri;
 
 import java.util.List;
 
@@ -46,12 +50,25 @@ public class GalleryAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View v = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_big_pic, container, false);
-        TouchImageView image = (TouchImageView) v.findViewById(R.id.pic);
-        Log.i(TAG, "load:" + pics.get(position));
-        Picasso.with(activity)
-                .load(pics.get(position))
-                .into(image);
+        final SubsamplingScaleImageView image = (SubsamplingScaleImageView) v.findViewById(R.id.pic);
+
+        GetVolley.getmInstance().getImageLoader().get(pics.get(position), new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                Bitmap bitmap = response.getBitmap();
+                if (bitmap != null) {
+                    image.setImage(ImageSource.bitmap(bitmap));
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }, GetThumbnailsUri.getPXs(activity,360),GetThumbnailsUri.getPXs(activity,640));
+
         container.addView(v);
         return v;
     }
+
 }

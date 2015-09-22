@@ -120,4 +120,10 @@ public class StaticField {
         public final static String Account = "guest";
         public final static String PassWord = "1a100d2c0dab19ce3ceb5881a0a1fdaad01296d7554868d4430e7d73762f379e";
     }
+
+    /*图片查看器*/
+    public static class GalleryPara {
+        public final static String pics = "pics";
+        public final static String nowPosition = "now";
+    }
 }

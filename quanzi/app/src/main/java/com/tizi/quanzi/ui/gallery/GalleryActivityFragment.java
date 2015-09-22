@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GalleryAdapter;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.List;
@@ -43,8 +44,9 @@ public class GalleryActivityFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
         Intent intent = getActivity().getIntent();
-        pics = intent.getStringArrayListExtra("pics");
-        picsNum.setText(getPicsNum(1));
+        pics = intent.getStringArrayListExtra(StaticField.GalleryPara.pics);
+        int nowPosition = intent.getIntExtra(StaticField.GalleryPara.nowPosition, 0);
+        picsNum.setText(getPicsNum(nowPosition + 1));
         galleryAdapter = new GalleryAdapter(pics, getActivity());
         picsViewPager.setAdapter(galleryAdapter);
         picsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -63,6 +65,7 @@ public class GalleryActivityFragment extends BaseFragment {
 
             }
         });
+        picsViewPager.setCurrentItem(nowPosition);
     }
 
     private String getPicsNum(int nowPosition) {

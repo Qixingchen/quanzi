@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
 import com.tizi.quanzi.database.DBAct;
@@ -16,6 +17,7 @@ import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -93,7 +95,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
      * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(final ChatMessAbsViewHolder holder, int position) {
+    public void onBindViewHolder(final ChatMessAbsViewHolder holder, final int position) {
         final ChatMessage chatMessage = chatMessageList.get(position);
 
         holder.setAllAdditionVisibilityGone();
@@ -112,6 +114,14 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                                 chatMessage.url, imagePix[0], imagePix[1]),
                         GetVolley.getmInstance().getImageLoader());
                 holder.contantImageView.setVisibility(View.VISIBLE);
+                holder.contantImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> image = new ArrayList<>();
+                        image.add(chatMessage.url);
+                        StartGalleryActivity.startByStringList(image, 0, mContext);
+                    }
+                });
                 break;
             case StaticField.ChatContantType.VOICE:
                 holder.videoPlayButton.setVisibility(View.VISIBLE);

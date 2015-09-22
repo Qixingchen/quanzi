@@ -1,6 +1,7 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,11 @@ import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
+import com.tizi.quanzi.tool.Timer;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -25,11 +29,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGroupAdapter.GroupViewHolder> {
 
     private List<GroupClass> groups;
+    private List<Boolean> isSignedIn;
     private Context mContext;
     private String actID;
 
     public ThemeSignUpGroupAdapter(List<GroupClass> groups, Context mContext, String actID) {
         this.groups = groups;
+        isSignedIn = new ArrayList<>();
+        for (int i = 0; i < groups.size(); i++) {
+            isSignedIn.add(false);
+        }
         this.mContext = mContext;
         this.actID = actID;
     }
@@ -71,21 +80,35 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
                             @Override
                             public void onOK(Object ts) {
                                 //todo 加长延迟时间
-                                holder.isSelect = !holder.isSelect;
-                                holder.setBorder(mContext);
-                                holder.progressBar.setVisibility(View.GONE);
+                                Timer timer = new Timer();
+                                timer.setOnResult(new Timer.OnResult() {
+                                    @Override
+                                    public void OK() {
+                                        boolean selectAfter = !isSignedIn.get(position);
+                                        isSignedIn.remove(position);
+                                        isSignedIn.add(position, selectAfter);
+                                        holder.setBorder(mContext, selectAfter);
+                                        holder.progressBar.setVisibility(View.GONE);
+                                    }
+                                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1200);
                             }
 
                             @Override
                             public void onError(String Message) {
-                                holder.progressBar.setVisibility(View.GONE);
+                                Timer timer = new Timer();
+                                timer.setOnResult(new Timer.OnResult() {
+                                    @Override
+                                    public void OK() {
+                                        holder.progressBar.setVisibility(View.GONE);
+                                    }
+                                }).execute(2000);
                             }
-                        }).signUP(actID, groups.get(position).ID, holder.isSelect ? 0 : 1);
+                        }).signUP(actID, groups.get(position).ID, isSignedIn.get(position) ? 0 : 1);
 
                     }
                 }
         );
-        holder.setBorder(mContext);
+        holder.setBorder(mContext, isSignedIn.get(position));
     }
 
     /**
@@ -96,10 +119,22 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
         return groups == null ? 0 : groups.size();
     }
 
+    /**
+     * 已经参加活动的群添加标志
+     */
+    public void setGroupsSignedIn(Map<String, Boolean> signedGroups) {
+        for (int i = 0; i < groups.size(); i++) {
+            if (signedGroups.containsKey(groups.get(i).ID)) {
+                isSignedIn.remove(i);
+                isSignedIn.add(i, true);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public static class GroupViewHolder extends RecyclerView.ViewHolder {
 
         private CircleImageView groupFace;
-        private boolean isSelect = false;
         private ProgressBar progressBar;
 
         public GroupViewHolder(View itemView) {
@@ -108,7 +143,7 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
             progressBar = (ProgressBar) itemView.findViewById(R.id.sign_up_process_bar);
         }
 
-        public void setBorder(Context mContext) {
+        public void setBorder(Context mContext, boolean isSelect) {
             if (isSelect) {
                 groupFace.setBorderColor(mContext.getResources().getColor(R.color.md_yellow_400));
             } else {

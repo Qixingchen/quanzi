@@ -101,7 +101,7 @@ public class Tool {
      */
     public static Map<String, String> getSignMap() {
         Map<String, String> para = new TreeMap<>();
-        para.put("ts", String.valueOf(System.currentTimeMillis() / 1000L));
+        para.put("ts", String.valueOf((System.currentTimeMillis() + AppStaticValue.timeAddtion) / 1000L));
         para.put("uid", AppStaticValue.getUserID());
         para.put("sign", getSignString(para.get("ts"), AppStaticValue.getUserID()));
         return para;
@@ -194,5 +194,17 @@ public class Tool {
 
             }
         }).getAPiinfo();
+    }
+
+    /**
+     * 从地址获取文件名
+     *
+     * @param filePath 文件地址
+     *
+     * @return 文件名
+     */
+    public static String getFileName(String filePath) {
+        int last = filePath.lastIndexOf("/");
+        return filePath.substring(last + 1);
     }
 }

@@ -23,12 +23,13 @@ public class StaticField {
     }
 
     /*本地储存信息字段*/
-    public static class TokenPreferences {
+    public static class Preferences {
         public final static String USERID = "USERID";
         public final static String USERTOKEN = "USERTOKEN";
         public final static String TOKENFILE = "TOKENFILE";
         public final static String PASSWORD = "PASSWORD";
         public final static String USERPHONE = "USERPHONE";
+        public final static String AllowAppUpDate = "AllowAppUpDate";
     }
 
     /*聊天室类型*/
@@ -125,5 +126,11 @@ public class StaticField {
     public static class GalleryPara {
         public final static String pics = "pics";
         public final static String nowPosition = "now";
+    }
+
+    /*APP Name*/
+    public static class AppName {
+        public final static String AppEngName = "JiMi";
+        public final static String AppZHName = "JiMi";
     }
 }

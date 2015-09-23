@@ -1,7 +1,6 @@
 package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.ApiInfoGson;
-import com.tizi.quanzi.log.Log;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -11,34 +10,23 @@ import retrofit.Response;
  * 后台API信息
  */
 public class ApiInfo extends RetrofitNetworkAbs {
+    private RetrofitAPI.ApiInfo apiInfoSer = RetrofitNetwork.retrofit.create(RetrofitAPI.ApiInfo.class);
+
+    public static ApiInfo getNewInstance() {
+        return new ApiInfo();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public ApiInfo setNetworkListener(NetworkListener networkListener) {
         return setNetworkListener(networkListener, this);
     }
 
-    public static ApiInfo getNewInstance() {
-        return new ApiInfo();
-    }
-
-    private RetrofitAPI.ApiInfo apiInfoSer = RetrofitNetwork.retrofit.create(RetrofitAPI.ApiInfo.class);
-
     public void getAPiinfo() {
         apiInfoSer.getApiVer().enqueue(new Callback<ApiInfoGson>() {
             @Override
             public void onResponse(Response<ApiInfoGson> response) {
-                if (response.isSuccess()) {
-                    Log.i(TAG, "success");
-                    if (networkListener != null) {
-                        networkListener.onOK(response.body());
-                    }
-                } else {
-                    String mess = response.message();
-                    Log.w(TAG, mess);
-                    if (networkListener != null) {
-                        networkListener.onError(mess);
-                    }
-                }
+                myOnResponse(response);
             }
 
             @Override

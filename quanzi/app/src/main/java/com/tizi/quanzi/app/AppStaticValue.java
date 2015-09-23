@@ -21,13 +21,31 @@ import java.util.HashMap;
  */
 public class AppStaticValue {
 
+    private static final String TAG = AppStaticValue.class.getSimpleName();
+    //当前聊天窗口ID
+    public static String UI_CONVERSATION_ID = "";
+    //时间差
+    public static long timeAddtion = 0;
+    private static HashMap<String, WeakReference<Activity>> mActivitys = new HashMap<>();
+    private static AVIMClient imClient = null;
+    private static Application application;
+    //偏好储存
+    private static SharedPreferences groupNotifiPreferences;
+    private static SharedPreferences preferences;
+    private static String UserToken = "";
+    private static String UserID = "";
+    private static String UserPhone = "";
+    //数据库
+    private static DataBaseHelper db;
+    private static SQLiteDatabase db1;
+
     public AppStaticValue() {
         application = App.getApplication();
-        preferences = application.getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
+        preferences = application.getSharedPreferences(StaticField.Preferences.TOKENFILE,
                 App.MODE_PRIVATE);
-        UserID = preferences.getString(StaticField.TokenPreferences.USERID, "");
-        UserToken = preferences.getString(StaticField.TokenPreferences.USERTOKEN, "");
-        UserPhone = preferences.getString(StaticField.TokenPreferences.USERPHONE, "");
+        UserID = preferences.getString(StaticField.Preferences.USERID, "");
+        UserToken = preferences.getString(StaticField.Preferences.USERTOKEN, "");
+        UserPhone = preferences.getString(StaticField.Preferences.USERPHONE, "");
 
         groupNotifiPreferences = application.getSharedPreferences(UserID + "GroupNotifi",
                 App.MODE_PRIVATE);
@@ -38,28 +56,6 @@ public class AppStaticValue {
             //getNewImClient(UserID);
         }
     }
-
-    private static final String TAG = AppStaticValue.class.getSimpleName();
-    private static HashMap<String, WeakReference<Activity>> mActivitys = new HashMap<>();
-    private static AVIMClient imClient = null;
-    private static Application application;
-
-    //偏好储存
-    private static SharedPreferences groupNotifiPreferences;
-    private static SharedPreferences preferences;
-    private static String UserToken = "";
-    private static String UserID = "";
-    private static String UserPhone = "";
-
-    //当前聊天窗口ID
-    public static String UI_CONVERSATION_ID = "";
-
-    //数据库
-    private static DataBaseHelper db;
-    private static SQLiteDatabase db1;
-
-    //时间差
-    public static long timeAddtion = 0;
 
     /* 设置数据库*/
     public static void setDataBaseHelper(String userID) {
@@ -77,7 +73,7 @@ public class AppStaticValue {
     }
 
     public static void setUserPhone(String userPhone) {
-        preferences.edit().putString(StaticField.TokenPreferences.USERPHONE, userPhone).apply();
+        preferences.edit().putString(StaticField.Preferences.USERPHONE, userPhone).apply();
         UserPhone = userPhone;
     }
 
@@ -86,12 +82,17 @@ public class AppStaticValue {
     }
 
     public static void setUserID(String userID) {
-        preferences.edit().putString(StaticField.TokenPreferences.USERID, userID).apply();
+        preferences.edit().putString(StaticField.Preferences.USERID, userID).apply();
         UserID = userID;
     }
 
     public static String getUserToken() {
         return UserToken;
+    }
+
+    public static void setUserToken(String userToken) {
+        preferences.edit().putString(StaticField.Preferences.USERTOKEN, userToken).apply();
+        UserToken = userToken;
     }
 
     public static String getPrefer(String Name) {
@@ -104,11 +105,6 @@ public class AppStaticValue {
 
     public static void setPrefer(String name, String vaule) {
         preferences.edit().putString(name, vaule).apply();
-    }
-
-    public static void setUserToken(String userToken) {
-        preferences.edit().putString(StaticField.TokenPreferences.USERTOKEN, userToken).apply();
-        UserToken = userToken;
     }
 
     /**

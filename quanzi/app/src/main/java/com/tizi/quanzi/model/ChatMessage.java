@@ -30,13 +30,13 @@ public class ChatMessage {
     public static String getContentText(ChatMessage chatMessage) {
         String contentText;
         if (chatMessage.type == StaticField.ChatContantType.IMAGE) {
-            contentText = "收到了一张图片";
+            contentText = "图片";
         } else if (chatMessage.type == StaticField.ChatContantType.VOICE) {
-            contentText = "收到了一段录音";
+            contentText = "录音";
         } else if (chatMessage.type == StaticField.ChatContantType.VEDIO) {
-            contentText = "收到了一段视频";
+            contentText = "视频";
         } else if (chatMessage.type == StaticField.ChatContantType.Location) {
-            contentText = "收到了一个位置";
+            contentText = "位置";
         } else {
             contentText = chatMessage.text;
         }

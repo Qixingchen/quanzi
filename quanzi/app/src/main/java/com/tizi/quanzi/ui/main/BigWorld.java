@@ -1,6 +1,5 @@
 package com.tizi.quanzi.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
-import com.tizi.quanzi.ui.register.RegisterActivity;
 
 /**
  */
@@ -33,6 +31,10 @@ public class BigWorld extends BaseFragment {
     private ImageView userSex;
     private View Share, Setting, userInfoLayout;
 
+
+    public BigWorld() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -50,10 +52,6 @@ public class BigWorld extends BaseFragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public BigWorld() {
-        // Required empty public constructor
     }
 
     @Override
@@ -103,8 +101,7 @@ public class BigWorld extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (Tool.isGuest()) {
-                    Intent register = new Intent(mActivity, RegisterActivity.class);
-                    startActivity(register);
+                    Tool.GuestAction(mActivity);
                 } else {
                     ((MainActivity) AppStaticValue.getActivity(MainActivity.class.getSimpleName()))
                             .StartUserInfoSet();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,22 +7,40 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <RelativeLayout
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/group_face_image_view"
-        android:layout_width="@dimen/group_face"
-        android:layout_height="@dimen/group_face"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        app:border_color="@color/md_yellow_400"
-        app:border_width="6dp"
-        tools:background="@drawable/face"/>
-
-    <ProgressBar
-        android:id="@+id/sign_up_process_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-</RelativeLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/group_face_image_view"
+            android:layout_width="@dimen/group_face"
+            android:layout_height="@dimen/group_face"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            app:border_color="@color/md_yellow_400"
+            app:border_width="6dp"
+            tools:background="@drawable/face"/>
+
+        <ProgressBar
+            android:id="@+id/sign_up_process_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="40dp"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/group_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="123333"/>
+
+</LinearLayout>

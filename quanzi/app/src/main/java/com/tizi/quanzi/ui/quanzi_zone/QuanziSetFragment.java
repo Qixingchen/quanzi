@@ -20,6 +20,7 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
@@ -137,7 +138,7 @@ public class QuanziSetFragment extends BaseFragment {
                     builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // TODO: 15/8/31 delete
+                            DBAct.getInstance().deleteAllMessage(groupAllInfo.group.convId);
                         }
                     });
                     builder.setNegativeButton("取消", null);

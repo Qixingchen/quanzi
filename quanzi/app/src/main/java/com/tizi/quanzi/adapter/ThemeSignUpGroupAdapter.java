@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
@@ -109,6 +110,7 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
                 }
         );
         holder.setBorder(mContext, isSignedIn.get(position));
+        holder.groupName.setText(groups.get(position).Name);
     }
 
     /**
@@ -136,11 +138,13 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
 
         private CircleImageView groupFace;
         private ProgressBar progressBar;
+        private TextView groupName;
 
         public GroupViewHolder(View itemView) {
             super(itemView);
             groupFace = (CircleImageView) itemView.findViewById(R.id.group_face_image_view);
             progressBar = (ProgressBar) itemView.findViewById(R.id.sign_up_process_bar);
+            groupName = (TextView) itemView.findViewById(R.id.group_name_text_view);
         }
 
         public void setBorder(Context mContext, boolean isSelect) {

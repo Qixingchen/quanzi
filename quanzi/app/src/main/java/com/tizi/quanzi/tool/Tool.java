@@ -1,6 +1,9 @@
 package com.tizi.quanzi.tool;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
@@ -11,6 +14,7 @@ import com.tizi.quanzi.gson.ApiInfoGson;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.ApiInfo;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.ui.LoginActivity;
 
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -73,6 +77,25 @@ public class Tool {
         return MyUserInfo.getInstance().getUserInfo().getAccount().compareTo(StaticField.GuestUser.Account) == 0;
     }
 
+    public static void GuestAction(final Context context) {
+        new AlertDialog.Builder(context).setTitle("此功能需要登录")
+                .setMessage("AAAAA")
+                .setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent login = new Intent(context, LoginActivity.class);
+                        context.startActivity(login);
+                    }
+                })
+                .setNegativeButton("再看看", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+
+    }
+
     /**
      * 获取签名MAP
      */
@@ -122,13 +145,7 @@ public class Tool {
      * utf-8 转换
      */
     public static String getUTF_8String(String value) {
-        String encoded = "";
-//        try {
-            encoded = URLEncoder.encode(value);
-//        } catch (UnsupportedEncodingException e) {//only for api 21-
-//            e.printStackTrace();
-//        }
-        return encoded;
+        return URLEncoder.encode(value);
     }
 
     /**

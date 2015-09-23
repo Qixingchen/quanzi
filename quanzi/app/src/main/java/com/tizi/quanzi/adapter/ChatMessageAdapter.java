@@ -1,6 +1,8 @@
 package com.tizi.quanzi.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.GetVolley;
@@ -32,6 +35,17 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
     private VoicePlayAsync voicePlayAsync;
 
     /**
+     * @param chatMessageList 聊天记录List
+     * @param context         上下文
+     *
+     * @see ChatMessage
+     */
+    public ChatMessageAdapter(List<ChatMessage> chatMessageList, Context context) {
+        this.chatMessageList = chatMessageList;
+        this.mContext = context;
+    }
+
+    /**
      * @param position 记录位置
      *
      * @return 记录类型
@@ -41,17 +55,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
     @Override
     public int getItemViewType(int position) {
         return chatMessageList.get(position).From;
-    }
-
-    /**
-     * @param chatMessageList 聊天记录List
-     * @param context         上下文
-     *
-     * @see ChatMessage
-     */
-    public ChatMessageAdapter(List<ChatMessage> chatMessageList, Context context) {
-        this.chatMessageList = chatMessageList;
-        this.mContext = context;
     }
 
     /**
@@ -99,6 +102,61 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
         final ChatMessage chatMessage = chatMessageList.get(position);
 
         holder.setAllAdditionVisibilityGone();
+
+        /*长按事件*/
+        holder.view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                String[] items;
+                switch (chatMessage.type) {
+                    case StaticField.ChatContantType.TEXT:
+                        items = new String[]{"删除", "复制"};
+                        break;
+                    default:
+                        items = new String[]{"删除"};
+                }
+                new AlertDialog.Builder(mContext)
+                        .setItems(items, new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        switch (which) {
+                                            case 0:
+                                                DBAct.getInstance().deleteMessage(chatMessage.messID);
+                                                chatMessageList.remove(position);
+                                                notifyDataSetChanged();
+                                                if (chatMessageList.size() > 0) {
+                                                    ChatMessage last = chatMessageList.get(chatMessageList.size() - 1);
+                                                    GroupList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
+                                                            ChatMessage.getContentText(last), last.create_time);
+                                                } else {
+                                                    GroupList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
+                                                            "", 0);
+                                                }
+
+                                                break;
+                                            case 1:
+
+                                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", chatMessage.text);
+                                                clipboard.setPrimaryClip(clip);
+                                                break;
+                                        }
+                                    }
+                                }
+
+                        ).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }
+
+                ).show();
+                return false;
+            }
+        });
         /*根据不同消息类型确定元素是否显示*/
         switch (chatMessage.type) {
             case StaticField.ChatContantType.TEXT:
@@ -192,26 +250,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
     }
 
     /**
-     * 实现BaseViewHolder
-     */
-    public static class OtherMessViewHolder extends ChatMessAbsViewHolder {
-        public OtherMessViewHolder(View v) {
-            super(v);
-            findViewByID(v, StaticField.ChatFrom.OTHER);
-        }
-    }
-
-    /**
-     * 实现BaseViewHolder
-     */
-    public static class MyMessViewHolder extends ChatMessAbsViewHolder {
-        public MyMessViewHolder(View v) {
-            super(v);
-            findViewByID(v, StaticField.ChatFrom.ME);
-        }
-    }
-
-    /**
      * 新增或更新消息
      * 将按照 create_time 插入正确的位置
      *
@@ -251,5 +289,25 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
             }
         }
         return position;
+    }
+
+    /**
+     * 实现BaseViewHolder
+     */
+    public static class OtherMessViewHolder extends ChatMessAbsViewHolder {
+        public OtherMessViewHolder(View v) {
+            super(v);
+            findViewByID(v, StaticField.ChatFrom.OTHER);
+        }
+    }
+
+    /**
+     * 实现BaseViewHolder
+     */
+    public static class MyMessViewHolder extends ChatMessAbsViewHolder {
+        public MyMessViewHolder(View v) {
+            super(v);
+            findViewByID(v, StaticField.ChatFrom.ME);
+        }
     }
 }

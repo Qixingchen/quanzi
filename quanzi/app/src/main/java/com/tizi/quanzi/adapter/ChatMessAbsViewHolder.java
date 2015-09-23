@@ -20,6 +20,7 @@ public abstract class ChatMessAbsViewHolder extends RecyclerView.ViewHolder {
     public TextView chatMessTextView, chatUserName, chatTime, voiceDuration;
     public ImageButton videoPlayButton;
     public ProgressBar audioProgressBar;
+    public View view;
 
     public ChatMessAbsViewHolder chatMessAbsViewHolder;
 
@@ -62,5 +63,6 @@ public abstract class ChatMessAbsViewHolder extends RecyclerView.ViewHolder {
         audioProgressBar.setIndeterminate(false);
         audioProgressBar.setProgress(0);
         voiceDuration = (TextView) v.findViewById(R.id.audio_duration);
+        view = itemView;
     }
 }

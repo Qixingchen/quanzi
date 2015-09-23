@@ -20,7 +20,6 @@ import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.ui.new_group.NewGroupActivity;
-import com.tizi.quanzi.ui.register.RegisterActivity;
 
 import java.util.List;
 
@@ -40,6 +39,10 @@ public class GroupChatList extends BaseFragment {
     private RecyclerView.LayoutManager mLayoutManager;
 
 
+    public GroupChatList() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -56,10 +59,6 @@ public class GroupChatList extends BaseFragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public GroupChatList() {
-        // Required empty public constructor
     }
 
     @Override
@@ -124,8 +123,7 @@ public class GroupChatList extends BaseFragment {
             public void itemClick(int position) {
                 if (position == groupClasses.size()) {
                     if (Tool.isGuest()) {
-                        Intent register = new Intent(mActivity, RegisterActivity.class);
-                        startActivity(register);
+                        Tool.GuestAction(mActivity);
                     } else {
                         Intent newGroup = new Intent(mActivity, NewGroupActivity.class);
                         startActivity(newGroup);

@@ -25,10 +25,15 @@ import java.util.List;
  * todo 事务回滚  https://groups.google.com/forum/#!topic/android-developers/dsEr5hj8k90
  */
 public class DBAct {
-    private SQLiteDatabase db;
+    private static final String TAG = "数据库操作";
     private static DBAct mInstance;
     private static Context mContext;
-    private static final String TAG = "数据库操作";
+    private SQLiteDatabase db;
+
+    private DBAct() {
+        db = AppStaticValue.getDatabase();
+        mContext = App.getApplication();
+    }
 
     public static DBAct getInstance() {
         if (mInstance == null) {
@@ -39,11 +44,6 @@ public class DBAct {
             }
         }
         return mInstance;
-    }
-
-    private DBAct() {
-        db = AppStaticValue.getDatabase();
-        mContext = App.getApplication();
     }
 
     /*查询*/
@@ -519,5 +519,28 @@ public class DBAct {
             chatMessageCursor.moveToNext();
         }
         chatMessageCursor.close();
+    }
+
+
+    /*删除*/
+
+    /**
+     * 删除 convID 对应的所有聊天消息
+     *
+     * @param convID 要删除的 convID
+     */
+    public void deleteAllMessage(String convID) {
+        db.delete(DataBaseHelper.chatHistorySQLName.TableName, DataBaseHelper.chatHistorySQLName.ConversationId + "=?",
+                new String[]{convID});
+    }
+
+    /**
+     * 删除 MessageID 对应的聊天消息
+     *
+     * @param MessID 要删除的 MessID
+     */
+    public void deleteMessage(String MessID) {
+        db.delete(DataBaseHelper.chatHistorySQLName.TableName, DataBaseHelper.chatHistorySQLName.messID + "=?",
+                new String[]{MessID});
     }
 }

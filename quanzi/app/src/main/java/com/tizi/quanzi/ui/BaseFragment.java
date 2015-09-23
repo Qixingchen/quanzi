@@ -13,10 +13,10 @@ import android.view.ViewGroup;
  * Fragment 的抽象
  */
 public abstract class BaseFragment extends Fragment {
+    protected final String TAG = this.getClass().getSimpleName();
     protected Activity mActivity;
     protected Context mContext;
     protected View view;
-    protected final String TAG = this.getClass().getSimpleName();
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container,
                                       Bundle savedInstanceState);
@@ -38,13 +38,7 @@ public abstract class BaseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-    }
-
-    @Override
-    @Deprecated
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mActivity = activity;
+        mActivity = getActivity();
     }
 
     protected abstract void findViews(View view);

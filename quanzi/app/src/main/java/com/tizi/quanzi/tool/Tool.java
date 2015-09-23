@@ -101,7 +101,7 @@ public class Tool {
      */
     public static Map<String, String> getSignMap() {
         Map<String, String> para = new TreeMap<>();
-        para.put("ts", String.valueOf(System.currentTimeMillis() / 1000L));
+        para.put("ts", String.valueOf((System.currentTimeMillis() + AppStaticValue.timeAddtion) / 1000L));
         para.put("uid", AppStaticValue.getUserID());
         para.put("sign", getSignString(para.get("ts"), AppStaticValue.getUserID()));
         return para;

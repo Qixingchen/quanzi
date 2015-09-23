@@ -85,9 +85,9 @@ public class LoginActivity extends BaseActivity {
                     public void onOK(Object ts) {
                         //储存密码
                         SharedPreferences preferences =
-                                getSharedPreferences(StaticField.TokenPreferences.TOKENFILE,
+                                getSharedPreferences(StaticField.Preferences.TOKENFILE,
                                         MODE_PRIVATE);
-                        preferences.edit().putString(StaticField.TokenPreferences.PASSWORD,
+                        preferences.edit().putString(StaticField.Preferences.PASSWORD,
                                 GetPassword.preHASH(passwordEditText.getText().toString())).apply();
                     }
 

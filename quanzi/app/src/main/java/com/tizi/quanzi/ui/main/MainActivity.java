@@ -13,6 +13,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.tool.GetAppVersion;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 
@@ -20,13 +21,11 @@ import com.tizi.quanzi.ui.BaseActivity;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
+    private static final String toolBarName = "圈子";
+    private static final String netWorkChangeName = "MainActivity";
     private MainFragment mainFragment;
     private PrivateMessageFragment privateMessageFragment;
     private UserInfoSetFragment userInfoSetFragment;
-    private static final String toolBarName = "圈子";
-    private static final String netWorkChangeName = "MainActivity";
-
     //toolbar
     private Toolbar toolbar;
 
@@ -34,6 +33,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        GetAppVersion.doit(this);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (userInfoSetFragment == null){
+        if (userInfoSetFragment == null) {
             return;
         }
         userInfoSetFragment.onActivityResult(requestCode, resultCode, data);

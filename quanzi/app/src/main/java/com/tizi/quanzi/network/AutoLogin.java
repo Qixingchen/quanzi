@@ -27,13 +27,28 @@ public class AutoLogin extends RetrofitNetworkAbs {
 
     private RetrofitAPI.UserAccount userAccountService = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
 
+    private AutoLogin() {
+        preferences = App.getApplication().getSharedPreferences(
+                StaticField.Preferences.TOKENFILE, Context.MODE_PRIVATE);
+    }
+
     public static AutoLogin getNewInstance() {
         return new AutoLogin();
     }
 
-    private AutoLogin() {
-        preferences = App.getApplication().getSharedPreferences(
-                StaticField.TokenPreferences.TOKENFILE, Context.MODE_PRIVATE);
+    /**
+     * 设置用户信息（APP的更新）
+     *
+     * @param phone 用户手机号
+     * @param ID    userID
+     * @param Token userToken
+     */
+    public static void setUserInfo(String phone, String ID, String Token) {
+        AppStaticValue.setUserToken(Token);
+        AppStaticValue.setUserID(ID);
+        AppStaticValue.setUserPhone(phone);
+        AppStaticValue.setDataBaseHelper(ID);
+        AppStaticValue.getNewImClient(ID);
     }
 
     /**
@@ -42,7 +57,7 @@ public class AutoLogin extends RetrofitNetworkAbs {
      * @return 是否有密码
      */
     public boolean loginFromPrefer() {
-        String password = preferences.getString(StaticField.TokenPreferences.PASSWORD, "");
+        String password = preferences.getString(StaticField.Preferences.PASSWORD, "");
         assert password != null;
         if (password.compareTo("") == 0) {
             return false;
@@ -59,7 +74,7 @@ public class AutoLogin extends RetrofitNetworkAbs {
      * @see GetPassword
      */
     public void loginFromPrePassword(String PrePassword) {
-        preferences.edit().putString(StaticField.TokenPreferences.PASSWORD, PrePassword).apply();
+        preferences.edit().putString(StaticField.Preferences.PASSWORD, PrePassword).apply();
         String RawPassword;
         // TODO: 15/9/17 delete test account
         if (AppStaticValue.getUserPhone().compareTo("1") == 0) {
@@ -99,22 +114,6 @@ public class AutoLogin extends RetrofitNetworkAbs {
         });
 
     }
-
-    /**
-     * 设置用户信息（APP的更新）
-     *
-     * @param phone 用户手机号
-     * @param ID    userID
-     * @param Token userToken
-     */
-    public static void setUserInfo(String phone, String ID, String Token) {
-        AppStaticValue.setUserToken(Token);
-        AppStaticValue.setUserID(ID);
-        AppStaticValue.setUserPhone(phone);
-        AppStaticValue.setDataBaseHelper(ID);
-        AppStaticValue.getNewImClient(ID);
-    }
-
 
     @SuppressWarnings("unchecked")
     @Override

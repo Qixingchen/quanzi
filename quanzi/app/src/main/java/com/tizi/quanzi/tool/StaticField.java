@@ -126,4 +126,10 @@ public class StaticField {
         public final static String pics = "pics";
         public final static String nowPosition = "now";
     }
+
+    /*APP Name*/
+    public static class AppName {
+        public final static String AppEngName = "JiMi";
+        public final static String AppZHName = "JiMi";
+    }
 }

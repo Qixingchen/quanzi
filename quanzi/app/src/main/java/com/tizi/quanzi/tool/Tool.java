@@ -195,4 +195,16 @@ public class Tool {
             }
         }).getAPiinfo();
     }
+
+    /**
+     * 从地址获取文件名
+     *
+     * @param filePath 文件地址
+     *
+     * @return 文件名
+     */
+    public static String getFileName(String filePath) {
+        int last = filePath.lastIndexOf("/");
+        return filePath.substring(last + 1);
+    }
 }

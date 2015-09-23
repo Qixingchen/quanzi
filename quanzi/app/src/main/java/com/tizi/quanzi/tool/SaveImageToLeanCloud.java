@@ -33,7 +33,7 @@ public class SaveImageToLeanCloud {
      * @param filePath 图片地址
      */
     public void savePhoto(String filePath) {
-        savePhoto(filePath, getFileName(filePath));
+        savePhoto(filePath, Tool.getFileName(filePath));
     }
 
     /**
@@ -55,7 +55,7 @@ public class SaveImageToLeanCloud {
      * @param maxHei   获取的图片链接最大高度
      */
     public void savePhoto(String filePath, int maxWei, int maxHei) {
-        savePhoto(filePath, getFileName(filePath), maxWei, maxHei);
+        savePhoto(filePath, Tool.getFileName(filePath), maxWei, maxHei);
     }
 
     /**
@@ -99,17 +99,6 @@ public class SaveImageToLeanCloud {
                 getImageUri.onResult(null, false);
             }
         }
-    }
-    /**
-     * 从图片地址获取文件名
-     *
-     * @param filePath 文件地址
-     *
-     * @return 文件名
-     */
-    private String getFileName(String filePath) {
-        int last = filePath.lastIndexOf("/");
-        return filePath.substring(last + 1);
     }
 
     public interface GetImageUri {

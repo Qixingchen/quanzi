@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
@@ -16,17 +17,22 @@ import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.tool.Statue;
+import com.tizi.quanzi.ui.BaseFragment;
 
 
 /**
  * 注册界面第1步
  */
-public class Register1stepFragment extends Fragment {
+public class Register1stepFragment extends BaseFragment {
 
-    private Button getSignButton, nextStepButton;
-    private TextInputLayout phoneNumberInputLayout, signInputLayout;
+    private Button getSignButton, nextStepButton, getVoiceSignButton;
+    private TextInputLayout phoneNumberInputLayout, signInputLayout, passwrodInputLayout;
     private Activity mActivity;
     private NextStep nextStep;
+    private Boolean agree = false;
+
+    public Register1stepFragment() {
+    }
 
     /**
      * 设置下一步监听器
@@ -39,10 +45,6 @@ public class Register1stepFragment extends Fragment {
         this.nextStep = nextStep;
     }
 
-    public Register1stepFragment() {
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,14 +53,27 @@ public class Register1stepFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        getSignButton = (Button) mActivity.findViewById(R.id.get_sign_button);
-        nextStepButton = (Button) mActivity.findViewById(R.id.next_button);
-        Button getVoiceSignButton = (Button) mActivity.findViewById(R.id.get_voice_sign_button);
-        phoneNumberInputLayout = (TextInputLayout) mActivity.findViewById(R.id.phoneNumberInputLayout);
-        signInputLayout = (TextInputLayout) mActivity.findViewById(R.id.signInputLayout);
+    protected void findViews(View view) {
+        passwrodInputLayout = (TextInputLayout) view.findViewById(R.id.passwordInputLayout);
+        getSignButton = (Button) view.findViewById(R.id.get_sign_button);
+        nextStepButton = (Button) view.findViewById(R.id.next_button);
+        getVoiceSignButton = (Button) view.findViewById(R.id.get_voice_sign_button);
+        phoneNumberInputLayout = (TextInputLayout) view.findViewById(R.id.phoneNumberInputLayout);
+        signInputLayout = (TextInputLayout) view.findViewById(R.id.signInputLayout);
+
+    }
+
+    @Override
+    protected void initViewsAndSetEvent() {
         phoneNumberInputLayout.setError(mActivity.getString(R.string.phone_number_error));
+
+        ((CheckBox) view.findViewById(R.id.agree)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        agree = isChecked;
+                    }
+                });
 
         getSignButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,10 +85,10 @@ public class Register1stepFragment extends Fragment {
                             public void done(AVException e) {
                                 if (e == null) {
                                     Snackbar.make(mActivity.findViewById(R.id.register_fragment),
-                                            "验证码发送成功", Snackbar.LENGTH_SHORT).show();
+                                            "验证码发送成功", Snackbar.LENGTH_LONG).show();
                                 } else {
                                     Snackbar.make(getActivity().findViewById(R.id.register_fragment),
-                                            e.getCode() + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                            e.getCode() + e.getMessage(), Snackbar.LENGTH_LONG).show();
 
                                 }
                             }
@@ -92,10 +107,10 @@ public class Register1stepFragment extends Fragment {
                             public void done(AVException e) {
                                 if (e == null) {
                                     Snackbar.make(mActivity.findViewById(R.id.register_fragment),
-                                            "请等待接听电话", Snackbar.LENGTH_SHORT).show();
+                                            "请等待接听电话", Snackbar.LENGTH_LONG).show();
                                 } else {
                                     Snackbar.make(getActivity().findViewById(R.id.register_fragment),
-                                            e.getCode() + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                            e.getCode() + e.getMessage(), Snackbar.LENGTH_LONG).show();
 
                                 }
                             }
@@ -106,10 +121,17 @@ public class Register1stepFragment extends Fragment {
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (!agree) {
+                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                            "您必须阅读并同意我们的条款", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
                 String sign = signInputLayout.getEditText().getText().toString();
                 final String phoneNumber = phoneNumberInputLayout.getEditText().getText().toString();
                 if (Statue.IsDev.now == Statue.IsDev.dev) {
-                    nextStep.register1stepOK(phoneNumber);
+                    nextStep.register1stepOK(phoneNumber, passwrodInputLayout.getEditText().getText().toString());
                     return;
                 }
                 AVOSCloud.verifySMSCodeInBackground(sign, phoneNumber, new AVMobilePhoneVerifyCallback() {
@@ -118,12 +140,12 @@ public class Register1stepFragment extends Fragment {
                     public void done(AVException e) {
                         if (e != null) {
                             Snackbar.make(mActivity.findViewById(R.id.register_fragment),
-                                    e.getCode() + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                    e.getCode() + e.getMessage(), Snackbar.LENGTH_LONG).show();
                             return;
                         }
                         Snackbar.make(mActivity.findViewById(R.id.register_fragment),
-                                "验证成功", Snackbar.LENGTH_SHORT).show();
-                        nextStep.register1stepOK(phoneNumber);
+                                "验证成功", Snackbar.LENGTH_LONG).show();
+                        nextStep.register1stepOK(phoneNumber, passwrodInputLayout.getEditText().getText().toString());
                     }
                 });
             }
@@ -134,6 +156,6 @@ public class Register1stepFragment extends Fragment {
         /**
          * @param phoneNumber 用户手机号
          */
-        void register1stepOK(String phoneNumber);
+        void register1stepOK(String phoneNumber, String password);
     }
 }

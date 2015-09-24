@@ -17,10 +17,14 @@ import com.tizi.quanzi.R;
 /**
  * 注册界面第2步
  */
+@Deprecated
 public class Register2stepFragment extends Fragment {
 
     private Activity mActivity;
     private NextStep nextStep;
+
+    public Register2stepFragment() {
+    }
 
     /**
      * @param nextStep 设置NextStep
@@ -29,9 +33,6 @@ public class Register2stepFragment extends Fragment {
      */
     public void setNextStep(NextStep nextStep) {
         this.nextStep = nextStep;
-    }
-
-    public Register2stepFragment() {
     }
 
     @Override

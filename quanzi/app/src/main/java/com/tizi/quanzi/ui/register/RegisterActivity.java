@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,13 +33,11 @@ import retrofit.Response;
 public class RegisterActivity extends AppCompatActivity implements Register1stepFragment.NextStep,
         Register2stepFragment.NextStep, CompleteUesrInfo.AllDone {
 
+    private final static String TAG = RegisterActivity.class.getSimpleName();
     private String phoneNumber;
     private String password;
-
     private CompleteUesrInfo completeUesrInfo;
     private Context context = this;
-
-    private final static String TAG = RegisterActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,13 +85,18 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
      * @param phoneNumber 用户手机号
      */
     @Override
-    public void register1stepOK(String phoneNumber) {
+    public void register1stepOK(String phoneNumber, String password) {
         this.phoneNumber = phoneNumber;
+        this.password = password;
         AppStaticValue.setUserID(phoneNumber);
-        Register2stepFragment register2stepFragment = new Register2stepFragment();
-        register2stepFragment.setNextStep(this);
+        //        Register2stepFragment register2stepFragment = new Register2stepFragment();
+        //        register2stepFragment.setNextStep(this);
+        //        getSupportFragmentManager().beginTransaction()
+        //                .replace(R.id.register_fragment, register2stepFragment).commit();
+        completeUesrInfo = new CompleteUesrInfo();
+        completeUesrInfo.setAllDone(this);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.register_fragment, register2stepFragment).commit();
+                .replace(R.id.register_fragment, completeUesrInfo).commit();
     }
 
     /**
@@ -138,12 +142,16 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
                 } else {
                     String mess = response.isSuccess() ? response.body().msg : response.message();
                     Log.w(TAG, mess);
+                    Snackbar.make(findViewById(R.id.register_fragment),
+                            mess, Snackbar.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 Log.w(TAG, t.getMessage());
+                Snackbar.make(findViewById(R.id.register_fragment),
+                        t.getMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -157,6 +165,5 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         completeUesrInfo.onIntentResult(requestCode, resultCode, data);
-
     }
 }

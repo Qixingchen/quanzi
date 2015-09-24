@@ -133,4 +133,9 @@ public class StaticField {
         public final static String AppEngName = "JiMi";
         public final static String AppZHName = "JiMi";
     }
+
+    /*Intent 名称*/
+    public static class IntentName {
+        public static final String OtherUserInfo = "userInfo";
+    }
 }

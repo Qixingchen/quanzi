@@ -169,12 +169,12 @@ public interface RetrofitAPI {
 
         @POST("/user/findUserF")
         Call<OtherUserInfo> getUserByID(
-                @Query("account") String userID,
+                @Query("userid") String userID,
                 @QueryMap Map<String, String> signMap);
 
         @POST("/user/findByContact")
         Call<ContantUsers> findContactUser(
-                @Query(value = "mobiles",encoded = true) String mpbiles,
+                @Query(value = "mobiles", encoded = true) String mpbiles,
                 @QueryMap Map<String, String> signMap);
     }
 

@@ -20,6 +20,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
@@ -37,11 +38,11 @@ import java.util.List;
  */
 public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.GroupUserViewHolder> {
 
+    private static final String TAG = GroupUserAdapter.class.getSimpleName();
     private Context mContext;
     private List<GroupAllInfo.MemlistEntity> memlist;
     private boolean isCreater;
     private String groupID;
-    private static final String TAG = GroupUserAdapter.class.getSimpleName();
 
     public GroupUserAdapter(Context mContext, @Nullable List<GroupAllInfo.MemlistEntity> memlist, boolean isCreater) {
         this.mContext = mContext;
@@ -90,7 +91,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             final GroupAllInfo.MemlistEntity mem = memlist.get(position);
             holder.weibo_avatar_NetworkImageView.setImageUrl(mem.icon,
                     GetVolley.getmInstance().getImageLoader());
-            if (isCreater) {
+            if (isCreater && mem.id.compareTo(MyUserInfo.getInstance().getUserInfo().getId()) != 0) {
                 holder.weibo_avatar_NetworkImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
@@ -229,6 +230,11 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         //界面元素
         private NetworkImageView weibo_avatar_NetworkImageView;
 
+        public GroupUserViewHolder(View v) {
+            super(v);
+            FindViewByID(v);
+        }
+
         /**
          * 为界面元素赋值
          *
@@ -236,11 +242,6 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
          */
         private void FindViewByID(View v) {
             weibo_avatar_NetworkImageView = (NetworkImageView) v.findViewById(R.id.pic);
-        }
-
-        public GroupUserViewHolder(View v) {
-            super(v);
-            FindViewByID(v);
         }
     }
 

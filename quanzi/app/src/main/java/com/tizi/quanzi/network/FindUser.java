@@ -22,17 +22,16 @@ import retrofit.Response;
  */
 public class FindUser extends RetrofitNetworkAbs {
 
+    private RetrofitAPI.FindUser findUserService = RetrofitNetwork.retrofit.create(RetrofitAPI.FindUser.class);
+
     public static FindUser getNewInstance() {
         return new FindUser();
     }
 
-    private RetrofitAPI.FindUser findUserService = RetrofitNetwork.retrofit.create(RetrofitAPI.FindUser.class);
-
     /**
      * 查找用户
      */
-    public FindUser finduser(String account) {
-
+    public void finduserByAccount(String account) {
         findUserService.getUserByAccount(account, Tool.getSignMap()).enqueue(new Callback<OtherUserInfo>() {
             @Override
             public void onResponse(retrofit.Response<OtherUserInfo> response) {
@@ -44,7 +43,21 @@ public class FindUser extends RetrofitNetworkAbs {
                 myOnFailure(t);
             }
         });
-        return this;
+
+    }
+
+    public void findUserByID(String ID) {
+        findUserService.getUserByID(ID, Tool.getSignMap()).enqueue(new Callback<OtherUserInfo>() {
+            @Override
+            public void onResponse(retrofit.Response<OtherUserInfo> response) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
     }
 
     public void findContactUsers() {

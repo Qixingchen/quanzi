@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tizi.quanzi" >
+<manifest package="com.tizi.quanzi"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -94,6 +94,10 @@
         <activity
             android:name=".ui.gallery.GalleryActivity"
             android:label="@string/title_activity_gallery" >
+        </activity>
+        <activity
+            android:name=".ui.user_zone.UserZoneActivity"
+            android:label="@string/title_activity_user_zone" >
         </activity>
     </application>
 

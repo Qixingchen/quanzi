@@ -3,22 +3,28 @@ package com.tizi.quanzi.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
+import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -237,6 +243,27 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                         .setChatMessage(chatMessage)
                         .setHolder(holder)
                         .execute(0);
+            }
+        });
+
+        /*点击用户头像进入个人空间*/
+        holder.userFaceImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                    @Override
+                    public void onOK(Object ts) {
+                        OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                        Intent otherUser = new Intent(mContext, UserZoneActivity.class);
+                        otherUser.putExtra(StaticField.IntentName.OtherUserInfo, otherUserInfo);
+                        mContext.startActivity(otherUser);
+                    }
+
+                    @Override
+                    public void onError(String Message) {
+                        Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
+                    }
+                }).findUserByID(chatMessage.sender);
             }
         });
     }

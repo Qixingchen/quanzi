@@ -23,11 +23,10 @@ import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
  */
 public class LockLock extends BaseFragment {
 
+    private static LockLock mInstance;
     private RecyclerView mThemeItemsRecyclerView;
     private ThemeAdapter themeAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
-    private static LockLock mInstance;
 
 
     public LockLock() {
@@ -54,7 +53,8 @@ public class LockLock extends BaseFragment {
             @Override
             public void Participate(Theme.ActsEntity act) {
                 getParentFragment().getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id)).commit();
+                        .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id))
+                        .addToBackStack("ThemeSignUpFragment").commit();
             }
         });
         mLayoutManager = new LinearLayoutManager(mActivity);

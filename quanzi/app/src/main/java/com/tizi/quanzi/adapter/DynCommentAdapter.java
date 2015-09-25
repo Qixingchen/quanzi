@@ -3,7 +3,12 @@ package com.tizi.quanzi.adapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +20,13 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Comments;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.network.Dyns;
+import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
 import java.util.List;
 
@@ -49,9 +58,32 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     @Override
     public void onBindViewHolder(CommentViewHolder holder, final int position) {
         final Comments.CommentsEntity comment = commentses.get(position);
+        holder.comment.setText("");
         holder.userFace.setImageUrl(comment.userIcon, GetVolley.getmInstance().getImageLoader());
         if (comment.atUserId != null) {
-            holder.comment.setText("@" + comment.atUserName + comment.content);
+            SpannableString atUser = makeLinkSpan("@" + comment.atUserName, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            Intent userZone = new Intent(activity, UserZoneActivity.class);
+                            userZone.putExtra(StaticField.IntentName.OtherUserInfo, (OtherUserInfo) ts);
+                            activity.startActivity(userZone);
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+                            Toast.makeText(activity, Message, Toast.LENGTH_LONG).show();
+                        }
+                    }).findUserByID(comment.atUserId);
+
+                }
+            });
+            holder.comment.append(atUser);
+            holder.comment.append(comment.content);
+            makeLinksFocusable(holder.comment);
         } else {
             holder.comment.setText(comment.content);
         }
@@ -96,9 +128,39 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
         });
     }
 
+    private SpannableString makeLinkSpan(CharSequence text, View.OnClickListener listener) {
+        SpannableString link = new SpannableString(text);
+        link.setSpan(new ClickableString(listener), 0, text.length(),
+                SpannableString.SPAN_INCLUSIVE_EXCLUSIVE);
+        return link;
+    }
+
+    private void makeLinksFocusable(TextView tv) {
+        MovementMethod m = tv.getMovementMethod();
+        if ((m == null) || !(m instanceof LinkMovementMethod)) {
+            if (tv.getLinksClickable()) {
+                tv.setMovementMethod(LinkMovementMethod.getInstance());
+            }
+        }
+    }
+
     @Override
     public int getItemCount() {
         return commentses == null ? 0 : commentses.size();
+    }
+
+    /* ClickableString class*/
+    private static class ClickableString extends ClickableSpan {
+        private View.OnClickListener mListener;
+
+        public ClickableString(View.OnClickListener listener) {
+            mListener = listener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            mListener.onClick(v);
+        }
     }
 
     protected static class CommentViewHolder extends RecyclerView.ViewHolder {

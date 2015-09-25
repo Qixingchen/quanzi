@@ -1,6 +1,7 @@
 package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.ApiInfoGson;
+import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupIDs;
@@ -26,8 +27,7 @@ public interface RetrofitAPI {
 
     interface Themes {
         @POST("/act/get")
-        Call<Theme> getThemes(
-                @QueryMap Map<String, String> signMap);
+        Call<Theme> getThemes();
 
         @POST("/act/sign")
         Call<OnlySuccess> signUp(
@@ -125,39 +125,46 @@ public interface RetrofitAPI {
         Call<OnlySuccess> addDyn(
                 @Query("actid") String themeID,
                 @Query("grpid") String groupID,
-                @Query("pics") String pics,
-                @QueryMap Map<String, String> signMap);
+                @Query("pics") String pics);
 
         @POST("/grpdyn/delF")
         Call<OnlySuccess> delDyn(
-                @Query("dynid") String dynID,
-                @QueryMap Map<String, String> signMap);
+                @Query("dynid") String dynID);
 
         @POST("/grpdyn/findF")
         Call<com.tizi.quanzi.gson.Dyns> findDyns(
                 @Query("actid") String actID,
                 @Query("grpid") String groupID,
                 @Query("start") int start,
-                @Query("limit") int limit,
-                @QueryMap Map<String, String> signMap);
+                @Query("limit") int limit);
 
         @POST("/grpdyn/zanF")
             // TODO: 15/9/16 get zan -> onlySuccess
         Call<OnlySuccess> zan(
                 @Query("dynid") String dynID,
-                @Query("zan") int isZan,
-                @QueryMap Map<String, String> signMap);
+                @Query("zan") int isZan);
 
         @POST("/grpdyn/addComment")
-        Call<OnlySuccess> addCommit(
+        Call<OnlySuccess> addComent(
                 @Query("dynid") String dynID,
-                @Query("commit") String commit,
-                @QueryMap Map<String, String> signMap);
+                @Query("comment") String comment);
+
+        @POST("/grpdyn/addComment")
+        Call<OnlySuccess> addComent(
+                @Query("dynid") String dynID,
+                @Query("comment") String comment,
+                @Query("replyid") String replyID,
+                @Query("atuserid") String AtUserID);
 
         @POST("/grpdyn/delComment")
-        Call<OnlySuccess> deleteCommit(
-                @Query("cid") String commitID,
-                @QueryMap Map<String, String> signMap);
+        Call<OnlySuccess> deleteComment(
+                @Query("cid") String commitID);
+
+        @POST("/grpdyn/findComment")
+        Call<Comments> findComment(
+                @Query("dynid") String dynid,
+                @Query("start") int start,
+                @Query("limit") int limit);
 
     }
 

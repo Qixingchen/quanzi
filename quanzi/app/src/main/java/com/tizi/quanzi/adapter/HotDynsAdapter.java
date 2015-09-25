@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.gson.HotDyns;
+import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.network.GetVolley;
 
 import java.util.List;
@@ -19,10 +19,10 @@ import java.util.List;
  * 热门动态
  */
 public class HotDynsAdapter extends PagerAdapter {
-    List<HotDyns.DynsEntity> dyns;
+    List<Dyns.DynsEntity> dyns;
     private int LastCount;
 
-    public HotDynsAdapter(List<HotDyns.DynsEntity> dyns) {
+    public HotDynsAdapter(List<Dyns.DynsEntity> dyns) {
         this.dyns = dyns;
     }
 
@@ -46,7 +46,7 @@ public class HotDynsAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View v = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_topic_hot_dyns, container, false);
-        HotDyns.DynsEntity dyn = dyns.get(position);
+        Dyns.DynsEntity dyn = dyns.get(position);
         NetworkImageView dynPic = (NetworkImageView) v.findViewById(R.id.dyn_pic);
         TextView dynText = (TextView) v.findViewById(R.id.dyn_text);
         LinearLayout pointGroup = (LinearLayout) v.findViewById(R.id.point_group);

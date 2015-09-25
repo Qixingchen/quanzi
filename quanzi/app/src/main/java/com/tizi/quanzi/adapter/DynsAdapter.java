@@ -25,10 +25,11 @@ import java.util.List;
  */
 public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder> {
 
+    private static final String TAG = DynsAdapter.class.getSimpleName();
     private List<Dyns.DynsEntity> dynsList;
     private Context mContext;
     private NeedMore needMore;
-    private static final String TAG = DynsAdapter.class.getSimpleName();
+    private Onclick onclick;
 
     /**
      * @param dynsList 动态List
@@ -93,6 +94,20 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
             });
         }
         holder.setPicVisbility(picsNum);
+
+        //点击回调
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onclick != null) {
+                    onclick.click(dyns);
+                } else {
+                    Log.w(TAG, "Onclick 回调为空");
+                }
+            }
+        });
+
+        //加载更多
         if (position == dynsList.size() - 1) {
             if (needMore != null) {
                 needMore.needMore();
@@ -146,8 +161,16 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         this.needMore = needMore;
     }
 
+    public void setOnclick(Onclick onclick) {
+        this.onclick = onclick;
+    }
+
     public interface NeedMore {
         void needMore();
+    }
+
+    public interface Onclick {
+        void click(Dyns.DynsEntity dyn);
     }
 
     /**
@@ -161,6 +184,12 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
                 attitudesTextView, commentsTextView;
         private NetworkImageView[] weibo_pics_NetworkImageView = new NetworkImageView[9];
         private LinearLayout weibo_pics_linearLayout;
+        private View view;
+
+        public DynsViewHolder(View v) {
+            super(v);
+            FindViewByID(v);
+        }
 
         /**
          * 为界面元素赋值
@@ -168,6 +197,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
          * @param v 布局
          */
         private void FindViewByID(View v) {
+            view = v;
             weibo_avatar_NetworkImageView = (NetworkImageView) v.findViewById(R.id.weibo_avatar);
             userNameTextView = (TextView) v.findViewById(R.id.weibo_name);
             contentTextView = (TextView) v.findViewById(R.id.weibo_content);
@@ -205,11 +235,6 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
                 weibo_pics_NetworkImageView[i].setVisibility(View.GONE);
                 weibo_pics_NetworkImageView[i].setOnClickListener(null);
             }
-        }
-
-        public DynsViewHolder(View v) {
-            super(v);
-            FindViewByID(v);
         }
     }
 

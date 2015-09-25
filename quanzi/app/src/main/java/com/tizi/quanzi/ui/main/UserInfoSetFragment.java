@@ -133,7 +133,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         LayoutInflater inflater = mActivity.getLayoutInflater();
         final View layout = inflater.inflate(R.layout.dialog_one_line,
-                (ViewGroup) mActivity.findViewById(R.id.one_line_dialog));
+                (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
         final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
         TextView title = (TextView) layout.findViewById(R.id.dialog_title);
         builder.setView(layout).setNegativeButton("取消", null);

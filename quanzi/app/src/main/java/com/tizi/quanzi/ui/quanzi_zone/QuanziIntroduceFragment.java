@@ -115,6 +115,15 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 }
             }
         });
+        dynsAdapter.setOnclick(new DynsAdapter.Onclick() {
+            @Override
+            public void click(Dyns.DynsEntity dyn) {
+                DynInfoFragment dynInfoFragment = new DynInfoFragment();
+                dynInfoFragment.setDyn(dyn);
+                getFragmentManager().beginTransaction().replace(R.id.fragment, dynInfoFragment)
+                        .addToBackStack("DynInfoFragment").commit();
+            }
+        });
         groupDynsLayoutManager = new LinearLayoutManager(mActivity);
         groupDynsRecyclerView.setLayoutManager(groupDynsLayoutManager);
         groupDynsRecyclerView.setAdapter(dynsAdapter);
@@ -257,4 +266,5 @@ public class QuanziIntroduceFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
+
 }

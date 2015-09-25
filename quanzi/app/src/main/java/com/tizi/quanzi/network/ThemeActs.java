@@ -40,7 +40,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
      */
     public void getThemes() {
 
-        final Call<Theme> themeCall = themeService.getThemes(Tool.getSignMap());
+        final Call<Theme> themeCall = themeService.getThemes();
 
         themeCall.enqueue(new Callback<Theme>() {
             @Override

@@ -1,7 +1,6 @@
 package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Callback;
 
@@ -24,7 +23,7 @@ public class DynamicAct extends RetrofitNetworkAbs {
      */
     public void getGroupDynamic(String themeID, String groupID, int start) {
 
-        dynsSer.findDyns(themeID, groupID, start, StaticField.MessageQueryLimit.DynamicLimit, Tool.getSignMap())
+        dynsSer.findDyns(themeID, groupID, start, StaticField.MessageQueryLimit.DynamicLimit)
                 .enqueue(new Callback<com.tizi.quanzi.gson.Dyns>() {
                     @Override
                     public void onResponse(retrofit.Response<com.tizi.quanzi.gson.Dyns> response) {

@@ -52,7 +52,12 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
             //your code here
             Log.i(TAG, "定位完成");
             try {
-                List<Address> address = new Geocoder(mContext).getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                double Latitude = location.getLatitude();
+                double Longitude = location.getLongitude();
+                UserInfoSetting.getNewInstance().changeLatitude(Latitude);
+                UserInfoSetting.getNewInstance().changeLongitude(Longitude);
+                Log.i(TAG, String.format("Latitude:%f,Longitude:%f", Latitude, Longitude));
+                List<Address> address = new Geocoder(mContext).getFromLocation(Latitude, Longitude, 1);
                 String area = address.get(0).getAdminArea() + address.get(0).getLocality();
                 userLocationTextView.setText(area);
                 UserInfoSetting.getNewInstance().changeArea(area);

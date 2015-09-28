@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.network.Dyns;
@@ -28,6 +31,7 @@ import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -106,14 +110,28 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
                 builder.setTitle("回复消息").setView(layout).setPositiveButton("发送", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String commentString = input.getText().toString();
+                        final String commentString = input.getText().toString();
                         if (commentString.compareTo("") == 0) {
                             Toast.makeText(activity, "内容为空", Toast.LENGTH_LONG).show();
                         } else {
                             Dyns.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                                 @Override
                                 public void onOK(Object ts) {
-
+                                    AddComment addComment = (AddComment) ts;
+                                    Comments.CommentsEntity newComment = new Comments.CommentsEntity();
+                                    newComment.id = addComment.cid;
+                                    newComment.content = commentString;
+                                    newComment.createTime = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                                    newComment.createUser = AppStaticValue.getUserID();
+                                    newComment.createUserName = MyUserInfo.getInstance().getUserInfo().getUserName();
+                                    newComment.dynamicId = comment.dynamicId;
+                                    newComment.userIcon = MyUserInfo.getInstance().getUserInfo().getIcon();
+                                    newComment.senderId = comment.senderId;
+                                    newComment.atUserName = comment.createUserName;
+                                    newComment.atUserId = comment.createUser;
+                                    newComment.replyId = comment.id;
+                                    commentses.add(0, newComment);
+                                    notifyDataSetChanged();
                                 }
 
                                 @Override

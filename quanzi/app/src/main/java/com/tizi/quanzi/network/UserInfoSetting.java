@@ -14,11 +14,11 @@ import retrofit.Callback;
  */
 public class UserInfoSetting extends RetrofitNetworkAbs {
 
+    private RetrofitAPI.UserAccount userAccountSer = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
+
     public static UserInfoSetting getNewInstance() {
         return new UserInfoSetting();
     }
-
-    private RetrofitAPI.UserAccount userAccountSer = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
 
     /**
      * 更改用户的资料
@@ -76,6 +76,20 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
      */
     public void changeArea(String area) {
         changeFiled("area", area);
+    }
+
+    /**
+     * 更改用户 Latitude
+     */
+    public void changeLatitude(double Latitude) {
+        changeFiled("Latitude", String.valueOf(Latitude));
+    }
+
+    /**
+     * 更改用户 Longitude
+     */
+    public void changeLongitude(double Longitude) {
+        changeFiled("Longitude", String.valueOf(Longitude));
     }
 
     @SuppressWarnings("unchecked")

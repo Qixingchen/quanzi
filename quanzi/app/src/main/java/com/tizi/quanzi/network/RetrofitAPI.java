@@ -1,5 +1,6 @@
 package com.tizi.quanzi.network;
 
+import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.ApiInfoGson;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.ContantUsers;
@@ -150,7 +151,7 @@ public interface RetrofitAPI {
                 @Query("comment") String comment);
 
         @POST("/grpdyn/addComment")
-        Call<OnlySuccess> addComent(
+        Call<AddComment> addComent(
                 @Query("dynid") String dynID,
                 @Query("comment") String comment,
                 @Query("replyid") String replyID,

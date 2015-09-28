@@ -1,5 +1,6 @@
 package com.tizi.quanzi.network;
 
+import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.OnlySuccess;
 
@@ -50,9 +51,9 @@ public class Dyns extends RetrofitNetworkAbs {
 
     /*添加评论*/
     public void addComment(String dynID, String comment, String replyID, String atUserID) {
-        dynsSer.addComent(dynID, comment, replyID, atUserID).enqueue(new Callback<OnlySuccess>() {
+        dynsSer.addComent(dynID, comment, replyID, atUserID).enqueue(new Callback<AddComment>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response) {
+            public void onResponse(Response<AddComment> response) {
                 myOnResponse(response);
             }
 

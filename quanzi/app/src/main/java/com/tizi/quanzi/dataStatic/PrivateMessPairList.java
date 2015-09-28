@@ -15,12 +15,6 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
 
     private static PrivateMessPairList mInstance;
 
-    @Override
-    public int getUnreadCount(String convID) {
-        // TODO: 15/9/9 get Unread count
-        return 0;
-    }
-
     public static PrivateMessPairList getInstance() {
         if (mInstance == null) {
             synchronized (PrivateMessPairList.class) {
@@ -30,6 +24,16 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
             }
         }
         return mInstance;
+    }
+
+    @Override
+    public int getUnreadCount(String convID) {
+        // TODO: 15/9/9 get Unread count
+        if (convID == null || convID.compareTo("") == 0) {
+            return 0;
+        } else {
+            return DBAct.getInstance().quaryUnreadCount(convID);
+        }
     }
 
     /**

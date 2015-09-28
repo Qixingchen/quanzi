@@ -46,4 +46,18 @@ public class PrivateMessPair extends ConvGroupAbs implements Serializable {
         return privateMessPair;
     }
 
+    public static PrivateMessPair getPrivatePair(ChatMessage chatMessage) {
+        PrivateMessPair privateMessPair = new PrivateMessPair();
+        privateMessPair.Name = chatMessage.userName;
+        privateMessPair.Face = chatMessage.chatImage;
+        privateMessPair.ID = chatMessage.sender;
+        privateMessPair.Type = StaticField.PrivateMessOrSysMess.PrivateMess;
+        privateMessPair.convId = chatMessage.ConversationId;
+        privateMessPair.UnreadCount = 1;
+        privateMessPair.lastMess = ChatMessage.getContentText(chatMessage);
+        privateMessPair.lastMessTime = chatMessage.create_time;
+
+        return privateMessPair;
+    }
+
 }

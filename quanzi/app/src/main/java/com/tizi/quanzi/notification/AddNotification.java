@@ -24,12 +24,18 @@ import java.util.ArrayList;
  */
 public class AddNotification {
 
+    private static final String TAG = "通知";
     private static Context mContext;
     private static AddNotification mInstance;
     private static ArrayList<ChatMessage> chatMessageArrayList;
     private static NotificationManager mNotificationManager;
 
-    private static final String TAG = "通知";
+    private AddNotification() {
+        mContext = App.getApplication();
+        chatMessageArrayList = new ArrayList<>();
+        mNotificationManager = (NotificationManager) mContext.
+                getSystemService(Context.NOTIFICATION_SERVICE);
+    }
 
     public static AddNotification getInstance() {
         if (mInstance == null) {
@@ -40,13 +46,6 @@ public class AddNotification {
             }
         }
         return mInstance;
-    }
-
-    private AddNotification() {
-        mContext = App.getApplication();
-        chatMessageArrayList = new ArrayList<>();
-        mNotificationManager = (NotificationManager) mContext.
-                getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     /**
@@ -147,10 +146,22 @@ public class AddNotification {
      * @param chatMessage 需要发布通知的消息
      */
     public void AddMessage(ChatMessage chatMessage) {
-        GroupClass group = (GroupClass) GroupList.getInstance().getGroup(chatMessage.groupID);
-        if (group != null && !group.getNeedNotifi()) {
-            return;
+        switch (chatMessage.ChatBothUserType) {
+            case StaticField.ChatBothUserType.GROUP:
+                GroupClass group = (GroupClass) GroupList.getInstance().getGroup(chatMessage.groupID);
+                if (group != null && !group.getNeedNotifi()) {
+                    return;
+                }
+                break;
+
+            case StaticField.ChatBothUserType.twoPerson:
+                // TODO: 15/9/28 allow ignore
+
+                break;
+            default:
+                break;
         }
+
         chatMessageArrayList.add(chatMessage);
         setNotification();
     }

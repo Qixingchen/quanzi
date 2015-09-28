@@ -10,6 +10,8 @@ import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMVideoMessage;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.SystemMessage;
@@ -211,10 +213,14 @@ public class ChatMessFormatFromAVIM {
         } else {
             chatMessage.From = StaticField.ChatFrom.OTHER;
         }
-        return chatMessage;
-        // TODO: 15/8/17  ChatBothUserType
-        // ChatBothUserType,;
 
+        // TODO: 15/8/17  ChatBothUserType in boom
+        if (chatMessage.groupID == null || PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) != null) {
+            chatMessage.ChatBothUserType = StaticField.ChatBothUserType.twoPerson;
+        } else if (GroupList.getInstance().getGroup(chatMessage.groupID) != null) {
+            chatMessage.ChatBothUserType = StaticField.ChatBothUserType.GROUP;
+        }
+        return chatMessage;
     }
 
 }

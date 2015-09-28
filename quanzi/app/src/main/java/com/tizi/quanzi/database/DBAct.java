@@ -9,9 +9,11 @@ import android.support.annotation.Nullable;
 
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -232,6 +234,34 @@ public class DBAct {
         }
         chatMessageCursor.close();
         return null;
+    }
+
+    /**
+     * 将数据库中的所有私聊信息加入PrivateList {@link com.tizi.quanzi.dataStatic.PrivateMessPairList}
+     */
+    public void addPrivateMessToList() {
+        Cursor privateMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,
+                null,
+                DataBaseHelper.chatHistorySQLName.ChatBothUserType + "=?",
+                new String[]{String.valueOf(StaticField.ChatBothUserType.twoPerson)},
+                null,
+                null,
+                DataBaseHelper.chatHistorySQLName.send_time + " DESC",//orderBy
+                "1" //limit
+        );
+
+        privateMessCursor.moveToFirst();
+        while (!privateMessCursor.isAfterLast()) {
+            ChatMessage chatMessage = chatMessageFromCursor(privateMessCursor);
+            if (PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) == null) {
+                PrivateMessPairList.getInstance().addGroup(PrivateMessPair.getPrivatePair(chatMessage));
+            } else {
+                PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
+                        ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+            }
+            privateMessCursor.moveToNext();
+        }
+        privateMessCursor.close();
     }
 
     /**

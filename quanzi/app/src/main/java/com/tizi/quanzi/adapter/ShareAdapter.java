@@ -36,7 +36,7 @@ public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder
      * @param parent   需要创建ViewHolder的 ViewGroup
      * @param viewType 记录类型
      *
-     * @return PriavteMessAbsViewHolder {@link com.tizi.quanzi.adapter.ShareAdapter.MyViewHolder}
+     * @return MyViewHolder {@link com.tizi.quanzi.adapter.ShareAdapter.MyViewHolder}
      */
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

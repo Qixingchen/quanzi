@@ -66,7 +66,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
     /*群聊天记录*/
-        db.execSQL("create table chat_history(id varchar(40)PRIMARY KEY not null, group_id varchar(40),convID varchar(50), account varchar(40), sender varchar(40), send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration varchar(50), isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),ChatBothUserType char(40),imageHeight integer,imageWeight integer,chatImage varchar(200))");
+        db.execSQL("create table chat_history(id varchar(40)PRIMARY KEY not null, group_id varchar(40),convID varchar(50), account varchar(40), sender varchar(40), send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration varchar(50), isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),ChatBothUserType integer,imageHeight integer,imageWeight integer,chatImage varchar(200))");
 
         /*私信记录*/
         db.execSQL("create table singlechat_list(id varchar(40) primary key not null, account varchar(40),uname varchar(40), text varchar(50), icon varchar(200), type Integer, create_user varchar(40), send_time integer, convid varchar(50), unread_count integer)");
@@ -84,7 +84,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    /*每次成功打开数据库后首先被执行*/
+    /**
+     * SystemMess 表列名
+     */
+    public static class SystemMessSQLName {
+        public static final String TableName = "systemMess";
+        public static final String id = "id";
+        public static final String create_time = "create_time";
+        public static final String isread = "isread";
+        public static final String Serializable = "Serializable";
+    }    /*每次成功打开数据库后首先被执行*/
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);

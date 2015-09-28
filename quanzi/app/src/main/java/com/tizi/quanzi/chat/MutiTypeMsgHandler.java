@@ -27,6 +27,10 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
     private static final String TAG = "富文本消息接收";
     private static MutiTypeMsgHandler mInstance;
+    private OnMessage onMessage;
+
+    private MutiTypeMsgHandler() {
+    }
 
     public static MutiTypeMsgHandler getInstance() {
         if (mInstance == null) {
@@ -39,7 +43,38 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         return mInstance;
     }
 
-    private MutiTypeMsgHandler() {
+    /**
+     * 系统消息的处理
+     *
+     * @param systemMessage 对应的系统消息
+     * @param ignore        如果为真，则是初始化刷取的，可以不做处理
+     */
+    public static void HandlerSystemMess(SystemMessage systemMessage, boolean ignore) {
+
+        if (ignore) {
+            return;
+        }
+
+         /*圈子改名*/
+        if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
+            GroupClass group = (GroupClass) GroupList.getInstance().getGroup(systemMessage.getGroup_id());
+            if (group != null) {
+                Log.i(TAG, group.Name + "更名为" + systemMessage.getContent());
+                group.Name = systemMessage.getContent();
+                GroupList.getInstance().updateGroup(group);
+            }
+            //不必加入数据库
+            return;
+        }
+
+            /*圈子解散*/
+        if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_delete) {
+
+            GroupList.getInstance().deleteGroup(systemMessage.getGroup_id());
+            systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
+        }
+        PrivateMessPairList.getInstance().addGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
+        DBAct.getInstance().addOrReplaceSysMess(systemMessage);
     }
 
     /**
@@ -58,16 +93,37 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         Log.w(TAG, "收到消息");
         try {
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
-
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+            switch (chatMessage.ChatBothUserType) {
+                case StaticField.ChatBothUserType.GROUP:
+                    GroupList.getInstance().updateGroupLastMess(
+                            chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
+                            chatMessage.create_time);
+                    break;
+
+                case StaticField.ChatBothUserType.twoPerson:
+
+                    if (PrivateMessPairList.getInstance().getGroup(chatMessage.sender) == null) {
+                        PrivateMessPairList.getInstance().addGroup(PrivateMessPair.getPrivatePair(chatMessage));
+                    }
+                    PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
+                            ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+                    break;
+
+                default:
+                    Log.w(TAG, "unknown ChatBothUserType" + chatMessage.ChatBothUserType);
+                    break;
+            }
+
+
             if (AppStaticValue.UI_CONVERSATION_ID.compareTo(message.getConversationId()) == 0) {
                 if (onMessage != null) {
                     onMessage.OnMessageGet(chatMessage);
                 }
+            } else {
+                AddNotification.getInstance().AddMessage(chatMessage);
             }
-            AddNotification.getInstance().AddMessage(chatMessage);
-            GroupList.getInstance().updateGroupLastMess(
-                    chatMessage.ConversationId, ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+
         } catch (ClassFormatError error) {
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
             HandlerSystemMess(systemMessage, false);
@@ -105,42 +161,6 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
      */
     public void setOnMessage(@Nullable OnMessage onMessage) {
         this.onMessage = onMessage;
-    }
-
-    private OnMessage onMessage;
-
-    /**
-     * 系统消息的处理
-     *
-     * @param systemMessage 对应的系统消息
-     * @param ignore        如果为真，则是初始化刷取的，可以不做处理
-     */
-    public static void HandlerSystemMess(SystemMessage systemMessage, boolean ignore) {
-
-        if (ignore) {
-            return;
-        }
-
-         /*圈子改名*/
-        if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
-            GroupClass group = (GroupClass) GroupList.getInstance().getGroup(systemMessage.getGroup_id());
-            if (group != null) {
-                Log.i(TAG, group.Name + "更名为" + systemMessage.getContent());
-                group.Name = systemMessage.getContent();
-                GroupList.getInstance().updateGroup(group);
-            }
-            //不必加入数据库
-            return;
-        }
-
-            /*圈子解散*/
-        if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_delete) {
-
-            GroupList.getInstance().deleteGroup(systemMessage.getGroup_id());
-            systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
-        }
-        PrivateMessPairList.getInstance().addGroup(PrivateMessPair.PriMessFromSystemMess(systemMessage));
-        DBAct.getInstance().addOrReplaceSysMess(systemMessage);
     }
 
 

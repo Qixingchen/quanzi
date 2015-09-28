@@ -50,7 +50,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
      * @param viewGroup 需要创建ViewHolder的 ViewGroup
      * @param i         记录类型
      *
-     * @return PriavteMessAbsViewHolder {@link com.tizi.quanzi.adapter.GroupListAdapter.MyViewHolder}
+     * @return MyViewHolder {@link com.tizi.quanzi.adapter.GroupListAdapter.MyViewHolder}
      */
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -108,36 +108,6 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
     }
 
     /**
-     * 点击接口
-     */
-    public interface Onclick {
-        /**
-         * 项目被点击
-         *
-         * @param position 点击序号
-         */
-        void itemClick(int position);
-    }
-
-
-    static class MyViewHolder extends RecyclerView.ViewHolder {
-
-        public ImageView groupFaceImageView;
-        public TextView groupNameTextview, lastMessTextview, unreadCountTextview, lastTimeTextview;
-        public View itemView;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            this.itemView = itemView;
-            groupFaceImageView = (ImageView) itemView.findViewById(R.id.group_face_image_view);
-            groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
-            lastMessTextview = (TextView) itemView.findViewById(R.id.last_mess_text_view);
-            unreadCountTextview = (TextView) itemView.findViewById(R.id.unread_count);
-            //lastTimeTextview = (TextView) view.findViewById(R.id.last_dyns_text_view);
-        }
-    }
-
-    /**
      * 为 groupClasses 添加内容
      *
      * @param group 需要添加的群
@@ -157,5 +127,34 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
             groupClasses.add(group);
         }
         notifyDataSetChanged();
+    }
+
+    /**
+     * 点击接口
+     */
+    public interface Onclick {
+        /**
+         * 项目被点击
+         *
+         * @param position 点击序号
+         */
+        void itemClick(int position);
+    }
+
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        public ImageView groupFaceImageView;
+        public TextView groupNameTextview, lastMessTextview, unreadCountTextview, lastTimeTextview;
+        public View itemView;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            this.itemView = itemView;
+            groupFaceImageView = (ImageView) itemView.findViewById(R.id.group_face_image_view);
+            groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
+            lastMessTextview = (TextView) itemView.findViewById(R.id.last_mess_text_view);
+            unreadCountTextview = (TextView) itemView.findViewById(R.id.unread_count);
+            //lastTimeTextview = (TextView) view.findViewById(R.id.last_dyns_text_view);
+        }
     }
 }

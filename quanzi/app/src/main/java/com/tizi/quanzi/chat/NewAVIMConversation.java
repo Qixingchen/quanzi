@@ -19,9 +19,9 @@ import java.util.Map;
  */
 public class NewAVIMConversation {
 
+    private final static String TAG = NewAVIMConversation.class.getSimpleName();
     private static NewAVIMConversation mInstance;
     private ConversationCallBack conversationCallBack;
-    private final static String TAG = NewAVIMConversation.class.getSimpleName();
 
     private NewAVIMConversation() {
     }
@@ -65,6 +65,33 @@ public class NewAVIMConversation {
             }
         });
         return mInstance;
+    }
+
+    /***
+     * 新建单聊群
+     */
+    public void newAPrivateChat(String AnotherUser) {
+        List<String> clientIds = new ArrayList<>();
+        clientIds.add(AppStaticValue.getUserID());
+        clientIds.add(AnotherUser);
+
+        Map<String, Object> attr = new HashMap<>();
+        attr.put("type", StaticField.ChatBothUserType.twoPerson);
+        AVIMClient imClient = AppStaticValue.getImClient();
+        imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
+            @Override
+            public void done(AVIMConversation avimConversation, AVException e) {
+                if (conversationCallBack != null) {
+                    if (avimConversation != null) {
+                        conversationCallBack.setConversationID(avimConversation.getConversationId());
+                    } else {
+                        conversationCallBack.setConversationID("0");
+                    }
+                } else {
+                    Log.e(TAG, "conversationCallBack = null");
+                }
+            }
+        });
     }
 
     /**

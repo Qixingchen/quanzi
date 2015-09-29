@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -23,12 +24,14 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.GroupAllInfo;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
+import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
 import java.util.List;
 
@@ -91,6 +94,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             final GroupAllInfo.MemlistEntity mem = memlist.get(position);
             holder.weibo_avatar_NetworkImageView.setImageUrl(mem.icon,
                     GetVolley.getmInstance().getImageLoader());
+            //自己是群主并且点击的不是自己：长按删除
             if (isCreater && mem.id.compareTo(MyUserInfo.getInstance().getUserInfo().getId()) != 0) {
                 holder.weibo_avatar_NetworkImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -100,6 +104,29 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                     }
                 });
             }
+            //点击的是别人：进入空间
+            if (mem.id.compareTo(MyUserInfo.getInstance().getUserInfo().getId()) != 0) {
+                holder.weibo_avatar_NetworkImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                            @Override
+                            public void onOK(Object ts) {
+                                OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                                Intent otherUser = new Intent(mContext, UserZoneActivity.class);
+                                otherUser.putExtra(StaticField.IntentName.OtherUserInfo, otherUserInfo);
+                                mContext.startActivity(otherUser);
+                            }
+
+                            @Override
+                            public void onError(String Message) {
+                                Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
+                            }
+                        }).findUserByID(mem.id);
+                    }
+                });
+            }
+
         }
     }
 

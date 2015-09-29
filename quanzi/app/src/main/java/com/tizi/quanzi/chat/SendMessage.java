@@ -10,6 +10,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
@@ -30,17 +31,12 @@ public class SendMessage {
     private SendOK sendOK;
 
 
-    public static SendMessage getInstance() {
-        return new SendMessage();
-    }
-
     private SendMessage() {
         mInstance = this;
     }
 
-    public SendMessage setSendOK(SendOK sendOK) {
-        this.sendOK = sendOK;
-        return mInstance;
+    public static SendMessage getInstance() {
+        return new SendMessage();
     }
 
     /**
@@ -89,12 +85,17 @@ public class SendMessage {
         return attr;
     }
 
+    public SendMessage setSendOK(SendOK sendOK) {
+        this.sendOK = sendOK;
+        return mInstance;
+    }
+
     /**
      * 发送图片消息
      *
      * @param Filepath 图片地址
      */
-    public void sendImageMesage(String convID, String Filepath, Map<String, Object> attr) {
+    public void sendImageMesage(final String convID, String Filepath, Map<String, Object> attr) {
         AVIMImageMessage message;
         try {
             message = new AVIMImageMessage(Filepath);
@@ -112,7 +113,7 @@ public class SendMessage {
                     @Override
                     public void done(AVException e) {
                         if (null != e) {
-                            // todo 出错了。。。
+                            onMessageSendError(e.getMessage(), convID);
                             e.printStackTrace();
                         } else {
                             onMessageSendOK(finalMessage, conversation.getConversationId());
@@ -128,7 +129,7 @@ public class SendMessage {
      *
      * @param Filepath 音频地址
      */
-    public void sendAudioMessage(String convID, String Filepath, Map<String, Object> attr) {
+    public void sendAudioMessage(final String convID, String Filepath, Map<String, Object> attr) {
         try {
             AVIMAudioMessage message = new AVIMAudioMessage(Filepath);
             message.setAttrs(attr);
@@ -139,6 +140,7 @@ public class SendMessage {
                 public void done(AVException e) {
                     if (e != null) {
                         e.printStackTrace();
+                        onMessageSendError(e.getMessage(), convID);
                     } else {
                         onMessageSendOK(finalMessage, conversation.getConversationId());
                     }
@@ -154,7 +156,7 @@ public class SendMessage {
      *
      * @param text 发送的文本
      */
-    public void sendTextMessage(String convID, String text, Map<String, Object> attr) {
+    public void sendTextMessage(final String convID, String text, Map<String, Object> attr) {
         final AVIMTextMessage message = new AVIMTextMessage();
         message.setText(text);
         message.setAttrs(attr);
@@ -164,7 +166,7 @@ public class SendMessage {
                     @Override
                     public void done(AVException e) {
                         if (null != e) {
-                            // todo 出错了。。。
+                            onMessageSendError(e.getMessage(), convID);
                             e.printStackTrace();
                         } else {
                             onMessageSendOK(message, conversation.getConversationId());
@@ -187,14 +189,20 @@ public class SendMessage {
                     ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
             Log.d("发送成功", chatMessage.toString());
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-            GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID, ChatMessage.getContentText(chatMessage),
-                    chatMessage.create_time);
+            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.GROUP) {
+                GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
+                        ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+            }
+            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.twoPerson) {
+                PrivateMessPairList.getInstance().updateGroupLastMess(CONVERSATION_ID,
+                        ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+            }
+            // TODO: 15/9/29 boom Group
 
         } catch (ClassFormatError e) {
             Log.w("", e.getMessage());
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(Message);
-            // TODO: 15/8/25 do systemMessage
-            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+            MutiTypeMsgHandler.HandlerSystemMess(systemMessage, false);
         }
 
         if (sendOK != null) {

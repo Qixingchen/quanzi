@@ -104,7 +104,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                 case StaticField.ChatBothUserType.twoPerson:
 
                     if (PrivateMessPairList.getInstance().getGroup(chatMessage.sender) == null) {
-                        PrivateMessPairList.getInstance().addGroup(PrivateMessPair.getPrivatePair(chatMessage));
+                        PrivateMessPairList.getInstance().addGroup(PrivateMessPair.newPrivatePair(chatMessage));
                     }
                     PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
                             ChatMessage.getContentText(chatMessage), chatMessage.create_time);

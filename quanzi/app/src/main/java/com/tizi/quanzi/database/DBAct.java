@@ -1,18 +1,15 @@
 package com.tizi.quanzi.database;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
-import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
@@ -29,12 +26,10 @@ import java.util.List;
 public class DBAct {
     private static final String TAG = "数据库操作";
     private static DBAct mInstance;
-    private static Context mContext;
     private SQLiteDatabase db;
 
     private DBAct() {
         db = AppStaticValue.getDatabase();
-        mContext = App.getApplication();
     }
 
     public static DBAct getInstance() {
@@ -254,7 +249,7 @@ public class DBAct {
         while (!privateMessCursor.isAfterLast()) {
             ChatMessage chatMessage = chatMessageFromCursor(privateMessCursor);
             if (PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) == null) {
-                PrivateMessPairList.getInstance().addGroup(PrivateMessPair.getPrivatePair(chatMessage));
+                PrivateMessPairList.getInstance().addGroup(PrivateMessPair.newPrivatePair(chatMessage));
             } else {
                 PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
                         ChatMessage.getContentText(chatMessage), chatMessage.create_time);
@@ -286,92 +281,6 @@ public class DBAct {
         int count = chatMessageCursor.getCount();
         chatMessageCursor.close();
         return count;
-    }
-
-    /*GroupClass 这个类不记载到数据库*/
-
-    /**
-     * 获取用户自己的所有GroupList
-     *
-     * @return List<GroupClass> {@link GroupClass}
-     */
-    @Deprecated
-    private List<GroupClass> quaryAllMyGroup() {
-
-        Cursor groupCursor = db.query(DataBaseHelper.GroupSQLName.TableName,//table name
-                null,//返回的列,null表示全选
-                null,//条件
-                null,//条件的参数
-                null,//groupBy
-                null,//having
-                null //+ " DESC"//orderBy
-        );
-
-        ArrayList<GroupClass> groupClassArrayList = new ArrayList<>();
-
-        groupCursor.moveToFirst();
-        while (!groupCursor.isAfterLast()) {
-            GroupClass temp = groupClassFromCursor(groupCursor);
-            if (temp != null) {
-                groupClassArrayList.add(temp);
-            }
-            groupCursor.moveToNext();
-        }
-        groupCursor.close();
-        return groupClassArrayList;
-    }
-
-    /**
-     * 根据 Cursor 转换 GroupClass
-     *
-     * @param cursor 查询到的游标
-     *
-     * @return 返回的 GroupClass
-     */
-    @Nullable
-    @Deprecated
-    private GroupClass groupClassFromCursor(Cursor cursor) {
-        GroupClass groupClass = new GroupClass();
-        byte[] SerializString = cursor.getBlob(
-                cursor.getColumnIndex(DataBaseHelper.GroupSQLName.Serializable));
-        try {
-            Object object = SerializedObjectFormat.readSerializedObject(SerializString);
-            if (object != null) {
-                groupClass = (GroupClass) object;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return groupClass;
-
-    }
-
-    /**
-     * 使用convID 查询Group
-     *
-     * @param convID 通讯ID
-     *
-     * @return 对应的群组ID
-     */
-    @Nullable
-    @Deprecated
-    private String quaryGroupIDByconvID(String convID) {
-        Cursor groupCursor = db.query(DataBaseHelper.GroupSQLName.TableName,//table name
-                new String[]{DataBaseHelper.GroupSQLName.id},//返回的列,null表示全选
-                DataBaseHelper.GroupSQLName.convID + "=?",//条件
-                new String[]{convID},//条件的参数
-                null,//groupBy
-                null,//having
-                null //+ " DESC"//orderBy
-        );
-        groupCursor.moveToFirst();
-        if (groupCursor.getCount() == 1) {
-            String ans = groupCursor.getString(0);
-            groupCursor.close();
-            return ans;
-        }
-        groupCursor.close();
-        return null;
     }
 
     /*SystemMessage*/
@@ -438,7 +347,7 @@ public class DBAct {
     private SystemMessage sysMessFromCursor(Cursor cursor) {
         SystemMessage systemMessage = new SystemMessage();
         byte[] SerializString = cursor.getBlob(
-                cursor.getColumnIndex(DataBaseHelper.GroupSQLName.Serializable));
+                cursor.getColumnIndex(DataBaseHelper.SystemMessSQLName.Serializable));
         Object object = SerializedObjectFormat.readSerializedObject(SerializString);
         if (object != null) {
             systemMessage = (SystemMessage) object;
@@ -493,21 +402,6 @@ public class DBAct {
 
 
         db.replace(DataBaseHelper.chatHistorySQLName.TableName, null, content);
-    }
-
-    /**
-     * 添加或更新 GroupClass
-     *
-     * @param groupClass 需要添加／更新的 GroupClass {@link GroupClass}
-     */
-    @Deprecated
-    private void addOrReplaceGroup(GroupClass groupClass) {
-        ContentValues content = new ContentValues();
-        content.put(DataBaseHelper.GroupSQLName.id, groupClass.ID);
-        content.put(DataBaseHelper.GroupSQLName.convID, groupClass.convId);
-        content.put(DataBaseHelper.GroupSQLName.Serializable,
-                SerializedObjectFormat.getSerializedObject(groupClass));
-        db.replace(DataBaseHelper.GroupSQLName.TableName, null, content);
     }
 
     /**

@@ -14,6 +14,7 @@ import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.model.ChatMessage;
@@ -207,9 +208,15 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
         if (!chatMessage.isread) {
             chatMessage.isread = true;
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.twoPerson) {
+                PrivateMessPairList.getInstance().callUpdate();
+            }
         }
         if (position == chatMessageList.size() - 1) {
             DBAct.getInstance().setAllAsRead(chatMessage.ConversationId);
+            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.twoPerson) {
+                PrivateMessPairList.getInstance().callUpdate();
+            }
         }
         /*设置头像*/
         holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(

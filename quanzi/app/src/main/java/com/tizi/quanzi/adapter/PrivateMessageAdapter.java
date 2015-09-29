@@ -1,6 +1,7 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.ChatActivity;
 
 import java.util.List;
 
@@ -161,13 +163,22 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         /*私信*/
         if (PrivateViewHolder.class.isInstance(holder)) {
-            PrivateViewHolder privateVH = (PrivateViewHolder) holder;
-            PrivateMessPair privateMess = privateMessPairs.get(position);
+            final PrivateViewHolder privateVH = (PrivateViewHolder) holder;
+            final PrivateMessPair privateMess = privateMessPairs.get(position);
             privateVH.mUserFaceImageNetworkImageView.setImageUrl(privateMess.Face,
                     GetVolley.getmInstance().getImageLoader());
             privateVH.mUserNameTextViewTextView.setText(privateMess.Name);
             privateVH.mMessTextViewTextView.setText(privateMess.lastMess);
-
+            privateVH.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent chat = new Intent(privateVH.view.getContext(), ChatActivity.class);
+                    chat.putExtra("conversation", privateMess.convId);
+                    chat.putExtra("chatType", StaticField.ChatBothUserType.twoPerson);
+                    chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    privateVH.view.getContext().startActivity(chat);
+                }
+            });
         }
     }
 
@@ -197,6 +208,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         private TextView titleTextview, MessTextview;
         private View itemView;
         private Button acceptButton, refuseButton;
+
         public SystemMessViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;

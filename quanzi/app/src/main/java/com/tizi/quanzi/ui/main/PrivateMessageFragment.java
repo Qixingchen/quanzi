@@ -73,5 +73,4 @@ public class PrivateMessageFragment extends BaseFragment {
         mPrivateMessRecyclerView.setAdapter(privateMessageAdapter);
     }
 
-
 }

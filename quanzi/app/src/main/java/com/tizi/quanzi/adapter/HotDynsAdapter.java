@@ -1,5 +1,7 @@
 package com.tizi.quanzi.adapter;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +11,12 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.ui.dyns.DynsActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +24,16 @@ import java.util.List;
  * 热门动态
  */
 public class HotDynsAdapter extends PagerAdapter {
-    List<Dyns.DynsEntity> dyns;
+    ArrayList<Dyns.DynsEntity> dyns;
     private int LastCount;
 
-    public HotDynsAdapter(List<Dyns.DynsEntity> dyns) {
+    public HotDynsAdapter(ArrayList<Dyns.DynsEntity> dyns) {
         this.dyns = dyns;
+    }
+
+
+    public HotDynsAdapter(List<Dyns.DynsEntity> dyns) {
+        this.dyns = new ArrayList<>(dyns);
     }
 
     @Override
@@ -72,6 +82,19 @@ public class HotDynsAdapter extends PagerAdapter {
         }
         dynText.setText(dyn.content);
         container.addView(v);
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent dynsIntent = new Intent(App.getApplication(), DynsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("dyns", dyns);
+                dynsIntent.putExtras(bundle);
+                dynsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                App.getApplication().startActivity(dynsIntent);
+            }
+        });
+
         return v;
     }
 }

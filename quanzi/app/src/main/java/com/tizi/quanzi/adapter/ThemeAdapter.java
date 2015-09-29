@@ -27,9 +27,9 @@ import java.util.List;
  */
 public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = ThemeAdapter.class.getSimpleName();
     private Context mContext;
     private List<Theme.ActsEntity> acts;
-    private static final String TAG = ThemeAdapter.class.getSimpleName();
     private OnClick onClick;
 
     public ThemeAdapter(List<Theme.ActsEntity> acts, Context mContext) {
@@ -199,7 +199,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         protected void addHotDyns(String themeID) {
 
-            ThemeActs.getNewInstance(mContext).setNetworkListener(
+            ThemeActs.getNewInstance().setNetworkListener(
                     new RetrofitNetworkAbs.NetworkListener() {
                         @Override
                         public void onOK(Object ts) {

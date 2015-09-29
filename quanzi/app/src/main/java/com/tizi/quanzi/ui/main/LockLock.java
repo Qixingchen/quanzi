@@ -64,7 +64,7 @@ public class LockLock extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-        ThemeActs.getNewInstance(mContext).setNetworkListener(
+        ThemeActs.getNewInstance().setNetworkListener(
                 new RetrofitNetworkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {

@@ -77,7 +77,7 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
                     public void onClick(View v) {
                         holder.progressBar.setVisibility(View.VISIBLE);
 
-                        ThemeActs.getNewInstance(mContext).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                             @Override
                             public void onOK(Object ts) {
                                 //todo 加长延迟时间

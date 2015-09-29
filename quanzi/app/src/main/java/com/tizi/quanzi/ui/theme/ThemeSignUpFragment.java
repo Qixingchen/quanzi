@@ -71,7 +71,7 @@ public class ThemeSignUpFragment extends BaseFragment {
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
         mGroupListRecyclerView.setAdapter(themeSignUpGroupAdapter);
 
-        ThemeActs.getNewInstance(getActivity()).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+        ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 GroupIDs groupIDs = (GroupIDs) ts;

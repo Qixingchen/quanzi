@@ -28,4 +28,5 @@
     <string name="private_message">私信</string>
     <string name="title_activity_gallery">GalleryActivity</string>
     <string name="title_activity_user_zone">个人空间</string>
+    <string name="title_activity_dyns">动态</string>
 </resources>

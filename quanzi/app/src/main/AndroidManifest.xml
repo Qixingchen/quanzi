@@ -99,6 +99,10 @@
             android:name=".ui.user_zone.UserZoneActivity"
             android:label="@string/title_activity_user_zone" >
         </activity>
+        <activity
+            android:name=".ui.dyns.DynsActivity"
+            android:label="@string/title_activity_dyns">
+        </activity>
     </application>
 
 </manifest>

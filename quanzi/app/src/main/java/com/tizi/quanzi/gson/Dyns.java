@@ -1,5 +1,8 @@
 package com.tizi.quanzi.gson;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -18,7 +21,16 @@ public class Dyns extends OnlySuccess {
     @SerializedName("dyns")
     public List<DynsEntity> dyns;
 
-    public static class DynsEntity {
+    public static class DynsEntity implements Parcelable {
+        public static final Parcelable.Creator<DynsEntity> CREATOR = new Parcelable.Creator<DynsEntity>() {
+            public DynsEntity createFromParcel(Parcel source) {
+                return new DynsEntity(source);
+            }
+
+            public DynsEntity[] newArray(int size) {
+                return new DynsEntity[size];
+            }
+        };
         /**
          * commentNum : 0
          * content : jy
@@ -53,13 +65,77 @@ public class Dyns extends OnlySuccess {
         @SerializedName("pics")
         public List<PicsEntity> pics;
 
-        public static class PicsEntity {
+
+        public DynsEntity() {
+        }
+
+        protected DynsEntity(Parcel in) {
+            this.commentNum = in.readInt();
+            this.content = in.readString();
+            this.createTime = in.readString();
+            this.icon = in.readString();
+            this.sex = in.readString();
+            this.createUser = in.readString();
+            this.zan = in.readInt();
+            this.nickName = in.readString();
+            this.dynid = in.readString();
+            this.pics = in.createTypedArrayList(PicsEntity.CREATOR);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.commentNum);
+            dest.writeString(this.content);
+            dest.writeString(this.createTime);
+            dest.writeString(this.icon);
+            dest.writeString(this.sex);
+            dest.writeString(this.createUser);
+            dest.writeInt(this.zan);
+            dest.writeString(this.nickName);
+            dest.writeString(this.dynid);
+            dest.writeTypedList(pics);
+        }
+
+        public static class PicsEntity implements Parcelable {
+            public static final Creator<PicsEntity> CREATOR = new Creator<PicsEntity>() {
+                public PicsEntity createFromParcel(Parcel source) {
+                    return new PicsEntity(source);
+                }
+
+                public PicsEntity[] newArray(int size) {
+                    return new PicsEntity[size];
+                }
+            };
             /**
              * url : http://ac-hy5srahi.clouddn.com/9AEsakFeTW4fJTiHnrH5JnD.jpeg
              */
 
             @SerializedName("url")
             public String url;
+
+            public PicsEntity() {
+            }
+
+            protected PicsEntity(Parcel in) {
+                this.url = in.readString();
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.url);
+            }
         }
     }
+
+
 }

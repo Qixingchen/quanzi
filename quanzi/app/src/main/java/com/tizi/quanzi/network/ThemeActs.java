@@ -1,7 +1,5 @@
 package com.tizi.quanzi.network;
 
-import android.content.Context;
-
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.OnlySuccess;
@@ -27,11 +25,9 @@ public class ThemeActs extends RetrofitNetworkAbs {
     }
 
     /**
-     * @param context 上下文
-     *
      * @return 新的实例
      */
-    public static ThemeActs getNewInstance(Context context) {
+    public static ThemeActs getNewInstance() {
         return new ThemeActs();
     }
 

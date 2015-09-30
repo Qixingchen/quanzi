@@ -1,7 +1,6 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,9 +86,9 @@ public class HotDynsAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 Intent dynsIntent = new Intent(App.getApplication(), DynsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("dyns", dyns);
-                dynsIntent.putExtras(bundle);
+                //                Bundle bundle = new Bundle();
+                //                bundle.putParcelableArrayList("dyns", dyns);
+                //                dynsIntent.putExtras(bundle);
                 dynsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 App.getApplication().startActivity(dynsIntent);
             }

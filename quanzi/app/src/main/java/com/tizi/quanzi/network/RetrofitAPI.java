@@ -2,6 +2,7 @@ package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.ApiInfoGson;
+import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.GroupAllInfo;
@@ -52,6 +53,11 @@ public interface RetrofitAPI {
         Call<GroupIDs> querySignedGroup(
                 @Query("actid") String ThemeID,
                 @QueryMap Map<String, String> signMap);
+
+        @POST("/group/collide")
+        Call<BoomGroup> getBoomGroup(
+                @Query("actid") String ThemeID
+        );
     }
 
     interface Group {

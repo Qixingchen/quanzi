@@ -1,5 +1,6 @@
 package com.tizi.quanzi.network;
 
+import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.OnlySuccess;
@@ -139,6 +140,23 @@ public class ThemeActs extends RetrofitNetworkAbs {
             }
         });
 
+    }
+
+    /**
+     * 获取碰撞的圈子
+     */
+    public void getBoomGroup(String themeID) {
+        themeService.getBoomGroup(themeID).enqueue(new Callback<BoomGroup>() {
+            @Override
+            public void onResponse(Response<BoomGroup> response) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

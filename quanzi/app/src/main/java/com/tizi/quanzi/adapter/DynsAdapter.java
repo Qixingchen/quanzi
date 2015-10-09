@@ -228,6 +228,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
                 weibo_pics_linearLayout.setVisibility(View.GONE);
                 return;
             }
+            weibo_pics_linearLayout.setVisibility(View.VISIBLE);
             for (int i = 0; i < picsNum; i++) {
                 weibo_pics_NetworkImageView[i].setVisibility(View.VISIBLE);
             }

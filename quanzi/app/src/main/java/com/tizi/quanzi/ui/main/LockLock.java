@@ -51,10 +51,17 @@ public class LockLock extends BaseFragment {
         mThemeItemsRecyclerView.setHasFixedSize(true);
         themeAdapter = new ThemeAdapter(null, mActivity).setOnClick(new ThemeAdapter.OnClick() {
             @Override
-            public void Participate(Theme.ActsEntity act) {
+            public void SignUP(Theme.ActsEntity act) {
                 getParentFragment().getFragmentManager().beginTransaction()
                         .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id))
                         .addToBackStack("ThemeSignUpFragment").commit();
+            }
+
+            @Override
+            public void EnterTheme(Theme.ActsEntity act) {
+                getParentFragment().getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, BoomGroupFragment.newInstance(act.id))
+                        .addToBackStack("BoomGroupFragment").commit();
             }
         });
         mLayoutManager = new LinearLayoutManager(mActivity);

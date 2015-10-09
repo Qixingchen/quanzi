@@ -25,8 +25,8 @@ import java.util.Date;
  */
 public class RequreForImage {
 
-    private String[] items = new String[]{"选择本地图片", "拍照"};
     private static final String IMAGE_FILE_NAME = "faceImage";
+    private String[] items = new String[]{"选择本地图片", "拍照"};
     private String photoTakenUri;
     private Activity mActivity;
     private String lastTitle;
@@ -41,7 +41,6 @@ public class RequreForImage {
      *
      * @param Title 对话框标题
      */
-    @RequiresPermission(allOf = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE})
     public void showDialogAndCallIntent(String Title) {
         lastTitle = Title;
 

@@ -44,6 +44,8 @@ import java.util.Map;
  */
 public class ChatActivity extends BaseActivity {
 
+    private static final int QueryLimit = StaticField.MessageQueryLimit.Limit;
+    private static final String TAG = ChatActivity.class.getSimpleName();
     private Context context;
     private RecyclerView chatmessagerecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -56,14 +58,8 @@ public class ChatActivity extends BaseActivity {
     private RequreForImage requreForImage;
     private RecodeAudio recodeAudio;
     private int ChatType;
-
     private ImageButton insertImageButton, insertVoiceButton;
-
     private int LastPosition = -1;
-
-    private static final int QueryLimit = StaticField.MessageQueryLimit.Limit;
-    private static final String TAG = ChatActivity.class.getSimpleName();
-
     //toolbar
     private Toolbar toolbar;
 
@@ -126,6 +122,8 @@ public class ChatActivity extends BaseActivity {
                             })
                                     .sendAudioMessage(CONVERSATION_ID, Filepath,
                                             setAttrs());
+                        } else {
+                            Toast.makeText(context, "时间过短，不发送", Toast.LENGTH_SHORT).show();
                         }
                 }
                 return false;

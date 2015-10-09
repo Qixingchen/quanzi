@@ -69,7 +69,6 @@ public class GroupChatList extends BaseFragment {
         }
         groupClasses = GroupList.getInstance().getGroupList();
         showGroupAndSetCallBack();
-
     }
 
     @Override

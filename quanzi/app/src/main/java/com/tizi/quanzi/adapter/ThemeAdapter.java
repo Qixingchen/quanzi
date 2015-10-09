@@ -106,7 +106,17 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         Log.w(TAG, "报名但没有回调监听:" + position);
                         return;
                     }
-                    onClick.Participate(acts.get(position));
+                    onClick.SignUP(acts.get(position));
+                }
+            });
+            tuodan.themeIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onClick == null) {
+                        Log.w(TAG, "没有回调监听:" + position);
+                        return;
+                    }
+                    onClick.EnterTheme(acts.get(position));
                 }
             });
         }
@@ -143,7 +153,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      * 报名监听
      */
     public interface OnClick {
-        void Participate(Theme.ActsEntity act);
+        /*报名*/
+        void SignUP(Theme.ActsEntity act);
+
+        /*进入活动*/
+        void EnterTheme(Theme.ActsEntity act);
     }
 
     /**

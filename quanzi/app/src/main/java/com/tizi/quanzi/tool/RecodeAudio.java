@@ -12,6 +12,7 @@ import com.tizi.quanzi.log.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -27,6 +28,8 @@ public class RecodeAudio {
 
     private String FileName;
     private File file;
+
+    private long startTime, endTime;
 
     private RecodeAudio(Activity mActivity) {
         this.mActivity = mActivity;
@@ -76,6 +79,7 @@ public class RecodeAudio {
             recorder.setOutputFile(file.getAbsolutePath());
             recorder.prepare();
             recorder.start();
+            startTime = Calendar.getInstance().getTimeInMillis();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,6 +99,10 @@ public class RecodeAudio {
             recorder.release();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        endTime = Calendar.getInstance().getTimeInMillis();
+        if (endTime - startTime < 1000) {
+            return null;
         }
         if (file != null && file.exists()) {
             return file.getAbsolutePath();

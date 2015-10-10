@@ -12,9 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
@@ -87,12 +87,12 @@ public class UserZoneActivityFragment extends BaseFragment {
                 members.add(otherUserInfo.id);
 
                 AVIMConversationQuery query = AppStaticValue.getImClient().getQuery();
-                query.whereEqualTo("attr.type", StaticField.ChatBothUserType.twoPerson);
+                query.whereEqualTo("attr.type", StaticField.ConvType.twoPerson);
                 query.withMembers(members);
                 query.whereSizeEqual("m", 2);
                 query.findInBackground(new AVIMConversationQueryCallback() {
                     @Override
-                    public void done(List<AVIMConversation> list, AVException e) {
+                    public void done(List<AVIMConversation> list, AVIMException e) {
                         if (e != null) {
                             Toast.makeText(getActivity(), "出现错误：" + e.getMessage(), Toast.LENGTH_LONG).show();
                             return;
@@ -135,7 +135,7 @@ public class UserZoneActivityFragment extends BaseFragment {
         }
         Intent chat = new Intent(getActivity(), ChatActivity.class);
         chat.putExtra("conversation", convID);
-        chat.putExtra("chatType", StaticField.ChatBothUserType.twoPerson);
+        chat.putExtra("chatType", StaticField.ConvType.twoPerson);
         startActivity(chat);
     }
 }

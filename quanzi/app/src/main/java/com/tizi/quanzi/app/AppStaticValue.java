@@ -5,8 +5,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.tizi.quanzi.database.DataBaseHelper;
 import com.tizi.quanzi.log.Log;
@@ -133,9 +133,10 @@ public class AppStaticValue {
             imClient.close(null);
         }
         imClient = AVIMClient.getInstance(userID);
+
         imClient.open(new AVIMClientCallback() {
             @Override
-            public void done(AVIMClient avimClient, AVException e) {
+            public void done(AVIMClient avimClient, AVIMException e) {
                 if (null != e) {
                     Log.e(TAG, "AVIMClient链接失败");
                     e.printStackTrace();

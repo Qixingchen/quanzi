@@ -1,8 +1,8 @@
 package com.tizi.quanzi.chat;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
@@ -48,11 +48,11 @@ public class NewAVIMConversation {
 
 
         Map<String, Object> attr = new HashMap<>();
-        attr.put("type", StaticField.ChatBothUserType.GROUP);
+        attr.put("type", StaticField.ConvType.GROUP);
         AVIMClient imClient = AppStaticValue.getImClient();
         imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
             @Override
-            public void done(AVIMConversation avimConversation, AVException e) {
+            public void done(AVIMConversation avimConversation, AVIMException e) {
                 if (conversationCallBack != null) {
                     if (avimConversation != null) {
                         conversationCallBack.setConversationID(avimConversation.getConversationId());
@@ -76,11 +76,11 @@ public class NewAVIMConversation {
         clientIds.add(AnotherUser);
 
         Map<String, Object> attr = new HashMap<>();
-        attr.put("type", StaticField.ChatBothUserType.twoPerson);
+        attr.put("type", StaticField.ConvType.twoPerson);
         AVIMClient imClient = AppStaticValue.getImClient();
         imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
             @Override
-            public void done(AVIMConversation avimConversation, AVException e) {
+            public void done(AVIMConversation avimConversation, AVIMException e) {
                 if (conversationCallBack != null) {
                     if (avimConversation != null) {
                         conversationCallBack.setConversationID(avimConversation.getConversationId());

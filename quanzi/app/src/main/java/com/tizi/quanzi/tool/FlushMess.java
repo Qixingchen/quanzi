@@ -1,7 +1,7 @@
 package com.tizi.quanzi.tool;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
@@ -21,9 +21,9 @@ import java.util.List;
  */
 public class FlushMess {
     private static final String TAG = FlushMess.class.getSimpleName();
+    private final int QueryLimit = StaticField.MessageQueryLimit.Limit;
     private AVIMMessagesQueryCallback avimMessagesQueryCallback;
     private AVIMConversation conversation;
-    private final int QueryLimit = StaticField.MessageQueryLimit.Limit;
 
     public static FlushMess getInstance() {
         return new FlushMess();
@@ -43,7 +43,7 @@ public class FlushMess {
         //聊天消息获取回调
         avimMessagesQueryCallback = new AVIMMessagesQueryCallback() {
             @Override
-            public void done(List<AVIMMessage> list, AVException e) {
+            public void done(List<AVIMMessage> list, AVIMException e) {
                 if (e != null) {
                     e.printStackTrace();
                     return;

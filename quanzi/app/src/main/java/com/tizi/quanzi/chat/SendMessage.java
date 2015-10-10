@@ -1,7 +1,7 @@
 package com.tizi.quanzi.chat;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
@@ -42,7 +42,7 @@ public class SendMessage {
     /**
      * 设置附加参数
      *
-     * @param ChatBothUserType {@link com.tizi.quanzi.tool.StaticField.ChatBothUserType}
+     * @param ChatBothUserType {@link StaticField.ConvType}
      *
      * @return 聊天时需要附加的参数
      */
@@ -111,7 +111,7 @@ public class SendMessage {
         conversation.sendMessage(message,
                 new AVIMConversationCallback() {
                     @Override
-                    public void done(AVException e) {
+                    public void done(AVIMException e) {
                         if (null != e) {
                             onMessageSendError(e.getMessage(), convID);
                             e.printStackTrace();
@@ -137,7 +137,7 @@ public class SendMessage {
             final AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
             conversation.sendMessage(message, new AVIMConversationCallback() {
                 @Override
-                public void done(AVException e) {
+                public void done(AVIMException e) {
                     if (e != null) {
                         e.printStackTrace();
                         onMessageSendError(e.getMessage(), convID);
@@ -164,7 +164,7 @@ public class SendMessage {
         conversation.sendMessage(message,
                 new AVIMConversationCallback() {
                     @Override
-                    public void done(AVException e) {
+                    public void done(AVIMException e) {
                         if (null != e) {
                             onMessageSendError(e.getMessage(), convID);
                             e.printStackTrace();
@@ -189,11 +189,11 @@ public class SendMessage {
                     ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
             Log.d("发送成功", chatMessage.toString());
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.GROUP) {
+            if (chatMessage.ChatBothUserType == StaticField.ConvType.GROUP) {
                 GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                         ChatMessage.getContentText(chatMessage), chatMessage.create_time);
             }
-            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.twoPerson) {
+            if (chatMessage.ChatBothUserType == StaticField.ConvType.twoPerson) {
                 PrivateMessPairList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                         ChatMessage.getContentText(chatMessage), chatMessage.create_time);
             }

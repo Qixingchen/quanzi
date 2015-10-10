@@ -3,8 +3,8 @@ package com.tizi.quanzi.chat;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
@@ -28,16 +28,16 @@ import java.util.Map;
  * 管理群用户
  */
 public class GroupUserAdmin {
+    private final static String TAG = GroupUserAdmin.class.getSimpleName();
     private Context mContext;
     private OnResult onResult;
-    private final static String TAG = GroupUserAdmin.class.getSimpleName();
-
-    public static GroupUserAdmin getInstance(Context context) {
-        return new GroupUserAdmin(context);
-    }
 
     private GroupUserAdmin(Context context) {
         this.mContext = context;
+    }
+
+    public static GroupUserAdmin getInstance(Context context) {
+        return new GroupUserAdmin(context);
     }
 
     /**
@@ -58,7 +58,7 @@ public class GroupUserAdmin {
      * @param userID  成员ID
      */
     public void addMember(String convID, final String groupID, String userID) {
-        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.twoPerson);
+        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
         attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
                 StaticField.SystemMessAttrName.systemFlag.invitation, "");
 
@@ -70,7 +70,7 @@ public class GroupUserAdmin {
         final Map<String, Object> finalAttr = attr;
         AppStaticValue.getImClient().createConversation(clientIds, chatAttr, new AVIMConversationCreatedCallback() {
             @Override
-            public void done(AVIMConversation avimConversation, AVException e) {
+            public void done(AVIMConversation avimConversation, AVIMException e) {
                 if (e != null) {
                     if (onResult != null) {
                         onResult.error(e.getMessage());
@@ -113,7 +113,7 @@ public class GroupUserAdmin {
     public void deleteMember(String convID, String groupID, String userID) {
         if (userID.compareTo(AppStaticValue.getUserID()) == 0) {
             //发送系统通知
-            Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.twoPerson);
+            Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
             attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
                     StaticField.SystemMessAttrName.systemFlag.kicked, "");
             SendMessage.getInstance().setSendOK(
@@ -140,7 +140,7 @@ public class GroupUserAdmin {
         AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
         conversation.kickMembers(userIds, new AVIMConversationCallback() {
             @Override
-            public void done(AVException e) {
+            public void done(AVIMException e) {
                 if (e != null) {
                     Log.w(TAG, "LC删除好友失败");
                     if (onResult != null) {
@@ -196,7 +196,7 @@ public class GroupUserAdmin {
         }).deleteGroup(groupID);
 
         //LC
-        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ChatBothUserType.GROUP);
+        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.GROUP);
         attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
                 StaticField.SystemMessAttrName.systemFlag.group_delete, "圈子已解散");
         SendMessage.getInstance().setSendOK(
@@ -241,7 +241,7 @@ public class GroupUserAdmin {
                 clientIds.add(AppStaticValue.getUserID());
                 AppStaticValue.getImClient().getConversation(convID).addMembers(clientIds, new AVIMConversationCallback() {
                     @Override
-                    public void done(AVException e) {
+                    public void done(AVIMException e) {
                         if (e != null) {
                             Log.w(TAG, "LC addMembers err:" + e.getMessage());
                             if (onResult != null) {
@@ -268,7 +268,7 @@ public class GroupUserAdmin {
         userIds.add(AppStaticValue.getUserID());
         AppStaticValue.getImClient().getConversation(convID).addMembers(userIds, new AVIMConversationCallback() {
             @Override
-            public void done(AVException e) {
+            public void done(AVIMException e) {
                 if (e == null) {
                     if (onResult != null) {
                         onResult.OK();

@@ -45,7 +45,7 @@ public class StaticField {
         public final static String userName = "userName";
         public final static String groupID = "groupId";
         public final static String userID = "userId";
-        public final static String type = "type";//单人群聊
+        public final static String type = "type";//单人群聊boom
         public final static String IS_SYS_MESS = "msgType";// 消息类型 ： S：系统消息， C：非系统消息
     }
 

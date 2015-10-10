@@ -7,6 +7,7 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
@@ -94,6 +95,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         try {
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+            /*刷新最后一条消息等信息*/
             switch (chatMessage.ChatBothUserType) {
                 case StaticField.ConvType.GROUP:
                     GroupList.getInstance().updateGroupLastMess(
@@ -103,11 +105,18 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
                 case StaticField.ConvType.twoPerson:
 
+                    //如果是不存在的私聊纪录，添加这个私聊组
                     if (PrivateMessPairList.getInstance().getGroup(chatMessage.sender) == null) {
                         PrivateMessPairList.getInstance().addGroup(PrivateMessPair.newPrivatePair(chatMessage));
                     }
                     PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
                             ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+                    break;
+                case StaticField.ConvType.BoomGroup:
+
+                    BoomGroupList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
+                            ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+
                     break;
 
                 default:
@@ -115,7 +124,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     break;
             }
 
-
+            /*添加到聊天界面*/
             if (AppStaticValue.UI_CONVERSATION_ID.compareTo(message.getConversationId()) == 0) {
                 if (onMessage != null) {
                     onMessage.OnMessageGet(chatMessage);

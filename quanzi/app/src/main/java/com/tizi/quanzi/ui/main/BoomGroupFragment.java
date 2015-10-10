@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.BoomGroupListAdapter;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.gson.BoomGroup;
+import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.StaticField;
@@ -79,12 +81,16 @@ public class BoomGroupFragment extends BaseFragment {
             public void onOK(Object ts) {
                 BoomGroup boomGroup = (BoomGroup) ts;
                 groupNums.setText(String.valueOf(boomGroup.groupmatch.size()));
-                boomGroupListAdapter = new BoomGroupListAdapter(boomGroup.groupmatch, mContext);
+
+                BoomGroupList.getInstance().setGroupList(
+                        BoomGroupClass.getBoomGroupListFromBoomGroupGson(boomGroup.groupmatch));
+
+                boomGroupListAdapter = new BoomGroupListAdapter(BoomGroupList.getInstance().getGroupList(), mContext);
                 boomGroupListAdapter.setOnClick(new BoomGroupListAdapter.OnClick() {
                     @Override
-                    public void clickBoomGroup(BoomGroup.GroupmatchEntity boomGroup) {
+                    public void clickBoomGroup(BoomGroupClass boomGroup) {
                         Intent chatmess = new Intent(mActivity, ChatActivity.class);
-                        chatmess.putExtra("chatType", StaticField.ChatBothUserType.BoomGroup);
+                        chatmess.putExtra("chatType", StaticField.ConvType.BoomGroup);
                         chatmess.putExtra("conversation", boomGroup.convId);
                         startActivity(chatmess);
                     }

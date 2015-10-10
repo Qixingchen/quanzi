@@ -83,7 +83,7 @@ dependencies {
     compile 'cn.leancloud.android:avoscloud-sdk:v3.8.1'
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
     compile 'cn.leancloud.android:avoscloud-push:v3.8.1@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.2.1-leancloud'
+    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
     //avoscloud-statistics 为 LeanCloud 统计包
 //    compile 'cn.leancloud.android:avoscloud-statistics:v3.8.1@aar'
     //gms

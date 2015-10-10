@@ -5,14 +5,16 @@ import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMFileMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMVideoMessage;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
+import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
@@ -113,12 +115,7 @@ public class ChatMessFormatFromAVIM {
         chatMessage.type = StaticField.ChatContantType.TEXT;
         AVGeoPoint avGeoPoint = ((AVIMLocationMessage) message).getLocation();
         chatMessage.text = ((AVIMLocationMessage) message).getText();
-        chatMessage.chatImage = (String)
-                ((AVIMLocationMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
-        chatMessage.userName = (String)
-                ((AVIMLocationMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
-        chatMessage.groupID = (String)
-                ((AVIMLocationMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
+        chatMessage = setAttrsInfo(chatMessage, message);
         // todo chatMessage.local_path
         // todo chatMessage.url
         // todo chatMessage.voice_duration
@@ -130,12 +127,7 @@ public class ChatMessFormatFromAVIM {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.TEXT;
         chatMessage.text = ((AVIMTextMessage) message).getText();
-        chatMessage.chatImage = (String)
-                ((AVIMTextMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
-        chatMessage.userName = (String)
-                ((AVIMTextMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
-        chatMessage.groupID = (String)
-                ((AVIMTextMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
+        chatMessage = setAttrsInfo(chatMessage, message);
         return chatMessage;
     }
 
@@ -144,12 +136,7 @@ public class ChatMessFormatFromAVIM {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.IMAGE;
         chatMessage.url = ((AVIMImageMessage) message).getFileUrl();
-        chatMessage.chatImage = (String)
-                ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
-        chatMessage.userName = (String)
-                ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
-        chatMessage.groupID = (String)
-                ((AVIMImageMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
+        chatMessage = setAttrsInfo(chatMessage, message);
         chatMessage.imageWeight = ((AVIMImageMessage) message).getWidth();
         chatMessage.imageHeight = ((AVIMImageMessage) message).getHeight();
         return chatMessage;
@@ -176,12 +163,7 @@ public class ChatMessFormatFromAVIM {
         chatMessage.type = StaticField.ChatContantType.VEDIO;
         chatMessage.url = ((AVIMVideoMessage) message).getFileUrl();
         chatMessage.voice_duration = ((AVIMVideoMessage) message).getDuration();
-        chatMessage.chatImage = (String)
-                ((AVIMVideoMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userIcon);
-        chatMessage.userName = (String)
-                ((AVIMVideoMessage) message).getAttrs().get(StaticField.ChatMessAttrName.userName);
-        chatMessage.groupID = (String)
-                ((AVIMVideoMessage) message).getAttrs().get(StaticField.ChatMessAttrName.groupID);
+        chatMessage = setAttrsInfo(chatMessage, message);
         return chatMessage;
     }
 
@@ -208,19 +190,86 @@ public class ChatMessFormatFromAVIM {
         chatMessage.isSelfSend = (message.getFrom().compareTo(AppStaticValue.getUserID()) == 0);
         // TODO: 15/8/17 isread
         chatMessage.isread = chatMessage.isSelfSend;
-        if (chatMessage.isSelfSend) {
-            chatMessage.From = StaticField.ChatFrom.ME;
-        } else {
-            chatMessage.From = StaticField.ChatFrom.OTHER;
-        }
 
-        // TODO: 15/8/17  conv_type in boom
-        if (chatMessage.groupID == null || PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) != null) {
-            chatMessage.ChatBothUserType = StaticField.ConvType.twoPerson;
-        } else if (GroupList.getInstance().getGroup(chatMessage.groupID) != null) {
-            chatMessage.ChatBothUserType = StaticField.ConvType.GROUP;
-        }
         return chatMessage;
     }
+
+    /*Attrs*/
+
+    /**
+     * 设置attrs,需要在 mainMessageInfoFromAvimMessage 后调用
+     *
+     * @param chatMessage 需要被设置的 ChatMessage
+     * @param avimMessage 含有 attrs 的信息
+     *
+     * @return 设置完成的 ChatMessage
+     */
+    private static ChatMessage setAttrsInfo(ChatMessage chatMessage, AVIMMessage avimMessage) {
+        String TAG = "ChatMessFormatFromAVIM.setAttrsInfo";
+        if (AVIMFileMessage.class.isInstance(avimMessage)) {
+            Log.i(TAG, "AVIMFileMessage");
+            AVIMFileMessage message = (AVIMFileMessage) avimMessage;
+            chatMessage.chatImage = (String)
+                    message.getAttrs().get(StaticField.ChatMessAttrName.userIcon);
+            chatMessage.userName = (String)
+                    message.getAttrs().get(StaticField.ChatMessAttrName.userName);
+            chatMessage.groupID = (String)
+                    message.getAttrs().get(StaticField.ChatMessAttrName.groupID);
+            chatMessage.ChatBothUserType = (int)
+                    message.getAttrs().get(StaticField.ChatMessAttrName.type);
+        } else if (AVIMTextMessage.class.isInstance(avimMessage)) {
+            Log.i(TAG, "AVIMTextMessage");
+            AVIMTextMessage message = (AVIMTextMessage) avimMessage;
+            chatMessage.chatImage = (String)
+                    message.getAttrs().get(StaticField.ChatMessAttrName.userIcon);
+            chatMessage.userName = (String)
+                    message.getAttrs().get(StaticField.ChatMessAttrName.userName);
+            chatMessage.groupID = (String)
+                    message.getAttrs().get(StaticField.ChatMessAttrName.groupID);
+            chatMessage.ChatBothUserType = (int)
+                    message.getAttrs().get(StaticField.ChatMessAttrName.type);
+        }
+
+        /*判断消息来源类型*/
+        if (chatMessage.isSelfSend) {
+            //自己发出的
+            chatMessage.From = StaticField.ChatFrom.ME;
+        } else if (chatMessage.ChatBothUserType != StaticField.ConvType.BoomGroup) {
+            //非碰撞
+            chatMessage.From = StaticField.ChatFrom.OTHER;
+        } else {
+            //碰撞圈子
+            BoomGroupClass boomGroup = BoomGroupList.getInstance().getGroup(chatMessage.groupID);
+            boolean isMyGroupContainSend = false;
+            if (boomGroup != null) {
+                if (boomGroup.isGroup1MyGroup) {
+                    //圈子1是自己的圈子
+                    for (BoomGroup.GroupmatchEntity.GrpmemEntity member : boomGroup.groupMenber1) {
+                        if (member.id.compareTo(chatMessage.sender) == 0) {
+                            isMyGroupContainSend = true;
+                            break;
+                        }
+                    }
+                } else {
+                    //圈子2是自己的圈子
+                    for (BoomGroup.GroupmatchEntity.GrpmemEntity member : boomGroup.groupMenber2) {
+                        if (member.id.compareTo(chatMessage.sender) == 0) {
+                            isMyGroupContainSend = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            //如果是圈内好友，来源是圈子，否则是其他
+            if (isMyGroupContainSend) {
+                chatMessage.From = StaticField.ChatFrom.GROUP;
+            } else {
+                chatMessage.From = StaticField.ChatFrom.OTHER;
+            }
+        }
+
+        return chatMessage;
+    }
+
 
 }

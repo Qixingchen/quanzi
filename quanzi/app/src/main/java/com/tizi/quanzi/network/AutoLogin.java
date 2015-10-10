@@ -82,6 +82,8 @@ public class AutoLogin extends RetrofitNetworkAbs {
             RawPassword = "96e79218965eb72c92a549dd5a330112";
         } else if (AppStaticValue.getUserPhone().compareTo("2") == 0) {
             RawPassword = "e3ceb5881a0a1fdaad01296d7554868d";
+        } else if (AppStaticValue.getUserPhone().compareTo("5") == 0) {
+            RawPassword = "5b1b68a9abf4d2cd155c81a9225fd158";
         } else {
             RawPassword = GetPassword.LaterHASH(PrePassword);
         }

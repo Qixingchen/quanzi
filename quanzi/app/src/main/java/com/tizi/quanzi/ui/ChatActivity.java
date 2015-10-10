@@ -27,6 +27,7 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.SendMessage;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
@@ -350,8 +351,11 @@ public class ChatActivity extends BaseActivity {
      */
     private Map<String, Object> setAttrs() {
         Map<String, Object> attr;
-        if (ChatType == StaticField.ChatBothUserType.GROUP) {
+        if (ChatType == StaticField.ConvType.GROUP) {
             attr = SendMessage.setMessAttr(GroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID),
+                    ChatType);
+        } else if (ChatType == StaticField.ConvType.BoomGroup) {
+            attr = SendMessage.setMessAttr(BoomGroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID),
                     ChatType);
         } else {
             attr = SendMessage.setMessAttr("", ChatType);

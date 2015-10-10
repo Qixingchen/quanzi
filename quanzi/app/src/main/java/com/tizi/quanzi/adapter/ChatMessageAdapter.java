@@ -89,6 +89,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                         .inflate(R.layout.item_my_chat, parent, false);
                 vh = new MyMessViewHolder(v);
                 break;
+            case StaticField.ChatFrom.GROUP:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_my_chat, parent, false);
+                vh = new MyMessViewHolder(v);
+                break;
             default:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_ohter_chat, parent, false);
@@ -307,7 +312,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
         }
         //todo 确认加载位置
         chatMessageList.add(insertPosition, chatMessage);
-        notifyDataSetChanged();
+        notifyItemInserted(insertPosition);
     }
 
     /**

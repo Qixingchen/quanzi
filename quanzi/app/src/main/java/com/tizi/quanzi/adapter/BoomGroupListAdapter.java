@@ -9,13 +9,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
+import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
 
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -27,13 +26,17 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
 
     private List<BoomGroupClass> boomGroups;
     private Context context;
-    private Map<String, Integer> unReadCount;
     private OnClick onClick;
 
     public BoomGroupListAdapter(List<BoomGroupClass> boomGroups, Context context) {
         this.boomGroups = boomGroups;
         this.context = context;
-        unReadCount = new TreeMap<>();
+        BoomGroupList.getInstance().addOnChangeCallBack(new ConvGroupAbsList.OnChangeCallBack() {
+            @Override
+            public void changed() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void setOnClick(OnClick onClick) {
@@ -77,7 +80,7 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
                     .resizeDimen(R.dimen.group_face, R.dimen.group_face).into(vh.secondGroupFace);
 
             /*both*/
-            if (isMyGroup(boomGroup.groupId1)) {
+            if (boomGroup.isGroup1MyGroup) {
                 vh.firstGroupDescription.setText(R.string.my_group);
                 vh.secondGroupDescription.setText(R.string.boom_group);
             } else {
@@ -86,7 +89,7 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
             }
 
             /*unread*/
-            Integer unreadCount = unReadCount.get(boomGroup.convId);
+            Integer unreadCount = BoomGroupList.getInstance().getUnreadCount(boomGroup.convId);
             vh.unreadCount.setText(String.valueOf(unreadCount == null ? 0 : unreadCount));
 
             /*onCLick*/
@@ -111,20 +114,6 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
         return boomGroups == null ? 0 : boomGroups.size();
     }
 
-    /**
-     * 判断是不是自己的群
-     *
-     * @param GroupID 群号
-     *
-     * @return true：是自己的圈子
-     */
-    private boolean isMyGroup(String GroupID) {
-        if (GroupList.getInstance().getGroup(GroupID) != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public interface OnClick {
         void clickBoomGroup(BoomGroupClass boomGroup);

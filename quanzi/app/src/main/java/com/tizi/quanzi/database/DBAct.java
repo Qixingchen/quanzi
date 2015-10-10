@@ -95,7 +95,7 @@ public class DBAct {
         chatMessage.type = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.type));
         chatMessage.status = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.status));
         //from需要在isSelfSend后判断
-        chatMessage.ChatBothUserType = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.ChatBothUserType));
+        chatMessage.ChatBothUserType = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.conv_type));
         chatMessage.imageHeight = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageHeight));
         chatMessage.imageWeight = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageWeight));
 
@@ -130,7 +130,7 @@ public class DBAct {
             chatMessage.From = StaticField.ChatFrom.ME;
         }//todo 判断是本群还是临时群
         else {
-            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.GROUP) {
+            if (chatMessage.ChatBothUserType == StaticField.ConvType.GROUP) {
                 chatMessage.From = StaticField.ChatFrom.OTHER;
             } else {
                 chatMessage.From = StaticField.ChatFrom.OTHER;
@@ -237,8 +237,8 @@ public class DBAct {
     public void addPrivateMessToList() {
         Cursor privateMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,
                 null,
-                DataBaseHelper.chatHistorySQLName.ChatBothUserType + "=?",
-                new String[]{String.valueOf(StaticField.ChatBothUserType.twoPerson)},
+                DataBaseHelper.chatHistorySQLName.conv_type + "=?",
+                new String[]{String.valueOf(StaticField.ConvType.twoPerson)},
                 null,
                 null,
                 DataBaseHelper.chatHistorySQLName.send_time + " DESC",//orderBy
@@ -397,7 +397,7 @@ public class DBAct {
         content.put(DataBaseHelper.chatHistorySQLName.Group_id, chatMessage.groupID);
         content.put(DataBaseHelper.chatHistorySQLName.imageHeight, chatMessage.imageHeight);
         content.put(DataBaseHelper.chatHistorySQLName.imageWeight, chatMessage.imageWeight);
-        content.put(DataBaseHelper.chatHistorySQLName.ChatBothUserType, chatMessage.ChatBothUserType);
+        content.put(DataBaseHelper.chatHistorySQLName.conv_type, chatMessage.ChatBothUserType);
         content.put(DataBaseHelper.chatHistorySQLName.chatImage, chatMessage.chatImage);
 
 

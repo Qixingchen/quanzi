@@ -147,14 +147,14 @@ public class AddNotification {
      */
     public void AddMessage(ChatMessage chatMessage) {
         switch (chatMessage.ChatBothUserType) {
-            case StaticField.ChatBothUserType.GROUP:
+            case StaticField.ConvType.GROUP:
                 GroupClass group = (GroupClass) GroupList.getInstance().getGroup(chatMessage.groupID);
                 if (group != null && !group.getNeedNotifi()) {
                     return;
                 }
                 break;
 
-            case StaticField.ChatBothUserType.twoPerson:
+            case StaticField.ConvType.twoPerson:
                 // TODO: 15/9/28 allow ignore
 
                 break;

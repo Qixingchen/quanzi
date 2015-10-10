@@ -208,13 +208,13 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
         if (!chatMessage.isread) {
             chatMessage.isread = true;
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.twoPerson) {
+            if (chatMessage.ChatBothUserType == StaticField.ConvType.twoPerson) {
                 PrivateMessPairList.getInstance().callUpdate();
             }
         }
         if (position == chatMessageList.size() - 1) {
             DBAct.getInstance().setAllAsRead(chatMessage.ConversationId);
-            if (chatMessage.ChatBothUserType == StaticField.ChatBothUserType.twoPerson) {
+            if (chatMessage.ChatBothUserType == StaticField.ConvType.twoPerson) {
                 PrivateMessPairList.getInstance().callUpdate();
             }
         }

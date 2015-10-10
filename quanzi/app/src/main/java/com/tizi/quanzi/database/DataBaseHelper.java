@@ -18,7 +18,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         /*群聊天记录*/
-        db.execSQL("create table chat_history(id varchar(40)PRIMARY KEY not null, group_id varchar(40),convID varchar(50), account varchar(40), sender varchar(40), send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration varchar(50), isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),ChatBothUserType integer,imageHeight integer,imageWeight integer,chatImage varchar(200))");
+        db.execSQL("create table chat_history(id varchar(40)PRIMARY KEY not null, group_id varchar(40),convID varchar(50), account varchar(40), sender varchar(40), send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration varchar(50), isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),conv_type integer,imageHeight integer,imageWeight integer,chatImage varchar(200))");
 
         /*系统消息记录*/
         db.execSQL("create table systemMess( id varchar(40) PRIMARY KEY not null ,create_time INTEGER, isread varchar(1) ,Serializable blob )");
@@ -58,7 +58,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         public static final String status = "status";
         public static final String isSelfSend_ioType = "isSelfSend_ioType";
         public static final String userName = "userName";
-        public static final String ChatBothUserType = "ChatBothUserType";
+        public static final String conv_type = "conv_type";
         public static final String imageHeight = "imageHeight";
         public static final String imageWeight = "imageWeight";
         public static final String chatImage = "chatImage";

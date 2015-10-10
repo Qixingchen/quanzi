@@ -129,7 +129,7 @@ public class GroupChatList extends BaseFragment {
                     }
                 } else {
                     Intent chatmess = new Intent(mActivity, ChatActivity.class);
-                    chatmess.putExtra("chatType", StaticField.ChatBothUserType.GROUP);
+                    chatmess.putExtra("chatType", StaticField.ConvType.GROUP);
                     chatmess.putExtra("conversation", groupClasses.get(position).convId);
                     startActivity(chatmess);
                 }

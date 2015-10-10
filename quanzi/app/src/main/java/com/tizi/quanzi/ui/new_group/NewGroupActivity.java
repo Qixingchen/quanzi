@@ -100,7 +100,7 @@ public class NewGroupActivity extends BaseActivity {
                                 groupClass.ID = group.group.id;
                                 groupClass.Name = ans.groupName;
                                 groupClass.Face = ans.groupFaceUri;
-                                groupClass.Type = StaticField.ChatBothUserType.GROUP;
+                                groupClass.Type = StaticField.ConvType.GROUP;
                                 groupClass.Notice = ans.groupSign;
                                 groupClass.convId = convID;
                                 groupClass.createUser = AppStaticValue.getUserID();

@@ -95,13 +95,13 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
             switch (chatMessage.ChatBothUserType) {
-                case StaticField.ChatBothUserType.GROUP:
+                case StaticField.ConvType.GROUP:
                     GroupList.getInstance().updateGroupLastMess(
                             chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
                             chatMessage.create_time);
                     break;
 
-                case StaticField.ChatBothUserType.twoPerson:
+                case StaticField.ConvType.twoPerson:
 
                     if (PrivateMessPairList.getInstance().getGroup(chatMessage.sender) == null) {
                         PrivateMessPairList.getInstance().addGroup(PrivateMessPair.newPrivatePair(chatMessage));
@@ -111,7 +111,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     break;
 
                 default:
-                    Log.w(TAG, "unknown ChatBothUserType" + chatMessage.ChatBothUserType);
+                    Log.w(TAG, "unknown conv_type" + chatMessage.ChatBothUserType);
                     break;
             }
 

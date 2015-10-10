@@ -214,11 +214,11 @@ public class ChatMessFormatFromAVIM {
             chatMessage.From = StaticField.ChatFrom.OTHER;
         }
 
-        // TODO: 15/8/17  ChatBothUserType in boom
+        // TODO: 15/8/17  conv_type in boom
         if (chatMessage.groupID == null || PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) != null) {
-            chatMessage.ChatBothUserType = StaticField.ChatBothUserType.twoPerson;
+            chatMessage.ChatBothUserType = StaticField.ConvType.twoPerson;
         } else if (GroupList.getInstance().getGroup(chatMessage.groupID) != null) {
-            chatMessage.ChatBothUserType = StaticField.ChatBothUserType.GROUP;
+            chatMessage.ChatBothUserType = StaticField.ConvType.GROUP;
         }
         return chatMessage;
     }

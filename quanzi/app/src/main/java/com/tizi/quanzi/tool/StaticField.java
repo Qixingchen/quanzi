@@ -33,7 +33,7 @@ public class StaticField {
     }
 
     /*聊天室类型*/
-    public static class ChatBothUserType {
+    public static class ConvType {
         public final static int twoPerson = 0;
         public final static int GROUP = 1;
         public final static int BoomGroup = 2;

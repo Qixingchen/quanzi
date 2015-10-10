@@ -106,7 +106,7 @@ public class QuanziSetFragment extends BaseFragment {
                                             name,
                                             SendMessage.setGroupManageSysMessAttr(
                                                     SendMessage.setMessAttr(group.ID,
-                                                            StaticField.ChatBothUserType.GROUP),
+                                                            StaticField.ConvType.GROUP),
                                                     group.convId,
                                                     StaticField.SystemMessAttrName.systemFlag.group_change_name,
                                                     ""));

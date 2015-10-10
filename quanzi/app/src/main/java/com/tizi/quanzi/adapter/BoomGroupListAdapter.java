@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.model.BoomGroupClass;
 
 import java.util.List;
 import java.util.Map;
@@ -25,12 +25,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
 
-    private List<BoomGroup.GroupmatchEntity> boomGroups;
+    private List<BoomGroupClass> boomGroups;
     private Context context;
     private Map<String, Integer> unReadCount;
     private OnClick onClick;
 
-    public BoomGroupListAdapter(List<BoomGroup.GroupmatchEntity> boomGroups, Context context) {
+    public BoomGroupListAdapter(List<BoomGroupClass> boomGroups, Context context) {
         this.boomGroups = boomGroups;
         this.context = context;
         unReadCount = new TreeMap<>();
@@ -65,7 +65,7 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (BoomGroupItemViewHolder.class.isInstance(holder)) {
             BoomGroupItemViewHolder vh = (BoomGroupItemViewHolder) holder;
-            final BoomGroup.GroupmatchEntity boomGroup = boomGroups.get(position);
+            final BoomGroupClass boomGroup = boomGroups.get(position);
             /*1*/
             vh.firstGroupName.setText(boomGroup.groupName1);
             Picasso.with(context).load(boomGroup.icon1)
@@ -127,7 +127,7 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
     }
 
     public interface OnClick {
-        void clickBoomGroup(BoomGroup.GroupmatchEntity boomGroup);
+        void clickBoomGroup(BoomGroupClass boomGroup);
     }
 
     class BoomGroupItemViewHolder extends RecyclerView.ViewHolder {

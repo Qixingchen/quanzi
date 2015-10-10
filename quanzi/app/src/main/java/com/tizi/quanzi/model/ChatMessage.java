@@ -49,7 +49,7 @@ public class ChatMessage {
                 "type=" + type +
                 ", status=" + status +
                 ", From=" + From +
-                ", ChatBothUserType=" + ChatBothUserType +
+                ", conv_type=" + ChatBothUserType +
                 ", imageHeight=" + imageHeight +
                 ", imageWeight=" + imageWeight +
                 ", text='" + text + '\'' +

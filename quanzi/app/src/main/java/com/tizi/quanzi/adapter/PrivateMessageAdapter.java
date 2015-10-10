@@ -174,7 +174,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onClick(View v) {
                     Intent chat = new Intent(privateVH.view.getContext(), ChatActivity.class);
                     chat.putExtra("conversation", privateMess.convId);
-                    chat.putExtra("chatType", StaticField.ChatBothUserType.twoPerson);
+                    chat.putExtra("chatType", StaticField.ConvType.twoPerson);
                     chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     privateVH.view.getContext().startActivity(chat);
                 }

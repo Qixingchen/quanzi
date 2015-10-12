@@ -10,12 +10,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:titleTextColor">@color/textColorPrimary</item>
-        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
     </style>
 
     <style name="AppTheme.Revert" parent="Theme.AppCompat.Light">
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:titleTextColor">@color/colorPrimary</item>
+        <item name="android:titleTextColor">@color/textColorPrimary</item>
     </style>
 
 

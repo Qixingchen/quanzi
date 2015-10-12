@@ -28,8 +28,8 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
     private Context context;
     private OnClick onClick;
 
-    public BoomGroupListAdapter(List<BoomGroupClass> boomGroups, Context context) {
-        this.boomGroups = boomGroups;
+    public BoomGroupListAdapter(Context context) {
+        this.boomGroups = BoomGroupList.getInstance().getGroupList();
         this.context = context;
         BoomGroupList.getInstance().addOnChangeCallBack(new ConvGroupAbsList.OnChangeCallBack() {
             @Override

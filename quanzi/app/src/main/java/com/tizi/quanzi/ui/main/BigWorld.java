@@ -14,6 +14,7 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.tool.GetShareIntent;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 
@@ -106,6 +107,13 @@ public class BigWorld extends BaseFragment {
                     ((MainActivity) AppStaticValue.getActivity(MainActivity.class.getSimpleName()))
                             .StartUserInfoSet();
                 }
+            }
+        });
+
+        Share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GetShareIntent.startShare(mContext);
             }
         });
     }

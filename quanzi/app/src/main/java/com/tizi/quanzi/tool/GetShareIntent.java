@@ -7,6 +7,8 @@ import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
+import com.tizi.quanzi.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +35,19 @@ public class GetShareIntent {
             intent.setComponent(new ComponentName(packageName, ri.activityInfo.name));
             intent.setAction(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, "fenxaing");
+            intent.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.share_the_app));
             intentList.add(new LabeledIntent(intent, packageName, ri.loadLabel(pm), ri.icon));
 
         }
         return intentList;
     }
+
+    public static void startShare(Context context) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, context.getResources().getString(R.string.share_the_app));
+        context.startActivity(intent);
+    }
+
 }

@@ -10,20 +10,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/userFace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="头像"/>
-
-        <TextView
-
-            android:textSize="18sp"
-            android:id="@+id/userFaceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            tools:text="123"/>
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/user_face"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            tools:background="@drawable/face"/>
 
         <Button
             android:id="@+id/userName"
@@ -32,11 +23,11 @@
             android:text="昵称"/>
 
         <TextView
-            android:layout_marginBottom="3dp"
-            android:textSize="18sp"
             android:id="@+id/userNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:textSize="18sp"
             tools:text="123"/>
 
         <Button
@@ -46,11 +37,11 @@
             android:text="性别"/>
 
         <TextView
-            android:layout_marginBottom="3dp"
-            android:textSize="18sp"
             android:id="@+id/userSexTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:textSize="18sp"
             tools:text="123"/>
 
         <Button
@@ -60,11 +51,11 @@
             android:text="年龄"/>
 
         <TextView
-            android:layout_marginBottom="3dp"
-            android:textSize="18sp"
             android:id="@+id/userAgeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:textSize="18sp"
             tools:text="123"/>
 
         <Button
@@ -74,11 +65,11 @@
             android:text="位置"/>
 
         <TextView
-            android:layout_marginBottom="3dp"
-            android:textSize="18sp"
             android:id="@+id/userLocationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:textSize="18sp"
             tools:text="123"/>
 
         <Button
@@ -88,10 +79,10 @@
             android:text="签名"/>
 
         <TextView
-            android:textSize="18sp"
             android:id="@+id/userSignTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             tools:text="123"/>
 
     </LinearLayout>

@@ -15,6 +15,7 @@ import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
 
@@ -59,9 +60,17 @@ public class LockLock extends BaseFragment {
 
             @Override
             public void EnterTheme(Theme.ActsEntity act) {
-                getParentFragment().getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, BoomGroupFragment.newInstance(act.id))
-                        .addToBackStack("BoomGroupFragment").commit();
+                if (//Statue.IsDev.now == Statue.IsDev.dev ||
+                        FriendTime.isInThemeTime(act.beginTime, act.endTime)) {
+                    getParentFragment().getFragmentManager().beginTransaction()
+                            .replace(R.id.fragment, BoomGroupFragment.newInstance(act.id))
+                            .addToBackStack("BoomGroupFragment").commit();
+                } else {
+                    getParentFragment().getFragmentManager().beginTransaction()
+                            .replace(R.id.fragment, CountdownFragment.newInstance(act.beginTime, act.id))
+                            .addToBackStack("CountdownFragment").commit();
+                }
+
             }
         });
         mLayoutManager = new LinearLayoutManager(mActivity);

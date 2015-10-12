@@ -24,9 +24,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.UserInfoSetting;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
@@ -41,7 +43,6 @@ import java.util.List;
  */
 public class UserInfoSetFragment extends BaseFragment implements View.OnClickListener {
 
-    private TextView userFaceTextView;
     private TextView userNameTextView;
     private TextView userSexTextView;
     private TextView userAgeTextView;
@@ -83,6 +84,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         }
     };
+    private NetworkImageView userFaceImageView;
     private TextView userSignTextView;
     private Calendar calendar = Calendar.getInstance();
     private LocationManager locationManager;
@@ -107,8 +109,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void findViews(View view) {
-        view.findViewById(R.id.userFace).setOnClickListener(this);
-        userFaceTextView = (TextView) view.findViewById(R.id.userFaceTextView);
+        userFaceImageView = (NetworkImageView) view.findViewById(R.id.user_face);
+        userFaceImageView.setOnClickListener(this);
         view.findViewById(R.id.userName).setOnClickListener(this);
         userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
         view.findViewById(R.id.userSex).setOnClickListener(this);
@@ -123,7 +125,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void initViewsAndSetEvent() {
-        userFaceTextView.setText(MyUserInfo.getInstance().getUserInfo().getIcon());
+        userFaceImageView.setImageUrl(MyUserInfo.getInstance().getUserInfo().getIcon(),
+                GetVolley.getmInstance().getImageLoader());
         userNameTextView.setText(MyUserInfo.getInstance().getUserInfo().getUserName());
         userSexTextView.setText(String.valueOf(MyUserInfo.getInstance().getUserInfo().getSex()));
         userAgeTextView.setText(MyUserInfo.getInstance().getUserInfo().getBirthday());
@@ -144,12 +147,13 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         builder.setView(layout).setNegativeButton("取消", null);
 
         switch (view.getId()) {
-            case R.id.userFace:
+            case R.id.user_face:
                 requreForImage = new RequreForImage(getActivity());
                 requreForImage.showDialogAndCallIntent("选择头像");
                 break;
             case R.id.userName:
                 input.setHint("输入昵称");
+                input.setText(userNameTextView.getText());
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -185,14 +189,24 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 }).show();
                 break;
             case R.id.userAge:
-                new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        userAgeTextView.setText(String.valueOf(year)
-                                + String.valueOf(monthOfYear + 1) + String.valueOf(dayOfMonth));
-                    }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+                DatePickerDialog datePickerDialog =
+                        new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                userAgeTextView.setText(String.valueOf(year)
+                                        + String.valueOf(monthOfYear + 1) + String.valueOf(dayOfMonth));
+                                UserInfoSetting.getNewInstance().chagngeBirthday(year, monthOfYear + 1, dayOfMonth);
+                                MyUserInfo.getInstance().getUserInfo()
+                                        .setBirthday(year + "-" + monthOfYear + "-" + dayOfMonth);
+                            }
+                        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                                calendar.get(Calendar.DAY_OF_MONTH));
+                String date[] = MyUserInfo.getInstance().getUserInfo().getBirthday().split("-");
+                int year = Integer.valueOf(date[0]);
+                int month = Integer.valueOf(date[1]);
+                int day = Integer.valueOf(date[2]);
+                datePickerDialog.updateDate(year, month, day);
+                datePickerDialog.show();
                 break;
             case R.id.userLocation:
                 if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -206,6 +220,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.userSign:
                 input.setHint("输入签名");
+                input.setText(userSignTextView.getText());
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -228,8 +243,10 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 @Override
                 public void onResult(String uri, boolean success) {
                     if (success) {
-                        userFaceTextView.setText(uri);
                         MyUserInfo.getInstance().getUserInfo().setIcon(uri);
+                        userFaceImageView.setImageUrl(MyUserInfo.getInstance().getUserInfo().getIcon(),
+                                GetVolley.getmInstance().getImageLoader());
+                        UserInfoSetting.getNewInstance().changeFace(uri);
                     }
                 }
             }).savePhoto(ans, MyUserInfo.getInstance().getUserInfo().getId() + "face.jpg", 200, 200);

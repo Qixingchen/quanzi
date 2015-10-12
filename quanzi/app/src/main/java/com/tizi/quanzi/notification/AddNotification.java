@@ -115,12 +115,17 @@ public class AddNotification {
                 .setVisibility(Notification.VISIBILITY_PRIVATE)
                 .setNumber(chatMessageArrayList.size())
                 .setLights(Color.WHITE, 1000, 500)
-                .setAutoCancel(false);
+                .setAutoCancel(false)
+                .setColor(mContext.getResources().getColor(R.color.colorPrimary));
 
         if (chatMessageArrayList.size() == 1) {
             ChatMessage chatMessage = chatMessageArrayList.get(0);
             mBuilder.setContentTitle(chatMessage.userName)
                     .setContentText(ChatMessage.getContentText(chatMessage));
+            if (chatMessage.type == StaticField.ChatContantType.IMAGE) {
+                NotificationCompat.BigPictureStyle pictureStyle = new NotificationCompat.BigPictureStyle();
+                // TODO: 15/10/12 BigPictureStyle
+            }
         } else {
             /*多条消息*/
             mBuilder.setContentTitle("圈子")

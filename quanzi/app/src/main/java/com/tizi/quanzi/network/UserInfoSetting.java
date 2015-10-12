@@ -79,6 +79,13 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
     }
 
     /**
+     * 更改用户生日
+     */
+    public void chagngeBirthday(int year, int month, int day) {
+        changeFiled("birthday", year + "-" + month + "-" + day);
+    }
+
+    /**
      * 更改用户 Latitude
      */
     public void changeLatitude(double Latitude) {

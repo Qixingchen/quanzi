@@ -60,10 +60,6 @@ public class BoomGroupFragment extends BaseFragment {
 
     }
 
-    public void setThemeID(String themeID) {
-        this.themeID = themeID;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,7 +94,7 @@ public class BoomGroupFragment extends BaseFragment {
 
                 BoomGroupList.getInstance().setGroupList(booms);
 
-                boomGroupListAdapter = new BoomGroupListAdapter(BoomGroupList.getInstance().getGroupList(), mContext);
+                boomGroupListAdapter = new BoomGroupListAdapter(mContext);
                 boomGroupListAdapter.setOnClick(new BoomGroupListAdapter.OnClick() {
                     @Override
                     public void clickBoomGroup(BoomGroupClass boomGroup) {
@@ -119,5 +115,11 @@ public class BoomGroupFragment extends BaseFragment {
         }).getBoomGroup(themeID);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (boomGroupListAdapter != null) {
+            boomGroupListAdapter.notifyDataSetChanged();
+        }
+    }
 }

@@ -1,22 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:paddingTop="@dimen/statue_bar_top_padding"
               tools:context="com.tizi.quanzi.ui.ChatActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        app:popupTheme="@style/AppTheme.Revert"
-        app:theme="@style/AppTheme.Revert"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
-        android:paddingTop="@dimen/statue_bar_top_padding"/>
+        android:paddingTop="@dimen/statue_bar_top_padding"
+        app:popupTheme="@style/AppTheme.Revert"
+        app:theme="@style/AppTheme.Revert"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/ChatSwipeToRefresh"
@@ -36,12 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:gravity="bottom">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-            android:src="@drawable/ic_mood_black_36dp"/>
 
         <EditText
             android:id="@+id/InputMessage"

@@ -70,4 +70,79 @@ public class FriendTime {
         return ans;
     }
 
+    /**
+     * 从UNIX 转化为 时间
+     *
+     * @param timestamp UNIXTime(ms)
+     *
+     * @return HH mm ss
+     */
+    private static int[] getDayTimeFromUNIX(long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.CHINESE);
+        String date = sdf.format(new Date(timestamp));
+        String time[] = date.split(":");
+        int[] ans = new int[3];
+        for (int i = 0; i < 3; i++) {
+            ans[i] = Integer.valueOf(time[i]);
+        }
+        return ans;
+    }
+
+    /**
+     * 从 HH:mm:ss 转化为 时间
+     *
+     * @param time HH:mm:ss
+     *
+     * @return HH mm ss
+     */
+    private static int[] getDayTimeFromString(String time) {
+        String times[] = time.split(":");
+        int[] ans = new int[3];
+        for (int i = 0; i < 3; i++) {
+            ans[i] = Integer.valueOf(times[i]);
+        }
+        return ans;
+    }
+
+
+    /**
+     * 从 HH mm ss 得到是今天的第几秒
+     *
+     * @param time 以上两个函数的结果
+     *
+     * @return 第几秒
+     */
+    private static int getDayMs(int[] time) {
+        return time[0] * 3600 + time[1] * 60 + time[2];
+    }
+
+    /**
+     * 判断是否在活动时间内
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     *
+     * @return 是否在时间内
+     */
+    public static boolean isInThemeTime(String startTime, String endTime) {
+        int now = getDayMs(getDayTimeFromUNIX(Tool.getBeijinTime()));
+        int start = getDayMs(getDayTimeFromString(startTime));
+        int end = getDayMs(getDayTimeFromString(endTime));
+
+        //如果是跨天的活动
+        if (start > end) {
+            if (now >= start || now < end) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //并不是跨天的
+        if (now < start || now > end) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

@@ -58,6 +58,12 @@ public interface RetrofitAPI {
         Call<BoomGroup> getBoomGroup(
                 @Query("actid") String ThemeID
         );
+
+        @POST("/group/collide")
+        Call<BoomGroup> getBoomGroup(
+                @Query("actid") String ThemeID,
+                @Query("groupid") String groupID
+        );
     }
 
     interface Group {

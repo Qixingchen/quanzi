@@ -293,7 +293,7 @@ public class GroupUserAdmin {
                         public void onError(String Message) {
 
                         }
-                    }).getBoomGroup(actsEntity.id);
+                    }).getBoomGroup(actsEntity.id, groupID);
                 }
             }
 

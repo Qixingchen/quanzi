@@ -144,6 +144,8 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
     /**
      * 获取碰撞的圈子
+     *
+     * @param themeID 主题ID
      */
     public void getBoomGroup(String themeID) {
         themeService.getBoomGroup(themeID).enqueue(new Callback<BoomGroup>() {
@@ -158,6 +160,27 @@ public class ThemeActs extends RetrofitNetworkAbs {
             }
         });
     }
+
+    /**
+     * 获取碰撞的圈子
+     *
+     * @param themeID 主题ID
+     * @param groupID 圈子ID
+     */
+    public void getBoomGroup(String themeID, String groupID) {
+        themeService.getBoomGroup(themeID, groupID).enqueue(new Callback<BoomGroup>() {
+            @Override
+            public void onResponse(Response<BoomGroup> response) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
 
     @SuppressWarnings("unchecked")
     @Override

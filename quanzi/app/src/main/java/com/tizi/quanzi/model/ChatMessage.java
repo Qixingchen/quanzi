@@ -3,6 +3,8 @@ package com.tizi.quanzi.model;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
 
+import java.io.Serializable;
+
 /**
  * Created by qixingchen on 15/8/12.
  * 聊天信息
@@ -10,7 +12,7 @@ import com.tizi.quanzi.tool.StaticField;
  *
  * @see com.tizi.quanzi.chat.ChatMessFormatFromAVIM
  */
-public class ChatMessage {
+public class ChatMessage implements Serializable {
 
     public int type, status, From, ChatBothUserType, imageHeight, imageWeight;
     public String text, ConversationId, uid, sender,

@@ -30,25 +30,29 @@ public class BoomGroupClass extends ConvGroupAbs {
             List<BoomGroup.GroupmatchEntity> boomGroups) {
         ArrayList<BoomGroupClass> ans = new ArrayList<>();
         for (BoomGroup.GroupmatchEntity boomGroup : boomGroups) {
-            BoomGroupClass temp = new BoomGroupClass();
-            temp.convId = boomGroup.convId;
-            temp.Type = StaticField.ConvType.BoomGroup;
-            temp.ID = boomGroup.id;
-            temp.UnreadCount = 0;
-            temp.lastMess = "";
-            temp.lastMessTime = 0;
-            temp.groupId1 = boomGroup.groupId1;
-            temp.groupId2 = boomGroup.groupId2;
-            temp.groupName1 = boomGroup.groupName1;
-            temp.groupName2 = boomGroup.groupName2;
-            temp.icon1 = boomGroup.icon1;
-            temp.icon2 = boomGroup.icon2;
-            temp.groupMenber1 = boomGroup.groupMenber1;
-            temp.groupMenber2 = boomGroup.groupMenber2;
-            temp.isGroup1MyGroup = isMyGroup(temp.groupId1);
-            ans.add(temp);
+            ans.add(getBoomGroupFromBoomGroupGson(boomGroup));
         }
         return ans;
+    }
+
+    public static BoomGroupClass getBoomGroupFromBoomGroupGson(BoomGroup.GroupmatchEntity boomGroup) {
+        BoomGroupClass temp = new BoomGroupClass();
+        temp.convId = boomGroup.convId;
+        temp.Type = StaticField.ConvType.BoomGroup;
+        temp.ID = boomGroup.id;
+        temp.UnreadCount = 0;
+        temp.lastMess = "";
+        temp.lastMessTime = 0;
+        temp.groupId1 = boomGroup.groupId1;
+        temp.groupId2 = boomGroup.groupId2;
+        temp.groupName1 = boomGroup.groupName1;
+        temp.groupName2 = boomGroup.groupName2;
+        temp.icon1 = boomGroup.icon1;
+        temp.icon2 = boomGroup.icon2;
+        temp.groupMenber1 = boomGroup.groupMenber1;
+        temp.groupMenber2 = boomGroup.groupMenber2;
+        temp.isGroup1MyGroup = isMyGroup(temp.groupId1);
+        return temp;
     }
 
     /**

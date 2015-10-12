@@ -98,6 +98,7 @@ public class DBAct {
         chatMessage.ChatBothUserType = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.conv_type));
         chatMessage.imageHeight = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageHeight));
         chatMessage.imageWeight = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.imageWeight));
+        chatMessage.From = cursor.getInt(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.from));
 
         //string
         chatMessage.text = cursor.getString(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.text));
@@ -124,19 +125,6 @@ public class DBAct {
 
         //double
         chatMessage.voice_duration = cursor.getDouble(cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.voice_duration));
-
-        //etc
-        if (chatMessage.isSelfSend) {
-            chatMessage.From = StaticField.ChatFrom.ME;
-        }//todo 判断是本群还是临时群
-        else {
-            if (chatMessage.ChatBothUserType == StaticField.ConvType.GROUP) {
-                chatMessage.From = StaticField.ChatFrom.OTHER;
-            } else {
-                chatMessage.From = StaticField.ChatFrom.OTHER;
-            }
-        }
-
 
         return chatMessage;
     }
@@ -399,7 +387,7 @@ public class DBAct {
         content.put(DataBaseHelper.chatHistorySQLName.imageWeight, chatMessage.imageWeight);
         content.put(DataBaseHelper.chatHistorySQLName.conv_type, chatMessage.ChatBothUserType);
         content.put(DataBaseHelper.chatHistorySQLName.chatImage, chatMessage.chatImage);
-
+        content.put(DataBaseHelper.chatHistorySQLName.from, chatMessage.From);
 
         db.replace(DataBaseHelper.chatHistorySQLName.TableName, null, content);
     }

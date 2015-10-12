@@ -207,4 +207,9 @@ public class Tool {
         int last = filePath.lastIndexOf("/");
         return filePath.substring(last + 1);
     }
+
+    public static long getBeijinTime() {
+        return Calendar.getInstance().getTimeInMillis() + AppStaticValue.timeAddtion;
+    }
+
 }

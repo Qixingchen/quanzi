@@ -95,6 +95,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         try {
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+
             /*刷新最后一条消息等信息*/
             switch (chatMessage.ChatBothUserType) {
                 case StaticField.ConvType.GROUP:

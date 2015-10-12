@@ -13,13 +13,17 @@ import android.widget.TextView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.BoomGroupListAdapter;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.model.BoomGroupClass;
+import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
+
+import java.util.List;
 
 /**
  * 碰撞圈子列表界面
@@ -82,8 +86,17 @@ public class BoomGroupFragment extends BaseFragment {
                 BoomGroup boomGroup = (BoomGroup) ts;
                 groupNums.setText(String.valueOf(boomGroup.groupmatch.size()));
 
-                BoomGroupList.getInstance().setGroupList(
-                        BoomGroupClass.getBoomGroupListFromBoomGroupGson(boomGroup.groupmatch));
+                List<BoomGroupClass> booms = BoomGroupClass.getBoomGroupListFromBoomGroupGson(boomGroup.groupmatch);
+
+                for (BoomGroupClass boom : booms) {
+                    ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(boom.convId);
+                    if (chatMessage != null) {
+                        boom.lastMessTime = chatMessage.create_time;
+                        boom.lastMess = ChatMessage.getContentText(chatMessage);
+                    }
+                }
+
+                BoomGroupList.getInstance().setGroupList(booms);
 
                 boomGroupListAdapter = new BoomGroupListAdapter(BoomGroupList.getInstance().getGroupList(), mContext);
                 boomGroupListAdapter.setOnClick(new BoomGroupListAdapter.OnClick() {

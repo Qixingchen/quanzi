@@ -45,6 +45,19 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     }
 
     /**
+     * 重设整个组
+     */
+    public void setGroupList(List<T> newGroupList) {
+        synchronized (groupList) {
+            groupList.clear();
+            groupList.addAll(newGroupList);
+            updateUnreadCount();
+        }
+        sort();
+        noticeAllCallBack();
+    }
+
+    /**
      * 向所有回调发布更新通知
      */
     public void callUpdate() {
@@ -86,22 +99,12 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     }
 
     /**
-     * 重设整个组
-     */
-    public void setGroupList(List<T> newGroupList) {
-        synchronized (groupList) {
-            groupList.clear();
-            groupList.addAll(newGroupList);
-            updateUnreadCount();
-        }
-        sort();
-        noticeAllCallBack();
-    }
-
-    /**
-     * 添加一个组
+     * 添加一个组,如果同 ID 已存在，则忽略
      */
     public void addGroup(T group) {
+        if (getGroup(group.ID) == null) {
+            return;
+        }
         synchronized (groupList) {
             groupList.add(group);
             group.UnreadCount = getUnreadCount(group.convId);

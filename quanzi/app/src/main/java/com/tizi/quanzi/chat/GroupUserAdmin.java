@@ -9,12 +9,17 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.GroupAllInfo;
+import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.network.UserManageInGroup;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -231,29 +236,13 @@ public class GroupUserAdmin {
         if (!isAccept) {
             return;
         }
+        //后台
         UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
                 GroupClass groupClass = GroupClass.getGroupByGroupUserInfo(groupAllInfo, groupID, convID);
                 GroupList.getInstance().addGroup(groupClass);
-                List<String> clientIds = new ArrayList<>();
-                clientIds.add(AppStaticValue.getUserID());
-                AppStaticValue.getImClient().getConversation(convID).addMembers(clientIds, new AVIMConversationCallback() {
-                    @Override
-                    public void done(AVIMException e) {
-                        if (e != null) {
-                            Log.w(TAG, "LC addMembers err:" + e.getMessage());
-                            if (onResult != null) {
-                                onResult.error("LC addMembers err:" + e.getMessage());
-                            }
-                        } else {
-                            if (onResult != null) {
-                                onResult.OK();
-                            }
-                        }
-                    }
-                });
             }
 
             @Override
@@ -264,6 +253,7 @@ public class GroupUserAdmin {
             }
         }).acceptJoinGroup(groupID, AppStaticValue.getUserID());
 
+        //LC
         List<String> userIds = new ArrayList<>();
         userIds.add(AppStaticValue.getUserID());
         AppStaticValue.getImClient().getConversation(convID).addMembers(userIds, new AVIMConversationCallback() {
@@ -274,13 +264,45 @@ public class GroupUserAdmin {
                         onResult.OK();
                     }
                 } else {
-                    Log.w(TAG, e.getMessage());
+                    Log.w(TAG, "LC addMembers err:" + e.getMessage());
                     if (onResult != null) {
-                        onResult.error(e.getMessage());
+                        onResult.error("LC addMembers err:" + e.getMessage());
                     }
                 }
             }
         });
+
+        //碰撞圈子
+        ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                Theme theme = (Theme) ts;
+                for (Theme.ActsEntity actsEntity : theme.acts) {
+                    ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            BoomGroup boomGroup = (BoomGroup) ts;
+                            for (BoomGroup.GroupmatchEntity groupmatch : boomGroup.groupmatch) {
+                                BoomGroupList.getInstance().addGroup(
+                                        BoomGroupClass.getBoomGroupFromBoomGroupGson(groupmatch)
+                                );
+                            }
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+
+                        }
+                    }).getBoomGroup(actsEntity.id);
+                }
+            }
+
+            @Override
+            public void onError(String Message) {
+
+            }
+        }).getThemes();
+
     }
 
     public interface OnResult {

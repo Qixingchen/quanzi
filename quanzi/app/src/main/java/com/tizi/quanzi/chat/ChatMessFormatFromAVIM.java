@@ -116,9 +116,6 @@ public class ChatMessFormatFromAVIM {
         AVGeoPoint avGeoPoint = ((AVIMLocationMessage) message).getLocation();
         chatMessage.text = ((AVIMLocationMessage) message).getText();
         chatMessage = setAttrsInfo(chatMessage, message);
-        // todo chatMessage.local_path
-        // todo chatMessage.url
-        // todo chatMessage.voice_duration
         return chatMessage;
     }
 
@@ -188,7 +185,6 @@ public class ChatMessFormatFromAVIM {
         chatMessage.sender = message.getFrom();
         // TODO: 15/8/13  getMessageIOType不可用 为什么？
         chatMessage.isSelfSend = (message.getFrom().compareTo(AppStaticValue.getUserID()) == 0);
-        // TODO: 15/8/17 isread
         chatMessage.isread = chatMessage.isSelfSend;
 
         return chatMessage;

@@ -57,7 +57,6 @@ public class PrivateMessageFragment extends BaseFragment {
         List<SystemMessage> systemMessages = DBAct.getInstance().quaryAllSysMess();
         List<PrivateMessPair> privateMessPairs = PrivateMessPairList.getInstance().getGroupList();
         for (SystemMessage systemMessage : systemMessages) {
-            // TODO: 15/9/18 筛选无需显示的消息
             if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
                 continue;
             }

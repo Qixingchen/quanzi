@@ -80,7 +80,6 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
                         ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                             @Override
                             public void onOK(Object ts) {
-                                //todo 加长延迟时间
                                 Timer timer = new Timer();
                                 timer.setOnResult(new Timer.OnResult() {
                                     @Override

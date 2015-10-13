@@ -61,7 +61,6 @@ public class FindUser extends RetrofitNetworkAbs {
     }
 
     public void findContactUsers() {
-        // TODO: 15/9/18 activity
         List<ReadContact.Mobiles> mobilesList = ReadContact.readContact(
                 AppStaticValue.getActivity(MainActivity.class.getSimpleName()));
 

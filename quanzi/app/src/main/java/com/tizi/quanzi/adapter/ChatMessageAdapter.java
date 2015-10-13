@@ -310,7 +310,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                 insertPosition = i;
             }
         }
-        //todo 确认加载位置
         chatMessageList.add(insertPosition, chatMessage);
         notifyItemInserted(insertPosition);
     }

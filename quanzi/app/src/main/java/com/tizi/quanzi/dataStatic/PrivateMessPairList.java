@@ -28,7 +28,6 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
 
     @Override
     public int getUnreadCount(String convID) {
-        // TODO: 15/9/9 get Unread count
         if (convID == null || convID.compareTo("") == 0) {
             return 0;
         } else {

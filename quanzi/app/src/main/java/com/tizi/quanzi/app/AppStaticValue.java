@@ -53,8 +53,6 @@ public class AppStaticValue {
 
         if (UserID.compareTo("") != 0) {
             setDataBaseHelper(UserID);
-            // TODO: 15/8/21 fix crash
-            //getNewImClient(UserID);
         }
     }
 

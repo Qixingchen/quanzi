@@ -20,18 +20,17 @@ import retrofit.Response;
  */
 public class AddOrQuaryGroup extends RetrofitNetworkAbs {
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public AddOrQuaryGroup setNetworkListener(NetworkListener networkListener) {
-        return super.setNetworkListener(networkListener, this);
-    }
-
     private RetrofitAPI.Group groupService = RetrofitNetwork.retrofit.create(RetrofitAPI.Group.class);
 
     public static AddOrQuaryGroup getNewInstance() {
         return new AddOrQuaryGroup();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public AddOrQuaryGroup setNetworkListener(NetworkListener networkListener) {
+        return super.setNetworkListener(networkListener, this);
+    }
 
     /**
      * 创建一个群
@@ -39,10 +38,9 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
      * @param GroupName 群名
      * @param icon      群头像
      * @param notice    群公告
-     * @param userID    创建者 todo 去掉
      * @param tag       群标签
      */
-    public void NewAGroup(String GroupName, String icon, String notice, String userID, String tag, String convid) {
+    public void NewAGroup(String GroupName, String icon, String notice, String tag, String convid) {
 
         String encodedTAG = Tool.getUTF_8String(tag);
         final Call<GroupAllInfo> addgroup = groupService.addGroup(GroupName, encodedTAG, icon, notice,

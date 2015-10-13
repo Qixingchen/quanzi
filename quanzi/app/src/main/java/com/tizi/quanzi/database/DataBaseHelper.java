@@ -18,7 +18,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         /*聊天记录*/
-        // TODO: 15/10/10 使用 Serializable
         db.execSQL("create table chat_history(id varchar(40)PRIMARY KEY not null, group_id varchar(40),convID varchar(50), account varchar(40), sender varchar(40), send_time integer, text varchar(1000), type INTEGER, local_path varchar(100), url varchar(200), voice_duration varchar(50), isread varchar(1),receiptTimestamp integer,status integer,isSelfSend_ioType char(1),userName char(40),conv_type integer,imageHeight integer,imageWeight integer,chatImage varchar(200),chat_from integer)");
 
         /*系统消息记录*/

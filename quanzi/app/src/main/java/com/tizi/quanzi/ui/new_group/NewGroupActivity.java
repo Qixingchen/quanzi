@@ -113,7 +113,7 @@ public class NewGroupActivity extends BaseActivity {
 
                             }
                         })
-                        .NewAGroup(GroupName, icon, notice, userID, tag, convID);
+                        .NewAGroup(GroupName, icon, notice, tag, convID);
 
 
             }

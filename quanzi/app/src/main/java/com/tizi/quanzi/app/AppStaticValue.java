@@ -38,6 +38,7 @@ public class AppStaticValue {
     //数据库
     private static DataBaseHelper db;
     private static SQLiteDatabase db1;
+    private static boolean isImclientOpen = false;
 
     public AppStaticValue() {
         application = App.getApplication();
@@ -66,7 +67,6 @@ public class AppStaticValue {
     public static SQLiteDatabase getDatabase() {
         return db1;
     }
-
 
     public static String getUserPhone() {
         return UserPhone;
@@ -139,9 +139,11 @@ public class AppStaticValue {
             public void done(AVIMClient avimClient, AVIMException e) {
                 if (null != e) {
                     Log.e(TAG, "AVIMClient链接失败");
+                    isImclientOpen = false;
                     e.printStackTrace();
                 } else {
                     Log.w(TAG, "AVIMClient链接成功");
+                    isImclientOpen = true;
                 }
             }
         });
@@ -152,6 +154,23 @@ public class AppStaticValue {
         if (imClient == null) {
             imClient = getNewImClient(UserID);
         }
+        if (!isImclientOpen) {
+            imClient.open(new AVIMClientCallback() {
+                @Override
+                public void done(AVIMClient avimClient, AVIMException e) {
+                    if (null != e) {
+                        Log.e(TAG, "AVIMClient链接失败");
+                        isImclientOpen = false;
+                        e.printStackTrace();
+                    } else {
+                        Log.w(TAG, "AVIMClient链接成功");
+                        isImclientOpen = true;
+                    }
+                }
+            });
+        }
+
+
         return imClient;
     }
 

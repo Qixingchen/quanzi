@@ -1,7 +1,6 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +14,11 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.ui.ChatActivity;
 
 import java.util.List;
 
@@ -28,6 +27,8 @@ import java.util.List;
  * 私信、系统消息列表
  */
 public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final String TAG = PrivateMessageAdapter.class.getSimpleName();
 
     private List<PrivateMessPair> privateMessPairs;
     private Context context;
@@ -158,6 +159,17 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         });
                     }
                 }
+                systemHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onclick != null) {
+                            onclick.systemMessClick(systemMessage);
+                        } else {
+                            Log.w(TAG, "系统消息被点击,但是没有 onclick 回调");
+                        }
+                    }
+                });
+
             }
         }
 
@@ -169,14 +181,14 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     GetVolley.getmInstance().getImageLoader());
             privateVH.mUserNameTextViewTextView.setText(privateMess.Name);
             privateVH.mMessTextViewTextView.setText(privateMess.lastMess);
-            privateVH.view.setOnClickListener(new View.OnClickListener() {
+            privateVH.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent chat = new Intent(privateVH.view.getContext(), ChatActivity.class);
-                    chat.putExtra("conversation", privateMess.convId);
-                    chat.putExtra("chatType", StaticField.ConvType.twoPerson);
-                    chat.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    privateVH.view.getContext().startActivity(chat);
+                    if (onclick != null) {
+                        onclick.priMessClick(privateMess);
+                    } else {
+                        Log.w(TAG, "私聊消息被点击,但是没有 onclick 回调");
+                    }
                 }
             });
         }
@@ -197,9 +209,16 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         /**
          * 项目被点击
          *
-         * @param position 点击序号
+         * @param systemMessage 被点击的系统消息
          */
-        void itemClick(int position);
+        void systemMessClick(SystemMessage systemMessage);
+
+        /**
+         * 项目被点击
+         *
+         * @param privateMessPair 被点击的私聊消息组
+         */
+        void priMessClick(PrivateMessPair privateMessPair);
     }
 
     public static class SystemMessViewHolder extends RecyclerView.ViewHolder {
@@ -258,11 +277,11 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         private NetworkImageView mUserFaceImageNetworkImageView;
         private TextView mUserNameTextViewTextView;
         private TextView mMessTextViewTextView;
-        private View view;
+        private View itemView;
 
         public PrivateViewHolder(View itemView) {
             super(itemView);
-            this.view = itemView;
+            this.itemView = itemView;
             mUserFaceImageNetworkImageView = (NetworkImageView) itemView.findViewById(R.id.user_face_image);
             mUserNameTextViewTextView = (TextView) itemView.findViewById(R.id.user_name_text_view);
             mMessTextViewTextView = (TextView) itemView.findViewById(R.id.mess_text_view);

@@ -230,12 +230,15 @@ public class DBAct {
                 null,
                 null,
                 DataBaseHelper.chatHistorySQLName.send_time + " DESC",//orderBy
-                "1" //limit
+                null //limit
         );
 
         privateMessCursor.moveToFirst();
         while (!privateMessCursor.isAfterLast()) {
             ChatMessage chatMessage = chatMessageFromCursor(privateMessCursor);
+            if (chatMessage.groupID == null) {
+                continue;
+            }
             if (PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) == null) {
                 PrivateMessPairList.getInstance().addGroup(PrivateMessPair.newPrivatePair(chatMessage));
             } else {

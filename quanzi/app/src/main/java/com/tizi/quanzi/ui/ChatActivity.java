@@ -26,6 +26,7 @@ import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
+import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
@@ -63,6 +64,7 @@ public class ChatActivity extends BaseActivity {
     private int LastPosition = -1;
     //toolbar
     private Toolbar toolbar;
+    private String toolbarTitle;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,21 @@ public class ChatActivity extends BaseActivity {
 
         context = this;
         setMessageCallback();
+        MyAVIMClientEventHandler.getInstance().addChange(TAG, new MyAVIMClientEventHandler.OnConnectionChange() {
+            @Override
+            public void onPaused() {
+                if (toolbar != null) {
+                    toolbar.setTitle("等待网络");
+                }
+            }
+
+            @Override
+            public void onResume() {
+                if (toolbar != null) {
+                    toolbar.setTitle(toolbarTitle);
+                }
+            }
+        });
     }
 
     @Override

@@ -73,6 +73,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      */
     @Nullable
     public T getGroup(String id) {
+        if (id == null) {
+            return null;
+        }
         synchronized (groupList) {
             for (T group : groupList) {
                 if (group.ID.compareTo(id) == 0) {
@@ -102,7 +105,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      * 添加一个组,如果同 ID 已存在，则忽略
      */
     public void addGroup(T group) {
-        if (getGroup(group.ID) == null) {
+        if (getGroup(group.ID) != null) {
             return;
         }
         synchronized (groupList) {

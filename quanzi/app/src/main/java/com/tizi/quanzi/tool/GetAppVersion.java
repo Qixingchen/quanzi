@@ -17,6 +17,8 @@ import com.tizi.quanzi.network.RetrofitNetworkAbs;
 /**
  * Created by qixingchen on 15/9/23.
  * 获取 APP 的最新版本，并发出弹窗
+ *
+ * @deprecated 市场政策不允许
  */
 public class GetAppVersion {
 

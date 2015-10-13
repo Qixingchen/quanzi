@@ -30,13 +30,18 @@ import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.network.FindUser;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
+import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -71,6 +76,7 @@ public class ChatActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        toolbarTitle = "聊天";
 
         context = this;
         setMessageCallback();
@@ -238,17 +244,38 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_zone) {
-            Intent intent = new Intent(this, QuanziZoneActivity.class);
-            intent.putExtra("conversation", CONVERSATION_ID);
-            startActivity(intent);
-            return true;
+
+            switch (ChatType) {
+                case StaticField.ConvType.GROUP:
+                    Intent intent = new Intent(this, QuanziZoneActivity.class);
+                    intent.putExtra("conversation", CONVERSATION_ID);
+                    startActivity(intent);
+                    return true;
+                case StaticField.ConvType.twoPerson:
+                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            Intent otherUser = new Intent(mContext, UserZoneActivity.class);
+                            otherUser.putExtra(StaticField.IntentName.OtherUserInfo, otherUserInfo);
+                            mContext.startActivity(otherUser);
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+                            Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
+                        }
+                    }).findUserByID(PrivateMessPairList.getInstance().getGroupIDByConvID(CONVERSATION_ID));
+                    return true;
+                case StaticField.ConvType.BoomGroup:
+                    // TODO: 15/10/13 boom group zone
+                    return true;
+                default:
+                    return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);

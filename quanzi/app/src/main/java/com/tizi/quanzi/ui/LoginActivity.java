@@ -1,5 +1,6 @@
 package com.tizi.quanzi.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
@@ -60,9 +62,14 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void setViewEvent() {
+        /*游客登陆*/
         findViewById(R.id.guest_user_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //删除偏好的密码
+                App.getApplication().getSharedPreferences(
+                        StaticField.Preferences.TOKENFILE, Context.MODE_PRIVATE).edit()
+                        .putString(StaticField.Preferences.PASSWORD, "").apply();
                 AutoLogin.getNewInstance().loginRaw(StaticField.GuestUser.Account, StaticField.GuestUser.PassWord);
             }
         });

@@ -13,7 +13,6 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.tool.GetAppVersion;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 
@@ -33,7 +32,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GetAppVersion.doit(this);
+        // TODO: 15/10/13 play政策不允许做这个
+        //GetAppVersion.doit(this);
     }
 
     @Override

@@ -50,6 +50,7 @@ public class AutoLogin extends RetrofitNetworkAbs {
         AppStaticValue.setUserPhone(phone);
         AppStaticValue.setDataBaseHelper(ID);
         AppStaticValue.getNewImClient(ID);
+        DBAct.flushDBID();
     }
 
     /**
@@ -95,7 +96,6 @@ public class AutoLogin extends RetrofitNetworkAbs {
                     setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     PrivateMessPairList.getInstance().getGroupsFromDataBase();
-                    DBAct.getInstance().addPrivateMessToList();
                     StartMainActivity.startByLoginGroup(login.getGroup(), App.getApplication());
                 }
             }

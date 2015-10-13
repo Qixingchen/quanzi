@@ -32,6 +32,11 @@ public class DBAct {
         db = AppStaticValue.getDatabase();
     }
 
+    /*用户重新登陆后,刷新DBID*/
+    public static void flushDBID() {
+        mInstance = new DBAct();
+    }
+
     public static DBAct getInstance() {
         if (mInstance == null) {
             synchronized (DBAct.class) {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.otto.BusProvider;
 
 /**
  * Created by qixingchen on 15/8/31.
@@ -12,9 +13,8 @@ import com.tizi.quanzi.app.AppStaticValue;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected Context mContext;
     protected final String TAG = this.getClass().getSimpleName();
-
+    protected Context mContext;
 
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
@@ -28,6 +28,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppStaticValue.setActivitys(this);
+        try {
+            BusProvider.getInstance().register(this);
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
     /**
@@ -45,4 +49,12 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected abstract void setViewEvent();
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            BusProvider.getInstance().unregister(this);
+        } catch (IllegalArgumentException ignore) {
+        }
+    }
 }

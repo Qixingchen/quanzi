@@ -9,10 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.otto.PrivateMessFragmentResume;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 
@@ -27,6 +29,8 @@ public class MainActivity extends BaseActivity {
     private UserInfoSetFragment userInfoSetFragment;
     //toolbar
     private Toolbar toolbar;
+
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,7 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+        this.menu = menu;
         return true;
     }
 
@@ -109,6 +114,17 @@ public class MainActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //订阅私信界面的恢复和暂停
+    @Subscribe
+    public void onPriMessFragChange(PrivateMessFragmentResume privateMessFragmentResume) {
+        if (privateMessFragmentResume.resumeOrPause) {
+            menu.findItem(R.id.action_private_message).setVisible(false);
+        } else {
+            menu.findItem(R.id.action_private_message).setVisible(true);
+        }
+    }
+
 
     public void StartUserInfoSet() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

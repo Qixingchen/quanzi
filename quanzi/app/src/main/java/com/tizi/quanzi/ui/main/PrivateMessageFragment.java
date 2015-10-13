@@ -16,6 +16,8 @@ import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
+import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.otto.PrivateMessFragmentResume;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
@@ -31,7 +33,6 @@ public class PrivateMessageFragment extends BaseFragment {
     private RecyclerView mPrivateMessRecyclerView;
     private PrivateMessageAdapter privateMessageAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
 
     public PrivateMessageFragment() {
         // Required empty public constructor
@@ -92,6 +93,23 @@ public class PrivateMessageFragment extends BaseFragment {
         mLayoutManager = new LinearLayoutManager(mActivity);
         mPrivateMessRecyclerView.setLayoutManager(mLayoutManager);
         mPrivateMessRecyclerView.setAdapter(privateMessageAdapter);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        PrivateMessFragmentResume ans = new PrivateMessFragmentResume();
+        ans.resumeOrPause = true;
+        BusProvider.getInstance().post(ans);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        PrivateMessFragmentResume ans = new PrivateMessFragmentResume();
+        ans.resumeOrPause = false;
+        BusProvider.getInstance().post(ans);
     }
 
 }

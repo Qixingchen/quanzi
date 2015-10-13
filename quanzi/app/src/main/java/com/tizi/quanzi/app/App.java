@@ -24,9 +24,12 @@ import com.tizi.quanzi.log.Log;
  */
 public class App extends Application {
     private static final String TAG = "App";
-    private static Application application;
     public static AppStaticValue appStaticValue;
+    private static Application application;
 
+    public static Application getApplication() {
+        return application;
+    }
 
     /**
      * 应用初始化
@@ -47,7 +50,7 @@ public class App extends Application {
         //AVAnalytics.enableCrashReport(this, true);
 
 
-        AVIMClient.setClientEventHandler(new MyAVIMClientEventHandler());
+        AVIMClient.setClientEventHandler(MyAVIMClientEventHandler.getInstance());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
 
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
@@ -87,11 +90,6 @@ public class App extends Application {
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);
         MultiDex.install(this);
-    }
-
-
-    public static Application getApplication() {
-        return application;
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.otto.PrivateMessFragmentResume;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
@@ -22,8 +23,7 @@ import com.tizi.quanzi.ui.BaseActivity;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String toolBarName = "圈子";
-    private static final String netWorkChangeName = "MainActivity";
+    private static final String toolbarTitle = "圈子";
     private MainFragment mainFragment;
     private PrivateMessageFragment privateMessageFragment;
     private UserInfoSetFragment userInfoSetFragment;
@@ -55,24 +55,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void setViewEvent() {
-        MyAVIMClientEventHandler.getInstance().addChange(netWorkChangeName, new MyAVIMClientEventHandler.OnConnectionChange() {
-            @Override
-            public void onPaused() {
-                toolbar.setTitle("等待网络");
-            }
-
-            @Override
-            public void onResume() {
-                toolbar.setTitle(toolBarName);
-            }
-        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //        mViewPager.removeOnPageChangeListener(getOnPageChangeListener());
-        MyAVIMClientEventHandler.getInstance().removeChange(netWorkChangeName);
     }
 
     @Override
@@ -115,7 +103,7 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //订阅私信界面的恢复和暂停
+    /*订阅私信界面的恢复和暂停*/
     @Subscribe
     public void onPriMessFragChange(PrivateMessFragmentResume privateMessFragmentResume) {
         if (privateMessFragmentResume.resumeOrPause) {
@@ -125,6 +113,20 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /*LC网络状态更改*/
+    @Subscribe
+    public void onNetworkChange(AVIMNetworkEvents avimNetworkEvents) {
+        if (toolbar == null) {
+            return;
+        }
+        toolbar.setTitle(avimNetworkEvents.isNetWorkAvailable ? toolbarTitle : "等待网络");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
+    }
 
     public void StartUserInfoSet() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

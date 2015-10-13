@@ -3,9 +3,8 @@ package com.tizi.quanzi.chat;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMClientEventHandler;
 import com.tizi.quanzi.log.Log;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.tizi.quanzi.otto.AVIMNetworkEvents;
+import com.tizi.quanzi.otto.BusProvider;
 
 /**
  * Created by qixingchen on 15/8/12.、
@@ -14,8 +13,11 @@ import java.util.Map;
 public class MyAVIMClientEventHandler extends AVIMClientEventHandler {
     private static final String TAG = "网络状态回调";
     private static MyAVIMClientEventHandler mInstance;
+    public boolean isNetworkAvailable;
 
-    private static Map<String, OnConnectionChange> callBacks = new HashMap<>();
+    private MyAVIMClientEventHandler() {
+        isNetworkAvailable = true;
+    }
 
     public static MyAVIMClientEventHandler getInstance() {
         if (mInstance == null) {
@@ -29,34 +31,13 @@ public class MyAVIMClientEventHandler extends AVIMClientEventHandler {
     }
 
     /**
-     * 添加网络监听
-     *
-     * @param name   监听器名，用于移除
-     * @param change 监听器
-     */
-    public void addChange(String name, OnConnectionChange change) {
-        callBacks.put(name, change);
-    }
-
-
-    /**
-     * 移除网络监听
-     *
-     * @param name 需要移除的监听器名
-     */
-    public void removeChange(String name) {
-        callBacks.remove(name);
-    }
-
-    /**
      * 链接丢失回调
      */
     @Override
     public void onConnectionPaused(AVIMClient avimClient) {
         Log.w(TAG, "链接丢失");
-        for (OnConnectionChange change : callBacks.values()) {
-            change.onPaused();
-        }
+        BusProvider.getInstance().post(AVIMNetworkEvents.networkEvents(false));
+        isNetworkAvailable = false;
     }
 
     /**
@@ -65,17 +46,8 @@ public class MyAVIMClientEventHandler extends AVIMClientEventHandler {
     @Override
     public void onConnectionResume(AVIMClient avimClient) {
         Log.w(TAG, "链接恢复");
-        for (OnConnectionChange change : callBacks.values()) {
-            change.onResume();
-        }
+        BusProvider.getInstance().post(AVIMNetworkEvents.networkEvents(true));
+        isNetworkAvailable = true;
     }
 
-    /**
-     * 网络变更回调
-     */
-    public interface OnConnectionChange {
-        void onPaused();
-
-        void onResume();
-    }
 }

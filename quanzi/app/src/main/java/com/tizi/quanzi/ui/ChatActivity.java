@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
@@ -37,6 +38,7 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
@@ -80,21 +82,15 @@ public class ChatActivity extends BaseActivity {
 
         context = this;
         setMessageCallback();
-        MyAVIMClientEventHandler.getInstance().addChange(TAG, new MyAVIMClientEventHandler.OnConnectionChange() {
-            @Override
-            public void onPaused() {
-                if (toolbar != null) {
-                    toolbar.setTitle("等待网络");
-                }
-            }
+    }
 
-            @Override
-            public void onResume() {
-                if (toolbar != null) {
-                    toolbar.setTitle(toolbarTitle);
-                }
-            }
-        });
+    /*LC网络状态更改*/
+    @Subscribe
+    public void onNetworkChange(AVIMNetworkEvents avimNetworkEvents) {
+        if (toolbar == null) {
+            return;
+        }
+        toolbar.setTitle(avimNetworkEvents.isNetWorkAvailable ? toolbarTitle : "等待网络");
     }
 
     @Override
@@ -111,7 +107,6 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
     }
 
     @Override
@@ -299,6 +294,7 @@ public class ChatActivity extends BaseActivity {
         } else {
             chatmessagerecyclerView.scrollToPosition(chatMessageAdapter.lastReadPosition());
         }
+        toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
     }
 
     @Override

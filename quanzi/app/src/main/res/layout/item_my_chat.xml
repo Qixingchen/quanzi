@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="end"
-    android:gravity="end"
-    android:orientation="horizontal"
-    android:weightSum="1">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="end"
+              android:gravity="end"
+              android:orientation="horizontal"
+              android:weightSum="1">
 
 
     <LinearLayout
@@ -34,7 +34,7 @@
             tools:text="聊天内容ssssssssssss
             ssssssssssssssssssss
             ssssssssss"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/contactImageView"
@@ -47,7 +47,7 @@
             tools:background="@drawable/face"
             tools:layout_height="120dp"
             tools:layout_width="120dp"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textSize="@dimen/normal_edit_text_size"
-                tools:text="13" />
+                tools:text="13"/>
 
             <ProgressBar
                 android:id="@+id/audio_progressBar"
@@ -69,7 +69,7 @@
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminate="true" />
+                android:indeterminate="true"/>
 
             <ImageButton
                 android:id="@+id/vedio_play_button"
@@ -77,9 +77,9 @@
                 android:layout_height="48dp"
                 android:layout_gravity="end"
                 android:background="?selectableItemBackground"
-                android:src="@drawable/ic_play_arrow_black_48dp"
+                android:src="@drawable/ic_play_arrow_36dp"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                tools:visibility="visible"/>
         </LinearLayout>
 
 
@@ -92,7 +92,7 @@
             android:layout_marginStart="4dp"
             android:textColor="@color/md_grey_800"
             android:textSize="@dimen/normal_edit_text_size"
-            tools:text="time:time" />
+            tools:text="time:time"/>
 
     </LinearLayout>
 
@@ -102,7 +102,7 @@
         android:layout_height="48dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="20dp"
-        tools:background="@drawable/face" />
+        tools:background="@drawable/face"/>
 
 
 </LinearLayout>

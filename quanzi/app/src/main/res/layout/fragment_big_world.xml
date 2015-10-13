@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="33dp"
                 android:layout_marginStart="33dp"
-                android:src="@drawable/share"/>
+                android:src="@drawable/ic_share_light_36dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="33dp"
                 android:layout_marginStart="33dp"
-                android:src="@drawable/setting"/>
+                android:src="@drawable/ic_settings_light_36dp"/>
 
             <TextView
                 android:layout_width="wrap_content"

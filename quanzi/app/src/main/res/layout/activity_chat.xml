@@ -49,21 +49,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
-            android:src="@drawable/ic_mic_black_36dp"/>
+            android:src="@drawable/ic_mic_36dp"/>
 
         <ImageButton
             android:id="@+id/insertImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
-            android:src="@drawable/ic_insert_photo_black_36dp"/>
+            android:src="@drawable/ic_photo_36dp"/>
 
         <ImageButton
             android:id="@+id/SendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
-            android:src="@drawable/ic_send_black_36dp"
+            android:src="@drawable/ic_send_36dp"
             android:visibility="gone"
             tools:visibility="visible"/>
 

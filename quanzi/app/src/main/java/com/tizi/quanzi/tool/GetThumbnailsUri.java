@@ -47,6 +47,25 @@ public class GetThumbnailsUri {
      * 按照长宽获取
      *
      * @param imageSourceUri 原始uri
+     * @param MaxHei         高最长 DP 长度
+     * @param MaxWei         宽最长 DP 长度
+     *
+     * @return 处理后的uri
+     */
+    public static String maxDPHeiAndWei(String imageSourceUri, int MaxHei, int MaxWei, Context context) {
+        int hei = getPXs(context, MaxHei);
+        int wei = getPXs(context, MaxWei);
+        String ans = imageSourceUri + addUri + "/2/w/" + wei;
+
+        ans += "/h/" + hei;
+
+        return ans;
+    }
+
+    /**
+     * 按照长宽获取
+     *
+     * @param imageSourceUri 原始uri
      * @param MaxHei         高最长长度
      * @param MaxWei         宽最长长度
      *

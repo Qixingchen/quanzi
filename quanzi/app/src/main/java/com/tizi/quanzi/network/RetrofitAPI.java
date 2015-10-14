@@ -68,7 +68,7 @@ public interface RetrofitAPI {
 
     interface Group {
         @POST("/group/createF")
-        Call<GroupAllInfo> addGroup(
+        Call<com.tizi.quanzi.gson.Group> addGroup(
                 @Query("groupname") String groupName,
                 @Query(value = "grouptags", encoded = true) String groupTags,
                 @Query("icon") String icon,

@@ -182,6 +182,10 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             @Override
             public void onOK(Object ts) {
                 ContantUsers users = (ContantUsers) ts;
+                if (users.mobiles.size() == 0) {
+                    Toast.makeText(mContext, "没有好友", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 InviteListAdapter inviteListAdapter = new InviteListAdapter(users.mobiles, activity,
                         new InviteListAdapter.OnAddUser() {
                             @Override

@@ -8,6 +8,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
@@ -197,7 +198,10 @@ public class SendMessage {
                 PrivateMessPairList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                         ChatMessage.getContentText(chatMessage), chatMessage.create_time);
             }
-            // TODO: 15/9/29 boom Group
+            if (chatMessage.ChatBothUserType == StaticField.ConvType.BoomGroup) {
+                BoomGroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
+                        ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+            }
 
         } catch (ClassFormatError e) {
             Log.w("", e.getMessage());

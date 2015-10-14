@@ -201,11 +201,14 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                             }
                         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                                 calendar.get(Calendar.DAY_OF_MONTH));
-                String date[] = MyUserInfo.getInstance().getUserInfo().getBirthday().split("-");
-                int year = Integer.valueOf(date[0]);
-                int month = Integer.valueOf(date[1]);
-                int day = Integer.valueOf(date[2]);
-                datePickerDialog.updateDate(year, month, day);
+                if (MyUserInfo.getInstance().getUserInfo().getBirthday() != null) {
+                    String date[] = MyUserInfo.getInstance().getUserInfo().getBirthday().split("-");
+                    int year = Integer.valueOf(date[0]);
+                    int month = Integer.valueOf(date[1]);
+                    int day = Integer.valueOf(date[2]);
+                    datePickerDialog.updateDate(year, month, day);
+                }
+
                 datePickerDialog.show();
                 break;
             case R.id.userLocation:

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.otto.BusProvider;
 
@@ -56,5 +57,21 @@ public abstract class BaseActivity extends AppCompatActivity {
             BusProvider.getInstance().unregister(this);
         } catch (IllegalArgumentException ignore) {
         }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    /**
+     * Dispatch onPause() to fragments.
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
     }
 }

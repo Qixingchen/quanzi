@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
@@ -17,7 +18,7 @@ import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.log.Log;
 
-//import me.drakeet.library.CrashWoodpecker;
+import me.drakeet.library.CrashWoodpecker;
 
 
 /**
@@ -45,12 +46,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
         appStaticValue = new AppStaticValue();
         //泄露监视器
         //LeakCanary.install(this);
-        //        CrashWoodpecker.fly().to(this);
+        //崩溃记录
+        CrashWoodpecker.fly().to(this);
 
-        //AVAnalytics.setAnalyticsEnabled(false);
+        AVAnalytics.setAnalyticsEnabled(false);
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
-        //AVAnalytics.enableCrashReport(this, true);
+        AVAnalytics.enableCrashReport(this, true);
 
 
         AVIMClient.setClientEventHandler(MyAVIMClientEventHandler.getInstance());
@@ -83,6 +85,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         Log.i("HARDWARE", Build.HARDWARE);
         Log.i("SERIAL", Build.SERIAL);
         Log.i("TYPE", Build.TYPE);
+
     }
 
     /**

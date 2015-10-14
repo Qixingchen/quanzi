@@ -16,7 +16,6 @@ import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.tool.Statue;
 import com.tizi.quanzi.ui.BaseFragment;
 
 
@@ -130,10 +129,24 @@ public class Register1stepFragment extends BaseFragment {
 
                 String sign = signInputLayout.getEditText().getText().toString();
                 final String phoneNumber = phoneNumberInputLayout.getEditText().getText().toString();
-                if (Statue.IsDev.now == Statue.IsDev.dev) {
-                    nextStep.register1stepOK(phoneNumber, passwrodInputLayout.getEditText().getText().toString());
+                final String password = passwrodInputLayout.getEditText().getText().toString();
+
+                if (sign.compareTo("") == 0) {
+                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                            "验证码为空", Snackbar.LENGTH_LONG).show();
                     return;
                 }
+                if (phoneNumber.compareTo("") == 0) {
+                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                            "手机号为空", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                if (password.compareTo("") == 0) {
+                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                            "密码为空", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
                 AVOSCloud.verifySMSCodeInBackground(sign, phoneNumber, new AVMobilePhoneVerifyCallback() {
 
                     @Override

@@ -57,7 +57,7 @@ public class Tool {
     public static int[] getImagePixel(Context context, int Heigh, int Weith) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         //宽度最大0.6
-        int imageMaxWidth = dm.widthPixels * 3 / 5;
+        int imageMaxWidth = dm.widthPixels * 2 / 5;
         int[] imagePixel = new int[2];
         if (Weith > imageMaxWidth) {
             imagePixel[1] = imageMaxWidth;

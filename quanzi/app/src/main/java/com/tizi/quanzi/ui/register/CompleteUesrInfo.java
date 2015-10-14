@@ -4,8 +4,8 @@ package com.tizi.quanzi.ui.register;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,26 +17,30 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
+import com.tizi.quanzi.ui.BaseFragment;
 
 /**
  * 用户填写个人信息界面
  **/
-public class CompleteUesrInfo extends Fragment {
-
-    private Activity mActivity;
-
-    private TextInputLayout nickNameInputLayout;
-    private NetworkImageView UserPhotoImageView;
-    private RadioGroup sexGroup;
+public class CompleteUesrInfo extends BaseFragment {
 
     /* 请求码 */
     private static final String IMAGE_FILE_NAME = "faceImage";
+    private Activity mActivity;
+    private TextInputLayout nickNameInputLayout;
+    private NetworkImageView UserPhotoImageView;
+    private RadioGroup sexGroup;
+    private Button submitButton;
     private String photoTakenUri;
     private String photoOnlineUri;
 
     private RequreForImage requreForImage;
 
     private AllDone allDone;
+
+    public CompleteUesrInfo() {
+        // Required empty public constructor
+    }
 
     /**
      * 全部完成回调
@@ -47,11 +51,6 @@ public class CompleteUesrInfo extends Fragment {
         this.allDone = allDone;
     }
 
-    public CompleteUesrInfo() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,27 +59,40 @@ public class CompleteUesrInfo extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mActivity = activity;
+    protected void findViews(View view) {
+        nickNameInputLayout = (TextInputLayout) mActivity.findViewById(R.id.nickNameInputLayout);
+        UserPhotoImageView = (NetworkImageView) mActivity.findViewById(R.id.UserPhotoImageView);
+        sexGroup = (RadioGroup) mActivity.findViewById(R.id.sexGroup);
+        submitButton = (Button) mActivity.findViewById(R.id.submit_button);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        nickNameInputLayout = (TextInputLayout) mActivity.findViewById(R.id.nickNameInputLayout);
-        UserPhotoImageView = (NetworkImageView) mActivity.findViewById(R.id.UserPhotoImageView);
+    protected void initViewsAndSetEvent() {
         UserPhotoImageView.setImageResource(R.drawable.face);
-        sexGroup = (RadioGroup) mActivity.findViewById(R.id.sexGroup);
-        Button submitButton = (Button) mActivity.findViewById(R.id.submit_button);
         requreForImage = new RequreForImage(mActivity);
-
-
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                allDone.CompUserInfoOK(nickNameInputLayout.getEditText().getText().toString(),
-                        sexGroup.getCheckedRadioButtonId(), photoOnlineUri);
+
+                String username = nickNameInputLayout.getEditText().getText().toString();
+                int sexid = sexGroup.getCheckedRadioButtonId();
+                if (username.compareTo("") == 0) {
+                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                            "用户名为空", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                if (sexid == -1) {
+                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                            "性别为空", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                if (photoOnlineUri == null || photoOnlineUri.compareTo("") == 0) {
+                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                            "头像为空", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
+                allDone.CompUserInfoOK(username, sexid, photoOnlineUri);
             }
         });
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {
@@ -89,19 +101,6 @@ public class CompleteUesrInfo extends Fragment {
                 requreForImage.showDialogAndCallIntent("设置头像");
             }
         });
-
-    }
-
-    /**
-     * 本界面完成回调借口
-     */
-    public interface AllDone {
-        /**
-         * @param userName 用户昵称
-         * @param sex      性别
-         * @param faceUri  头像
-         */
-        void CompUserInfoOK(String userName, int sex, String faceUri);
     }
 
     /**
@@ -137,6 +136,18 @@ public class CompleteUesrInfo extends Fragment {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         requreForImage.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * 本界面完成回调借口
+     */
+    public interface AllDone {
+        /**
+         * @param userName 用户昵称
+         * @param sex      性别
+         * @param faceUri  头像
+         */
+        void CompUserInfoOK(String userName, int sex, String faceUri);
     }
 
 }

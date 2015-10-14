@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.tizi.quanzi.otto.BusProvider;
 
 /**
@@ -63,4 +64,16 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void findViews(View view);
 
     protected abstract void initViewsAndSetEvent();
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AVAnalytics.onFragmentStart(TAG);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
+    }
 }

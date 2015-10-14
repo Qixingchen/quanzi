@@ -1,8 +1,10 @@
 package com.tizi.quanzi.app;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.avos.avoscloud.AVOSCloud;
@@ -22,9 +24,10 @@ import com.tizi.quanzi.log.Log;
  * Created by qixingchen on 15/7/13.
  * Application
  */
-public class App extends Application {
+public class App extends Application implements Application.ActivityLifecycleCallbacks {
     private static final String TAG = "App";
     public static AppStaticValue appStaticValue;
+    public static boolean isAppForeground;
     private static Application application;
 
     public static Application getApplication() {
@@ -103,4 +106,38 @@ public class App extends Application {
     }
 
 
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+        isAppForeground = true;
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+        isAppForeground = false;
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+
+    }
 }

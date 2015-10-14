@@ -30,7 +30,7 @@ public class AppStaticValue {
     private static AVIMClient imClient = null;
     private static Application application;
     //偏好储存
-    private static SharedPreferences groupNotifiPreferences;
+    private static SharedPreferences notifiPreferences;
     private static SharedPreferences preferences;
     private static String UserToken = "";
     private static String UserID = "";
@@ -48,7 +48,7 @@ public class AppStaticValue {
         UserToken = preferences.getString(StaticField.Preferences.USERTOKEN, "");
         UserPhone = preferences.getString(StaticField.Preferences.USERPHONE, "");
 
-        groupNotifiPreferences = application.getSharedPreferences(UserID + "GroupNotifi",
+        notifiPreferences = application.getSharedPreferences(UserID + "Notifi",
                 App.MODE_PRIVATE);
 
         if (UserID.compareTo("") != 0) {
@@ -97,13 +97,14 @@ public class AppStaticValue {
         return preferences.getString(Name, "");
     }
 
-    public static SharedPreferences getGroupNotifiPreferences() {
-        return groupNotifiPreferences;
-    }
-
     public static void setPrefer(String name, String vaule) {
         preferences.edit().putString(name, vaule).apply();
     }
+
+    public static SharedPreferences getNotifiPreferences() {
+        return notifiPreferences;
+    }
+
 
     /**
      * 设置Activity引用

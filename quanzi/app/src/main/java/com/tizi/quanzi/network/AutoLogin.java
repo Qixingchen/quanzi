@@ -10,6 +10,7 @@ import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
+import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
@@ -50,6 +51,7 @@ public class AutoLogin extends RetrofitNetworkAbs {
         AppStaticValue.setDataBaseHelper(ID);
         AppStaticValue.getNewImClient(ID);
         DBAct.flushDBID();
+        AddNotification.getInstance().setSharedPreferences();
     }
 
     /**

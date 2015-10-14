@@ -138,4 +138,11 @@ public class StaticField {
     public static class IntentName {
         public static final String OtherUserInfo = "userInfo";
     }
+
+    /*系统设置字段*/
+    public static class SystemSettingString {
+        public static final String needVibrate = "needVibrate";
+        public static final String needSound = "needSound";
+        public static final String needInAppNotifi = "needInAppNotifi";
+    }
 }

@@ -110,6 +110,18 @@ public class BigWorld extends BaseFragment {
             }
         });
 
+        Setting.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SystemSettingFragment fragment = new SystemSettingFragment();
+                        getParentFragment().getFragmentManager().beginTransaction()
+                                .replace(R.id.fragment, fragment).addToBackStack("SystemSettingFragment")
+                                .commit();
+                    }
+                }
+        );
+
         Share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

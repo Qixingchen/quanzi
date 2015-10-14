@@ -5,11 +5,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
@@ -29,6 +32,9 @@ public class AddNotification {
     private static AddNotification mInstance;
     private static ArrayList<ChatMessage> chatMessageArrayList;
     private static NotificationManager mNotificationManager;
+    SharedPreferences systemSetting;
+    //通知设置
+    private boolean needVibrate, needSound, needInAppNotifi;
 
     private AddNotification() {
         mContext = App.getApplication();
@@ -118,6 +124,13 @@ public class AddNotification {
                 .setAutoCancel(false)
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary));
 
+        if (needSound) {
+            mBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+        }
+        if (needVibrate) {
+            mBuilder.setVibrate(new long[]{1000, 1000});
+        }
+
         if (chatMessageArrayList.size() == 1) {
             ChatMessage chatMessage = chatMessageArrayList.get(0);
             mBuilder.setContentTitle(chatMessage.userName)
@@ -151,8 +164,12 @@ public class AddNotification {
      * @param chatMessage 需要发布通知的消息
      */
     public void AddMessage(ChatMessage chatMessage) {
+        if (App.isAppForeground && !needInAppNotifi) {
+            return;
+        }
         switch (chatMessage.ChatBothUserType) {
             case StaticField.ConvType.GROUP:
+
                 GroupClass group = (GroupClass) GroupList.getInstance().getGroup(chatMessage.groupID);
                 if (group != null && !group.getNeedNotifi()) {
                     return;
@@ -160,8 +177,12 @@ public class AddNotification {
                 break;
 
             case StaticField.ConvType.twoPerson:
-                // TODO: 15/9/28 allow ignore
-
+                if (!systemSetting.getBoolean(chatMessage.sender, true))
+                    return;
+                break;
+            case StaticField.ConvType.BoomGroup:
+                if (!systemSetting.getBoolean(chatMessage.groupID, true))
+                    return;
                 break;
             default:
                 break;
@@ -172,4 +193,37 @@ public class AddNotification {
     }
 
 
+    public boolean isNeedVibrate() {
+        return needVibrate;
+    }
+
+    public void setNeedVibrate(boolean needVibrate) {
+        this.needVibrate = needVibrate;
+        systemSetting.edit().putBoolean(StaticField.SystemSettingString.needVibrate, needVibrate).apply();
+    }
+
+    public boolean isNeedSound() {
+        return needSound;
+    }
+
+    public void setNeedSound(boolean needSound) {
+        this.needSound = needSound;
+        systemSetting.edit().putBoolean(StaticField.SystemSettingString.needSound, needSound).apply();
+    }
+
+    public boolean isNeedInAppNotifi() {
+        return needInAppNotifi;
+    }
+
+    public void setNeedInAppNotifi(boolean needInAppNotifi) {
+        this.needInAppNotifi = needInAppNotifi;
+        systemSetting.edit().putBoolean(StaticField.SystemSettingString.needInAppNotifi, needInAppNotifi).apply();
+    }
+
+    public void setSharedPreferences() {
+        systemSetting = AppStaticValue.getNotifiPreferences();
+        needVibrate = systemSetting.getBoolean(StaticField.SystemSettingString.needVibrate, true);
+        needSound = systemSetting.getBoolean(StaticField.SystemSettingString.needSound, true);
+        needInAppNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needInAppNotifi, true);
+    }
 }

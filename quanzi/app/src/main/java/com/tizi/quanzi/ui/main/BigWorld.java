@@ -1,9 +1,11 @@
 package com.tizi.quanzi.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +17,10 @@ import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetShareIntent;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.ui.LoginActivity;
 
 /**
  */
@@ -31,6 +35,7 @@ public class BigWorld extends BaseFragment {
     private NetworkImageView userFace;
     private ImageView userSex;
     private View Share, Setting, userInfoLayout;
+    private Button logout;
 
 
     public BigWorld() {
@@ -83,6 +88,7 @@ public class BigWorld extends BaseFragment {
         Share = view.findViewById(R.id.share);
         Setting = view.findViewById(R.id.setting);
         userInfoLayout = view.findViewById(R.id.userInfoLayout);
+        logout = (Button) view.findViewById(R.id.log_out);
     }
 
     @Override
@@ -128,6 +134,17 @@ public class BigWorld extends BaseFragment {
                 GetShareIntent.startShare(mContext);
             }
         });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppStaticValue.setPrefer(StaticField.Preferences.PASSWORD, "");
+                Intent log_in = new Intent(mActivity, LoginActivity.class);
+                log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(log_in);
+            }
+        });
+
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.FriendTime;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
 
@@ -53,6 +54,10 @@ public class LockLock extends BaseFragment {
         themeAdapter = new ThemeAdapter(null, mActivity).setOnClick(new ThemeAdapter.OnClick() {
             @Override
             public void SignUP(Theme.ActsEntity act) {
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(mActivity);
+                    return;
+                }
                 getParentFragment().getFragmentManager().beginTransaction()
                         .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id))
                         .addToBackStack("ThemeSignUpFragment").commit();

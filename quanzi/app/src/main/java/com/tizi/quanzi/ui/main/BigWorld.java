@@ -2,6 +2,7 @@ package com.tizi.quanzi.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
@@ -98,7 +102,7 @@ public class BigWorld extends BaseFragment {
                 GetVolley.getmInstance().getImageLoader());
         userName.setText(userInfo.getUserName());
 
-        if (userInfo.getSex() == 1) {
+        if (userInfo.getSex() == 0) {
             Picasso.with(mActivity).load(R.drawable.man).into(userSex);
         } else {
             Picasso.with(mActivity).load(R.drawable.girl).into(userSex);
@@ -139,6 +143,14 @@ public class BigWorld extends BaseFragment {
             @Override
             public void onClick(View v) {
                 AppStaticValue.setPrefer(StaticField.Preferences.PASSWORD, "");
+                AppStaticValue.getImClient().close(new AVIMClientCallback() {
+                    @Override
+                    public void done(AVIMClient avimClient, AVIMException e) {
+                        if (e != null) {
+                            Snackbar.make(view, "退出失败:" + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                });
                 Intent log_in = new Intent(mActivity, LoginActivity.class);
                 log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(log_in);

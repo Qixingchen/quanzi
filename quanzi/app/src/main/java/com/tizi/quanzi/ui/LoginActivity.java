@@ -95,7 +95,7 @@ public class LoginActivity extends BaseActivity {
                 String password = passwordEditText.getText().toString();
 
                 if (Tool.getPhoneNum(phoneNumber) == null || password.compareTo("") == 0) {
-                    Snackbar.make(findViewById(R.id.LoginLayout), "手机号或密码未填写",
+                    Snackbar.make(findViewById(R.id.LoginLayout), "手机号未填写或不合法或密码未填写",
                             Snackbar.LENGTH_LONG).show();
                     return;
                 }

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.PrivateMessageAdapter;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.otto.BusProvider;
@@ -21,8 +20,6 @@ import com.tizi.quanzi.otto.PrivateMessFragmentResume;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,40 +51,32 @@ public class PrivateMessageFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
         mPrivateMessRecyclerView = (RecyclerView) mActivity.findViewById(R.id.private_message_item_recycler_view);
-        List<SystemMessage> systemMessages = DBAct.getInstance().quaryAllSysMess();
-        List<PrivateMessPair> privateMessPairs = PrivateMessPairList.getInstance().getGroupList();
-        for (SystemMessage systemMessage : systemMessages) {
-            if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
-                continue;
-            }
-            privateMessPairs.add(PrivateMessPair.PriMessFromSystemMess(systemMessage));
-        }
-        privateMessageAdapter = new PrivateMessageAdapter(privateMessPairs, mActivity,
-                new PrivateMessageAdapter.Onclick() {
+        privateMessageAdapter = new PrivateMessageAdapter(PrivateMessPairList.getInstance().getGroupList()
+                , mActivity, new PrivateMessageAdapter.Onclick() {
 
-                    /**
-                     * 项目被点击,忽略 并没有什么需要处理的
-                     *
-                     * @param systemMessage 被点击的系统消息
-                     */
-                    @Override
-                    public void systemMessClick(SystemMessage systemMessage) {
+            /**
+             * 项目被点击,忽略 并没有什么需要处理的
+             *
+             * @param systemMessage 被点击的系统消息
+             */
+            @Override
+            public void systemMessClick(SystemMessage systemMessage) {
                         /*ignore*/
-                    }
+            }
 
-                    /**
-                     * 项目被点击,发起私聊
-                     *
-                     * @param privateMessPair 被点击的私聊消息组
-                     */
-                    @Override
-                    public void priMessClick(PrivateMessPair privateMessPair) {
-                        Intent chat = new Intent(getActivity(), ChatActivity.class);
-                        chat.putExtra("conversation", privateMessPair.convId);
-                        chat.putExtra("chatType", StaticField.ConvType.twoPerson);
-                        startActivity(chat);
-                    }
-                });
+            /**
+             * 项目被点击,发起私聊
+             *
+             * @param privateMessPair 被点击的私聊消息组
+             */
+            @Override
+            public void priMessClick(PrivateMessPair privateMessPair) {
+                Intent chat = new Intent(getActivity(), ChatActivity.class);
+                chat.putExtra("conversation", privateMessPair.convId);
+                chat.putExtra("chatType", StaticField.ConvType.twoPerson);
+                startActivity(chat);
+            }
+        });
         mPrivateMessRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(mActivity);
         mPrivateMessRecyclerView.setLayoutManager(mLayoutManager);

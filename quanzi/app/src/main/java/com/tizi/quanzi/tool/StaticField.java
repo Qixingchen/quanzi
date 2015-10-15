@@ -104,10 +104,11 @@ public class StaticField {
     }
 
     /*消息刷新数量*/
-    public static class MessageQueryLimit {
-        public static final int Limit = 1000;
+    public static class QueryLimit {
+        public static final int MessageLimit = 1000;
         public static final int FlushMaxTimes = 10;
         public static final int DynamicLimit = 50;
+        public static final int ContactLimit = 100;
     }
 
     /*系统消息还是私聊*/

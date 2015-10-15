@@ -88,7 +88,7 @@ public class NewGroupActivity extends BaseActivity {
                 String GroupName = ans.groupName;
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
-                String userID = AppStaticValue.getUserID(), tag = "[{}]";
+                String tag = "[{}]";
 
                 AddOrQuaryGroup.getNewInstance().setNetworkListener(
                         new RetrofitNetworkAbs.NetworkListener() {

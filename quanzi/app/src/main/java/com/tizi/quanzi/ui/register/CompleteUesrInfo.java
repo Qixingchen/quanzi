@@ -26,7 +26,6 @@ public class CompleteUesrInfo extends BaseFragment {
 
     /* 请求码 */
     private static final String IMAGE_FILE_NAME = "faceImage";
-    private Activity mActivity;
     private TextInputLayout nickNameInputLayout;
     private NetworkImageView UserPhotoImageView;
     private RadioGroup sexGroup;
@@ -60,10 +59,10 @@ public class CompleteUesrInfo extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        nickNameInputLayout = (TextInputLayout) mActivity.findViewById(R.id.nickNameInputLayout);
-        UserPhotoImageView = (NetworkImageView) mActivity.findViewById(R.id.UserPhotoImageView);
-        sexGroup = (RadioGroup) mActivity.findViewById(R.id.sexGroup);
-        submitButton = (Button) mActivity.findViewById(R.id.submit_button);
+        nickNameInputLayout = (TextInputLayout) view.findViewById(R.id.nickNameInputLayout);
+        UserPhotoImageView = (NetworkImageView) view.findViewById(R.id.UserPhotoImageView);
+        sexGroup = (RadioGroup) view.findViewById(R.id.sexGroup);
+        submitButton = (Button) view.findViewById(R.id.submit_button);
     }
 
     @Override

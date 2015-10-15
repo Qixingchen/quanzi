@@ -67,7 +67,7 @@ public class DynsActivityFragment extends BaseFragment {
             public void needMore() {
                 if (hasMoreToGet) {
                     quaryMore("", lastIndex);
-                    lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
+                    lastIndex += StaticField.QueryLimit.DynamicLimit;
                 }
             }
         });
@@ -83,7 +83,7 @@ public class DynsActivityFragment extends BaseFragment {
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
                 dynsAdapter.addItems(dyns.dyns);
-                if (dyns.dyns.size() != StaticField.MessageQueryLimit.DynamicLimit) {
+                if (dyns.dyns.size() != StaticField.QueryLimit.DynamicLimit) {
                     hasMoreToGet = false;
                 }
             }

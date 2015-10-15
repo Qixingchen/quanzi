@@ -28,11 +28,10 @@ import java.io.IOException;
  */
 public class NewGroupStep1Fragment extends Fragment {
 
+    RequreForImage requreForImage;
     private Activity mActivity;
     private android.support.design.widget.TextInputLayout quanziNameInputLayout, quanziSignInputLayout;
     private ImageView UserPhotoImageView;
-    RequreForImage requreForImage;
-
     private String groupFaceUri;
 
     public NewGroupStep1Fragment() {
@@ -132,9 +131,11 @@ public class NewGroupStep1Fragment extends Fragment {
         ans.groupName = quanziNameInputLayout.getEditText().getText().toString();
         ans.groupSign = quanziSignInputLayout.getEditText().getText().toString();
         ans.groupFaceUri = groupFaceUri;
+        if (ans.groupName == null || ans.groupSign == null || ans.groupFaceUri == null) {
+            ans.complete = false;
+            return ans;
+        }
         ans.complete = (!ans.groupSign.isEmpty() && !ans.groupName.isEmpty() && !ans.groupFaceUri.isEmpty());
-        // TODO: 15/8/28 test
-        ans.complete = true;
         return ans;
     }
 

@@ -15,5 +15,6 @@ public class Statue {
         public final static int dev = 0;
         public final static int common = 1;
         public final static int now = 0;
+        public final static boolean isDev = true;
     }
 }

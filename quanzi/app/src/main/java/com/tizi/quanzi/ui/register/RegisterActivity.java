@@ -28,6 +28,7 @@ import java.util.List;
 
 import retrofit.Callback;
 import retrofit.Response;
+import retrofit.Retrofit;
 
 
 public class RegisterActivity extends AppCompatActivity implements Register1stepFragment.NextStep,
@@ -130,7 +131,7 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
                 String.valueOf(Build.VERSION.SDK_INT) + " GMS:" + GetGMSStatue.haveGMS(this)
                 , Build.MODEL + "  " + Build.DEVICE, Tool.getSignMap()).enqueue(new Callback<Login>() {
             @Override
-            public void onResponse(Response<Login> response) {
+            public void onResponse(Response<Login> response, Retrofit retrofit) {
                 if (response.isSuccess() && response.body().isSuccess()) {
                     Login login = response.body();
                     AutoLogin.setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(),

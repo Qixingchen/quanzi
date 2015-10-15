@@ -53,7 +53,7 @@ import java.util.Map;
  */
 public class ChatActivity extends BaseActivity {
 
-    private static final int QueryLimit = StaticField.MessageQueryLimit.Limit;
+    private static final int QueryLimit = StaticField.QueryLimit.MessageLimit;
     private static final String TAG = ChatActivity.class.getSimpleName();
     private Context context;
     private RecyclerView chatmessagerecyclerView;

@@ -111,7 +111,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
             public void needMore() {
                 if (hasMoreToGet) {
                     quaryMore(groupClass.ID, lastIndex);
-                    lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
+                    lastIndex += StaticField.QueryLimit.DynamicLimit;
                 }
             }
         });
@@ -195,7 +195,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                     GetVolley.getmInstance().getImageLoader());
             zoneSignTextview.setText("签名是：" + groupClass.Notice);
             quaryMore(groupClass.ID, lastIndex);
-            lastIndex += StaticField.MessageQueryLimit.DynamicLimit;
+            lastIndex += StaticField.QueryLimit.DynamicLimit;
         }
         if (groupAllInfo != null) {
             groupUsersRecyclerView.getLayoutParams().height = (int) (105 * GetThumbnailsUri.getDpi(mActivity)
@@ -211,7 +211,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
                 dynsAdapter.addItems(dyns.dyns);
-                if (dyns.dyns.size() != StaticField.MessageQueryLimit.DynamicLimit) {
+                if (dyns.dyns.size() != StaticField.QueryLimit.DynamicLimit) {
                     hasMoreToGet = false;
                 }
                 Log.i(TAG, "groupDynsLayoutManager Heigh:" + groupDynsLayoutManager.getHeight());

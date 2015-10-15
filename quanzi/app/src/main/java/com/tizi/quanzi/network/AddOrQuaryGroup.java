@@ -9,6 +9,7 @@ import com.tizi.quanzi.tool.Tool;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by qixingchen on 15/8/17.
@@ -43,12 +44,10 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
     public void NewAGroup(String GroupName, String icon, String notice, String tag, String convid) {
 
         String encodedTAG = Tool.getUTF_8String(tag);
-        final Call<Group> addgroup = groupService.addGroup(GroupName, encodedTAG, icon, notice,
-                AppStaticValue.getUserID(), convid, Tool.getSignMap());
-
-        addgroup.enqueue(new Callback<Group>() {
+        groupService.addGroup(GroupName, encodedTAG, icon, notice,
+                AppStaticValue.getUserID(), convid, Tool.getSignMap()).enqueue(new Callback<Group>() {
             @Override
-            public void onResponse(retrofit.Response<Group> response) {
+            public void onResponse(Response<Group> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -57,7 +56,6 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
                 myOnFailure(t);
             }
         });
-
     }
 
 
@@ -72,7 +70,7 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
 
         groupInfo.enqueue(new Callback<GroupAllInfo>() {
             @Override
-            public void onResponse(Response<GroupAllInfo> response) {
+            public void onResponse(Response<GroupAllInfo> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

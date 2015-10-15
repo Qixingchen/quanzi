@@ -39,6 +39,7 @@ public class ReadContact {
             }
         }
         phones.close();
+        Log.i("通讯录", String.valueOf(mobilesList.size()));
         return mobilesList;
     }
 

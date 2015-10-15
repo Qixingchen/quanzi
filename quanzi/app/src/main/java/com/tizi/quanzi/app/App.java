@@ -18,8 +18,6 @@ import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.log.Log;
 
-import me.drakeet.library.CrashWoodpecker;
-
 
 /**
  * Created by qixingchen on 15/7/13.
@@ -46,10 +44,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         appStaticValue = new AppStaticValue();
         //泄露监视器
         //LeakCanary.install(this);
-        //崩溃记录
-        CrashWoodpecker.fly().to(this);
 
-        AVAnalytics.setAnalyticsEnabled(false);
+        AVAnalytics.setAnalyticsEnabled(true);
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
         AVAnalytics.enableCrashReport(this, true);

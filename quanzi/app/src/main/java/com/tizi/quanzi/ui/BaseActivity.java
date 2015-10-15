@@ -3,6 +3,7 @@ package com.tizi.quanzi.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.tizi.quanzi.app.AppStaticValue;
@@ -16,14 +17,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected final String TAG = this.getClass().getSimpleName();
     protected Context mContext;
+    protected View view;
 
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         mContext = this;
+        view = getWindow().getDecorView().getRootView();
         findView();
         initView();
         setViewEvent();
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

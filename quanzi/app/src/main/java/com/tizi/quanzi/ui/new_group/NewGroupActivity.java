@@ -2,6 +2,7 @@ package com.tizi.quanzi.ui.new_group;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -116,6 +117,8 @@ public class NewGroupActivity extends BaseActivity {
                         .NewAGroup(GroupName, icon, notice, tag, convID);
 
 
+            } else {
+                Snackbar.make(view, "信息未填写完毕", Snackbar.LENGTH_LONG).show();
             }
             return true;
         }

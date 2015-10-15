@@ -17,6 +17,7 @@ import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.tool.Statue;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 
 
@@ -133,9 +134,9 @@ public class Register1stepFragment extends BaseFragment {
                 final String password = passwrodInputLayout.getEditText().getText().toString();
 
 
-                if (phoneNumber.compareTo("") == 0) {
+                if (phoneNumber.compareTo("") == 0 || Tool.getPhoneNum(phoneNumber) == null) {
                     Snackbar.make(mActivity.findViewById(R.id.register_fragment),
-                            "手机号为空", Snackbar.LENGTH_LONG).show();
+                            "手机号为空或不合法", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (password.compareTo("") == 0) {

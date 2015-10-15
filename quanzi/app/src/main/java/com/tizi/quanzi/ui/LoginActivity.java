@@ -90,8 +90,17 @@ public class LoginActivity extends BaseActivity {
                 imm.hideSoftInputFromInputMethod(phoneNumberEditText.getWindowToken(), 0);
                 imm.hideSoftInputFromInputMethod(passwordEditText.getWindowToken(), 0);
                 imm.hideSoftInputFromInputMethod(LoginButton.getWindowToken(), 0);
-                AppStaticValue.setUserPhone(phoneNumberEditText.getText().toString());
+
+                String phoneNumber = phoneNumberEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
+
+                if (Tool.getPhoneNum(phoneNumber) == null || password.compareTo("") == 0) {
+                    Snackbar.make(findViewById(R.id.LoginLayout), "手机号或密码未填写",
+                            Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
+                AppStaticValue.setUserPhone(phoneNumber);
                 AutoLogin.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {
@@ -105,8 +114,7 @@ public class LoginActivity extends BaseActivity {
 
                     @Override
                     public void onError(String Message) {
-                        Snackbar.make(findViewById(R.id.LoginLayout), "网络错误" + Message,
-                                Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(R.id.LoginLayout), Message, Snackbar.LENGTH_LONG).show();
                     }
                 }).loginFromPrePassword(GetPassword.preHASH(password));
             }

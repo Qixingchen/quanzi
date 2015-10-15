@@ -124,7 +124,7 @@ public class AddNotification {
                 .setAutoCancel(false)
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary));
 
-        if (needSound) {
+        if (needSound && chatMessageArrayList.size() == 1) {
             mBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         }
         if (needVibrate) {

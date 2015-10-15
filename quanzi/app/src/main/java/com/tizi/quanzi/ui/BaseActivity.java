@@ -8,6 +8,8 @@ import android.view.View;
 import com.avos.avoscloud.AVAnalytics;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.otto.PermissionAnser;
+import com.tizi.quanzi.tool.StaticField;
 
 /**
  * Created by qixingchen on 15/8/31.
@@ -77,5 +79,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         AVAnalytics.onPause(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (StaticField.PermissionRequestCode.isPermissionRequest(requestCode)) {
+            BusProvider.getInstance().post(PermissionAnser.getAns(requestCode, permissions, grantResults));
+        }
     }
 }

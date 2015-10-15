@@ -195,7 +195,7 @@ public class ChatActivity extends BaseActivity {
         insertImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requreForImage.showDialogAndCallIntent("选择图片");
+                requreForImage.showDialogAndCallIntent("选择图片", StaticField.PermissionRequestCode.chat_insert_photo);
             }
         });
 
@@ -342,17 +342,6 @@ public class ChatActivity extends BaseActivity {
 
     }
 
-    /**
-     * 授权回调
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == StaticField.PermissionRequestCode.requreForImage) {
-            requreForImage.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
-    }
 
     /*聊天消息回调接口*/
     private void setMessageCallback() {

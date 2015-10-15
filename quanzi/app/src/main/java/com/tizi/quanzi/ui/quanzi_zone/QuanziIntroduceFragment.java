@@ -162,7 +162,8 @@ public class QuanziIntroduceFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 requreForImage = new RequreForImage(mActivity);
-                requreForImage.showDialogAndCallIntent("选择圈子照片");
+                requreForImage.showDialogAndCallIntent("选择圈子照片",
+                        StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face);
             }
         });
         showGroupInfo();

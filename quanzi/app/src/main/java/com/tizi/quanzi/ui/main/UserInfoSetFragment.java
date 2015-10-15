@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +26,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.UserInfoSetting;
+import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.io.IOException;
@@ -132,7 +136,6 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         userAgeTextView.setText(MyUserInfo.getInstance().getUserInfo().getBirthday());
         userLocationTextView.setText(MyUserInfo.getInstance().getUserInfo().getArea());
         userSignTextView.setText(MyUserInfo.getInstance().getUserInfo().getSignature());
-        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Override
@@ -149,7 +152,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         switch (view.getId()) {
             case R.id.user_face:
                 requreForImage = new RequreForImage(getActivity());
-                requreForImage.showDialogAndCallIntent("选择头像");
+                requreForImage.showDialogAndCallIntent("选择头像",
+                        StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo);
                 break;
             case R.id.userName:
                 input.setHint("输入昵称");
@@ -215,8 +219,13 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
                     Log.w(TAG, "没有位置权限");
+                    ActivityCompat.requestPermissions(mActivity,
+                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    Manifest.permission.ACCESS_FINE_LOCATION},
+                            StaticField.PermissionRequestCode.userInfoSetFragment_location);
                     return;
                 }
+                locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                 Log.i(TAG, "定位中");
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
 
@@ -253,6 +262,28 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     }
                 }
             }).savePhoto(ans, MyUserInfo.getInstance().getUserInfo().getId() + "face.jpg", 200, 200);
+        }
+    }
+
+    @Subscribe
+    public void onPermissionAns(PermissionAnser permissionAnser) {
+
+        for (int ans : permissionAnser.grantResults) {
+            if (ans == PackageManager.PERMISSION_DENIED) {
+                Snackbar.make(view, "您拒绝了权限!", Snackbar.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        switch (permissionAnser.requestCode) {
+            case StaticField.PermissionRequestCode.userInfoSetFragment_location:
+                locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+                Log.i(TAG, "定位中");
+                locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
+                break;
+            default:
+                Log.e(TAG, "unKnow permission code" + permissionAnser.requestCode);
+                break;
         }
     }
 }

@@ -1,10 +1,8 @@
 package com.tizi.quanzi.ui.new_group;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.RequiresPermission;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,6 +18,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
+import com.tizi.quanzi.tool.StaticField;
 
 import java.io.IOException;
 
@@ -53,7 +52,8 @@ public class NewGroupStep1Fragment extends Fragment {
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requreForImage.showDialogAndCallIntent("圈子头像");
+                requreForImage.showDialogAndCallIntent("圈子头像",
+                        StaticField.PermissionRequestCode.new_group_face_photo);
             }
         });
     }
@@ -81,20 +81,10 @@ public class NewGroupStep1Fragment extends Fragment {
     }
 
     /**
-     * 授权回调
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        requreForImage.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    /**
      * 将图片储存到LeanCloud
      *
      * @param filepath 图片地址
      */
-    @RequiresPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     private void savePhoto(String filepath) {
         AVFile file = null;
         try {

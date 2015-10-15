@@ -95,12 +95,29 @@ public class StaticField {
     }
 
     /*申请权限ID*/
+    /*0~255 在这被使用*/
     public static class PermissionRequestCode {
 
-        public final static int requreForImage = 1;
-        public final static int RECORD_AUDIO = 2;
-        public final static int userInfoSetFragment = 3;
-        public final static int addContactUsers = 4;
+        /*图像相关:1~100*/
+        public final static int requreForImage = 0;
+        public final static int chat_insert_photo = 1;
+        public final static int userInfoSetFragment_user_face_photo = 2;
+        public final static int new_group_face_photo = 3;
+        public final static int QuanziIntroduceFragment_group_face = 4;
+        public final static int register_user_face = 5;
+
+
+        public final static int CHAT_RECORD_AUDIO = 101;
+        public final static int userInfoSetFragment_location = 102;
+        public final static int addContactUsers = 103;
+
+        public static boolean isPermissionRequest(int code) {
+            return code >= 0 && code <= 255;
+        }
+
+        public static boolean isImagePermissionEvent(int code) {
+            return code > 0 && code <= 100;
+        }
     }
 
     /*消息刷新数量*/

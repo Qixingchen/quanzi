@@ -17,6 +17,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
 /**
@@ -97,7 +98,8 @@ public class CompleteUesrInfo extends BaseFragment {
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requreForImage.showDialogAndCallIntent("设置头像");
+                requreForImage.showDialogAndCallIntent("设置头像",
+                        StaticField.PermissionRequestCode.register_user_face);
             }
         });
     }
@@ -126,15 +128,6 @@ public class CompleteUesrInfo extends BaseFragment {
                 }).savePhoto(filePath, 200, 200);
             }
         }
-    }
-
-    /**
-     * 授权回调
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        requreForImage.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**

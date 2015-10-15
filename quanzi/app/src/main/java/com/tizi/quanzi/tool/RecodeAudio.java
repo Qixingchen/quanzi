@@ -127,7 +127,7 @@ public class RecodeAudio {
     private void requestAllPermission() {
         String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.RECORD_AUDIO};
-        int code = StaticField.PermissionRequestCode.RECORD_AUDIO;
+        int code = StaticField.PermissionRequestCode.CHAT_RECORD_AUDIO;
         ActivityCompat.requestPermissions(mActivity, permission, code);
     }
 }

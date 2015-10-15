@@ -1,10 +1,7 @@
 package com.tizi.quanzi.ui.main;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,10 +10,8 @@ import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
-import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.otto.PrivateMessFragmentResume;
-import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 
 
@@ -129,22 +124,6 @@ public class MainActivity extends BaseActivity {
     }
 
     public void StartUserInfoSet() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "没有位置权限");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION},
-                    StaticField.PermissionRequestCode.userInfoSetFragment);
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "没有位置权限");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION},
-                    StaticField.PermissionRequestCode.userInfoSetFragment);
-            return;
-        }
         userInfoSetFragment = new UserInfoSetFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, userInfoSetFragment).addToBackStack("userInfoSetFragment").commit();

@@ -9,11 +9,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.otto.PermissionAnser;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +36,19 @@ public class RequreForImage {
 
     public RequreForImage(Activity mActivity) {
         this.mActivity = mActivity;
+        try {
+            BusProvider.getInstance().register(this);
+        } catch (IllegalArgumentException ignore) {
+        }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        try {
+            BusProvider.getInstance().unregister(this);
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
     /**
@@ -41,17 +56,17 @@ public class RequreForImage {
      *
      * @param Title 对话框标题
      */
-    public void showDialogAndCallIntent(String Title) {
+    public void showDialogAndCallIntent(String Title, int eventCode) {
         lastTitle = Title;
 
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, eventCode);
             return;
         }
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, eventCode);
             return;
         }
         new AlertDialog.Builder(mActivity)
@@ -105,7 +120,6 @@ public class RequreForImage {
      *
      * @param uri 图片地址
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public void startPhotoZoom(Uri uri) {
 
         Intent intent = new Intent("com.android.camera.action.CROP");
@@ -134,7 +148,6 @@ public class RequreForImage {
      *
      * @return 创建的文件
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private File createImageFile() {
         // Create an image file name
         String imageFileName = String.valueOf(new Date().getTime() / 1000) + ".jpg";
@@ -188,18 +201,21 @@ public class RequreForImage {
      *
      * @param permission 需要授权的权限
      */
-    private void requestPermission(String permission) {
-        int code = StaticField.PermissionRequestCode.requreForImage;
-        ActivityCompat.requestPermissions(mActivity, new String[]{permission}, code);
+    private void requestPermission(String permission, int eventCode) {
+        ActivityCompat.requestPermissions(mActivity, new String[]{permission}, eventCode);
     }
 
-    /**
-     * 取得授权回调
-     */
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            showDialogAndCallIntent(lastTitle);
+    /*授权回调*/
+    @Subscribe
+    public void onRequestPermissionsResult(PermissionAnser permissionAnser) {
+        if (StaticField.PermissionRequestCode.isImagePermissionEvent(permissionAnser.requestCode)) {
+
+            if (permissionAnser.grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showDialogAndCallIntent(lastTitle, permissionAnser.requestCode);
+            } else {
+                Snackbar.make(mActivity.getWindow().getDecorView().getRootView(),
+                        "您拒绝了相关权限!", Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 }

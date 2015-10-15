@@ -140,7 +140,7 @@ public class BigWorld extends BaseFragment {
             public void onClick(View v) {
                 AppStaticValue.setPrefer(StaticField.Preferences.PASSWORD, "");
                 Intent log_in = new Intent(mActivity, LoginActivity.class);
-                log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(log_in);
             }
         });

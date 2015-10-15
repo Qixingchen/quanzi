@@ -28,38 +28,38 @@ public interface RetrofitAPI {
 
 
     interface Themes {
-        @POST("/act/get")
+        @POST("act/get")
         Call<Theme> getThemes();
 
-        @POST("/act/sign")
+        @POST("act/sign")
         Call<OnlySuccess> signUp(
                 @Query("actid") String actID,
                 @Query("grpid") String groupID,
                 @Query("flag") int flag,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/act/feedback")
+        @POST("act/feedback")
         Call<OnlySuccess> feedBack(
                 @Query("actid") String actID,
                 @Query("feedback") String feedBack,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/grpdyn/getHot")
+        @POST("grpdyn/getHot")
         Call<HotDyns> getHotDyns(
                 @Query("actid") String themeID,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/act/mysign")
+        @POST("act/mysign")
         Call<GroupIDs> querySignedGroup(
                 @Query("actid") String ThemeID,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/group/collide")
+        @POST("group/collide")
         Call<BoomGroup> getBoomGroup(
                 @Query("actid") String ThemeID
         );
 
-        @POST("/group/collide")
+        @POST("group/collide")
         Call<BoomGroup> getBoomGroup(
                 @Query("actid") String ThemeID,
                 @Query("groupid") String groupID
@@ -67,7 +67,7 @@ public interface RetrofitAPI {
     }
 
     interface Group {
-        @POST("/group/createF")
+        @POST("group/createF")
         Call<com.tizi.quanzi.gson.Group> addGroup(
                 @Query("groupname") String groupName,
                 @Query(value = "grouptags", encoded = true) String groupTags,
@@ -77,23 +77,23 @@ public interface RetrofitAPI {
                 @Query("convid") String convID,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/group/findGroupAllInfoF")
+        @POST("group/findGroupAllInfoF")
         Call<GroupAllInfo> queryGroup(
                 @Query("groupid") String groupID,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/group/findTagF")
+        @POST("group/findTagF")
         Call<GroupAllInfo.TagListEntity> queryAllAvailableTag(
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/group/updateFieldF")
+        @POST("group/updateFieldF")
         Call<OnlySuccess> changeGroupInfo(
                 @Query("groupid") String groupID,
                 @Query("field") String field,
                 @Query("value") String value,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/group/findGroupTags")
+        @POST("group/findGroupTags")
         Call<GroupAllInfo.TagListEntity> queryGroupTAG(
                 @Query("groupid") String groupID,
                 @QueryMap Map<String, String> signMap);
@@ -102,18 +102,18 @@ public interface RetrofitAPI {
     }
 
     interface GroupMember {
-        @POST("/group/acceptGroupInvite")
+        @POST("group/acceptGroupInvite")
         Call<GroupAllInfo> acceptGroupInvite(
                 @Query("groupid") String groupID,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/group/exitGroupF")
+        @POST("group/exitGroupF")
         Call<OnlySuccess> exitOrDeleteMember(
                 @Query("groupid") String groupID,
                 @Query("userid") String exitUserID,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/group/dropGroupF")
+        @POST("group/dropGroupF")
         Call<OnlySuccess> dropGroup(
                 @Query("groupid") String groupID,
                 @QueryMap Map<String, String> signMap);
@@ -121,12 +121,12 @@ public interface RetrofitAPI {
 
     interface Follow {
 
-        @POST("/group/followGroupF")
+        @POST("group/followGroupF")
         Call<OnlySuccess> followGroup(
                 @Query("groupid") String groupID,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/group/cancelFollowF")
+        @POST("group/cancelFollowF")
         Call<OnlySuccess> cancelFollowGroup(
                 @Query("groupid") String groupID,
                 @QueryMap Map<String, String> signMap);
@@ -134,46 +134,46 @@ public interface RetrofitAPI {
     }
 
     interface Dyns {
-        @POST("/grpdyn/addF")
+        @POST("grpdyn/addF")
         Call<OnlySuccess> addDyn(
                 @Query("actid") String themeID,
                 @Query("grpid") String groupID,
                 @Query("pics") String pics);
 
-        @POST("/grpdyn/delF")
+        @POST("grpdyn/delF")
         Call<OnlySuccess> delDyn(
                 @Query("dynid") String dynID);
 
-        @POST("/grpdyn/findF")
+        @POST("grpdyn/findF")
         Call<com.tizi.quanzi.gson.Dyns> findDyns(
                 @Query("actid") String actID,
                 @Query("grpid") String groupID,
                 @Query("start") int start,
                 @Query("limit") int limit);
 
-        @POST("/grpdyn/zanF")
+        @POST("grpdyn/zanF")
             // TODO: 15/9/16 get zan -> onlySuccess
         Call<OnlySuccess> zan(
                 @Query("dynid") String dynID,
                 @Query("zan") int isZan);
 
-        @POST("/grpdyn/addComment")
+        @POST("grpdyn/addComment")
         Call<OnlySuccess> addComent(
                 @Query("dynid") String dynID,
                 @Query("comment") String comment);
 
-        @POST("/grpdyn/addComment")
+        @POST("grpdyn/addComment")
         Call<AddComment> addComent(
                 @Query("dynid") String dynID,
                 @Query("comment") String comment,
                 @Query("replyid") String replyID,
                 @Query("atuserid") String AtUserID);
 
-        @POST("/grpdyn/delComment")
+        @POST("grpdyn/delComment")
         Call<OnlySuccess> deleteComment(
                 @Query("cid") String commitID);
 
-        @POST("/grpdyn/findComment")
+        @POST("grpdyn/findComment")
         Call<Comments> findComment(
                 @Query("dynid") String dynid,
                 @Query("start") int start,
@@ -182,17 +182,17 @@ public interface RetrofitAPI {
     }
 
     interface FindUser {
-        @POST("/user/findUserF")
+        @POST("user/findUserF")
         Call<OtherUserInfo> getUserByAccount(
                 @Query("account") String account,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/user/findUserF")
+        @POST("user/findUserF")
         Call<OtherUserInfo> getUserByID(
                 @Query("userid") String userID,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/user/findByContact")
+        @POST("user/findByContact")
         Call<ContantUsers> findContactUser(
                 @Query(value = "mobiles", encoded = true) String mpbiles,
                 @QueryMap Map<String, String> signMap);
@@ -206,7 +206,7 @@ public interface RetrofitAPI {
     }
 
     interface UserAccount {
-        @POST("/applogin/regF")
+        @POST("applogin/regF")
         Call<Login> register(
                 @Query("account") String account,
                 @Query("username") String userName,
@@ -218,18 +218,18 @@ public interface RetrofitAPI {
                 @Query("clientmac") String clientMAC,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/applogin/updatePassF")
+        @POST("applogin/updatePassF")
         Call<OnlySuccess> changePassword(
                 @Query("account") String account,
                 @Query("password") String password);
 
-        @POST("/applogin/loginF")
+        @POST("applogin/loginF")
         Call<Login> login(
                 @Query("account") String account,
                 @Query("password") String password,
                 @QueryMap Map<String, String> signMap);
 
-        @POST("/user/updateFieldF")
+        @POST("user/updateFieldF")
         Call<OnlySuccess> changeUserInfo(
                 @Query("field") String field,
                 @Query(value = "value", encoded = true) String value,

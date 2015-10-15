@@ -6,6 +6,7 @@ import com.tizi.quanzi.gson.OnlySuccess;
 
 import retrofit.Callback;
 import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by qixingchen on 15/9/25.
@@ -22,7 +23,7 @@ public class Dyns extends RetrofitNetworkAbs {
     public void getComment(String dynID, int start, int limit) {
         dynsSer.findComment(dynID, start, limit).enqueue(new Callback<Comments>() {
             @Override
-            public void onResponse(Response<Comments> response) {
+            public void onResponse(Response<Comments> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -37,7 +38,7 @@ public class Dyns extends RetrofitNetworkAbs {
     public void addComment(String dynID, String comment) {
         dynsSer.addComent(dynID, comment).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response) {
+            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -53,7 +54,7 @@ public class Dyns extends RetrofitNetworkAbs {
     public void addComment(String dynID, String comment, String replyID, String atUserID) {
         dynsSer.addComent(dynID, comment, replyID, atUserID).enqueue(new Callback<AddComment>() {
             @Override
-            public void onResponse(Response<AddComment> response) {
+            public void onResponse(Response<AddComment> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

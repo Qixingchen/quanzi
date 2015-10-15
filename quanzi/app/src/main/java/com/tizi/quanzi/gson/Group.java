@@ -19,13 +19,6 @@ public class Group extends OnlySuccess {
      */
     private String groupId;
     private List<GroupTagsEntity> groupTags;
-    private boolean success;
-
-    public String getMsg() {
-        return msg;
-    }
-
-    private String msg;
 
     public String getGroupId() {
         return groupId;
@@ -33,10 +26,6 @@ public class Group extends OnlySuccess {
 
     public List<GroupTagsEntity> getGroupTags() {
         return groupTags;
-    }
-
-    public boolean isSuccess() {
-        return success;
     }
 
     public static class GroupTagsEntity {

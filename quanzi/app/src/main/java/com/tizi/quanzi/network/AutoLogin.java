@@ -16,6 +16,7 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Callback;
+import retrofit.Retrofit;
 
 /**
  * Created by qixingchen on 15/7/23.
@@ -91,7 +92,7 @@ public class AutoLogin extends RetrofitNetworkAbs {
 
         userAccountService.login(account, password, Tool.getSignMap()).enqueue(new Callback<Login>() {
             @Override
-            public void onResponse(retrofit.Response<Login> response) {
+            public void onResponse(retrofit.Response<Login> response, Retrofit retrofit) {
                 if (myOnResponse(response)) {
                     Login login = response.body();
                     setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());

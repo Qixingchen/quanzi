@@ -10,6 +10,7 @@ import com.tizi.quanzi.tool.Tool;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by qixingchen on 15/9/11.
@@ -41,7 +42,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
         themeCall.enqueue(new Callback<Theme>() {
             @Override
-            public void onResponse(retrofit.Response<Theme> response) {
+            public void onResponse(retrofit.Response<Theme> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -64,7 +65,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
         hotDynsCall.enqueue(new Callback<HotDyns>() {
             @Override
-            public void onResponse(Response<HotDyns> response) {
+            public void onResponse(Response<HotDyns> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -84,7 +85,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
         themeService.querySignedGroup(themeID, Tool.getSignMap())
                 .enqueue(new Callback<GroupIDs>() {
                     @Override
-                    public void onResponse(Response<GroupIDs> response) {
+                    public void onResponse(Response<GroupIDs> response, Retrofit retrofit) {
                         myOnResponse(response);
                     }
 
@@ -108,7 +109,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
         themeCall.enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response) {
+            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -130,7 +131,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
         themeCall.enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response) {
+            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -150,7 +151,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
     public void getBoomGroup(String themeID) {
         themeService.getBoomGroup(themeID).enqueue(new Callback<BoomGroup>() {
             @Override
-            public void onResponse(Response<BoomGroup> response) {
+            public void onResponse(Response<BoomGroup> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -170,7 +171,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
     public void getBoomGroup(String themeID, String groupID) {
         themeService.getBoomGroup(themeID, groupID).enqueue(new Callback<BoomGroup>() {
             @Override
-            public void onResponse(Response<BoomGroup> response) {
+            public void onResponse(Response<BoomGroup> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

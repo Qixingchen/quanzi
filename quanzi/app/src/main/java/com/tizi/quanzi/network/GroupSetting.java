@@ -4,6 +4,7 @@ import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Callback;
+import retrofit.Retrofit;
 
 /**
  * Created by qixingchen on 15/9/9.
@@ -13,11 +14,11 @@ import retrofit.Callback;
 public class GroupSetting extends RetrofitNetworkAbs {
 
 
+    private RetrofitAPI.Group groupSer = RetrofitNetwork.retrofit.create(RetrofitAPI.Group.class);
+
     public static GroupSetting getInstance() {
         return new GroupSetting();
     }
-
-    private RetrofitAPI.Group groupSer = RetrofitNetwork.retrofit.create(RetrofitAPI.Group.class);
 
     /**
      * 更改群的信息
@@ -30,7 +31,7 @@ public class GroupSetting extends RetrofitNetworkAbs {
 
         groupSer.changeGroupInfo(groupID, field, value, Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response) {
+            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

@@ -6,6 +6,7 @@ import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Callback;
 import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by qixingchen on 15/9/2.
@@ -16,11 +17,11 @@ import retrofit.Response;
 public class UserManageInGroup extends RetrofitNetworkAbs {
 
 
+    private RetrofitAPI.GroupMember groupMemberSer = RetrofitNetwork.retrofit.create(RetrofitAPI.GroupMember.class);
+
     public static UserManageInGroup getNewInstance() {
         return new UserManageInGroup();
     }
-
-    private RetrofitAPI.GroupMember groupMemberSer = RetrofitNetwork.retrofit.create(RetrofitAPI.GroupMember.class);
 
     /**
      * 将用户从圈子中删除
@@ -29,7 +30,7 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
 
         groupMemberSer.exitOrDeleteMember(GroupID, UserID, Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response) {
+            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -47,7 +48,7 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
 
         groupMemberSer.acceptGroupInvite(GroupID, Tool.getSignMap()).enqueue(new Callback<GroupAllInfo>() {
             @Override
-            public void onResponse(retrofit.Response<GroupAllInfo> response) {
+            public void onResponse(retrofit.Response<GroupAllInfo> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -65,7 +66,7 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
 
         groupMemberSer.dropGroup(GroupID, Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response) {
+            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

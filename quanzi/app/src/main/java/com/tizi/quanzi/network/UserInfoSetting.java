@@ -5,6 +5,7 @@ import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Callback;
+import retrofit.Retrofit;
 
 /**
  * Created by qixingchen on 15/9/10.
@@ -32,7 +33,7 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
         userAccountSer.changeUserInfo(field, value, AppStaticValue.getUserID(),
                 Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response) {
+            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

@@ -4,6 +4,7 @@ import com.tizi.quanzi.gson.ApiInfoGson;
 
 import retrofit.Callback;
 import retrofit.Response;
+import retrofit.Retrofit;
 
 /**
  * Created by qixingchen on 15/9/18.
@@ -25,7 +26,7 @@ public class ApiInfo extends RetrofitNetworkAbs {
     public void getAPiinfo() {
         apiInfoSer.getApiVer().enqueue(new Callback<ApiInfoGson>() {
             @Override
-            public void onResponse(Response<ApiInfoGson> response) {
+            public void onResponse(Response<ApiInfoGson> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

@@ -194,7 +194,7 @@ public class ChatMessFormatFromAVIM {
     /*Attrs*/
 
     /**
-     * 设置attrs,需要在 mainMessageInfoFromAvimMessage 后调用
+     * 从 attrs 获取信息,需要在 mainMessageInfoFromAvimMessage 后调用
      *
      * @param chatMessage 需要被设置的 ChatMessage
      * @param avimMessage 含有 attrs 的信息

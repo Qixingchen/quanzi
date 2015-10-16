@@ -75,24 +75,25 @@ public class CompleteUesrInfo extends BaseFragment {
             public void onClick(View v) {
 
                 String username = nickNameInputLayout.getEditText().getText().toString();
-                int sexid = sexGroup.getCheckedRadioButtonId();
                 if (username.compareTo("") == 0) {
                     Snackbar.make(mActivity.findViewById(R.id.register_fragment),
                             "用户名为空", Snackbar.LENGTH_LONG).show();
                     return;
                 }
-                if (sexid == -1) {
+                int buttonID = sexGroup.getCheckedRadioButtonId();
+                if (buttonID == -1) {
                     Snackbar.make(mActivity.findViewById(R.id.register_fragment),
                             "性别为空", Snackbar.LENGTH_LONG).show();
                     return;
                 }
+                int sexID = sexGroup.indexOfChild(sexGroup.findViewById(buttonID));
                 if (photoOnlineUri == null || photoOnlineUri.compareTo("") == 0) {
                     Snackbar.make(mActivity.findViewById(R.id.register_fragment),
                             "头像为空", Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
-                allDone.CompUserInfoOK(username, sexid, photoOnlineUri);
+                allDone.CompUserInfoOK(username, sexID, photoOnlineUri);
             }
         });
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {

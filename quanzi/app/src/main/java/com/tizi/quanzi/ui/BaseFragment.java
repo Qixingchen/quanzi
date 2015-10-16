@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.tool.Tool;
 
 /**
  * Created by qixingchen on 15/8/31.
@@ -28,6 +29,7 @@ public abstract class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         findViews(view);
+        Tool.hideKeyboard(view, getActivity());
     }
 
     @Override

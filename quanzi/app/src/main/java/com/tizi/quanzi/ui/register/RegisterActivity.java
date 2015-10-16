@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,6 +21,7 @@ import com.tizi.quanzi.network.RetrofitNetwork;
 import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.Tool;
+import com.tizi.quanzi.ui.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 
-public class RegisterActivity extends AppCompatActivity implements Register1stepFragment.NextStep,
-        Register2stepFragment.NextStep, CompleteUesrInfo.AllDone {
+public class RegisterActivity extends BaseActivity implements Register1stepFragment.NextStep,
+        CompleteUesrInfo.AllDone {
 
     private final static String TAG = RegisterActivity.class.getSimpleName();
     private String phoneNumber;
@@ -44,21 +44,33 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+    }
+
+    /**
+     * 获取布局控件
+     */
+    @Override
+    protected void findView() {
+
+    }
+
+    /**
+     * 初始化View的一些数据
+     */
+    @Override
+    protected void initView() {
         Register1stepFragment register1StepFragment = new Register1stepFragment();
         register1StepFragment.setNextStep(this);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.register_fragment, register1StepFragment).commit();
+    }
 
-        //        //todo: 测试用，跳过了验证码
-        //        Register2stepFragment register2stepFragment = new Register2stepFragment();
-        //        register2stepFragment.setNextStep(this);
-        //        getSupportFragmentManager().beginTransaction()
-        //                .replace(R.id.register_fragment, register2stepFragment).commit();
-        //
-        //        completeUesrInfo = new CompleteUesrInfo();
-        //        completeUesrInfo.setAllDone(this);
-        //        getSupportFragmentManager().beginTransaction()
-        //                .replace(R.id.register_fragment, completeUesrInfo).commit();
+    /**
+     * 设置点击监听
+     */
+    @Override
+    protected void setViewEvent() {
+
     }
 
 
@@ -81,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
 
     /**
      * 注册第一步完成（手机验证）
-     * 跳转第二界面
+     * 跳转信息补全
      *
      * @param phoneNumber 用户手机号
      */
@@ -90,25 +102,6 @@ public class RegisterActivity extends AppCompatActivity implements Register1step
         this.phoneNumber = phoneNumber;
         this.password = password;
         AppStaticValue.setUserID(phoneNumber);
-        //        Register2stepFragment register2stepFragment = new Register2stepFragment();
-        //        register2stepFragment.setNextStep(this);
-        //        getSupportFragmentManager().beginTransaction()
-        //                .replace(R.id.register_fragment, register2stepFragment).commit();
-        completeUesrInfo = new CompleteUesrInfo();
-        completeUesrInfo.setAllDone(this);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.register_fragment, completeUesrInfo).commit();
-    }
-
-    /**
-     * 注册第2步完成（密码）
-     * 跳转补全
-     *
-     * @param password 用户密码
-     */
-    @Override
-    public void regi2StepOK(String password) {
-        this.password = password;
         completeUesrInfo = new CompleteUesrInfo();
         completeUesrInfo.setAllDone(this);
         getSupportFragmentManager().beginTransaction()

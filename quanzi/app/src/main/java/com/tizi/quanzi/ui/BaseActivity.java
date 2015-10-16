@@ -1,5 +1,6 @@
 package com.tizi.quanzi.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 
 /**
  * Created by qixingchen on 15/8/31.
@@ -20,11 +22,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final String TAG = this.getClass().getSimpleName();
     protected Context mContext;
     protected View view;
+    protected Activity mActivity;
 
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         mContext = this;
+        mActivity = this;
         view = getWindow().getDecorView().getRootView();
+        Tool.hideKeyboard(view, this);
         findView();
         initView();
         setViewEvent();

@@ -1,5 +1,6 @@
 package com.tizi.quanzi.tool;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,6 +8,11 @@ import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
@@ -211,5 +217,58 @@ public class Tool {
     public static long getBeijinTime() {
         return Calendar.getInstance().getTimeInMillis() + AppStaticValue.timeAddtion;
     }
+
+    /**
+     * Hide keyboard on touch of UI
+     */
+    public static void hideKeyboard(View view, final Activity activity) {
+
+        if (view instanceof ViewGroup) {
+
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+
+                View innerView = ((ViewGroup) view).getChildAt(i);
+
+                hideKeyboard(innerView, activity);
+            }
+        }
+        if (!(view instanceof EditText)) {
+
+            view.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(v, activity);
+                    return false;
+                }
+
+            });
+        }
+
+    }
+
+    /**
+     * Hide keyboard while focus is moved
+     */
+    private static void hideSoftKeyboard(View view, Activity activity) {
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) activity
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputManager != null) {
+                if (android.os.Build.VERSION.SDK_INT < 11) {
+                    inputManager.hideSoftInputFromWindow(view.getWindowToken(),
+                            0);
+                } else {
+                    if (activity.getCurrentFocus() != null) {
+                        inputManager.hideSoftInputFromWindow(activity
+                                        .getCurrentFocus().getWindowToken(),
+                                InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                    view.clearFocus();
+                }
+                view.clearFocus();
+            }
+        }
+    }
+
 
 }

@@ -9,7 +9,6 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -86,10 +85,6 @@ public class LoginActivity extends BaseActivity {
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromInputMethod(phoneNumberEditText.getWindowToken(), 0);
-                imm.hideSoftInputFromInputMethod(passwordEditText.getWindowToken(), 0);
-                imm.hideSoftInputFromInputMethod(LoginButton.getWindowToken(), 0);
 
                 String phoneNumber = phoneNumberEditText.getText().toString();
                 String password = passwordEditText.getText().toString();

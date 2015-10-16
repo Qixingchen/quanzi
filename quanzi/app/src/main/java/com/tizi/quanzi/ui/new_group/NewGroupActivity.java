@@ -75,6 +75,7 @@ public class NewGroupActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_next_step) {
+
             NewGroupStep1Fragment.NewGroupStep1Ans temp = newGroupStep1Fragment.getNewGroupAns();
             /*下一步*/
             if (temp.complete) {

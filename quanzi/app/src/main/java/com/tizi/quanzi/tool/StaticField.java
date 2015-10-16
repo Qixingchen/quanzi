@@ -109,7 +109,8 @@ public class StaticField {
 
         public final static int CHAT_RECORD_AUDIO = 101;
         public final static int userInfoSetFragment_location = 102;
-        public final static int addContactUsers = 103;
+        public final static int addContactUsersInQuanziZone = 103;
+        public final static int addContactUsersInNewGroup = 104;
 
         public static boolean isPermissionRequest(int code) {
             return code >= 0 && code <= 255;

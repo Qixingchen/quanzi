@@ -186,8 +186,7 @@ public class QuanziSetFragment extends BaseFragment {
                                                     @Override
                                                     public void OK() {
                                                         GroupList.getInstance().deleteGroup(groupClass.ID);
-                                                        Intent mainActivity = new Intent(mActivity, MainActivity.class);
-                                                        startActivity(mainActivity);
+                                                        returnToMainActivity();
                                                     }
 
                                                     @Override
@@ -210,9 +209,7 @@ public class QuanziSetFragment extends BaseFragment {
                                                     @Override
                                                     public void OK() {
                                                         GroupList.getInstance().deleteGroup(groupClass.ID);
-                                                        Intent mainActivity = new Intent(mActivity, MainActivity.class);
-                                                        mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                        startActivity(mainActivity);
+                                                        returnToMainActivity();
                                                     }
 
                                                     @Override
@@ -232,6 +229,12 @@ public class QuanziSetFragment extends BaseFragment {
 
             );
         }
+    }
+
+    private void returnToMainActivity() {
+        Intent mainActivity = new Intent(mActivity, MainActivity.class);
+        mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainActivity);
     }
 
 }

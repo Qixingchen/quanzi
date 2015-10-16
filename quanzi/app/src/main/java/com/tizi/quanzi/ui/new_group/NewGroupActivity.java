@@ -85,8 +85,6 @@ public class NewGroupActivity extends BaseActivity {
                 toolbar.setTitle("邀请好友");
                 newGroupStep2Fragment = new NewGroupStep2Fragment();
                 newGroupStep2Fragment.setAns(ans);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, newGroupStep2Fragment).commit();
                 String GroupName = ans.groupName;
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
@@ -98,6 +96,9 @@ public class NewGroupActivity extends BaseActivity {
                             public void onOK(Object ts) {
                                 Group group = (Group) ts;
 
+                                newGroupStep2Fragment.setGroupID(group.getGroupId());
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment, newGroupStep2Fragment).commit();
                                 GroupClass groupClass = new GroupClass();
                                 groupClass.ID = group.getGroupId();
                                 groupClass.Name = ans.groupName;

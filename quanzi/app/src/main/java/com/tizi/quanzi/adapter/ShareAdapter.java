@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * Created by qixingchen on 15/8/28.
  * 分享适配器
+ * @deprecated 并没有用了
  */
 public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder> {
 
@@ -88,7 +89,7 @@ public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            appIcon = (ImageView) itemView.findViewById(R.id.share_pic);
+            //            appIcon = (ImageView) itemView.findViewById(R.id.share_pic);
             share_text = (TextView) itemView.findViewById(R.id.share_text);
             share_item = itemView.findViewById(R.id.share_item);
         }

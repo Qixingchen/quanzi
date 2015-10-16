@@ -165,7 +165,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            int code = StaticField.PermissionRequestCode.addContactUsers;
+            int code = StaticField.PermissionRequestCode.addContactUsersInQuanziZone;
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CONTACTS}, code);
             return;
         }

@@ -1,8 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.tizi.quanzi.ui.new_group.NewGroupStep2Fragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tizi.quanzi.ui.new_group.NewGroupStep2Fragment">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -22,11 +23,6 @@
             android:gravity="center"
             android:textSize="@dimen/normal_text_size"
             tools:text="123333333"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="通过以下方式邀请好友"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/shareRecyclerView"

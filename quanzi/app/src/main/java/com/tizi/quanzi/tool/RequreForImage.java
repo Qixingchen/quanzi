@@ -244,12 +244,15 @@ public class RequreForImage {
     public void onRequestPermissionsResult(PermissionAnser permissionAnser) {
         if (StaticField.PermissionRequestCode.isImagePermissionEvent(permissionAnser.requestCode)) {
 
-            if (permissionAnser.grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                showDialogAndCallIntent(lastTitle, permissionAnser.requestCode, lastAllowMultiple, lastSelectLimit);
-            } else {
-                Snackbar.make(mActivity.getWindow().getDecorView().getRootView(),
-                        "您拒绝了相关权限!", Snackbar.LENGTH_LONG).show();
+            for (int ans : permissionAnser.grantResults) {
+                if (ans == PackageManager.PERMISSION_DENIED) {
+                    Snackbar.make(mActivity.getWindow().getDecorView().getRootView(),
+                            "您拒绝了权限!", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
             }
+            showDialogAndCallIntent(lastTitle, permissionAnser.requestCode, lastAllowMultiple, lastSelectLimit);
+
         }
     }
 }

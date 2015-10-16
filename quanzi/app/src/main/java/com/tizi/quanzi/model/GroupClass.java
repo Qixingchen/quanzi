@@ -3,7 +3,7 @@ package com.tizi.quanzi.model;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.gson.GroupAllInfo;
+import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.Login;
 
 import java.io.Serializable;
@@ -75,24 +75,26 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
     /**
      * 将 GroupAllInfo 转换为 GroupClass
      *
-     * @param groupAllInfo 须转换的 GroupAllInfo {@link GroupAllInfo}
+     * @param groupInviteAns 须转换的 GroupInviteAns {@link GroupInviteAns}
      *
      * @return 转换完成的 GroupClass
      */
-    @Deprecated
-    public static GroupClass getGroupByGroupUserInfo(GroupAllInfo groupAllInfo, String groupID,
-                                                     String convId) {
+    public static GroupClass getGroupByGroupInviteAns(GroupInviteAns groupInviteAns) {
         GroupClass groupClass = new GroupClass();
-        groupClass.ID = groupID;
-        groupClass.Name = groupAllInfo.group.groupName;
-        groupClass.Face = groupAllInfo.group.icon;
-        groupClass.Type = Integer.valueOf(groupAllInfo.group.type);
-        groupClass.Notice = "";
-        groupClass.convId = convId;
+        Login.GroupEntity groupans = groupInviteAns.groups.get(0);
+        groupClass.ID = groupans.id;
+        groupClass.Name = groupans.groupName;
+        groupClass.Face = groupans.icon;
+        groupClass.Type = groupans.type;
+        groupClass.Notice = groupans.notice;
+        groupClass.convId = groupans.convId;
         groupClass.validation = true;
-        groupClass.createUser = AppStaticValue.getUserID();
-        // TODO: 15/9/3 信息不够！
-
+        groupClass.createUser = groupans.createUser;
+        groupClass.UnreadCount = 0;
+        groupClass.lastMessTime = 0;
+        groupClass.lastMess = "";
+        groupClass.background = groupans.bg;
+        groupClass.needNotifi = true;
         return groupClass;
     }
 

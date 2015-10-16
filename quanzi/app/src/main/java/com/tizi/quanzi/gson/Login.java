@@ -191,27 +191,27 @@ public class Login extends OnlySuccess {
          */
 
         @SerializedName("id")
-        private String id;
+        public String id;
         @SerializedName("groupNo")
-        private String groupNo;
+        public String groupNo;
         @SerializedName("groupName")
-        private String groupName;
+        public String groupName;
         @SerializedName("notice")
-        private String notice;
+        public String notice;
         @SerializedName("type")
-        private int type;
+        public int type;
         @SerializedName("convId")
-        private String convId;
+        public String convId;
         @SerializedName("icon")
-        private String icon;
+        public String icon;
         @SerializedName("bg")
-        private String bg;
+        public String bg;
         @SerializedName("remark")
-        private String remark;
+        public String remark;
         @SerializedName("validation")
-        private boolean validation;
+        public boolean validation;
         @SerializedName("createUser")
-        private String createUser;
+        public String createUser;
 
         public String getId() {
             return id;

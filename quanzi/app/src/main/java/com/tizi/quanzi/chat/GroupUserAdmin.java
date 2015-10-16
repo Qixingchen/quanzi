@@ -13,7 +13,7 @@ import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.BoomGroup;
-import com.tizi.quanzi.gson.GroupAllInfo;
+import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
@@ -240,8 +240,8 @@ public class GroupUserAdmin {
         UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
-                GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
-                GroupClass groupClass = GroupClass.getGroupByGroupUserInfo(groupAllInfo, groupID, convID);
+                GroupInviteAns groupInviteAns = (GroupInviteAns) ts;
+                GroupClass groupClass = GroupClass.getGroupByGroupInviteAns(groupInviteAns);
                 GroupList.getInstance().addGroup(groupClass);
             }
 

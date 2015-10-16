@@ -1,6 +1,6 @@
 package com.tizi.quanzi.network;
 
-import com.tizi.quanzi.gson.GroupAllInfo;
+import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.tool.Tool;
 
@@ -46,9 +46,9 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
      */
     public void acceptJoinGroup(String GroupID, String UserID) {
 
-        groupMemberSer.acceptGroupInvite(GroupID, Tool.getSignMap()).enqueue(new Callback<GroupAllInfo>() {
+        groupMemberSer.acceptGroupInvite(GroupID, UserID).enqueue(new Callback<GroupInviteAns>() {
             @Override
-            public void onResponse(retrofit.Response<GroupAllInfo> response, Retrofit retrofit) {
+            public void onResponse(retrofit.Response<GroupInviteAns> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

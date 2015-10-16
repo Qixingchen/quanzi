@@ -7,6 +7,7 @@ import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupIDs;
+import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.gson.OnlySuccess;
@@ -103,9 +104,9 @@ public interface RetrofitAPI {
 
     interface GroupMember {
         @POST("group/acceptGroupInvite")
-        Call<GroupAllInfo> acceptGroupInvite(
+        Call<GroupInviteAns> acceptGroupInvite(
                 @Query("groupid") String groupID,
-                @QueryMap Map<String, String> signMap);
+                @Query("userid") String userid);
 
         @POST("group/exitGroupF")
         Call<OnlySuccess> exitOrDeleteMember(

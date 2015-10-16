@@ -142,6 +142,7 @@ public class ChatMessFormatFromAVIM {
     /*转换音频消息*/
     private static ChatMessage voiceChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
+        chatMessage = setAttrsInfo(chatMessage, message);
         chatMessage.type = StaticField.ChatContantType.VOICE;
         chatMessage.url = ((AVIMAudioMessage) message).getFileUrl();
         chatMessage.voice_duration = ((AVIMAudioMessage) message).getDuration();

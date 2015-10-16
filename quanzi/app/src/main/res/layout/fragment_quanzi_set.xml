@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -123,12 +123,12 @@
                             android:textSize="@dimen/normal_text_size"/>
 
                         <Switch
-                            android:id="@+id/mess_notifi_switch"
+                            android:id="@+id/ignore_notifi_switch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:gravity="end"/>
-                    </LinearLayout>
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="4dp"/>
+                    </RelativeLayout>
 
 
                     <TextView

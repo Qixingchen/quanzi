@@ -36,7 +36,7 @@ import com.tizi.quanzi.ui.main.MainActivity;
 public class QuanziSetFragment extends BaseFragment {
 
     private TextView quanziName, quanziTag, quanziSign, deleteMess;
-    private Switch messNotifiSwitch;
+    private Switch ignoreNotifiSwitch;
     private Button exitQuanzi;
     private GroupAllInfo groupAllInfo;
 
@@ -63,7 +63,7 @@ public class QuanziSetFragment extends BaseFragment {
         quanziTag = (TextView) view.findViewById(R.id.quanzi_tag);
         quanziSign = (TextView) view.findViewById(R.id.quanzi_sign);
         deleteMess = (TextView) view.findViewById(R.id.delete_mess);
-        messNotifiSwitch = (Switch) view.findViewById(R.id.mess_notifi_switch);
+        ignoreNotifiSwitch = (Switch) view.findViewById(R.id.ignore_notifi_switch);
         exitQuanzi = (Button) view.findViewById(R.id.exit_quanzi);
 
     }
@@ -75,6 +75,8 @@ public class QuanziSetFragment extends BaseFragment {
             Log.e(TAG, "group 获取失败");
             return;
         }
+
+        ignoreNotifiSwitch.setChecked(!group.getNeedNotifi());
 
 
         if (groupAllInfo != null) {
@@ -145,7 +147,7 @@ public class QuanziSetFragment extends BaseFragment {
                     builder.create().show();
                 }
             });
-            messNotifiSwitch.setOnCheckedChangeListener(
+            ignoreNotifiSwitch.setOnCheckedChangeListener(
                     new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -153,7 +155,6 @@ public class QuanziSetFragment extends BaseFragment {
                             GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(group.ID);
                             if (groupClass != null) {
                                 if (isChecked) {
-
                                     groupClass.setNeedNotifi(false, true);
                                 } else {
                                     groupClass.setNeedNotifi(true, true);

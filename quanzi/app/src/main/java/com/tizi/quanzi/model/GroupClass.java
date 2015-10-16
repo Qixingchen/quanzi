@@ -102,6 +102,10 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         return needNotifi;
     }
 
+    public void setNeedNotifiFromPrefer() {
+        this.needNotifi = AppStaticValue.getNotifiPreferences().getBoolean(ID, true);
+    }
+
     public void setNeedNotifi(Boolean needNotifi, boolean NeedWrite) {
         if (NeedWrite) {
             AppStaticValue.getNotifiPreferences().edit().putBoolean(ID, needNotifi).apply();

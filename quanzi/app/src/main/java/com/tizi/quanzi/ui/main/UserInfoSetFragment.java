@@ -171,19 +171,20 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
             case R.id.userSex:
                 final int[] position = {0};
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(mActivity);
-                builder2.setSingleChoiceItems(new String[]{"男", "女"}, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                position[0] = 0;
-                                break;
-                            case 1:
-                                position[0] = 1;
-                                break;
-                        }
-                    }
-                }).setTitle("选择性别").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                builder2.setSingleChoiceItems(new String[]{"男", "女"}, MyUserInfo.getInstance().getUserInfo().getSex(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        position[0] = 0;
+                                        break;
+                                    case 1:
+                                        position[0] = 1;
+                                        break;
+                                }
+                            }
+                        }).setTitle("选择性别").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UserInfoSetting.getNewInstance().changeSex(String.valueOf(position[0]));

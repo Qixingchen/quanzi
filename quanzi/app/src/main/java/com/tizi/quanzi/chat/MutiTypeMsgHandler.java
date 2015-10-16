@@ -9,6 +9,7 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessageHandler;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
@@ -53,6 +54,11 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
     public static void HandlerSystemMess(SystemMessage systemMessage, boolean ignore) {
 
         if (ignore) {
+            return;
+        }
+
+        /*自己发出的信息 忽略*/
+        if (systemMessage.getUser_id().compareTo(MyUserInfo.getInstance().getUserInfo().getId()) == 0) {
             return;
         }
 

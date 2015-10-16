@@ -106,6 +106,13 @@
             android:name=".ui.dyns.DynsActivity"
             android:label="@string/title_activity_dyns">
         </activity>
+        <activity
+            android:name="com.darsh.multipleimageselect.activities.AlbumSelectActivity"
+            android:theme="@style/MultipleImageSelectTheme">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

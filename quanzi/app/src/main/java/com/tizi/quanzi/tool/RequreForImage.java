@@ -12,6 +12,8 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 
+import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
+import com.darsh.multipleimageselect.helpers.Constants;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.otto.BusProvider;
@@ -32,6 +34,8 @@ public class RequreForImage {
     private String photoTakenUri;
     private Activity mActivity;
     private String lastTitle;
+    private int lastSelectLimit;
+    private boolean lastAllowMultiple;
 
 
     public RequreForImage(Activity mActivity) {
@@ -51,13 +55,26 @@ public class RequreForImage {
         }
     }
 
+    public void showDialogAndCallIntent(String Title, int eventCode) {
+        showDialogAndCallIntent(Title, eventCode, false, 1);
+    }
+
+    public void showDialogAndCallIntent(String Title, int eventCode, boolean allMultiple) {
+        showDialogAndCallIntent(Title, eventCode, false, 1);
+    }
+
     /**
      * 显示选择对话框
      *
-     * @param Title 对话框标题
+     * @param Title         对话框标题
+     * @param eventCode     授权事件代码 {@link com.tizi.quanzi.tool.StaticField.PermissionRequestCode}
+     * @param allowMultiple 是否允许多选
+     * @param selectLimit   允许采集的最大数量
      */
-    public void showDialogAndCallIntent(String Title, int eventCode) {
+    public void showDialogAndCallIntent(String Title, int eventCode, final boolean allowMultiple, final int selectLimit) {
         lastTitle = Title;
+        lastSelectLimit = selectLimit;
+        lastAllowMultiple = allowMultiple;
 
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -77,10 +94,11 @@ public class RequreForImage {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
-                                        intentFromGallery.setType("image/*"); // 设置文件类型
-                                        mActivity.startActivityForResult(intentFromGallery,
-                                                StaticField.ImageRequreCode.IMAGE_REQUEST_CODE);
+                                        if (allowMultiple) {
+                                            intentForMultiple(selectLimit);
+                                        } else {
+                                            intentForSingle();
+                                        }
                                         break;
                                     case 1:
                                         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -112,6 +130,22 @@ public class RequreForImage {
                 }
 
         ).show();
+    }
+
+    /*发起单选*/
+    private void intentForSingle() {
+        Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
+        intentFromGallery.setType("image/*"); // 设置文件类型
+        mActivity.startActivityForResult(intentFromGallery,
+                StaticField.ImageRequreCode.IMAGE_REQUEST_CODE);
+    }
+
+    /*发起多选,包括如果本身应该是多选,只是因为已经选了多张而使得limit=1的情况*/
+    private void intentForMultiple(int limit) {
+        Intent intent = new Intent(mActivity, AlbumSelectActivity.class);
+        //set limit on number of images that can be selected, default is 10
+        intent.putExtra(Constants.INTENT_EXTRA_LIMIT, limit);
+        mActivity.startActivityForResult(intent, Constants.REQUEST_CODE);
     }
 
 
@@ -211,7 +245,7 @@ public class RequreForImage {
         if (StaticField.PermissionRequestCode.isImagePermissionEvent(permissionAnser.requestCode)) {
 
             if (permissionAnser.grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                showDialogAndCallIntent(lastTitle, permissionAnser.requestCode);
+                showDialogAndCallIntent(lastTitle, permissionAnser.requestCode, lastAllowMultiple, lastSelectLimit);
             } else {
                 Snackbar.make(mActivity.getWindow().getDecorView().getRootView(),
                         "您拒绝了相关权限!", Snackbar.LENGTH_LONG).show();

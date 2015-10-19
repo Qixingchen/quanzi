@@ -76,6 +76,7 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
                     @Override
                     public void onClick(View v) {
                         holder.progressBar.setVisibility(View.VISIBLE);
+                        holder.groupFace.setClickable(false);
 
                         ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                             @Override
@@ -89,6 +90,7 @@ public class ThemeSignUpGroupAdapter extends RecyclerView.Adapter<ThemeSignUpGro
                                         isSignedIn.add(position, selectAfter);
                                         holder.setBorder(mContext, selectAfter);
                                         holder.progressBar.setVisibility(View.GONE);
+                                        holder.groupFace.setClickable(true);
                                     }
                                 }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1200);
                             }

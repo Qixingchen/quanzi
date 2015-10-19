@@ -3,9 +3,9 @@ package com.tizi.quanzi.network;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
@@ -93,12 +93,13 @@ public class AutoLogin extends RetrofitNetworkAbs {
         userAccountService.login(account, password, Tool.getSignMap()).enqueue(new Callback<Login>() {
             @Override
             public void onResponse(retrofit.Response<Login> response, Retrofit retrofit) {
-                if (myOnResponse(response)) {
+                if (response.isSuccess() && response.body().success) {
                     Login login = response.body();
                     setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     PrivateMessPairList.getInstance().getGroupsFromDataBase();
-                    StartMainActivity.startByLoginGroup(login.getGroup(), App.getApplication());
+                    ((GroupList) (GroupList.getInstance())).setGroupListByLoginGroup(login.getGroup());
+                    myOnResponse(response);
                 }
             }
 

@@ -17,6 +17,7 @@ import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.network.AutoLogin;
 
 
 /**
@@ -52,7 +53,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
         AVAnalytics.enableCrashReport(this, true);
 
-
         AVIMClient.setClientEventHandler(MyAVIMClientEventHandler.getInstance());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
 
@@ -66,6 +66,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
                         .enableWebKitInspector(
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
+
+        AutoLogin.getNewInstance().loginFromPrefer();
 
         //test build
 

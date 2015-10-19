@@ -8,9 +8,9 @@ import android.support.design.widget.Snackbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.tizi.quanzi.Intent.StartMainActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.gson.Login;
@@ -22,6 +22,7 @@ import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseActivity;
+import com.tizi.quanzi.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +133,11 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     PrivateMessPairList.getInstance().getGroupsFromDataBase();
                     List<Login.GroupEntity> groups = new ArrayList<>();
-                    StartMainActivity.startByLoginGroup(groups, context);
+                    ((GroupList) GroupList.getInstance()).setGroupListByLoginGroup(groups);
+                    //start intent
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(intent);
                 } else {
                     String mess = response.isSuccess() ? response.body().msg : response.message();
                     Log.w(TAG, mess);

@@ -16,12 +16,14 @@ import android.widget.TextView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.AutoLogin;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
+import com.tizi.quanzi.ui.main.MainActivity;
 import com.tizi.quanzi.ui.register.RegisterActivity;
 
 /**
@@ -41,7 +43,20 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         //分析GCM分布
         GetGMSStatue.haveGMS(this);
-        AutoLogin.getNewInstance().loginFromPrefer();
+        AutoLogin.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                //启动主界面
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onError(String Message) {
+
+            }
+        }).loginFromPrefer();
         Tool.flushTimeDifference();
     }
 
@@ -99,12 +114,19 @@ public class LoginActivity extends BaseActivity {
                 AutoLogin.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {
+                        Login login = (Login) ts;
+
                         //储存密码
                         SharedPreferences preferences =
                                 getSharedPreferences(StaticField.Preferences.TOKENFILE,
                                         MODE_PRIVATE);
                         preferences.edit().putString(StaticField.Preferences.PASSWORD,
                                 GetPassword.preHASH(passwordEditText.getText().toString())).apply();
+                        //启动主界面
+                        //start intent
+                        Intent intent = new Intent(mActivity, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                     }
 
                     @Override

@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * Created by qixingchen on 15/8/28.
  * 分享适配器
+ *
  * @deprecated 并没有用了
  */
 public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder> {
@@ -69,7 +70,7 @@ public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder
                 Intent openInChooser = new Intent(Intent.ACTION_SEND);
                 openInChooser.setType("text/plain");
                 openInChooser.setPackage(intents.get(position).getSourcePackage());
-                openInChooser.putExtra(Intent.EXTRA_TEXT, "The text you want to share");
+                openInChooser.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_the_app));
                 context.startActivity(openInChooser);
             }
         });

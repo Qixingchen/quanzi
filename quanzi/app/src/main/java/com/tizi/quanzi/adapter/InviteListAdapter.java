@@ -33,10 +33,11 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (users != null && position < users.size()) {
-            return USER_VIEW;
-        } else {
+
+        if (users == null || position == users.size()) {
             return SHARE_VIEW;
+        } else {
+            return USER_VIEW;
         }
     }
 
@@ -64,7 +65,7 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             case SHARE_VIEW:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_invite, parent, false);
+                        .inflate(R.layout.item_share, parent, false);
                 vh = new ShareViewHolder(v) {
                 };
                 return vh;

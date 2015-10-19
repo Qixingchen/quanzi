@@ -1,21 +1,49 @@
 package com.tizi.quanzi.ui.dyns;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.ui.BaseActivity;
 
-public class DynsActivity extends AppCompatActivity {
+public class DynsActivity extends BaseActivity {
+
+    DynsActivityFragment dynsActivityFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dyns);
-        DynsActivityFragment dynsActivityFragment = new DynsActivityFragment();
+        dynsActivityFragment = new DynsActivityFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynsActivityFragment)
                 .commit();
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+    }
+
+    /**
+     * 获取布局控件
+     */
+    @Override
+    protected void findView() {
+
+    }
+
+    /**
+     * 初始化View的一些数据
+     */
+    @Override
+    protected void initView() {
+
+    }
+
+    /**
+     * 设置点击监听
+     */
+    @Override
+    protected void setViewEvent() {
+
     }
 
 
@@ -34,7 +62,10 @@ public class DynsActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_send_dyn) {
+            SendDynFragment sendDynFragment = SendDynFragment.newInstance(null, null);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, sendDynFragment)
+                    .addToBackStack("SendDynFragment").commit();
             return true;
         }
 

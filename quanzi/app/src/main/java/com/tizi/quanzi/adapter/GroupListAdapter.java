@@ -12,15 +12,14 @@ import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.tool.GetThumbnailsUri;
 
 import java.util.List;
 
 /**
  * Created by qixingchen on 15/7/16.
- * 群组列表Adapter
+ * 群组聊天列表Adapter
  */
-public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyViewHolder> {
+public class GroupListAdapter extends RecyclerViewAdapterAbs {
 
     private List<GroupClass> groupClasses;
     private Context context;
@@ -48,63 +47,67 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
      * 创建 ViewHolder
      *
      * @param viewGroup 需要创建ViewHolder的 ViewGroup
-     * @param i         记录类型
+     * @param viewType  记录类型
      *
-     * @return MyViewHolder {@link com.tizi.quanzi.adapter.GroupListAdapter.MyViewHolder}
+     * @return ViewHolder
      */
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        // create a new view
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_group, viewGroup, false);
         // set the view's size, margins, paddings and layout parameters
-        MyViewHolder vh = new MyViewHolder(v);
-        return vh;
+        return new MyViewHolder(v);
+
     }
+
 
     /**
      * 发生绑定时，为viewHolder的元素赋值
      *
-     * @param myViewHolder 被绑定的ViewHolder
-     * @param position     列表位置
+     * @param holder   被绑定的ViewHolder
+     * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(MyViewHolder myViewHolder, final int position) {
-        myViewHolder.unreadCountTextview.setVisibility(View.GONE);
-        if (position == groupClasses.size()) {
-            myViewHolder.groupNameTextview.setText("创建圈子");
-            Picasso.with(context).load(R.drawable.face)
-                    .resize(GetThumbnailsUri.getPXs(context, 127),
-                            GetThumbnailsUri.getPXs(context, 127))
-                    .into(myViewHolder.groupFaceImageView);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        if (MyViewHolder.class.isInstance(holder)) {
+            MyViewHolder myViewHolder = (MyViewHolder) holder;
 
-        } else {
-            if (groupClasses.get(position).UnreadCount != 0) {
-                myViewHolder.unreadCountTextview.setVisibility(View.VISIBLE);
-                myViewHolder.unreadCountTextview.setText(String.valueOf(groupClasses.get(position).UnreadCount));
+            myViewHolder.unreadCountTextview.setVisibility(View.GONE);
+            if (position == groupClasses.size()) {
+                myViewHolder.groupNameTextview.setText("创建圈子");
+                Picasso.with(context).load(R.drawable.face)
+                        .resizeDimen(R.dimen.group_face, R.dimen.group_face)
+                        .into(myViewHolder.groupFaceImageView);
+
+            } else {
+                if (groupClasses.get(position).UnreadCount != 0) {
+                    myViewHolder.unreadCountTextview.setVisibility(View.VISIBLE);
+                    myViewHolder.unreadCountTextview.setText(String.valueOf(groupClasses.get(position).UnreadCount));
+                }
+                myViewHolder.groupNameTextview.setText(groupClasses.get(position).Name);
+                myViewHolder.lastMessTextview.setText(groupClasses.get(position).lastMess);
+                Picasso.with(context)
+                        .load(groupClasses.get(position).Face.toString())
+                        .resizeDimen(R.dimen.group_face, R.dimen.group_face)
+                        .into(myViewHolder.groupFaceImageView);
             }
-            myViewHolder.groupNameTextview.setText(groupClasses.get(position).Name);
-            myViewHolder.lastMessTextview.setText(groupClasses.get(position).lastMess);
-            Picasso.with(context)
-                    .load(groupClasses.get(position).Face.toString())
-                    .resize((int) (127 * GetThumbnailsUri.getDpi(context)),
-                            (int) (127 * GetThumbnailsUri.getDpi(context)))
-                    .into(myViewHolder.groupFaceImageView);
+            myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onclick.itemClick(position);
+                }
+            });
         }
-        myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onclick.itemClick(position);
-            }
-        });
+
     }
 
     /**
-     * @return 记录数+1(最后一个用于创建圈子)
+     * @return 注册 记录数+1(最后一个用于创建圈子)
      */
     @Override
     public int getItemCount() {
         return groupClasses == null ? 1 : groupClasses.size() + 1;
+
     }
 
     /**
@@ -157,4 +160,6 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.MyVi
             //lastTimeTextview = (TextView) view.findViewById(R.id.last_dyns_text_view);
         }
     }
+
+
 }

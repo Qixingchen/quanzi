@@ -2,12 +2,14 @@ package com.tizi.quanzi.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.StaticField;
@@ -92,5 +94,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (StaticField.PermissionRequestCode.isPermissionRequest(requestCode)) {
             BusProvider.getInstance().post(PermissionAnser.getAns(requestCode, permissions, grantResults));
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        BusProvider.getInstance().post(new ActivityResultAns(requestCode, resultCode, data));
     }
 }

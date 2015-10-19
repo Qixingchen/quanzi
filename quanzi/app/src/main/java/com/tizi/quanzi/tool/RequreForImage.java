@@ -55,11 +55,13 @@ public class RequreForImage {
         }
     }
 
+    /**
+     * 显示选择对话框(不允许多选)
+     *
+     * @param Title     对话框标题
+     * @param eventCode 授权事件代码 {@link com.tizi.quanzi.tool.StaticField.PermissionRequestCode}
+     */
     public void showDialogAndCallIntent(String Title, int eventCode) {
-        showDialogAndCallIntent(Title, eventCode, false, 1);
-    }
-
-    public void showDialogAndCallIntent(String Title, int eventCode, boolean allMultiple) {
         showDialogAndCallIntent(Title, eventCode, false, 1);
     }
 
@@ -71,7 +73,7 @@ public class RequreForImage {
      * @param allowMultiple 是否允许多选
      * @param selectLimit   允许采集的最大数量
      */
-    public void showDialogAndCallIntent(String Title, int eventCode, final boolean allowMultiple, final int selectLimit) {
+    public void showDialogAndCallIntent(String Title, final int eventCode, final boolean allowMultiple, final int selectLimit) {
         lastTitle = Title;
         lastSelectLimit = selectLimit;
         lastAllowMultiple = allowMultiple;
@@ -95,9 +97,9 @@ public class RequreForImage {
                                 switch (which) {
                                     case 0:
                                         if (allowMultiple) {
-                                            intentForMultiple(selectLimit);
+                                            intentForMultiple(selectLimit, eventCode);
                                         } else {
-                                            intentForSingle();
+                                            intentForSingle(eventCode);
                                         }
                                         break;
                                     case 1:
@@ -133,19 +135,17 @@ public class RequreForImage {
     }
 
     /*发起单选*/
-    private void intentForSingle() {
+    private void intentForSingle(int eventCode) {
         Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
         intentFromGallery.setType("image/*"); // 设置文件类型
-        mActivity.startActivityForResult(intentFromGallery,
-                StaticField.ImageRequreCode.IMAGE_REQUEST_CODE);
+        mActivity.startActivityForResult(intentFromGallery, eventCode);
     }
 
     /*发起多选,包括如果本身应该是多选,只是因为已经选了多张而使得limit=1的情况*/
-    private void intentForMultiple(int limit) {
+    private void intentForMultiple(int limit, int eventCode) {
         Intent intent = new Intent(mActivity, AlbumSelectActivity.class);
-        //set limit on number of images that can be selected, default is 10
         intent.putExtra(Constants.INTENT_EXTRA_LIMIT, limit);
-        mActivity.startActivityForResult(intent, Constants.REQUEST_CODE);
+        mActivity.startActivityForResult(intent, eventCode);
     }
 
 

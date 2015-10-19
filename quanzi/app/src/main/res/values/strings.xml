@@ -32,4 +32,5 @@
     <string name="boom_group">碰撞的圈子</string>
     <string name="my_group">自己的圈子</string>
     <string name="share_the_app">一起来分享应用吧!</string>
+    <string name="send_dyn">发状态</string>
 </resources>

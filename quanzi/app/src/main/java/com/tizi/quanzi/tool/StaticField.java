@@ -99,12 +99,12 @@ public class StaticField {
     public static class PermissionRequestCode {
 
         /*图像相关:1~100*/
-        public final static int requreForImage = 0;
         public final static int chat_insert_photo = 1;
         public final static int userInfoSetFragment_user_face_photo = 2;
         public final static int new_group_face_photo = 3;
         public final static int QuanziIntroduceFragment_group_face = 4;
         public final static int register_user_face = 5;
+        public final static int send_dyn = 6;
 
 
         public final static int CHAT_RECORD_AUDIO = 101;

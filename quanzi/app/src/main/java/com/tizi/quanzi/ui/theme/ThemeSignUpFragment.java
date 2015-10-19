@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.adapter.ThemeSignUpGroupAdapter;
+import com.tizi.quanzi.adapter.GroupSelectAdapter;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
@@ -27,7 +27,7 @@ public class ThemeSignUpFragment extends BaseFragment {
     private static final String ACT_ID = "actID";
     private RecyclerView mGroupListRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ThemeSignUpGroupAdapter themeSignUpGroupAdapter;
+    private GroupSelectAdapter groupSelectAdapter;
     private String actID;
 
     public ThemeSignUpFragment() {
@@ -65,11 +65,12 @@ public class ThemeSignUpFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-        themeSignUpGroupAdapter = new ThemeSignUpGroupAdapter(GroupList.getInstance().getGroupList(), mActivity, actID);
+        groupSelectAdapter = new GroupSelectAdapter(GroupList.getInstance().getGroupList(),
+                mActivity, actID, GroupSelectAdapter.Theme_Sign_UP_Group);
         mGroupListRecyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(mActivity, 3);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
-        mGroupListRecyclerView.setAdapter(themeSignUpGroupAdapter);
+        mGroupListRecyclerView.setAdapter(groupSelectAdapter);
 
         ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
@@ -79,7 +80,7 @@ public class ThemeSignUpFragment extends BaseFragment {
                 for (String groupid : groupIDs.grpids) {
                     signedGroup.put(groupid, true);
                 }
-                themeSignUpGroupAdapter.setGroupsSignedIn(signedGroup);
+                groupSelectAdapter.setGroupsSignedIn(signedGroup);
             }
 
             @Override

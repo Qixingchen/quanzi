@@ -198,11 +198,11 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                         new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                userAgeTextView.setText(String.valueOf(year)
-                                        + String.valueOf(monthOfYear + 1) + String.valueOf(dayOfMonth));
+                                userAgeTextView.setText(String.valueOf(year) + "-"
+                                        + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(dayOfMonth));
                                 UserInfoSetting.getNewInstance().chagngeBirthday(year, monthOfYear + 1, dayOfMonth);
                                 MyUserInfo.getInstance().getUserInfo()
-                                        .setBirthday(year + "-" + monthOfYear + "-" + dayOfMonth);
+                                        .setBirthday(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                             }
                         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                                 calendar.get(Calendar.DAY_OF_MONTH));

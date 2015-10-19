@@ -23,7 +23,7 @@ android {
     dexOptions {
         jumboMode true
         //incremental true
-        javaMaxHeapSize "2g"
+        javaMaxHeapSize "4g"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -50,16 +50,11 @@ buildscript {
     repositories {
         mavenCentral()
     }
-
-//    dependencies {
-//        classpath 'me.tatarka:gradle-retrolambda:3.2.0'
-//    }
 }
 
 repositories {
     mavenCentral()
 }
-//apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

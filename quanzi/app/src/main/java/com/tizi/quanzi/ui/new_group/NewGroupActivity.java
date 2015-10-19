@@ -126,7 +126,7 @@ public class NewGroupActivity extends BaseActivity {
         }
 
         if (id == R.id.action_complete) {
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
 
         return super.onOptionsItemSelected(item);

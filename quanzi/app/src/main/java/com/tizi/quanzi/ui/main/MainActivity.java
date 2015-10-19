@@ -1,6 +1,5 @@
 package com.tizi.quanzi.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,8 +15,6 @@ import com.tizi.quanzi.ui.BaseActivity;
 
 
 public class MainActivity extends BaseActivity {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
     private static final String toolbarTitle = "圈子";
     private MainFragment mainFragment;
     private PrivateMessageFragment privateMessageFragment;
@@ -55,7 +52,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //        mViewPager.removeOnPageChangeListener(getOnPageChangeListener());
     }
 
     @Override
@@ -79,15 +75,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         if (id == R.id.action_private_message) {
             privateMessageFragment = new PrivateMessageFragment();
             getSupportFragmentManager().beginTransaction()
@@ -127,14 +116,5 @@ public class MainActivity extends BaseActivity {
         userInfoSetFragment = new UserInfoSetFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, userInfoSetFragment).addToBackStack("userInfoSetFragment").commit();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (userInfoSetFragment == null) {
-            return;
-        }
-        userInfoSetFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

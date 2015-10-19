@@ -13,12 +13,12 @@ import com.tizi.quanzi.ui.BaseFragment;
 
 /**
  * Created by qixingchen on 15/9/4.
+ * 主界面 Fragment
  */
 public class MainFragment extends BaseFragment {
 
     private ViewPager mViewPager;
     private MainFragmentPagerAdapter mainFragmentPagerAdapter;
-    private ViewPager.OnPageChangeListener onPageChangeListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +31,6 @@ public class MainFragment extends BaseFragment {
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mainFragmentPagerAdapter = new MainFragmentPagerAdapter(this.getChildFragmentManager(), mActivity);
         mViewPager.setAdapter(mainFragmentPagerAdapter);
-        mViewPager.addOnPageChangeListener(getOnPageChangeListener());
         tabLayout.setupWithViewPager(mViewPager);
 
         TextView tab = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.custom_tab, null);
@@ -58,10 +57,5 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mViewPager.removeOnPageChangeListener(getOnPageChangeListener());
-    }
-
-    private ViewPager.OnPageChangeListener getOnPageChangeListener() {
-        return null;
     }
 }

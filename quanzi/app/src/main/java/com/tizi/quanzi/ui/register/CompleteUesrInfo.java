@@ -122,6 +122,7 @@ public class CompleteUesrInfo extends BaseFragment {
                         if (!success) {
                             return;
                         }
+                        UserPhotoImageView.setBackground(null);
                         UserPhotoImageView.setImageUrl(uri,
                                 GetVolley.getmInstance().getImageLoader());
                         photoOnlineUri = uri;

@@ -247,10 +247,11 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    @Override
+    @Subscribe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG, "头像获取");
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK
+                && requestCode == StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo) {
             String ans = requreForImage.ZipedFilePathFromIntent(data);
             SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                 @Override

@@ -5,5 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:textSize="@dimen/small_title_size"
+    tools:layout_height="200dp"
+    tools:layout_width="100dp"
     tools:text="123"/>

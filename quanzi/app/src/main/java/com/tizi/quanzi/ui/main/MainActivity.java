@@ -10,7 +10,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
-import com.tizi.quanzi.otto.PrivateMessFragmentResume;
+import com.tizi.quanzi.otto.FragmentResume;
 import com.tizi.quanzi.ui.BaseActivity;
 
 
@@ -89,8 +89,11 @@ public class MainActivity extends BaseActivity {
 
     /*订阅私信界面的恢复和暂停*/
     @Subscribe
-    public void onPriMessFragChange(PrivateMessFragmentResume privateMessFragmentResume) {
-        if (privateMessFragmentResume.resumeOrPause) {
+    public void onFragmentResume(FragmentResume fragmentResume) {
+        if (fragmentResume.FramgentName.compareTo(PrivateMessageFragment.class.getSimpleName()) != 0) {
+            return;
+        }
+        if (fragmentResume.resumeOrPause) {
             menu.findItem(R.id.action_private_message).setVisible(false);
         } else {
             menu.findItem(R.id.action_private_message).setVisible(true);

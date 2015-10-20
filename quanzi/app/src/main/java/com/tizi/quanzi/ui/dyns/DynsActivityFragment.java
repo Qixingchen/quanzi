@@ -30,6 +30,8 @@ public class DynsActivityFragment extends BaseFragment {
     private boolean hasMoreToGet = true;
     private int lastIndex = 0;
 
+    private String themeID, GroupID;
+
 
     public DynsActivityFragment() {
     }
@@ -52,6 +54,9 @@ public class DynsActivityFragment extends BaseFragment {
             dynsList = getActivity().getIntent().getExtras().getParcelableArrayList("dyns");
         } catch (NullPointerException ignore) {
         }
+        themeID = getActivity().getIntent().getStringExtra("themeID");
+        GroupID = getActivity().getIntent().getStringExtra("groupID");
+
         dynsAdapter = new DynsAdapter(dynsList, getContext());
         dynsAdapter.setOnclick(new DynsAdapter.Onclick() {
             @Override
@@ -66,19 +71,20 @@ public class DynsActivityFragment extends BaseFragment {
             @Override
             public void needMore() {
                 if (hasMoreToGet) {
-                    quaryMore("", lastIndex);
+                    quaryMore(themeID, GroupID, lastIndex);
                     lastIndex += StaticField.QueryLimit.DynamicLimit;
                 }
             }
         });
-        quaryMore("", lastIndex);
+        quaryMore(themeID, GroupID, lastIndex);
         recyclerView.setAdapter(dynsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void quaryMore(String groupID, int lastIndex) {
+    private void quaryMore(String thmemID, String groupID, int lastIndex) {
         Log.i(TAG, "查询群动态 lastIndex=" + lastIndex);
-        DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+
+        RetrofitNetworkAbs.NetworkListener listener = new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
@@ -92,6 +98,12 @@ public class DynsActivityFragment extends BaseFragment {
             public void onError(String Message) {
 
             }
-        }).getGroupDynamic("", groupID, lastIndex);
+        };
+
+        if (groupID == null) {
+            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, lastIndex);
+        } else {
+            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, lastIndex);
+        }
     }
 }

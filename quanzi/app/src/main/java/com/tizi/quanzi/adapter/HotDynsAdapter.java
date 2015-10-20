@@ -25,14 +25,17 @@ import java.util.List;
 public class HotDynsAdapter extends PagerAdapter {
     ArrayList<Dyns.DynsEntity> dyns;
     private int LastCount;
+    private String themeID;
 
-    public HotDynsAdapter(ArrayList<Dyns.DynsEntity> dyns) {
+    public HotDynsAdapter(ArrayList<Dyns.DynsEntity> dyns, String themeID) {
         this.dyns = dyns;
+        this.themeID = themeID;
     }
 
 
-    public HotDynsAdapter(List<Dyns.DynsEntity> dyns) {
+    public HotDynsAdapter(List<Dyns.DynsEntity> dyns, String themeID) {
         this.dyns = new ArrayList<>(dyns);
+        this.themeID = themeID;
     }
 
     @Override
@@ -86,9 +89,7 @@ public class HotDynsAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 Intent dynsIntent = new Intent(App.getApplication(), DynsActivity.class);
-                //                Bundle bundle = new Bundle();
-                //                bundle.putParcelableArrayList("dyns", dyns);
-                //                dynsIntent.putExtras(bundle);
+                dynsIntent.putExtra("themeID", themeID);
                 dynsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 App.getApplication().startActivity(dynsIntent);
             }

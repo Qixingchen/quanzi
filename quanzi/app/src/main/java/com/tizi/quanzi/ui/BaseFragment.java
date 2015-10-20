@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.otto.FragmentResume;
 import com.tizi.quanzi.tool.Tool;
 
 /**
@@ -71,11 +72,13 @@ public abstract class BaseFragment extends Fragment {
     public void onResume() {
         super.onResume();
         AVAnalytics.onFragmentStart(TAG);
+        BusProvider.getInstance().post(new FragmentResume(true, TAG));
     }
 
     @Override
     public void onPause() {
         super.onPause();
         AVAnalytics.onFragmentEnd(TAG);
+        BusProvider.getInstance().post(new FragmentResume(false, TAG));
     }
 }

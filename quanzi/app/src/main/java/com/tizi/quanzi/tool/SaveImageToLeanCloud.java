@@ -44,7 +44,7 @@ public class SaveImageToLeanCloud {
      * @param fileName 图片储存的名称
      */
     public void savePhoto(String filePath, String fileName) {
-        savePhoto(filePath, fileName, 0, 0);
+        savePhoto(filePath, fileName, 0, 0, 100);
     }
 
     /**
@@ -55,7 +55,19 @@ public class SaveImageToLeanCloud {
      * @param maxHei   获取的图片链接最大高度
      */
     public void savePhoto(String filePath, int maxWei, int maxHei) {
-        savePhoto(filePath, Tool.getFileName(filePath), maxWei, maxHei);
+        savePhoto(filePath, Tool.getFileName(filePath), maxWei, maxHei, 100);
+    }
+
+    /**
+     * 将图片储存到LeanCloud
+     *
+     * @param filePath 图片地址 图片名称使用文件名
+     * @param maxWei   获取的图片链接最大宽度
+     * @param maxHei   获取的图片链接最大高度
+     * @param quality  图片质量
+     */
+    public void savePhoto(String filePath, int maxWei, int maxHei, int quality) {
+        savePhoto(filePath, Tool.getFileName(filePath), maxWei, maxHei, quality);
     }
 
     /**
@@ -67,6 +79,19 @@ public class SaveImageToLeanCloud {
      * @param maxHei   获取的图片链接最大高度
      */
     public void savePhoto(final String filePath, final String fileName, final int maxWei, final int maxHei) {
+        savePhoto(filePath, fileName, maxWei, maxHei, 100);
+    }
+
+    /**
+     * 将图片储存到LeanCloud
+     *
+     * @param filePath 图片地址
+     * @param fileName 图片储存的名称
+     * @param maxWei   获取的图片链接最大宽度
+     * @param maxHei   获取的图片链接最大高度
+     * @param quality  图片质量
+     */
+    public void savePhoto(final String filePath, final String fileName, final int maxWei, final int maxHei, final int quality) {
         AVFile file;
         try {
             file = AVFile.withAbsoluteLocalPath(fileName, filePath);
@@ -83,7 +108,7 @@ public class SaveImageToLeanCloud {
                         String photoUri;
 
                         if (maxWei != 0) {
-                            photoUri = finalFile.getThumbnailUrl(false, maxWei, maxHei);
+                            photoUri = finalFile.getThumbnailUrl(false, maxWei, maxHei, quality, "png");
                         } else {
                             photoUri = finalFile.getUrl();
                         }

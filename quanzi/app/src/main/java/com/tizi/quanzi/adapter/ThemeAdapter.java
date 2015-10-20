@@ -211,14 +211,14 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             dynsViewPager = (ViewPager) view.findViewById(R.id.dynsViewPager);
         }
 
-        protected void addHotDyns(String themeID) {
+        protected void addHotDyns(final String themeID) {
 
             ThemeActs.getNewInstance().setNetworkListener(
                     new RetrofitNetworkAbs.NetworkListener() {
                         @Override
                         public void onOK(Object ts) {
                             HotDyns hotDyns = (HotDyns) ts;
-                            HotDynsAdapter hotDynsAdapter = new HotDynsAdapter(hotDyns.dyns);
+                            HotDynsAdapter hotDynsAdapter = new HotDynsAdapter(hotDyns.dyns, themeID);
                             dynsViewPager.setAdapter(hotDynsAdapter);
                         }
 

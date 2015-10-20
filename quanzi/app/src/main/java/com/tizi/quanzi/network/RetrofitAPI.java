@@ -139,7 +139,14 @@ public interface RetrofitAPI {
         Call<OnlySuccess> addDyn(
                 @Query("actid") String themeID,
                 @Query("grpid") String groupID,
+                @Query("content") String content,
                 @Query("pics") String pics);
+
+        @POST("grpdyn/addF")
+        Call<OnlySuccess> addDyn(
+                @Query("actid") String themeID,
+                @Query("grpid") String groupID,
+                @Query("content") String content);
 
         @POST("grpdyn/delF")
         Call<OnlySuccess> delDyn(
@@ -148,7 +155,19 @@ public interface RetrofitAPI {
         @POST("grpdyn/findF")
         Call<com.tizi.quanzi.gson.Dyns> findDyns(
                 @Query("actid") String actID,
-                @Query("grpid") String groupID,
+                @Query("senderid") String groupID,
+                @Query("start") int start,
+                @Query("limit") int limit);
+
+        @POST("grpdyn/findF")
+        Call<com.tizi.quanzi.gson.Dyns> findGroupDyns(
+                @Query("senderid") String groupID,
+                @Query("start") int start,
+                @Query("limit") int limit);
+
+        @POST("grpdyn/findF")
+        Call<com.tizi.quanzi.gson.Dyns> findThemeDyns(
+                @Query("actid") String actID,
                 @Query("start") int start,
                 @Query("limit") int limit);
 

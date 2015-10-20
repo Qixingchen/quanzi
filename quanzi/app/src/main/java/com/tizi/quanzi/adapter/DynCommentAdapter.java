@@ -24,7 +24,7 @@ import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.OtherUserInfo;
-import com.tizi.quanzi.network.Dyns;
+import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
@@ -114,7 +114,7 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
                         if (commentString.compareTo("") == 0) {
                             Toast.makeText(activity, "内容为空", Toast.LENGTH_LONG).show();
                         } else {
-                            Dyns.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                            DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                                 @Override
                                 public void onOK(Object ts) {
                                     AddComment addComment = (AddComment) ts;

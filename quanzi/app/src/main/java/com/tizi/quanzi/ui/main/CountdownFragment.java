@@ -1,7 +1,6 @@
 package com.tizi.quanzi.ui.main;
 
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,9 +15,7 @@ import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.dyns.DynsActivity;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CountdownFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 倒计时界面
  */
 public class CountdownFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
@@ -72,6 +69,7 @@ public class CountdownFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent dynsIntent = new Intent(App.getApplication(), DynsActivity.class);
                 dynsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                dynsIntent.putExtra("themeID", themeID);
                 App.getApplication().startActivity(dynsIntent);
             }
         });

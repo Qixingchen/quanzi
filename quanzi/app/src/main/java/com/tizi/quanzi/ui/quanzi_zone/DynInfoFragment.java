@@ -16,6 +16,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.DynCommentAdapter;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.Dyns;
+import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.BaseFragment;
@@ -142,7 +143,7 @@ public class DynInfoFragment extends BaseFragment {
         commentRecyclerView.setAdapter(dynCommentAdapter);
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
-        com.tizi.quanzi.network.Dyns.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+        DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 Comments comments = (Comments) ts;

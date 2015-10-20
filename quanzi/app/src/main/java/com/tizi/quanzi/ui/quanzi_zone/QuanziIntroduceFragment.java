@@ -215,14 +215,13 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 if (dyns.dyns.size() != StaticField.QueryLimit.DynamicLimit) {
                     hasMoreToGet = false;
                 }
-                Log.i(TAG, "groupDynsLayoutManager Heigh:" + groupDynsLayoutManager.getHeight());
             }
 
             @Override
             public void onError(String Message) {
 
             }
-        }).getGroupDynamic("", groupID, lastIndex);
+        }).getGroupDynamic(true, groupID, lastIndex);
     }
 
     @Override

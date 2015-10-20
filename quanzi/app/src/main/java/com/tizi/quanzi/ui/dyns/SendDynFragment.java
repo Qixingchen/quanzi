@@ -21,6 +21,7 @@ import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupSelectAdapter;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.otto.ActivityResultAns;
@@ -58,7 +59,7 @@ public class SendDynFragment extends BaseFragment {
     private String selectGroupID;
     private ArrayList<String> photoUrls = new ArrayList<>();
 
-    private int photoCount = 0;
+    private int photoCount = 0;//用于统计已选择的照片数,photoUrls未上传时不会被添加
 
 
     public SendDynFragment() {
@@ -94,11 +95,19 @@ public class SendDynFragment extends BaseFragment {
             Snackbar.make(view, "状态为空或没有选择群", Snackbar.LENGTH_LONG).show();
             return false;
         }
+        if (photoCount != photoUrls.size()) {
+            Snackbar.make(view, "正在上传照片中!", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
         if (photoUrls.size() == 0) {
             DynamicAct.getNewInstance().addDYn(themeID, selectGroupID, comment);
         } else {
+            ArrayList<Pics> pics = new ArrayList<>();
+            for (String photoUrl : photoUrls) {
+                pics.add(new Pics(photoUrl));
+            }
             DynamicAct.getNewInstance().addDYn(themeID, selectGroupID, comment,
-                    new Gson().toJson(photoUrls.toArray()));
+                    new Gson().toJson(pics));
         }
         return true;
     }
@@ -185,6 +194,7 @@ public class SendDynFragment extends BaseFragment {
                 && activityResultAns.resultCode == Activity.RESULT_OK && activityResultAns.data != null) {
             ArrayList<Image> images = activityResultAns.data
                     .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
+            photoCount += images.size();
             for (Image image : images) {
                 SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                     @Override
@@ -192,7 +202,6 @@ public class SendDynFragment extends BaseFragment {
                         if (success) {
                             photoUrls.add(uri);
                             flushImages();
-                            photoCount++;
                         }
                     }
                 }).savePhoto(image.path, image.name);

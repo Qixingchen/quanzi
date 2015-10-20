@@ -22,6 +22,7 @@ import com.tizi.quanzi.network.ApiInfo;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.LoginActivity;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -151,7 +152,12 @@ public class Tool {
      * utf-8 转换
      */
     public static String getUTF_8String(String value) {
-        return URLEncoder.encode(value);
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**

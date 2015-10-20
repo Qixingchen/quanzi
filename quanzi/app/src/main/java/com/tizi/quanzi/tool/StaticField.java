@@ -121,12 +121,13 @@ public class StaticField {
         }
     }
 
-    /*消息刷新数量*/
+    /*数量限制*/
     public static class QueryLimit {
         public static final int MessageLimit = 1000;
         public static final int FlushMaxTimes = 10;
         public static final int DynamicLimit = 50;
-        public static final int ContactLimit = 100;
+        // TODO: 15/10/20 加大联系人限制到100
+        public static final int ContactLimit = 10;
     }
 
     /*系统消息还是私聊*/

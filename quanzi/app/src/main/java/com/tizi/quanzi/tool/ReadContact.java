@@ -44,6 +44,6 @@ public class ReadContact {
     }
 
     public static class Mobiles {
-        String mobile;
+        public String mobile;
     }
 }

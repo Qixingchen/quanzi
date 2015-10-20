@@ -140,7 +140,7 @@ public interface RetrofitAPI {
                 @Query("actid") String themeID,
                 @Query("grpid") String groupID,
                 @Query("content") String content,
-                @Query("pics") String pics);
+                @Query(value = "pics", encoded = true) String pics);
 
         @POST("grpdyn/addF")
         Call<OnlySuccess> addDyn(

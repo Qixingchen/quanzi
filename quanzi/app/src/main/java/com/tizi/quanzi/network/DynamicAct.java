@@ -3,7 +3,9 @@ package com.tizi.quanzi.network;
 import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.OnlySuccess;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -127,7 +129,8 @@ public class DynamicAct extends RetrofitNetworkAbs {
         if (pic == null) {
             addDynCall = dynsSer.addDyn(ThemeID, GroupID, comment);
         } else {
-            addDynCall = dynsSer.addDyn(ThemeID, GroupID, comment, pic);
+            Log.i(TAG, pic);
+            addDynCall = dynsSer.addDyn(ThemeID, GroupID, comment, Tool.getUTF_8String(pic));
         }
 
         addDynCall.enqueue(new Callback<OnlySuccess>() {

@@ -20,7 +20,6 @@ import com.tizi.quanzi.network.RetrofitAPI;
 import com.tizi.quanzi.network.RetrofitNetwork;
 import com.tizi.quanzi.tool.GetGMSStatue;
 import com.tizi.quanzi.tool.GetPassword;
-import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
 
@@ -123,7 +122,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
         RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class).register(phoneNumber, userName,
                 GetPassword.fullHash(password), String.valueOf(sex), faceUri, "2",
                 String.valueOf(Build.VERSION.SDK_INT) + " GMS:" + GetGMSStatue.haveGMS(this)
-                , Build.MODEL + "  " + Build.DEVICE, Tool.getSignMap()).enqueue(new Callback<Login>() {
+                , Build.MODEL + "  " + Build.DEVICE).enqueue(new Callback<Login>() {
             @Override
             public void onResponse(Response<Login> response, Retrofit retrofit) {
                 if (response.isSuccess() && response.body().isSuccess()) {

@@ -9,6 +9,7 @@ import retrofit.Retrofit;
 /**
  * Created by qixingchen on 15/9/9.
  * 群设置管理－后台
+ *
  * @see com.tizi.quanzi.network.RetrofitAPI.Group
  */
 public class GroupSetting extends RetrofitNetworkAbs {
@@ -29,7 +30,7 @@ public class GroupSetting extends RetrofitNetworkAbs {
      */
     private void changeField(String groupID, String field, String value) {
 
-        groupSer.changeGroupInfo(groupID, field, value, Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
+        groupSer.changeGroupInfo(groupID, field, Tool.getUTF_8String(value)).enqueue(new Callback<OnlySuccess>() {
             @Override
             public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);

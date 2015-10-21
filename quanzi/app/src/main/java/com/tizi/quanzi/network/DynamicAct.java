@@ -93,7 +93,7 @@ public class DynamicAct extends RetrofitNetworkAbs {
 
     /*添加评论*/
     public void addComment(String dynID, String comment) {
-        dynsSer.addComent(dynID, comment).enqueue(new Callback<OnlySuccess>() {
+        dynsSer.addComent(dynID, Tool.getUTF_8String(comment)).enqueue(new Callback<OnlySuccess>() {
             @Override
             public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
@@ -109,7 +109,7 @@ public class DynamicAct extends RetrofitNetworkAbs {
 
     /*添加评论*/
     public void addComment(String dynID, String comment, String replyID, String atUserID) {
-        dynsSer.addComent(dynID, comment, replyID, atUserID).enqueue(new Callback<AddComment>() {
+        dynsSer.addComent(dynID, Tool.getUTF_8String(comment), replyID, atUserID).enqueue(new Callback<AddComment>() {
             @Override
             public void onResponse(Response<AddComment> response, Retrofit retrofit) {
                 myOnResponse(response);
@@ -126,6 +126,7 @@ public class DynamicAct extends RetrofitNetworkAbs {
     public void addDYn(String ThemeID, String GroupID, String comment, String pic) {
 
         Call<OnlySuccess> addDynCall;
+        comment = Tool.getUTF_8String(comment);
         if (pic == null) {
             addDynCall = dynsSer.addDyn(ThemeID, GroupID, comment);
         } else {

@@ -17,7 +17,7 @@
         <RelativeLayout
             android:id="@+id/weibo_user"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
@@ -26,10 +26,10 @@
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/weibo_avatar"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 tools:background="@drawable/face"
                 tools:src="@drawable/face"/>
 

@@ -2,7 +2,6 @@ package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.OnlySuccess;
-import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -28,7 +27,7 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
      */
     public void deleteUser(String GroupID, String UserID) {
 
-        groupMemberSer.exitOrDeleteMember(GroupID, UserID, Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
+        groupMemberSer.exitOrDeleteMember(GroupID, UserID).enqueue(new Callback<OnlySuccess>() {
             @Override
             public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);
@@ -64,7 +63,7 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
      */
     public void deleteGroup(String GroupID) {
 
-        groupMemberSer.dropGroup(GroupID, Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
+        groupMemberSer.dropGroup(GroupID).enqueue(new Callback<OnlySuccess>() {
             @Override
             public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
                 myOnResponse(response);

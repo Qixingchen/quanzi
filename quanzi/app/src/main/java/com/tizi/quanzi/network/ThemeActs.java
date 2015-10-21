@@ -61,7 +61,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
      */
     public void getHotDyns(String themeID) {
 
-        final Call<HotDyns> hotDynsCall = themeService.getHotDyns(themeID, Tool.getSignMap());
+        final Call<HotDyns> hotDynsCall = themeService.getHotDyns(themeID);
 
         hotDynsCall.enqueue(new Callback<HotDyns>() {
             @Override
@@ -82,7 +82,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
      * @param themeID 活动ID
      */
     public void getMySignedGroups(String themeID) {
-        themeService.querySignedGroup(themeID, Tool.getSignMap())
+        themeService.querySignedGroup(themeID)
                 .enqueue(new Callback<GroupIDs>() {
                     @Override
                     public void onResponse(Response<GroupIDs> response, Retrofit retrofit) {
@@ -105,7 +105,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
      */
     public void signUP(String actID, String groupID, int flag) {
 
-        final Call<OnlySuccess> themeCall = themeService.signUp(actID, groupID, flag, Tool.getSignMap());
+        final Call<OnlySuccess> themeCall = themeService.signUp(actID, groupID, flag);
 
         themeCall.enqueue(new Callback<OnlySuccess>() {
             @Override
@@ -127,7 +127,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
      * @param feedback 反馈
      */
     public void feedBack(String actID, String feedback) {
-        final Call<OnlySuccess> themeCall = themeService.feedBack(actID, feedback, Tool.getSignMap());
+        final Call<OnlySuccess> themeCall = themeService.feedBack(actID, Tool.getUTF_8String(feedback));
 
         themeCall.enqueue(new Callback<OnlySuccess>() {
             @Override

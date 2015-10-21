@@ -35,7 +35,7 @@ public class FindUser extends RetrofitNetworkAbs {
      * 查找用户
      */
     public void finduserByAccount(String account) {
-        findUserService.getUserByAccount(account, Tool.getSignMap()).enqueue(new Callback<OtherUserInfo>() {
+        findUserService.getUserByAccount(account).enqueue(new Callback<OtherUserInfo>() {
             @Override
             public void onResponse(retrofit.Response<OtherUserInfo> response, Retrofit retrofit) {
                 myOnResponse(response);
@@ -50,7 +50,7 @@ public class FindUser extends RetrofitNetworkAbs {
     }
 
     public void findUserByID(String ID) {
-        findUserService.getUserByID(ID, Tool.getSignMap()).enqueue(new Callback<OtherUserInfo>() {
+        findUserService.getUserByID(ID).enqueue(new Callback<OtherUserInfo>() {
             @Override
             public void onResponse(retrofit.Response<OtherUserInfo> response, Retrofit retrofit) {
                 myOnResponse(response);
@@ -78,8 +78,8 @@ public class FindUser extends RetrofitNetworkAbs {
             mobileString[i] = new Gson().toJson(mobilesList.subList(i * contactLimit,
                     Math.min((i + 1) * contactLimit - 1, mobilesList.size())));
             Log.i(TAG, mobileString[i] + "\n \n");
-            findUserService.findContactUser(Tool.getUTF_8String(mobileString[i]),
-                    Tool.getSignMap()).enqueue(new Callback<ContantUsers>() {
+            findUserService.findContactUser(Tool.getUTF_8String(mobileString[i]))
+                    .enqueue(new Callback<ContantUsers>() {
                 @Override
                 public void onResponse(Response<ContantUsers> response, Retrofit retrofit) {
                     if (response.isSuccess() && response.body().success) {

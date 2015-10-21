@@ -13,7 +13,6 @@ import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Callback;
 import retrofit.Retrofit;
@@ -90,7 +89,7 @@ public class AutoLogin extends RetrofitNetworkAbs {
      */
     public void loginRaw(String account, String password) {
 
-        userAccountService.login(account, password, Tool.getSignMap()).enqueue(new Callback<Login>() {
+        userAccountService.login(account, password).enqueue(new Callback<Login>() {
             @Override
             public void onResponse(retrofit.Response<Login> response, Retrofit retrofit) {
                 if (response.isSuccess() && response.body().success) {

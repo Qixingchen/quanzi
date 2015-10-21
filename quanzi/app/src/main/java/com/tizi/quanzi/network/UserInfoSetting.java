@@ -30,18 +30,18 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
     private void changeFiled(String field, String value) {
 
         value = Tool.getUTF_8String(value);
-        userAccountSer.changeUserInfo(field, value, AppStaticValue.getUserID(),
-                Tool.getSignMap()).enqueue(new Callback<OnlySuccess>() {
-            @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
+        userAccountSer.changeUserInfo(field, value, AppStaticValue.getUserID())
+                .enqueue(new Callback<OnlySuccess>() {
+                    @Override
+                    public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
+                        myOnResponse(response);
+                    }
 
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
+                    @Override
+                    public void onFailure(Throwable t) {
+                        myOnFailure(t);
+                    }
+                });
     }
 
     /**

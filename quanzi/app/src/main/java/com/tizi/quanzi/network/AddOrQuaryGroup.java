@@ -44,8 +44,8 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
     public void NewAGroup(String GroupName, String icon, String notice, String tag, String convid) {
 
         String encodedTAG = Tool.getUTF_8String(tag);
-        groupService.addGroup(GroupName, encodedTAG, icon, notice,
-                AppStaticValue.getUserID(), convid, Tool.getSignMap()).enqueue(new Callback<Group>() {
+        groupService.addGroup(GroupName, encodedTAG, icon, Tool.getUTF_8String(notice),
+                AppStaticValue.getUserID(), convid).enqueue(new Callback<Group>() {
             @Override
             public void onResponse(Response<Group> response, Retrofit retrofit) {
                 myOnResponse(response);
@@ -66,7 +66,7 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
      * @param GroupID 群ID
      */
     public void queryGroup(String GroupID) {
-        final Call<GroupAllInfo> groupInfo = groupService.queryGroup(GroupID, Tool.getSignMap());
+        final Call<GroupAllInfo> groupInfo = groupService.queryGroup(GroupID);
 
         groupInfo.enqueue(new Callback<GroupAllInfo>() {
             @Override

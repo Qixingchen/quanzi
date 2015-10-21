@@ -173,6 +173,7 @@ public class SendDynFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     photoUrls.remove(finalI);
+                    photoCount--;
                     flushImages();
                 }
             });

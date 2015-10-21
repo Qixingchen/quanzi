@@ -106,10 +106,10 @@ public class DynInfoFragment extends BaseFragment {
                 IsZan isZan = (IsZan) ts;
                 if (isZan.cnt == 0) {
                     iszan = false;
-                    plusOne.setBackground(getResources().getDrawable(R.drawable.ic_plus_one_48dp));
+                    plusOne.setColorFilter(getResources().getColor(R.color.md_black));
                 } else {
                     iszan = true;
-                    plusOne.setBackground(getResources().getDrawable(R.drawable.ic_plus_one_red_48dp));
+                    plusOne.setColorFilter(getResources().getColor(R.color.md_red_500));
                 }
             }
 
@@ -147,9 +147,9 @@ public class DynInfoFragment extends BaseFragment {
                         iszan = !iszan;
                         plusOne.setEnabled(true);
                         if (iszan) {
-                            plusOne.setBackground(getResources().getDrawable(R.drawable.ic_plus_one_red_48dp));
+                            plusOne.setColorFilter(getResources().getColor(R.color.md_red_500));
                         } else {
-                            plusOne.setBackground(getResources().getDrawable(R.drawable.ic_plus_one_48dp));
+                            plusOne.setColorFilter(getResources().getColor(R.color.md_black));
                         }
                         attitudesTextView.setText(String.valueOf(addZan.zan));
                         dyn.zan = addZan.zan;

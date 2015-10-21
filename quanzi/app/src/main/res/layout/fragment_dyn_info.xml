@@ -28,7 +28,7 @@
                 android:id="@+id/comment"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/ic_chat_24dp"/>
+                android:background="@drawable/ic_chat_48dp"/>
 
         </LinearLayout>
 

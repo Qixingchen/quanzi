@@ -125,7 +125,7 @@
                 android:layout_height="18dp"
                 android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_chat_24dp"
+                android:src="@drawable/ic_chat_48dp"
                 />
 
             <TextView

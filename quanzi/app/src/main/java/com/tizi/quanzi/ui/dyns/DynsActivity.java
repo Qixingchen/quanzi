@@ -109,6 +109,7 @@ public class DynsActivity extends BaseActivity {
             if (sendDynFragment.SendDyn()) {
                 getSupportFragmentManager().popBackStack();
             }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

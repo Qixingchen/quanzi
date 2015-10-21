@@ -14,6 +14,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.tool.GetThumbnailsUri;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +81,11 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         if (picsNum > 9) {
             picsNum = 9;
         }
+        int hei = mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_hei);
+        int wei = mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_wei);
         for (int i = 0; i < picsNum; i++) {
-            holder.weibo_pics_NetworkImageView[i].setImageUrl(dyns.pics.get(i).url,
+            String thumUri = GetThumbnailsUri.maxHeiAndWei(dyns.pics.get(i).url, hei, wei);
+            holder.weibo_pics_NetworkImageView[i].setImageUrl(thumUri,
                     GetVolley.getmInstance().getImageLoader());
             final int finalI = i;
             holder.weibo_pics_NetworkImageView[i].setOnClickListener(new View.OnClickListener() {

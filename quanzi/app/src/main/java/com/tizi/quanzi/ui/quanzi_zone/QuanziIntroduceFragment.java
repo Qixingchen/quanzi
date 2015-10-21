@@ -41,6 +41,7 @@ import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.ui.dyns.DynInfoFragment;
 
 import java.io.IOException;
 

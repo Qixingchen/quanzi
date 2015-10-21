@@ -1,8 +1,6 @@
 package com.tizi.quanzi.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -12,26 +10,22 @@ import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.dataStatic.MyUserInfo;
-import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.OtherUserInfo;
-import com.tizi.quanzi.network.DynamicAct;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,9 +35,23 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
 
     private List<Comments.CommentsEntity> commentses;
     private Activity activity;
+    private onCommentClick onCommentClick;
 
     public DynCommentAdapter(Activity activity) {
         this.activity = activity;
+    }
+
+    public DynCommentAdapter setOnCommentClick(DynCommentAdapter.onCommentClick onCommentClick) {
+        this.onCommentClick = onCommentClick;
+        return this;
+    }
+
+    public void addComment(Comments.CommentsEntity commentsEntity, int postion) {
+        if (commentses == null) {
+            commentses = new ArrayList<>();
+        }
+        commentses.add(postion, commentsEntity);
+        notifyItemInserted(postion);
     }
 
     public void setCommentses(List<Comments.CommentsEntity> commentses) {
@@ -96,52 +104,13 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
         holder.addComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String hit = "回复：" + comment.createUserName;
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                LayoutInflater inflater = activity.getLayoutInflater();
-                final View layout = inflater.inflate(R.layout.dialog_one_line,
-                        (ViewGroup) activity.findViewById(R.id.dialog_one_line));
-                final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
-                final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
-
-                title.setVisibility(View.GONE);
-                input.setHint(hit);
-                builder.setTitle("回复消息").setView(layout).setPositiveButton("发送", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final String commentString = input.getText().toString();
-                        if (commentString.compareTo("") == 0) {
-                            Toast.makeText(activity, "内容为空", Toast.LENGTH_LONG).show();
-                        } else {
-                            DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
-                                @Override
-                                public void onOK(Object ts) {
-                                    AddComment addComment = (AddComment) ts;
-                                    Comments.CommentsEntity newComment = new Comments.CommentsEntity();
-                                    newComment.id = addComment.cid;
-                                    newComment.content = commentString;
-                                    newComment.createTime = String.valueOf(Calendar.getInstance().getTimeInMillis());
-                                    newComment.createUser = AppStaticValue.getUserID();
-                                    newComment.createUserName = MyUserInfo.getInstance().getUserInfo().getUserName();
-                                    newComment.dynamicId = comment.dynamicId;
-                                    newComment.userIcon = MyUserInfo.getInstance().getUserInfo().getIcon();
-                                    newComment.senderId = comment.senderId;
-                                    newComment.atUserName = comment.createUserName;
-                                    newComment.atUserId = comment.createUser;
-                                    newComment.replyId = comment.id;
-                                    commentses.add(0, newComment);
-                                    notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onError(String Message) {
-                                    Toast.makeText(activity, Message, Toast.LENGTH_LONG).show();
-                                }
-                            }).addComment(comment.dynamicId, commentString, comment.id, comment.createUser);
-                        }
-                    }
-                }).setNegativeButton("取消", null).show();
+                if (onCommentClick != null) {
+                    onCommentClick.Onclick(comment, position);
+                } else {
+                    Log.w(DynCommentAdapter.class.getSimpleName(), "评论点击,但没有回调函数,位置:" + position);
+                    Thread.dumpStack();
+                }
             }
         });
     }
@@ -165,6 +134,10 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     @Override
     public int getItemCount() {
         return commentses == null ? 0 : commentses.size();
+    }
+
+    public interface onCommentClick {
+        void Onclick(Comments.CommentsEntity comment, int postio);
     }
 
     /* ClickableString class*/

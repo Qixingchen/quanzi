@@ -1,7 +1,9 @@
 package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.AddComment;
+import com.tizi.quanzi.gson.AddZan;
 import com.tizi.quanzi.gson.Comments;
+import com.tizi.quanzi.gson.IsZan;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
@@ -75,6 +77,35 @@ public class DynamicAct extends RetrofitNetworkAbs {
         });
     }
 
+    /*点赞*/
+    public void addZan(String dynID, boolean isZan) {
+        dynsSer.zan(dynID, isZan ? 1 : -1).enqueue(new Callback<AddZan>() {
+            @Override
+            public void onResponse(Response<AddZan> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
+    public void isZan(String dynID) {
+        dynsSer.isZan(dynID).enqueue(new Callback<IsZan>() {
+            @Override
+            public void onResponse(Response<IsZan> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
 
     /*获取评论*/
     public void getComment(String dynID, int start, int limit) {
@@ -93,9 +124,9 @@ public class DynamicAct extends RetrofitNetworkAbs {
 
     /*添加评论*/
     public void addComment(String dynID, String comment) {
-        dynsSer.addComent(dynID, Tool.getUTF_8String(comment)).enqueue(new Callback<OnlySuccess>() {
+        dynsSer.addComent(dynID, Tool.getUTF_8String(comment)).enqueue(new Callback<AddComment>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Response<AddComment> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

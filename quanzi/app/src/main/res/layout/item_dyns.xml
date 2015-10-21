@@ -108,7 +108,7 @@
                 android:layout_height="18dp"
                 android:layout_marginRight="2dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_plus_one_24dp"
+                android:src="@drawable/plus_one"
                 />
 
             <TextView

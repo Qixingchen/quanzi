@@ -68,12 +68,14 @@ public class GalleryAdapter extends PagerAdapter {
                 Bitmap bitmap = response.getBitmap();
                 if (bitmap != null) {
                     image.setImage(ImageSource.bitmap(bitmap));
+                } else {
+                    image.setImage(ImageSource.resource(R.drawable.face));
                 }
             }
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                image.setImage(ImageSource.resource(R.drawable.girl));
             }
         }, GetThumbnailsUri.getPXs(activity, 360), GetThumbnailsUri.getPXs(activity, 640));
         image.setOnLongClickListener(new View.OnLongClickListener() {

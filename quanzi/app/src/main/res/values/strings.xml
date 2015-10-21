@@ -34,4 +34,5 @@
     <string name="share_the_app">一起来分享应用吧!</string>
     <string name="send_dyn">发状态</string>
     <string name="action_send">发送</string>
+    <string name="action_comment">评论</string>
 </resources>

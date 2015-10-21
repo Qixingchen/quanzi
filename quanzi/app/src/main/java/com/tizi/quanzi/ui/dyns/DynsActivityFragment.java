@@ -15,7 +15,6 @@ import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
-import com.tizi.quanzi.ui.quanzi_zone.DynInfoFragment;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,7 @@
 package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.AddComment;
+import com.tizi.quanzi.gson.AddZan;
 import com.tizi.quanzi.gson.ApiInfoGson;
 import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.Comments;
@@ -9,6 +10,7 @@ import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.HotDyns;
+import com.tizi.quanzi.gson.IsZan;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.gson.OtherUserInfo;
@@ -156,13 +158,12 @@ public interface RetrofitAPI {
                 @Query("limit") int limit);
 
         @POST("grpdyn/zanF")
-            // TODO: 15/9/16 get zan -> onlySuccess
-        Call<OnlySuccess> zan(
+        Call<AddZan> zan(
                 @Query("dynid") String dynID,
                 @Query("zan") int isZan);
 
         @POST("grpdyn/addComment")
-        Call<OnlySuccess> addComent(
+        Call<AddComment> addComent(
                 @Query("dynid") String dynID,
                 @Query(value = "comment", encoded = true) String comment);
 
@@ -182,6 +183,11 @@ public interface RetrofitAPI {
                 @Query("dynid") String dynid,
                 @Query("start") int start,
                 @Query("limit") int limit);
+
+        @POST("grpdyn/isZan")
+        Call<IsZan> isZan(
+                @Query("dynid") String dynid
+        );
 
     }
 

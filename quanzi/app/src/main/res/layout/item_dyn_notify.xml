@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="4dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/weibo_user"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/weibo_avatar"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="@dimen/group_face_small"
+                android:layout_height="@dimen/group_face_small"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                tools:src="@drawable/face"/>
+
+            <TextView
+                android:id="@+id/weibo_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/weibo_avatar"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/normal_edit_text_size"
+                tools:text="Author Name"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="false"
+                android:layout_alignStart="@+id/weibo_name">
+
+                <TextView
+                    android:id="@+id/weibo_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="2dp"
+                    android:paddingBottom="10dp"
+                    android:textSize="12sp"
+                    tools:text="Date"/>
+
+                <TextView
+                    android:id="@+id/weibo_from_divide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="|"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/weibo_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    tools:text="From"/>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/weibo_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/weibo_user"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:lineSpacingExtra="4dp"
+            android:paddingBottom="15dp"
+            android:textColorLink="?attr/colorAccent"
+            android:textSize="16sp"
+            tools:text="Content"/>
+
+        <RelativeLayout
+            android:id="@+id/old_weibo_user"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/weibo_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="5dp">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/old_weibo_avatar"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                tools:background="@drawable/face"
+                tools:src="@drawable/face"/>
+
+            <TextView
+                android:id="@+id/old_weibo_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/old_weibo_avatar"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/normal_edit_text_size"
+                tools:text="Author Name"/>
+
+
+            <TextView
+                android:id="@+id/old_weibo_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="false"
+                android:layout_alignStart="@+id/old_weibo_name"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:lineSpacingExtra="4dp"
+                android:paddingBottom="15dp"
+                android:textColorLink="?attr/colorAccent"
+                android:textSize="16sp"
+                tools:text="Content"/>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

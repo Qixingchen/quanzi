@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +25,6 @@ import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.DynsAdapter;
 import com.tizi.quanzi.adapter.GroupUserAdapter;
-import com.tizi.quanzi.adapter.GroupZonePagerAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Dyns;
@@ -56,8 +54,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private NetworkImageView zoneBackgroundImageView, userface[];
     private TextView zoneSignTextview;
     private CollapsingToolbarLayout collapsingtoolbar;
-    private ViewPager viewPager;
-    private GroupZonePagerAdapter groupZonePagerAdapter;
     private RecyclerView groupUsersRecyclerView, groupDynsRecyclerView;
     private GroupUserAdapter groupUserAdapter;
     private DynsAdapter dynsAdapter;
@@ -89,10 +85,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         collapsingtoolbar =
                 (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-        //crash is know issue at https://code.google.com/p/android/issues/detail?id=183166
-        //        viewPager = (ViewPager) view.findViewById(R.id.detail_viewpager);
-        //        groupZonePagerAdapter = new GroupZonePagerAdapter(mActivity);
-        //        viewPager.setAdapter(groupZonePagerAdapter);
         groupUsersRecyclerView = (RecyclerView) view.findViewById(R.id.group_users_item_recycler_view);
         groupDynsRecyclerView = (RecyclerView) view.findViewById(R.id.group_dyns_item_recycler_view);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);

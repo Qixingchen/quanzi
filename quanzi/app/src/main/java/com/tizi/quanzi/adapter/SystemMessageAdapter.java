@@ -17,9 +17,12 @@ import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.model.SystemMessagePair;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by qixingchen on 15/10/22.
@@ -74,6 +77,13 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                         .inflate(R.layout.item_system_mess, parent, false);
                 vh = new GroupInviteViewHolder(v);
                 break;
+
+            case StaticField.SystemMessAttrName.systemFlag.dyn_comment:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_system_mess, parent, false);
+                vh = new GroupInviteViewHolder(v);
+                break;
+
             default:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_system_mess, parent, false);
@@ -91,15 +101,15 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        SystemMessagePair systemMessagePair = systemMessagePairs.get(position);
+        final SystemMessage systemMessage = systemMessagePair.systemMessage;
 
         /*系统消息*/
         if (GroupInviteViewHolder.class.isInstance(holder)) {
             GroupInviteViewHolder systemHolder = (GroupInviteViewHolder) holder;
 
             systemHolder.setAllAdditionVisibilityGone();
-            SystemMessagePair systemMessagePair = systemMessagePairs.get(position);
 
-            final SystemMessage systemMessage = systemMessagePair.systemMessage;
             if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.invitation) {
                 systemHolder.titleTextview.setVisibility(View.VISIBLE);
                 systemHolder.MessTextview.setVisibility(View.VISIBLE);
@@ -149,8 +159,16 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                     }
                 }
             });
+        }
 
-
+        /*动态评论*/
+        if (DynNotifyViewHolder.class.isInstance(holder)) {
+            DynNotifyViewHolder dynNotifyViewHolder = (DynNotifyViewHolder) holder;
+            dynNotifyViewHolder.old_weibo_name.setText(systemMessage.dyn_create_username);
+            dynNotifyViewHolder.weiboName.setText(systemMessage.reply_username);
+            dynNotifyViewHolder.weibo_content.setText(systemMessage.reply_comment);
+            dynNotifyViewHolder.weibo_date.setText(FriendTime.FriendlyDate(systemMessage.create_time));
+            dynNotifyViewHolder.old_weibo_content.setText(systemMessage.dyn_content);
         }
     }
 
@@ -222,6 +240,38 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
             MessTextview = (TextView) v.findViewById(R.id.mess_text_view);
             acceptButton = (Button) v.findViewById(R.id.accept_button);
             refuseButton = (Button) v.findViewById(R.id.refuse_button);
+        }
+
+    }
+
+    static class DynNotifyViewHolder extends RecyclerView.ViewHolder {
+
+        private CircleImageView weiboUser, oldWeiboUser;
+        private TextView weiboName, weibo_date, weibo_from, weibo_content, old_weibo_content, old_weibo_name;
+        private View itemView;
+
+        public DynNotifyViewHolder(View itemView) {
+            super(itemView);
+            this.itemView = itemView;
+            findViewByID(itemView);
+        }
+
+        /**
+         * 为界面元素赋值
+         *
+         * @param v 布局
+         */
+        private void findViewByID(View v) {
+            weiboUser = (CircleImageView) v.findViewById(R.id.weibo_avatar);
+            oldWeiboUser = (CircleImageView) v.findViewById(R.id.old_weibo_avatar);
+
+            weiboName = (TextView) v.findViewById(R.id.weibo_name);
+            weibo_date = (TextView) v.findViewById(R.id.weibo_date);
+            weibo_from = (TextView) v.findViewById(R.id.weibo_from);
+            weibo_content = (TextView) v.findViewById(R.id.weibo_content);
+            old_weibo_content = (TextView) v.findViewById(R.id.old_weibo_content);
+            old_weibo_name = (TextView) v.findViewById(R.id.old_weibo_name);
+
         }
 
     }

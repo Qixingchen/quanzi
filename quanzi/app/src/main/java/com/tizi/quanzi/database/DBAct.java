@@ -242,6 +242,7 @@ public class DBAct {
         while (!privateMessCursor.isAfterLast()) {
             ChatMessage chatMessage = chatMessageFromCursor(privateMessCursor);
             if (chatMessage.groupID == null) {
+                privateMessCursor.moveToNext();
                 continue;
             }
             if (PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) == null) {

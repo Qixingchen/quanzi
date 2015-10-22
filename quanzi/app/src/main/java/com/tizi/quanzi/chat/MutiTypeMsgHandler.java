@@ -104,7 +104,6 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         Log.w(TAG, "收到消息");
         try {
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
-            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
 
             /*刷新最后一条消息等信息*/
             switch (chatMessage.ChatBothUserType) {
@@ -122,6 +121,8 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     }
                     PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
                             ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+                    chatMessage.groupID = chatMessage.sender;
+
                     break;
                 case StaticField.ConvType.BoomGroup:
 
@@ -143,6 +144,8 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             } else {
                 AddNotification.getInstance().AddMessage(chatMessage);
             }
+
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
 
         } catch (ClassFormatError error) {
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);

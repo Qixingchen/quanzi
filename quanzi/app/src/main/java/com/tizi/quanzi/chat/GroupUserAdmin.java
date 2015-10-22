@@ -187,9 +187,6 @@ public class GroupUserAdmin {
         UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
-                if (onResult != null) {
-                    onResult.OK();
-                }
             }
 
             @Override

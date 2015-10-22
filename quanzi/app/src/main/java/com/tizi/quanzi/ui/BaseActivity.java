@@ -3,16 +3,20 @@ package com.tizi.quanzi.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.avos.avoscloud.AVAnalytics;
+import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
-import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 
 /**
@@ -30,7 +34,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.setContentView(layoutResID);
         mContext = this;
         mActivity = this;
-        view = getWindow().getDecorView().getRootView();
+        view = findViewById(R.id.fragment);
+        if (view == null) {
+            Log.e(TAG, "fragment view is null");
+            view = getWindow().getDecorView().getRootView();
+        }
         Tool.hideKeyboard(view, this);
         findView();
         initView();
@@ -91,9 +99,23 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (StaticField.PermissionRequestCode.isPermissionRequest(requestCode)) {
-            BusProvider.getInstance().post(PermissionAnser.getAns(requestCode, permissions, grantResults));
+
+        for (int ans : grantResults) {
+            if (ans == PackageManager.PERMISSION_DENIED) {
+                Snackbar.make(view, "您拒绝了权限!", Snackbar.LENGTH_LONG).setAction("去设置", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:" + getApplicationContext().getPackageName())));
+
+                    }
+                }).show();
+                return;
+            }
         }
+
+        BusProvider.getInstance().post(PermissionAnser.getAns(requestCode, permissions, grantResults));
+
     }
 
     @Override

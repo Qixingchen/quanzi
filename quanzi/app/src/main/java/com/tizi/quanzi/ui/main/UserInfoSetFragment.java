@@ -16,7 +16,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -269,13 +268,6 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Subscribe
     public void onPermissionAns(PermissionAnser permissionAnser) {
-
-        for (int ans : permissionAnser.grantResults) {
-            if (ans == PackageManager.PERMISSION_DENIED) {
-                Snackbar.make(view, "您拒绝了权限!", Snackbar.LENGTH_LONG).show();
-                return;
-            }
-        }
 
         switch (permissionAnser.requestCode) {
             case StaticField.PermissionRequestCode.userInfoSetFragment_location:

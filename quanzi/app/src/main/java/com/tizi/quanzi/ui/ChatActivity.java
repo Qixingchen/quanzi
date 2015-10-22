@@ -120,7 +120,7 @@ public class ChatActivity extends BaseActivity {
                         recodeAudio = RecodeAudio.getInstance(AppStaticValue.getActivity(ChatActivity.class.getSimpleName()));
                         if (recodeAudio.start()) {
                             Toast.makeText(context, "录音中", Toast.LENGTH_SHORT).show();
-                        } else {
+                        } else if (recodeAudio.AllPermissionGrant()) {
                             Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -141,7 +141,7 @@ public class ChatActivity extends BaseActivity {
                             })
                                     .sendAudioMessage(CONVERSATION_ID, Filepath,
                                             setAttrs());
-                        } else {
+                        } else if (recodeAudio.AllPermissionGrant()) {
                             Toast.makeText(context, "时间过短，不发送", Toast.LENGTH_SHORT).show();
                         }
                 }

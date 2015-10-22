@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
@@ -244,13 +243,6 @@ public class RequreForImage {
     public void onRequestPermissionsResult(PermissionAnser permissionAnser) {
         if (StaticField.PermissionRequestCode.isImagePermissionEvent(permissionAnser.requestCode)) {
 
-            for (int ans : permissionAnser.grantResults) {
-                if (ans == PackageManager.PERMISSION_DENIED) {
-                    Snackbar.make(mActivity.getWindow().getDecorView().getRootView(),
-                            "您拒绝了权限!", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-            }
             showDialogAndCallIntent(lastTitle, permissionAnser.requestCode, lastAllowMultiple, lastSelectLimit);
 
         }

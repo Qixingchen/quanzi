@@ -29,6 +29,7 @@ import com.tizi.quanzi.gson.IsZan;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.ArrayList;
@@ -139,6 +140,10 @@ public class DynInfoFragment extends BaseFragment {
         plusOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(mActivity);
+                    return;
+                }
                 plusOne.setEnabled(false);
                 DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                     @Override
@@ -166,6 +171,10 @@ public class DynInfoFragment extends BaseFragment {
         addCommentImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(mActivity);
+                    return;
+                }
                 addComment(null);
             }
         });
@@ -213,6 +222,10 @@ public class DynInfoFragment extends BaseFragment {
         dynCommentAdapter.setOnCommentClick(new DynCommentAdapter.onCommentClick() {
             @Override
             public void Onclick(Comments.CommentsEntity comment, int postio) {
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(mActivity);
+                    return;
+                }
                 addComment(comment);
             }
         });

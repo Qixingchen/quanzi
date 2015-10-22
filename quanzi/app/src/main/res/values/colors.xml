@@ -3,7 +3,7 @@
     <color name="window_background">#FFF5F5F5</color>
 
     <color name="colorPrimary">@color/md_yellow_500</color>
-    <color name="colorPrimaryDark">@color/md_grey_700</color>
+    <color name="colorPrimaryDark">@color/md_yellow_700</color>
     <color name="colorAccent">@color/md_red_500</color>
     <color name="textColorPrimary">@color/md_black</color>
 

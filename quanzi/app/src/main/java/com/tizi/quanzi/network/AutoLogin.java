@@ -98,8 +98,8 @@ public class AutoLogin extends RetrofitNetworkAbs {
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     PrivateMessPairList.getInstance().getGroupsFromDataBase();
                     ((GroupList) (GroupList.getInstance())).setGroupListByLoginGroup(login.getGroup());
-                    myOnResponse(response);
                 }
+                myOnResponse(response);
             }
 
             @Override

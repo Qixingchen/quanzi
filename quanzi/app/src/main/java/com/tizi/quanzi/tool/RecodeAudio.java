@@ -101,6 +101,7 @@ public class RecodeAudio {
             recorder.release();
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
         endTime = Calendar.getInstance().getTimeInMillis();
         if (endTime - startTime < 1000) {
@@ -147,8 +148,26 @@ public class RecodeAudio {
             return;
         }
 
-        String[] permission = (String[]) permissionList.toArray();
+        String[] permission = permissionList.toArray(new String[permissionList.size()]);
         int code = StaticField.PermissionRequestCode.CHAT_RECORD_AUDIO;
         ActivityCompat.requestPermissions(mActivity, permission, code);
+    }
+
+    public boolean AllPermissionGrant() {
+        List<String> permissionList = new ArrayList<>();
+
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.RECORD_AUDIO);
+        }
+        return permissionList.size() == 0;
     }
 }

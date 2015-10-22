@@ -4,7 +4,6 @@ package com.tizi.quanzi.ui.new_group;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -141,12 +140,6 @@ public class NewGroupStep2Fragment extends BaseFragment {
     public void onContactPermissionAns(PermissionAnser permissionAnser) {
         if (StaticField.PermissionRequestCode.addContactUsersInNewGroup == permissionAnser.requestCode) {
 
-            for (int ans : permissionAnser.grantResults) {
-                if (ans == PackageManager.PERMISSION_DENIED) {
-                    Snackbar.make(view, "您拒绝了权限!", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-            }
             FindContactUsers();
         }
     }

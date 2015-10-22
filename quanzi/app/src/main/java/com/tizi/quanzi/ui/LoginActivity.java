@@ -85,7 +85,21 @@ public class LoginActivity extends BaseActivity {
                 App.getApplication().getSharedPreferences(
                         StaticField.Preferences.TOKENFILE, Context.MODE_PRIVATE).edit()
                         .putString(StaticField.Preferences.PASSWORD, "").apply();
-                AutoLogin.getNewInstance().loginRaw(StaticField.GuestUser.Account, StaticField.GuestUser.PassWord);
+                AutoLogin.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                    @Override
+                    public void onOK(Object ts) {
+                        //启动主界面
+                        //start intent
+                        Intent intent = new Intent(mActivity, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(String Message) {
+                        Snackbar.make(findViewById(R.id.LoginLayout), Message, Snackbar.LENGTH_LONG).show();
+                    }
+                }).loginRaw(StaticField.GuestUser.Account, StaticField.GuestUser.PassWord);
             }
         });
 

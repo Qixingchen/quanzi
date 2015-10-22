@@ -12,6 +12,7 @@ import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.otto.FragmentResume;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseActivity;
 
 public class DynsActivity extends BaseActivity {
@@ -100,6 +101,10 @@ public class DynsActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_send_dyn) {
+            if (Tool.isGuest()) {
+                Tool.GuestAction(this);
+                return true;
+            }
             sendDynFragment = SendDynFragment.newInstance(themeString, groupID, themeID);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment, sendDynFragment)
                     .addToBackStack("SendDynFragment").commit();

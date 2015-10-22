@@ -49,7 +49,7 @@ public class LockLock extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        mThemeItemsRecyclerView = (RecyclerView) view.findViewById(R.id.theme_item_recycler_view);
+        mThemeItemsRecyclerView = (RecyclerView) view.findViewById(R.id.item_recycler_view);
         mThemeItemsRecyclerView.setHasFixedSize(true);
         themeAdapter = new ThemeAdapter(null, mActivity).setOnClick(new ThemeAdapter.OnClick() {
             @Override

@@ -8,6 +8,7 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.notification.AddNotification;
@@ -97,6 +98,7 @@ public class AutoLogin extends RetrofitNetworkAbs {
                     setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     PrivateMessPairList.getInstance().getGroupsFromDataBase();
+                    SystemMessageList.getInstance().getGroupsFromDataBase();
                     ((GroupList) (GroupList.getInstance())).setGroupListByLoginGroup(login.getGroup());
                 }
                 myOnResponse(response);

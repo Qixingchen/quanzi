@@ -28,7 +28,7 @@ public class GroupList extends ConvGroupAbsList<GroupClass> {
     }
 
     @Override
-    public int getUnreadCount(String convID) {
+    public int getUnreadCount(String convID, String groupID) {
         return DBAct.getInstance().quaryUnreadCount(convID);
     }
 

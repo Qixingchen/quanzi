@@ -23,7 +23,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      *
      * @return 未读数量
      */
-    public abstract int getUnreadCount(String convID);
+    public abstract int getUnreadCount(String convID, String GroupID);
 
     /**
      * 添加数据变更时的回调
@@ -53,6 +53,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
             groupList.addAll(newGroupList);
             updateUnreadCount();
         }
+
         sort();
         noticeAllCallBack();
     }
@@ -79,7 +80,8 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         synchronized (groupList) {
             for (T group : groupList) {
                 if (group.ID.compareTo(id) == 0) {
-                    group.UnreadCount = getUnreadCount(group.convId);
+                    // TODO: 15/10/22 在系统消息上循环,如果有用,请另外提供
+                    //group.UnreadCount = getUnreadCount(group.convId, group.ID);
                     return group;
                 }
             }
@@ -110,7 +112,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         }
         synchronized (groupList) {
             groupList.add(group);
-            group.UnreadCount = getUnreadCount(group.convId);
+            group.UnreadCount = getUnreadCount(group.convId, group.ID);
         }
         sort();
         noticeAllCallBack();
@@ -182,7 +184,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
                 if (group.convId.compareTo(convID) == 0) {
                     group.lastMess = lastMess;
                     group.lastMessTime = lastTime;
-                    group.UnreadCount = getUnreadCount(group.convId);
+                    group.UnreadCount = getUnreadCount(group.convId, group.ID);
                     isUpdated = true;
                     break;
                 }
@@ -200,7 +202,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      */
     protected void updateUnreadCount() {
         for (T group : groupList) {
-            group.UnreadCount = getUnreadCount(group.convId);
+            group.UnreadCount = getUnreadCount(group.convId, group.ID);
         }
     }
 

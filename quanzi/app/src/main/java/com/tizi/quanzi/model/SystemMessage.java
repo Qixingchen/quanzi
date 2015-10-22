@@ -13,23 +13,51 @@ import java.io.Serializable;
  * 相关attr name {@link com.tizi.quanzi.tool.StaticField.SystemMessAttrName}
  */
 public class SystemMessage implements Parcelable, Serializable {
-    private String id; //消息ID
-    private String convid;//会话id, 针对邀请加入某个圈子之类的，需要根据当前会话id加入
-    private String user_id; //发送系统消息方
-    private String user_icon;//发送系统消息方的头像，冗余，可以为空，如系统主动发送的消息可能会有个系统图标，此时这个为空。
-    private String user_name;//发送系统消息的名称，冗余，可以为空，如a邀请b加入某个圈子，user_name = a。系统发送的可以为空或“客服小秘书”
-    private String msg_type;//消息类型：系统公告、邀请加入圈子等消息类型
-    private String content;//消息内容：如 xxx邀请您加入xx圈子
-    private String remark;//消息中附带的邀请者信息：比如附带消息是“我是xxx，快来加入啊”
-    private String link_url;//可能是链接消息，可以通过网址打开网站
-    /** 系统消息标识 {@link com.tizi.quanzi.tool.StaticField.SystemMessAttrName.systemFlag} */
-    private int sys_msg_flag;
-    /** 处理状态 {@link StaticField.SystemMessAttrName.statueCode} */
-    private int status;
+    public static final Parcelable.Creator<SystemMessage> CREATOR = new Parcelable.Creator<SystemMessage>() {
+        public SystemMessage createFromParcel(Parcel source) {
+            return new SystemMessage(source);
+        }
 
-    private boolean isread;//是否已读
-    private String group_id;//邀请加入的圈子ID
-    private long create_time;
+        public SystemMessage[] newArray(int size) {
+            return new SystemMessage[size];
+        }
+    };
+    public String id; //消息ID
+    public String convid;//会话id, 针对邀请加入某个圈子之类的，需要根据当前会话id加入
+    public String user_id; //发送系统消息方
+    public String user_icon;//发送系统消息方的头像，冗余，可以为空，如系统主动发送的消息可能会有个系统图标，此时这个为空。
+    public String user_name;//发送系统消息的名称，冗余，可以为空，如a邀请b加入某个圈子，user_name = a。系统发送的可以为空或“客服小秘书”
+    public String msg_type;//消息类型：系统公告、邀请加入圈子等消息类型
+    public String content;//消息内容：如 xxx邀请您加入xx圈子
+    public String remark;//消息中附带的邀请者信息：比如附带消息是“我是xxx，快来加入啊”
+    public String link_url;//可能是链接消息，可以通过网址打开网站
+    /** 系统消息标识 {@link com.tizi.quanzi.tool.StaticField.SystemMessAttrName.systemFlag} */
+    public int sys_msg_flag;
+    /** 处理状态 {@link StaticField.SystemMessAttrName.statueCode} */
+    public int status;
+    public boolean isread;//是否已读
+    public String group_id;//邀请加入的圈子ID
+    public long create_time;
+
+    public SystemMessage() {
+    }
+
+    protected SystemMessage(Parcel in) {
+        this.id = in.readString();
+        this.convid = in.readString();
+        this.user_id = in.readString();
+        this.user_icon = in.readString();
+        this.user_name = in.readString();
+        this.msg_type = in.readString();
+        this.content = in.readString();
+        this.remark = in.readString();
+        this.link_url = in.readString();
+        this.sys_msg_flag = in.readInt();
+        this.status = in.readInt();
+        this.isread = in.readByte() != 0;
+        this.group_id = in.readString();
+        this.create_time = in.readLong();
+    }
 
     @Override
     public String toString() {
@@ -185,34 +213,4 @@ public class SystemMessage implements Parcelable, Serializable {
         dest.writeString(this.group_id);
         dest.writeLong(this.create_time);
     }
-
-    public SystemMessage() {
-    }
-
-    protected SystemMessage(Parcel in) {
-        this.id = in.readString();
-        this.convid = in.readString();
-        this.user_id = in.readString();
-        this.user_icon = in.readString();
-        this.user_name = in.readString();
-        this.msg_type = in.readString();
-        this.content = in.readString();
-        this.remark = in.readString();
-        this.link_url = in.readString();
-        this.sys_msg_flag = in.readInt();
-        this.status = in.readInt();
-        this.isread = in.readByte() != 0;
-        this.group_id = in.readString();
-        this.create_time = in.readLong();
-    }
-
-    public static final Parcelable.Creator<SystemMessage> CREATOR = new Parcelable.Creator<SystemMessage>() {
-        public SystemMessage createFromParcel(Parcel source) {
-            return new SystemMessage(source);
-        }
-
-        public SystemMessage[] newArray(int size) {
-            return new SystemMessage[size];
-        }
-    };
 }

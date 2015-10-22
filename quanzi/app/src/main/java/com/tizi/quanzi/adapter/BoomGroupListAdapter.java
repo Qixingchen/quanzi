@@ -89,7 +89,7 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
             }
 
             /*unread*/
-            Integer unreadCount = BoomGroupList.getInstance().getUnreadCount(boomGroup.convId);
+            Integer unreadCount = BoomGroupList.getInstance().getUnreadCount(boomGroup.convId, boomGroup.ID);
             vh.unreadCount.setText(String.valueOf(unreadCount == null ? 0 : unreadCount));
 
             /*onCLick*/

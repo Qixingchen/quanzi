@@ -21,19 +21,19 @@ import com.tizi.quanzi.network.RetrofitNetworkAbs;
 public class GroupZonePagerAdapter extends PagerAdapter {
 
 
+    private final static String TAG = GroupZonePagerAdapter.class.getSimpleName();
     private final String tabTitles[] = new String[]{"参与", "相册"};
     private View Views[] = new View[tabTitles.length];
     private Context mContext;
     private RecyclerView mDynsItemsRecyclerView;
     private DynsAdapter dynsAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private final static String TAG = GroupZonePagerAdapter.class.getSimpleName();
 
     public GroupZonePagerAdapter(Context context) {
         mContext = context;
         LayoutInflater Inflater = LayoutInflater.from(context);
-        Views[0] = Inflater.inflate(R.layout.item_group_zone_dyns, null);
-        Views[1] = Inflater.inflate(R.layout.item_group_zone_dyns, null);
+        Views[0] = Inflater.inflate(R.layout.item_only_recycler_view, null);
+        Views[1] = Inflater.inflate(R.layout.item_only_recycler_view, null);
     }
 
     /**
@@ -71,7 +71,7 @@ public class GroupZonePagerAdapter extends PagerAdapter {
     public Object instantiateItem(View container, int position) {
         if (position == 0) {
 
-            mDynsItemsRecyclerView = (RecyclerView) Views[0].findViewById(R.id.theme_item_recycler_view);
+            mDynsItemsRecyclerView = (RecyclerView) Views[0].findViewById(R.id.item_recycler_view);
             mDynsItemsRecyclerView.setHasFixedSize(true);
             dynsAdapter = new DynsAdapter(null, mContext);
             mLayoutManager = new LinearLayoutManager(mContext);

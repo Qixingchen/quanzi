@@ -91,6 +91,7 @@ public class StaticField {
             public final static int group_delete = 3;
             public final static int kicked = 4;
             public final static int group_change_name = 5;
+            public final static int dyn_comment = 6;
         }
     }
 

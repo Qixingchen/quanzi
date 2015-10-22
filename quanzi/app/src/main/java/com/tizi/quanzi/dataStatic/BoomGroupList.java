@@ -30,7 +30,7 @@ public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
      * @return 未读数量
      */
     @Override
-    public int getUnreadCount(String convID) {
+    public int getUnreadCount(String convID, String groupID) {
         return DBAct.getInstance().quaryUnreadCount(convID);
     }
 }

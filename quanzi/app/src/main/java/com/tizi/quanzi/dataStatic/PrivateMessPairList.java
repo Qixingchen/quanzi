@@ -2,10 +2,7 @@ package com.tizi.quanzi.dataStatic;
 
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.PrivateMessPair;
-import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
-
-import java.util.List;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -27,7 +24,7 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
     }
 
     @Override
-    public int getUnreadCount(String convID) {
+    public int getUnreadCount(String convID, String groupID) {
         if (convID == null || convID.compareTo("") == 0) {
             return 0;
         } else {
@@ -39,8 +36,6 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
      * 从数据库加载原有的消息
      */
     public void getGroupsFromDataBase() {
-        List<SystemMessage> systemMessages = DBAct.getInstance().quaryAllSysMess();
-        setGroupList(PrivateMessPair.PriMessesFromSystemMesses(systemMessages));
         DBAct.getInstance().addPrivateMessToList();
     }
 

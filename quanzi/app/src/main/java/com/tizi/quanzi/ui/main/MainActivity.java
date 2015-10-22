@@ -17,7 +17,7 @@ import com.tizi.quanzi.ui.BaseActivity;
 public class MainActivity extends BaseActivity {
     private static final String toolbarTitle = "圈子";
     private MainFragment mainFragment;
-    private PrivateMessageFragment privateMessageFragment;
+    private NotifiMessageFragment notifiMessageFragment;
     private UserInfoSetFragment userInfoSetFragment;
     //toolbar
     private Toolbar toolbar;
@@ -63,9 +63,9 @@ public class MainActivity extends BaseActivity {
             public void changed() {
                 int num = PrivateMessPairList.getInstance().getAllUnreadCount();
                 if (num != 0) {
-                    menu.findItem(R.id.action_private_message).setTitle("私信（" + num + "）条");
+                    menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
                 } else {
-                    menu.findItem(R.id.action_private_message).setTitle("私信");
+                    menu.findItem(R.id.action_notifi_message).setTitle("通知");
                 }
             }
         });
@@ -77,26 +77,26 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_private_message) {
-            privateMessageFragment = new PrivateMessageFragment();
+        if (id == R.id.action_notifi_message) {
+            notifiMessageFragment = new NotifiMessageFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment, privateMessageFragment)
-                    .addToBackStack("privateMessageFragment").commit();
+                    .replace(R.id.fragment, notifiMessageFragment)
+                    .addToBackStack("notifiMessageFragment").commit();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    /*订阅私信界面的恢复和暂停*/
+    /*订阅通知界面的恢复和暂停*/
     @Subscribe
     public void onFragmentResume(FragmentResume fragmentResume) {
-        if (fragmentResume.FramgentName.compareTo(PrivateMessageFragment.class.getSimpleName()) != 0) {
+        if (fragmentResume.FramgentName.compareTo(NotifiMessageFragment.class.getSimpleName()) != 0) {
             return;
         }
         if (fragmentResume.resumeOrPause) {
-            menu.findItem(R.id.action_private_message).setVisible(false);
+            menu.findItem(R.id.action_notifi_message).setVisible(false);
         } else {
-            menu.findItem(R.id.action_private_message).setVisible(true);
+            menu.findItem(R.id.action_notifi_message).setVisible(true);
         }
     }
 

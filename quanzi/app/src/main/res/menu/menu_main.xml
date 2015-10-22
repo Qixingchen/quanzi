@@ -3,7 +3,7 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.tizi.quanzi.ui.main.MainActivity">
     <item
-        android:id="@+id/action_private_message"
+        android:id="@+id/action_notifi_message"
         android:orderInCategory="100"
         android:title="@string/private_message"
         app:showAsAction="withText|always"/>

@@ -5,21 +5,21 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.network.GetVolley;
-import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.tool.ZipPic;
@@ -58,32 +58,32 @@ public class GalleryAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
-        View v = LayoutInflater.from(container.getContext())
+        final View vRoot = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_big_pic, container, false);
-        final SubsamplingScaleImageView image = (SubsamplingScaleImageView) v.findViewById(R.id.pic);
+        final SubsamplingScaleImageView image = (SubsamplingScaleImageView) vRoot.findViewById(R.id.pic);
 
-        GetVolley.getmInstance().getImageLoader().get(pics.get(position), new ImageLoader.ImageListener() {
+        Picasso.with(activity).load(pics.get(position)).into(new Target() {
             @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                Bitmap bitmap = response.getBitmap();
-                if (bitmap != null) {
-                    image.setImage(ImageSource.bitmap(bitmap));
-                    image.setZoomEnabled(true);
-                } else if (!image.isImageLoaded()) {
-                    image.setImage(ImageSource.resource(R.drawable.face));
-                    image.setZoomEnabled(false);
-                }
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                image.setImage(ImageSource.bitmap(bitmap));
+                image.setZoomEnabled(true);
             }
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onBitmapFailed(Drawable errorDrawable) {
                 image.setImage(ImageSource.resource(R.drawable.girl));
                 image.setZoomEnabled(false);
             }
-        }, GetThumbnailsUri.getPXs(activity, 360), GetThumbnailsUri.getPXs(activity, 640));
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                image.setImage(ImageSource.resource(R.drawable.face));
+                image.setZoomEnabled(false);
+            }
+        });
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onLongClick(final View v) {
                 String[] items = {"保存图片"};
                 new AlertDialog.Builder(activity)
                         .setItems(items, new DialogInterface.OnClickListener() {
@@ -92,18 +92,20 @@ public class GalleryAdapter extends PagerAdapter {
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
                                             case 0:
-                                                GetVolley.getmInstance().getImageLoader().get(pics.get(position), new ImageLoader.ImageListener() {
+                                                Picasso.with(activity).load(pics.get(position)).into(new Target() {
                                                     @Override
-                                                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                                                        Bitmap bitmap = response.getBitmap();
-                                                        if (bitmap != null) {
-                                                            saveBitmap(bitmap, position);
-                                                        }
+                                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                                        saveBitmap(bitmap, position);
                                                     }
 
                                                     @Override
-                                                    public void onErrorResponse(VolleyError error) {
+                                                    public void onBitmapFailed(Drawable errorDrawable) {
+                                                        Snackbar.make(vRoot, "下载失败", Snackbar.LENGTH_LONG).show();
+                                                    }
 
+                                                    @Override
+                                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                                        Snackbar.make(vRoot, "下载失败", Snackbar.LENGTH_LONG).show();
                                                     }
                                                 });
                                                 break;
@@ -124,8 +126,8 @@ public class GalleryAdapter extends PagerAdapter {
             }
         });
 
-        container.addView(v);
-        return v;
+        container.addView(vRoot);
+        return vRoot;
     }
 
     private void saveBitmap(Bitmap bitmap, int position) {

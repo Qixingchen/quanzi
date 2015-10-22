@@ -141,7 +141,7 @@ public class AppStaticValue {
                     isImclientOpen = false;
                     e.printStackTrace();
                 } else {
-                    Log.w(TAG, "AVIMClient链接成功");
+                    Log.i(TAG, "AVIMClient链接成功");
                     isImclientOpen = true;
                 }
             }
@@ -162,7 +162,7 @@ public class AppStaticValue {
                         isImclientOpen = false;
                         e.printStackTrace();
                     } else {
-                        Log.w(TAG, "AVIMClient链接成功");
+                        Log.i(TAG, "AVIMClient链接成功");
                         isImclientOpen = true;
                     }
                 }

@@ -1,34 +1,29 @@
 package com.tizi.quanzi.ui.new_group;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.SaveCallback;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.tool.GetThumbnailsUri;
+import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.RequreForImage;
+import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
-
-import java.io.IOException;
+import com.tizi.quanzi.ui.BaseFragment;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NewGroupStep1Fragment extends Fragment {
+public class NewGroupStep1Fragment extends BaseFragment {
 
-    RequreForImage requreForImage;
-    private Activity mActivity;
+    private RequreForImage requreForImage;
     private android.support.design.widget.TextInputLayout quanziNameInputLayout, quanziSignInputLayout;
     private ImageView UserPhotoImageView;
     private String groupFaceUri;
@@ -43,12 +38,16 @@ public class NewGroupStep1Fragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    protected void findViews(View view) {
         requreForImage = new RequreForImage(mActivity);
         quanziNameInputLayout = (TextInputLayout) mActivity.findViewById(R.id.quanziNameInputLayout);
         quanziSignInputLayout = (TextInputLayout) mActivity.findViewById(R.id.quanziSignInputLayout);
         UserPhotoImageView = (ImageView) mActivity.findViewById(R.id.UserPhotoImageView);
+    }
+
+    @Override
+    protected void initViewsAndSetEvent() {
+
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,56 +57,30 @@ public class NewGroupStep1Fragment extends Fragment {
         });
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mActivity = activity;
-    }
-
     /**
      * Intent回调
-     *
-     * @param requestCode 请求码
-     * @param resultCode  结果码（是否完成）
-     * @param data        数据
      */
-    public void onIntentResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            String filePath = requreForImage.ZipedFilePathFromIntent(data);
-            if (filePath != null) {
-                savePhoto(filePath);
-            }
-        }
-    }
+    @Subscribe
+    public void onIntentResult(ActivityResultAns activityResultAns) {
+        if (activityResultAns.requestCode == StaticField.PermissionRequestCode.new_group_face_photo) {
+            if (activityResultAns.resultCode == Activity.RESULT_OK && activityResultAns.data != null) {
+                String filePath = requreForImage.ZipedFilePathFromIntent(activityResultAns.data);
+                if (filePath != null) {
 
-    /**
-     * 将图片储存到LeanCloud
-     *
-     * @param filepath 图片地址
-     */
-    private void savePhoto(String filepath) {
-        AVFile file = null;
-        try {
-            file = AVFile.withAbsoluteLocalPath(AppStaticValue.getUserID() + "group.jpg",
-                    filepath);
-            final AVFile finalFile = file;
-            file.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e != null) {
-                        //上传失败
-                    } else {
-                        String photoUri = finalFile.getThumbnailUrl(false, 200, 200);
-                        Picasso.with(mActivity).load(photoUri)
-                                //todo getsize
-                                .resize(GetThumbnailsUri.getPXs(mActivity, 48), GetThumbnailsUri.getPXs(mActivity, 48))
-                                .into(UserPhotoImageView);
-                        groupFaceUri = photoUri;
-                    }
+                    SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+                        @Override
+                        public void onResult(String uri, boolean success) {
+                            String photoUri = uri;
+                            //finalFile.getThumbnailUrl(false, 200, 200);
+                            Picasso.with(mActivity).load(photoUri)
+                                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                                    .into(UserPhotoImageView);
+                            groupFaceUri = photoUri;
+                        }
+                    }).savePhoto(filePath, AppStaticValue.getUserID() + "group.jpg", 200, 200, 50);
+
                 }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+            }
         }
     }
 

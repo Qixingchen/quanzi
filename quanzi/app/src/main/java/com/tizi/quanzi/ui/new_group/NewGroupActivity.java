@@ -132,9 +132,4 @@ public class NewGroupActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        newGroupStep1Fragment.onIntentResult(requestCode, resultCode, data);
-    }
 }

@@ -12,8 +12,10 @@ import com.tizi.quanzi.log.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by qixingchen on 15/8/17.
@@ -125,8 +127,27 @@ public class RecodeAudio {
      * 取得所有需要的授权
      */
     private void requestAllPermission() {
-        String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO};
+
+        List<String> permissionList = new ArrayList<>();
+
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.RECORD_AUDIO);
+        }
+        if (permissionList.size() == 0) {
+            Log.w(RecodeAudio.class.getSimpleName(), "permissionList.size == 0");
+            return;
+        }
+
+        String[] permission = (String[]) permissionList.toArray();
         int code = StaticField.PermissionRequestCode.CHAT_RECORD_AUDIO;
         ActivityCompat.requestPermissions(mActivity, permission, code);
     }

@@ -14,4 +14,5 @@
     <dimen name="group_introduce_face_size">120dp</dimen>
     <dimen name="weibo_pic_wei">68dp</dimen>
     <dimen name="weibo_pic_hei">100dp</dimen>
+    <dimen name="group_face_small">64dp</dimen>
 </resources>

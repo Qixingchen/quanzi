@@ -9,11 +9,11 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/UserPhotoImageView"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="@dimen/group_face_small"
+        android:layout_height="@dimen/group_face_small"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:background="@drawable/face"/>
+        android:src="@drawable/ic_camera_alt_48dp"/>
 
 
     <android.support.design.widget.TextInputLayout

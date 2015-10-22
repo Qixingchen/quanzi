@@ -85,27 +85,55 @@ public class ChatMessFormatFromAVIM {
                     StaticField.SystemMessAttrName.JOIN_CONV_ID));
         } catch (Exception ignored) {
         }
-        systemMessage.setUser_id((String) textMessage.getAttrs().get(
+        systemMessage.user_id = ((String) textMessage.getAttrs().get(
                 StaticField.ChatMessAttrName.userID));
-        systemMessage.setUser_icon((String) textMessage.getAttrs().get(
+        systemMessage.user_icon = ((String) textMessage.getAttrs().get(
                 StaticField.ChatMessAttrName.userIcon));
-        systemMessage.setUser_name((String) textMessage.getAttrs().get(
+        systemMessage.user_name = ((String) textMessage.getAttrs().get(
                 StaticField.ChatMessAttrName.userName));
-        systemMessage.setMsg_type((String) textMessage.getAttrs().get(
+        systemMessage.msg_type = ((String) textMessage.getAttrs().get(
                 StaticField.ChatMessAttrName.IS_SYS_MESS));
         systemMessage.setContent(textMessage.getText());
-        systemMessage.setRemark((String) textMessage.getAttrs().get(
+        systemMessage.remark = ((String) textMessage.getAttrs().get(
                 StaticField.SystemMessAttrName.REMARK));
-        systemMessage.setLink_url((String) textMessage.getAttrs().get(
+        systemMessage.link_url = ((String) textMessage.getAttrs().get(
                 StaticField.SystemMessAttrName.LINK_URL));
-        systemMessage.setSys_msg_flag((int) textMessage.getAttrs().get(
+        systemMessage.sys_msg_flag = ((int) textMessage.getAttrs().get(
                 StaticField.SystemMessAttrName.SYS_MSG_FLAG));
         systemMessage.setStatus(0);
         systemMessage.setIsread(false);
         systemMessage.setGroup_id((String) textMessage.getAttrs().get(
                 StaticField.ChatMessAttrName.groupID));
-        systemMessage.setCreate_time(textMessage.getTimestamp());
+        systemMessage.create_time = (textMessage.getTimestamp());
+        if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.dyn_comment) {
+            systemMessage = dynNoticeFromAVmess(textMessage, systemMessage);
+        }
         return systemMessage;
+    }
+
+    /**
+     * 将 AVIMTypedMessage 转换为 SystemMessage
+     *
+     * @param avMess  需要转换的 AVIMTypedMessage
+     * @param sysMess avmess 已经通过 SysMessFromAVMess 转换的 SystemMessage
+     *
+     * @return {@link SystemMessage}
+     */
+    private static SystemMessage dynNoticeFromAVmess(AVIMTextMessage avMess, SystemMessage sysMess) {
+
+        sysMess.reply_comment_id = (String) avMess.getAttrs().get(StaticField.DynNoticeAttrName.reply_comment_id);
+        sysMess.reply_comment = (String) avMess.getAttrs().get(StaticField.DynNoticeAttrName.reply_comment);
+        sysMess.reply_userid = (String) avMess.getAttrs().get(StaticField.DynNoticeAttrName.reply_userid);
+        sysMess.reply_username = (String) avMess.getAttrs().get(StaticField.DynNoticeAttrName.reply_username);
+
+        sysMess.dynid = (String) avMess.getAttrs().get(StaticField.DynNoticeAttrName.dynid);
+        sysMess.dyn_content = (String) avMess.getAttrs().get(StaticField.DynNoticeAttrName.dyn_content);
+        sysMess.dyn_icon = (String) avMess.getAttrs().get(StaticField.DynNoticeAttrName.dyn_icon);
+        sysMess.dyn_create_userid = (String) avMess.getAttrs().get(StaticField.DynNoticeAttrName.dyn_create_userid);
+        sysMess.dyn_create_username = (String) avMess.getAttrs()
+                .get(StaticField.DynNoticeAttrName.dyn_create_username);
+
+        return sysMess;
     }
 
     /*转换位置消息*/

@@ -95,6 +95,20 @@ public class StaticField {
         }
     }
 
+    public static class DynNoticeAttrName {
+
+        public final static String reply_comment_id = "reply_comment_id"; //回复评论id
+        public final static String reply_comment = "reply_comment"; // 回复评论内容
+        public final static String reply_userid = "reply_userid"; // 回复评论人id
+        public final static String reply_username = "reply_username"; // 回复评论人名称
+
+        public final static String dynid = "dynid"; // 动态id
+        public final static String dyn_content = "dyn_content"; //动态内容
+        public final static String dyn_icon = "dyn_icon";
+        public final static String dyn_create_userid = "dyn_create_userid"; // 动态发布人id
+        public final static String dyn_create_username = "dyn_create_username"; //动态发布人（圈子）
+    }
+
     /*申请权限ID*/
     /*0~255 在这被使用*/
     public static class PermissionRequestCode {

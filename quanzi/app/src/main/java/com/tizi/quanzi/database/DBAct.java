@@ -408,7 +408,7 @@ public class DBAct {
     public void addOrReplaceSysMess(SystemMessage systemMessage) {
         ContentValues content = new ContentValues();
         content.put(DataBaseHelper.SystemMessSQLName.id, systemMessage.getId());
-        content.put(DataBaseHelper.SystemMessSQLName.create_time, systemMessage.getCreate_time());
+        content.put(DataBaseHelper.SystemMessSQLName.create_time, systemMessage.create_time);
         content.put(DataBaseHelper.SystemMessSQLName.isread, systemMessage.isread());
         content.put(DataBaseHelper.SystemMessSQLName.Serializable,
                 SerializedObjectFormat.getSerializedObject(systemMessage));

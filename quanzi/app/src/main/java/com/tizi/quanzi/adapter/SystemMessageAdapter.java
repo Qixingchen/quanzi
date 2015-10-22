@@ -43,6 +43,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         });
     }
 
+
     /**
      * 判定类型
      *
@@ -99,13 +100,13 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
             SystemMessagePair systemMessagePair = systemMessagePairs.get(position);
 
             final SystemMessage systemMessage = systemMessagePair.systemMessage;
-            if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.invitation) {
+            if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.invitation) {
                 systemHolder.titleTextview.setVisibility(View.VISIBLE);
                 systemHolder.MessTextview.setVisibility(View.VISIBLE);
                 systemHolder.titleTextview.setText("邀请您加入圈子");
                 systemHolder.MessTextview.setText(systemMessage.getContent());
 
-                if (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.notComplete) {
+                if (systemMessage.status == StaticField.SystemMessAttrName.statueCode.notComplete) {
 
                     systemHolder.acceptButton.setVisibility(View.VISIBLE);
                     systemHolder.refuseButton.setVisibility(View.VISIBLE);

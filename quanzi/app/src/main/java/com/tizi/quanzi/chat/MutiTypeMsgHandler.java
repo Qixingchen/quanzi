@@ -60,12 +60,12 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         }
 
         /*自己发出的信息 忽略*/
-        if (systemMessage.getUser_id().compareTo(MyUserInfo.getInstance().getUserInfo().getId()) == 0) {
+        if (systemMessage.user_id.compareTo(MyUserInfo.getInstance().getUserInfo().getId()) == 0) {
             return;
         }
 
          /*圈子改名*/
-        if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
+        if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
             GroupClass group = (GroupClass) GroupList.getInstance().getGroup(systemMessage.getGroup_id());
             if (group != null) {
                 Log.i(TAG, group.Name + "更名为" + systemMessage.getContent());
@@ -77,12 +77,13 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         }
 
             /*圈子解散*/
-        if (systemMessage.getSys_msg_flag() == StaticField.SystemMessAttrName.systemFlag.group_delete) {
+        if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.group_delete) {
 
             GroupList.getInstance().deleteGroup(systemMessage.getGroup_id());
             systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
         }
-        SystemMessageList.getInstance().updateGroup(
+
+        SystemMessageList.getInstance().addGroup(
                 SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
         DBAct.getInstance().addOrReplaceSysMess(systemMessage);
     }
@@ -145,7 +146,9 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
         } catch (ClassFormatError error) {
             SystemMessage systemMessage = ChatMessFormatFromAVIM.SysMessFromAVMess(message);
+
             HandlerSystemMess(systemMessage, false);
+
         }
     }
 

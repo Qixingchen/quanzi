@@ -11,8 +11,9 @@ import java.io.Serializable;
  * Created by qixingchen on 15/8/25.
  * 系统消息
  * 相关attr name {@link com.tizi.quanzi.tool.StaticField.SystemMessAttrName}
+ * {@link com.tizi.quanzi.tool.StaticField.DynNoticeAttrName}
  */
-public class SystemMessage implements Parcelable, Serializable {
+public class SystemMessage implements Serializable, Parcelable {
     public static final Parcelable.Creator<SystemMessage> CREATOR = new Parcelable.Creator<SystemMessage>() {
         public SystemMessage createFromParcel(Parcel source) {
             return new SystemMessage(source);
@@ -38,6 +39,16 @@ public class SystemMessage implements Parcelable, Serializable {
     public boolean isread;//是否已读
     public String group_id;//邀请加入的圈子ID
     public long create_time;
+    /*动态通知*/
+    public String reply_comment_id; //回复评论id
+    public String reply_comment; // 回复评论内容
+    public String reply_userid; // 回复评论人id
+    public String reply_username; // 回复评论人名称
+    public String dynid; // 动态id
+    public String dyn_content; //动态内容
+    public String dyn_icon;
+    public String dyn_create_userid; // 动态发布人id
+    public String dyn_create_username; //动态发布人（圈子）
 
     public SystemMessage() {
     }
@@ -57,34 +68,15 @@ public class SystemMessage implements Parcelable, Serializable {
         this.isread = in.readByte() != 0;
         this.group_id = in.readString();
         this.create_time = in.readLong();
-    }
-
-    @Override
-    public String toString() {
-        return "SystemMessage{" +
-                "id='" + id + '\'' +
-                ", convid='" + convid + '\'' +
-                ", user_id='" + user_id + '\'' +
-                ", user_icon='" + user_icon + '\'' +
-                ", user_name='" + user_name + '\'' +
-                ", msg_type='" + msg_type + '\'' +
-                ", content='" + content + '\'' +
-                ", remark='" + remark + '\'' +
-                ", link_url='" + link_url + '\'' +
-                ", sys_msg_flag=" + sys_msg_flag +
-                ", status=" + status +
-                ", isread=" + isread +
-                ", group_id='" + group_id + '\'' +
-                ", create_time=" + create_time +
-                '}';
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        this.reply_comment_id = in.readString();
+        this.reply_comment = in.readString();
+        this.reply_userid = in.readString();
+        this.reply_username = in.readString();
+        this.dynid = in.readString();
+        this.dyn_content = in.readString();
+        this.dyn_icon = in.readString();
+        this.dyn_create_userid = in.readString();
+        this.dyn_create_username = in.readString();
     }
 
     public String getConvid() {
@@ -95,76 +87,20 @@ public class SystemMessage implements Parcelable, Serializable {
         this.convid = convid;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getGroup_id() {
+        return group_id;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setGroup_id(String group_id) {
+        this.group_id = group_id;
     }
 
-    public String getUser_icon() {
-        return user_icon;
+    public String getId() {
+        return id;
     }
 
-    public void setUser_icon(String user_icon) {
-        this.user_icon = user_icon;
-    }
-
-    public String getUser_name() {
-        return user_name;
-    }
-
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
-    }
-
-    public String getMsg_type() {
-        return msg_type;
-    }
-
-    public void setMsg_type(String msg_type) {
-        this.msg_type = msg_type;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getLink_url() {
-        return link_url;
-    }
-
-    public void setLink_url(String link_url) {
-        this.link_url = link_url;
-    }
-
-    public int getSys_msg_flag() {
-        return sys_msg_flag;
-    }
-
-    public void setSys_msg_flag(int sys_msg_flag) {
-        this.sys_msg_flag = sys_msg_flag;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public boolean isread() {
@@ -175,20 +111,20 @@ public class SystemMessage implements Parcelable, Serializable {
         this.isread = isread;
     }
 
-    public String getGroup_id() {
-        return group_id;
+    public String getContent() {
+        return content;
     }
 
-    public void setGroup_id(String group_id) {
-        this.group_id = group_id;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public long getCreate_time() {
-        return create_time;
+    public int getStatus() {
+        return status;
     }
 
-    public void setCreate_time(long create_time) {
-        this.create_time = create_time;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override
@@ -212,5 +148,14 @@ public class SystemMessage implements Parcelable, Serializable {
         dest.writeByte(isread ? (byte) 1 : (byte) 0);
         dest.writeString(this.group_id);
         dest.writeLong(this.create_time);
+        dest.writeString(this.reply_comment_id);
+        dest.writeString(this.reply_comment);
+        dest.writeString(this.reply_userid);
+        dest.writeString(this.reply_username);
+        dest.writeString(this.dynid);
+        dest.writeString(this.dyn_content);
+        dest.writeString(this.dyn_icon);
+        dest.writeString(this.dyn_create_userid);
+        dest.writeString(this.dyn_create_username);
     }
 }

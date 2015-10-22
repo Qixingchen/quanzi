@@ -68,14 +68,17 @@ public class GalleryAdapter extends PagerAdapter {
                 Bitmap bitmap = response.getBitmap();
                 if (bitmap != null) {
                     image.setImage(ImageSource.bitmap(bitmap));
-                } else {
+                    image.setZoomEnabled(true);
+                } else if (!image.isImageLoaded()) {
                     image.setImage(ImageSource.resource(R.drawable.face));
+                    image.setZoomEnabled(false);
                 }
             }
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 image.setImage(ImageSource.resource(R.drawable.girl));
+                image.setZoomEnabled(false);
             }
         }, GetThumbnailsUri.getPXs(activity, 360), GetThumbnailsUri.getPXs(activity, 640));
         image.setOnLongClickListener(new View.OnLongClickListener() {

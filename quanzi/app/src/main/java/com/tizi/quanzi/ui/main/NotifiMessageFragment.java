@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.NotifiPagerAdapter;
+import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.ui.BaseFragment;
 
 /**
@@ -51,4 +53,10 @@ public class NotifiMessageFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        PrivateMessPairList.getInstance().callUpdate();
+        SystemMessageList.getInstance().callUpdate();
+    }
 }

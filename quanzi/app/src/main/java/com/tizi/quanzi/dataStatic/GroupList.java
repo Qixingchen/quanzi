@@ -4,6 +4,7 @@ import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.otto.BusProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,14 @@ public class GroupList extends ConvGroupAbsList<GroupClass> {
     @Override
     public int getUnreadCount(String convID, String groupID) {
         return DBAct.getInstance().quaryUnreadCount(convID);
+    }
+
+    /**
+     * 通知所有回调
+     */
+    @Override
+    protected void noticeAllCallBack() {
+        BusProvider.getInstance().post(this);
     }
 
     /**

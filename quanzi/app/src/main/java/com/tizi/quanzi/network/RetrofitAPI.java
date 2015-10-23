@@ -157,6 +157,10 @@ public interface RetrofitAPI {
                 @Query("start") int start,
                 @Query("limit") int limit);
 
+        @POST("grpdyn/findF")
+        Call<com.tizi.quanzi.gson.Dyns> findDynByID(
+                @Query("dynid") String dynID);
+
         @POST("grpdyn/zanF")
         Call<AddZan> zan(
                 @Query("dynid") String dynID,

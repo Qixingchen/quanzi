@@ -1,6 +1,7 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,18 +10,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.GroupUserAdmin;
-import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
 import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.model.SystemMessagePair;
+import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.dyns.DynsActivity;
 
 import java.util.List;
 
@@ -40,14 +44,19 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         this.systemMessagePairs = systemMessagePairs;
         this.mContext = mContext;
         this.onclick = onclick;
-        SystemMessageList.getInstance().addOnChangeCallBack(new ConvGroupAbsList.OnChangeCallBack() {
-            @Override
-            public void changed() {
-                notifyDataSetChanged();
-            }
-        });
+        BusProvider.getInstance().register(this);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void onChanged(SystemMessageList list) {
+        notifyDataSetChanged();
+    }
 
     /**
      * 判定类型
@@ -131,7 +140,17 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                     systemHolder.acceptButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            GroupUserAdmin.getInstance(mContext).
+                            GroupUserAdmin.getInstance(mContext).setOnResult(new GroupUserAdmin.OnResult() {
+                                @Override
+                                public void OK() {
+
+                                }
+
+                                @Override
+                                public void error(String errorMessage) {
+                                    Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
+                                }
+                            }).
                                     acceptToJoinGroup(true, systemMessage.getConvid(), systemMessage.getGroup_id());
                             systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
                             systemMessage.setIsread(true);
@@ -155,6 +174,9 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                         }
                     });
                 }
+            } else {
+                systemHolder.MessTextview.setVisibility(View.VISIBLE);
+                systemHolder.MessTextview.setText(systemMessage.getContent());
             }
             systemHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -207,6 +229,14 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                 dynNotifyViewHolder.weibo_content.setTypeface(Typeface.DEFAULT);
                 dynNotifyViewHolder.weibo_content.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
             }
+            dynNotifyViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent dyn = new Intent(mContext, DynsActivity.class);
+                    dyn.putExtra("dynID", systemMessage.dynid);
+                    mContext.startActivity(dyn);
+                }
+            });
         }
     }
 

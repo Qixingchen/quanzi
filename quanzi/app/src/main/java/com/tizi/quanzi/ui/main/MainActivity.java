@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
-import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
@@ -58,34 +57,37 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        PrivateMessPairList.getInstance().addOnChangeCallBack(new PrivateMessPairList.OnChangeCallBack() {
-            @Override
-            public void changed() {
-                int num = PrivateMessPairList.getInstance().getAllUnreadCount()
-                        + SystemMessageList.getInstance().getAllUnreadCount();
-                if (num != 0) {
-                    menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
-                } else {
-                    menu.findItem(R.id.action_notifi_message).setTitle("通知");
-                }
-            }
-        });
-        SystemMessageList.getInstance().addOnChangeCallBack(new ConvGroupAbsList.OnChangeCallBack() {
-            @Override
-            public void changed() {
-                int num = PrivateMessPairList.getInstance().getAllUnreadCount()
-                        + SystemMessageList.getInstance().getAllUnreadCount();
-                if (num != 0) {
-                    menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
-                } else {
-                    menu.findItem(R.id.action_notifi_message).setTitle("通知");
-                }
-            }
-        });
         this.menu = menu;
         return true;
+    }
+
+    @Subscribe
+    public void onChanged(SystemMessageList ignore) {
+        if (menu == null) {
+            return;
+        }
+        int num = PrivateMessPairList.getInstance().getAllUnreadCount()
+                + SystemMessageList.getInstance().getAllUnreadCount();
+        if (num != 0) {
+            menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
+        } else {
+            menu.findItem(R.id.action_notifi_message).setTitle("通知");
+        }
+    }
+
+    @Subscribe
+    public void onChanged(PrivateMessPairList ignore) {
+        if (menu == null) {
+            return;
+        }
+        int num = PrivateMessPairList.getInstance().getAllUnreadCount()
+                + SystemMessageList.getInstance().getAllUnreadCount();
+        if (num != 0) {
+            menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
+        } else {
+            menu.findItem(R.id.action_notifi_message).setTitle("通知");
+        }
     }
 
     @Override

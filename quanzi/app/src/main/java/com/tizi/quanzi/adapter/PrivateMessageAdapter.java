@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.otto.BusProvider;
 
 import java.util.List;
 
@@ -37,14 +39,20 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      */
     public PrivateMessageAdapter(List<PrivateMessPair> privateMessPairs, Context mContext, Onclick onclick) {
         this.privateMessPairs = privateMessPairs;
-        PrivateMessPairList.getInstance().addOnChangeCallBack(new PrivateMessPairList.OnChangeCallBack() {
-            @Override
-            public void changed() {
-                notifyDataSetChanged();
-            }
-        });
         this.mContext = mContext;
         this.onclick = onclick;
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void onChanged(PrivateMessPairList list) {
+        notifyDataSetChanged();
     }
 
     /**

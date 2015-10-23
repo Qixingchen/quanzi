@@ -13,11 +13,13 @@ import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.BoomGroup;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.network.AddOrQuaryGroup;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.network.UserManageInGroup;
@@ -115,29 +117,45 @@ public class GroupUserAdmin {
      * @param groupID 组ID
      * @param userID  成员ID
      */
-    public void deleteMember(String convID, String groupID, String userID) {
+    public void deleteMember(final String convID, final String groupID, String userID) {
         if (userID.compareTo(AppStaticValue.getUserID()) == 0) {
             //发送系统通知
-            Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
-            attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
-                    StaticField.SystemMessAttrName.systemFlag.kicked, "");
-            SendMessage.getInstance().setSendOK(
-                    new SendMessage.SendOK() {
-                        @Override
-                        public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                            Log.i(TAG, "已发送删除通知");
-                        }
+            AddOrQuaryGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                @Override
+                public void onOK(Object ts) {
+                    GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
+                    Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
+                    attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
+                            StaticField.SystemMessAttrName.systemFlag.kicked, "");
+                    SendMessage sendMessage = SendMessage.getInstance().setSendOK(
+                            new SendMessage.SendOK() {
+                                @Override
+                                public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                                    Log.i(TAG, "已发送删除通知");
+                                }
 
-                        @Override
-                        public void sendError(String errorMessage, String CONVERSATION_ID) {
-                            Toast.makeText(mContext, "发送删除通知失败", Toast.LENGTH_LONG).show();
-                            Log.w(TAG, "发送删除通知失败" + errorMessage);
-                            if (onResult != null) {
-                                onResult.error(errorMessage);
-                            }
-                        }
+                                @Override
+                                public void sendError(String errorMessage, String CONVERSATION_ID) {
+                                    Toast.makeText(mContext, "发送删除通知失败", Toast.LENGTH_LONG).show();
+                                    Log.w(TAG, "发送删除通知失败" + errorMessage);
+                                    if (onResult != null) {
+                                        onResult.error(errorMessage);
+                                    }
+                                }
+                            });
+                    if (groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
+                        sendMessage.sendTextMessage(convID, "你被踢出了OAQ", attr);
+                    } else {
+                        sendMessage.sendTextMessage(convID, MyUserInfo.getInstance().getUserInfo().getUserName() +
+                                "退出了圈子" + groupAllInfo.group.groupName, attr);
                     }
-            ).sendTextMessage(convID, "你被踢出了OAQ", attr);
+                }
+
+                @Override
+                public void onError(String Message) {
+
+                }
+            }).queryGroup(groupID);
         }
         //LeanCloud删除
         List<String> userIds = new ArrayList<>();

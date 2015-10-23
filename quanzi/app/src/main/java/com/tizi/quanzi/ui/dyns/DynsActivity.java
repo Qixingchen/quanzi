@@ -2,13 +2,16 @@ package com.tizi.quanzi.ui.dyns;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.Theme;
+import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.otto.FragmentResume;
@@ -29,9 +32,33 @@ public class DynsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dyns);
-        dynsActivityFragment = new DynsActivityFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynsActivityFragment)
-                .commit();
+        String dynID = getIntent().getStringExtra("dynID");
+        if (dynID == null) {
+            dynsActivityFragment = new DynsActivityFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynsActivityFragment)
+                    .commit();
+        } else {
+            DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                @Override
+                public void onOK(Object ts) {
+                    Dyns dyns = (Dyns) ts;
+                    if (dyns.dyns.size() == 1) {
+                        DynInfoFragment dynInfoFragment = new DynInfoFragment();
+                        dynInfoFragment.setDyn(dyns.dyns.get(0));
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynInfoFragment)
+                                .addToBackStack("DynInfoFragment").commit();
+                    } else {
+                        Snackbar.make(view, "找不到对应动态 数量:" + dyns.dyns.size(), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onError(String Message) {
+                    Snackbar.make(view, "找不到对应动态 " + Message, Snackbar.LENGTH_LONG).show();
+                }
+            }).getDynamicByID(dynID);
+
+        }
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
     }
 

@@ -3,6 +3,7 @@ package com.tizi.quanzi.network;
 import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.AddZan;
 import com.tizi.quanzi.gson.Comments;
+import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.IsZan;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
@@ -67,6 +68,25 @@ public class DynamicAct extends RetrofitNetworkAbs {
         dynsCall.enqueue(new Callback<com.tizi.quanzi.gson.Dyns>() {
             @Override
             public void onResponse(retrofit.Response<com.tizi.quanzi.gson.Dyns> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
+    /**
+     * 获取动态
+     *
+     * @param dynID 动态ID
+     */
+    public void getDynamicByID(String dynID) {
+        dynsSer.findDynByID(dynID).enqueue(new Callback<Dyns>() {
+            @Override
+            public void onResponse(Response<Dyns> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

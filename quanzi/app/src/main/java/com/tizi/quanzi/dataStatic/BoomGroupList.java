@@ -2,6 +2,7 @@ package com.tizi.quanzi.dataStatic;
 
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.BoomGroupClass;
+import com.tizi.quanzi.otto.BusProvider;
 
 /**
  * Created by qixingchen on 15/10/10.
@@ -32,5 +33,13 @@ public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
     @Override
     public int getUnreadCount(String convID, String groupID) {
         return DBAct.getInstance().quaryUnreadCount(convID);
+    }
+
+    /**
+     * 通知所有回调
+     */
+    @Override
+    protected void noticeAllCallBack() {
+        BusProvider.getInstance().post(this);
     }
 }

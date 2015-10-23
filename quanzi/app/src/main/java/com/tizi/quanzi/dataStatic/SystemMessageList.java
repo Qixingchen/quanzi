@@ -3,6 +3,7 @@ package com.tizi.quanzi.dataStatic;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.model.SystemMessagePair;
+import com.tizi.quanzi.otto.BusProvider;
 
 import java.util.List;
 
@@ -42,7 +43,19 @@ public class SystemMessageList extends ConvGroupAbsList<SystemMessagePair> {
      */
     @Override
     public int getUnreadCount(String convID, String groupID) {
-        return getGroup(groupID).systemMessage.isread ? 0 : 1;
+        SystemMessagePair pair = getGroup(groupID);
+        if (pair == null) {
+            return 0;
+        }
+        return pair.systemMessage.isread ? 0 : 1;
+    }
+
+    /**
+     * 通知所有回调
+     */
+    @Override
+    protected void noticeAllCallBack() {
+        BusProvider.getInstance().post(this);
     }
 
     /**

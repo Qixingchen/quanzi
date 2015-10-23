@@ -14,7 +14,6 @@ import java.util.List;
 public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
 
     protected final ArrayList<T> groupList = new ArrayList<>();
-    protected ArrayList<OnChangeCallBack> onChangeCallBacks = new ArrayList<>();
 
     /**
      * 获取未读数量
@@ -25,16 +24,6 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      */
     public abstract int getUnreadCount(String convID, String GroupID);
 
-    /**
-     * 添加数据变更时的回调
-     * 添加后会立即调用一次
-     */
-    public ConvGroupAbsList addOnChangeCallBack(OnChangeCallBack onChangeCallBack) {
-
-        onChangeCallBacks.add(onChangeCallBack);
-        noticeAllCallBack();
-        return this;
-    }
 
     /**
      * 获取组列表
@@ -62,6 +51,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      * 向所有回调发布更新通知
      */
     public void callUpdate() {
+        updateUnreadCount();
         noticeAllCallBack();
     }
 
@@ -209,13 +199,6 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     /**
      * 通知所有回调
      */
-    protected void noticeAllCallBack() {
-        for (OnChangeCallBack cb : onChangeCallBacks) {
-            cb.changed();
-        }
-    }
+    protected abstract void noticeAllCallBack();
 
-    public interface OnChangeCallBack {
-        void changed();
-    }
 }

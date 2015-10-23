@@ -7,12 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
-import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
+import com.tizi.quanzi.otto.BusProvider;
 
 import java.util.List;
 
@@ -31,12 +32,18 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
     public BoomGroupListAdapter(Context context) {
         this.boomGroups = BoomGroupList.getInstance().getGroupList();
         this.context = context;
-        BoomGroupList.getInstance().addOnChangeCallBack(new ConvGroupAbsList.OnChangeCallBack() {
-            @Override
-            public void changed() {
-                notifyDataSetChanged();
-            }
-        });
+        BusProvider.getInstance().register(this);
+    }
+
+    @Subscribe
+    public void onChanged(BoomGroupList ignore) {
+        notifyDataSetChanged();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        BusProvider.getInstance().unregister(this);
     }
 
     public void setOnClick(OnClick onClick) {

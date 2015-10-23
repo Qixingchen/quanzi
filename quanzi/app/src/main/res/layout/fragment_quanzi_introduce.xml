@@ -112,7 +112,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
-        android:src="@drawable/face"
+        android:src="@drawable/ic_camera_alt_48dp"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|right|end"/>
 

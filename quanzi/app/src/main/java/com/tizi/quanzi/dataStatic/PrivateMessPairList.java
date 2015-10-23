@@ -2,6 +2,7 @@ package com.tizi.quanzi.dataStatic;
 
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.PrivateMessPair;
+import com.tizi.quanzi.otto.BusProvider;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -29,6 +30,14 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
         } else {
             return DBAct.getInstance().quaryUnreadCount(convID);
         }
+    }
+
+    /**
+     * 通知所有回调
+     */
+    @Override
+    protected void noticeAllCallBack() {
+        BusProvider.getInstance().post(this);
     }
 
     /**

@@ -8,10 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.otto.BusProvider;
 
 import java.util.List;
 
@@ -34,13 +36,19 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
         this.groupClasses = kGroupClasses;
         this.context = context;
         this.onclick = onclick;
-        GroupList.getInstance().addOnChangeCallBack(new GroupList.OnChangeCallBack() {
-            @Override
-            public void changed() {
-                groupClasses = GroupList.getInstance().getGroupList();
-                notifyDataSetChanged();
-            }
-        });
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void onChanged(GroupList list) {
+        groupClasses = list.getGroupList();
+        notifyDataSetChanged();
     }
 
     /**

@@ -9,8 +9,7 @@
         android:id="@+id/phonenumber"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:hint="手机号"
-        android:inputType="phone"/>
+        android:hint="手机号"/>
 
     <Button
         android:id="@+id/ok"

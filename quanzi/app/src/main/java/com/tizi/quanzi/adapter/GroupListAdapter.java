@@ -14,6 +14,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.tool.StaticField;
 
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemCount() {
-        return groupClasses == null ? 1 : groupClasses.size() + 1;
+        return groupClasses == null ? 1 : Math.min(groupClasses.size() + 1, StaticField.QueryLimit.MAX_QUANZI);
 
     }
 

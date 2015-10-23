@@ -143,6 +143,7 @@ public class StaticField {
         public static final int DynamicLimit = 50;
         // TODO: 15/10/20 加大联系人限制到100
         public static final int ContactLimit = 10;
+        public static final int MAX_QUANZI = 10;
     }
 
     /*系统消息还是私聊*/

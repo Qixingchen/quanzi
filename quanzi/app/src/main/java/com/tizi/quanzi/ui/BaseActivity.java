@@ -110,11 +110,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                     }
                 }).show();
+                BusProvider.getInstance().post(PermissionAnser.getAns(requestCode, permissions, grantResults, false));
                 return;
             }
         }
+        BusProvider.getInstance().post(PermissionAnser.getAns(requestCode, permissions, grantResults, true));
 
-        BusProvider.getInstance().post(PermissionAnser.getAns(requestCode, permissions, grantResults));
 
     }
 

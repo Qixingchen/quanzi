@@ -241,6 +241,9 @@ public class RequreForImage {
     /*授权回调*/
     @Subscribe
     public void onRequestPermissionsResult(PermissionAnser permissionAnser) {
+        if (!permissionAnser.allGreen) {
+            return;
+        }
         if (StaticField.PermissionRequestCode.isImagePermissionEvent(permissionAnser.requestCode)) {
 
             showDialogAndCallIntent(lastTitle, permissionAnser.requestCode, lastAllowMultiple, lastSelectLimit);

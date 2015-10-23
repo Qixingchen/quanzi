@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
@@ -29,6 +30,8 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
@@ -51,6 +54,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         this.mContext = mContext;
         this.memlist = memlist;
         this.isCreater = isCreater;
+        BusProvider.getInstance().register(this);
     }
 
     public void setGroupID(String groupID) {
@@ -86,7 +90,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             holder.weibo_avatar_NetworkImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addUser(groupID);
+                    addUser(groupID, false);
                 }
             });
 
@@ -159,11 +163,11 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      *
      * @param groupid 当前组ID
      */
-    private void addUser(final String groupid) {
+    private void addUser(final String groupid, boolean dontHavePermissionButIgnore) {
 
         final Activity activity = AppStaticValue.getActivity(QuanziZoneActivity.class.getSimpleName());
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (!dontHavePermissionButIgnore && ActivityCompat.checkSelfPermission(
+                activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 
             int code = StaticField.PermissionRequestCode.addContactUsersInQuanziZone;
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CONTACTS}, code);
@@ -178,38 +182,45 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         final RecyclerView phoneList = (RecyclerView) layout.findViewById(R.id.invite_item_recycler_view);
         phoneList.setLayoutManager(new LinearLayoutManager(activity));
 
+        final InviteListAdapter.OnAddUser onAddUser = new InviteListAdapter.OnAddUser() {
+            @Override
+            public void add(String userID) {
+                final String convID = GroupList.getInstance().getGroup(groupid).convId;
+
+                GroupUserAdmin.getInstance(mContext)
+                        .setOnResult(new GroupUserAdmin.OnResult() {
+                            @Override
+                            public void OK() {
+                                Toast.makeText(mContext, "添加请求发送成功", Toast.LENGTH_LONG).show();
+                                Log.i(TAG, "添加请求发送成功");
+                            }
+
+                            @Override
+                            public void error(String errorMessage) {
+                                Toast.makeText(mContext, "添加失败" + errorMessage
+                                        , Toast.LENGTH_LONG).show();
+                                Log.w(TAG, "添加失败" + errorMessage);
+                            }
+                        })
+                        .addMember(convID, groupid, userID);
+            }
+        };
+
+        if (dontHavePermissionButIgnore) {
+            InviteListAdapter inviteListAdapter = new InviteListAdapter(null, activity, onAddUser);
+            phoneList.setAdapter(inviteListAdapter);
+            builder.setView(layout).show();
+            return;
+        }
+
         FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 ContantUsers users = (ContantUsers) ts;
                 if (users.mobiles.size() == 0) {
                     Toast.makeText(mContext, "没有好友", Toast.LENGTH_LONG).show();
-                    return;
                 }
-                InviteListAdapter inviteListAdapter = new InviteListAdapter(users.mobiles, activity,
-                        new InviteListAdapter.OnAddUser() {
-                            @Override
-                            public void add(String userID) {
-                                final String convID = GroupList.getInstance().getGroup(groupid).convId;
-
-                                GroupUserAdmin.getInstance(mContext)
-                                        .setOnResult(new GroupUserAdmin.OnResult() {
-                                            @Override
-                                            public void OK() {
-                                                Toast.makeText(mContext, "添加请求发送成功", Toast.LENGTH_LONG).show();
-                                                Log.i(TAG, "添加请求发送成功");
-                                            }
-
-                                            @Override
-                                            public void error(String errorMessage) {
-                                                Toast.makeText(mContext, "添加失败" + errorMessage
-                                                        , Toast.LENGTH_LONG).show();
-                                                Log.w(TAG, "添加失败" + errorMessage);
-                                            }
-                                        })
-                                        .addMember(convID, groupid, userID);
-                            }
-                        });
+                InviteListAdapter inviteListAdapter = new InviteListAdapter(users.mobiles, activity, onAddUser);
                 phoneList.setAdapter(inviteListAdapter);
                 builder.setView(layout).show();
             }
@@ -253,6 +264,18 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                 }).setNegativeButton("取消", null).show();
     }
 
+    @Subscribe
+    public void onpermissionAns(PermissionAnser permissionAnser) {
+        if (permissionAnser.requestCode == StaticField.PermissionRequestCode.addContactUsersInQuanziZone) {
+            if (permissionAnser.allGreen) {
+                addUser(groupID, false);
+            } else {
+                addUser(groupID, true);
+            }
+        }
+
+    }
+
     /**
      * 圈子用户的ViewHolder
      */
@@ -275,5 +298,4 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             weibo_avatar_NetworkImageView = (NetworkImageView) v.findViewById(R.id.pic);
         }
     }
-
 }

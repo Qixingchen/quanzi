@@ -268,6 +268,9 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Subscribe
     public void onPermissionAns(PermissionAnser permissionAnser) {
+        if (!permissionAnser.allGreen) {
+            return;
+        }
 
         switch (permissionAnser.requestCode) {
             case StaticField.PermissionRequestCode.userInfoSetFragment_location:

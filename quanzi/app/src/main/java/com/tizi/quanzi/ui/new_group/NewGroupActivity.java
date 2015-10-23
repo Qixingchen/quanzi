@@ -75,6 +75,10 @@ public class NewGroupActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_next_step) {
+            if (convID.compareTo("0") == 0) {
+                Snackbar.make(view, "LC ConvID 为空", Snackbar.LENGTH_LONG).show();
+                return true;
+            }
 
             NewGroupStep1Fragment.NewGroupStep1Ans temp = newGroupStep1Fragment.getNewGroupAns();
             /*下一步*/
@@ -113,7 +117,7 @@ public class NewGroupActivity extends BaseActivity {
 
                             @Override
                             public void onError(String Message) {
-
+                                Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
                             }
                         })
                         .NewAGroup(GroupName, icon, notice, tag, convID);

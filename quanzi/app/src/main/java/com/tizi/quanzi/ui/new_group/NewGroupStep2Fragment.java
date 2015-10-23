@@ -138,6 +138,9 @@ public class NewGroupStep2Fragment extends BaseFragment {
 
     @Subscribe
     public void onContactPermissionAns(PermissionAnser permissionAnser) {
+        if (!permissionAnser.allGreen) {
+            return;
+        }
         if (StaticField.PermissionRequestCode.addContactUsersInNewGroup == permissionAnser.requestCode) {
 
             FindContactUsers();

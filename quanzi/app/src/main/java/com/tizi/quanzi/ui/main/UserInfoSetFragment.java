@@ -8,7 +8,6 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -31,6 +30,7 @@ import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.UserInfoSetting;
+import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
@@ -247,11 +247,11 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Subscribe
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(ActivityResultAns activityResultAns) {
         Log.i(TAG, "头像获取");
-        if (resultCode == Activity.RESULT_OK
-                && requestCode == StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo) {
-            String ans = requreForImage.ZipedFilePathFromIntent(data);
+        if (activityResultAns.resultCode == Activity.RESULT_OK
+                && activityResultAns.requestCode == StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo) {
+            String ans = requreForImage.ZipedFilePathFromIntent(activityResultAns.data);
             SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                 @Override
                 public void onResult(String uri, boolean success) {

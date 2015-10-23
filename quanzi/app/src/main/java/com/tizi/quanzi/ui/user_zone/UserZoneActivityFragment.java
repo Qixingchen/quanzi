@@ -4,34 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMConversationQuery;
-import com.avos.avoscloud.im.v2.AVIMException;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.chat.NewAVIMConversation;
+import com.tizi.quanzi.chat.StartPrivateChat;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.gson.OtherUserInfo;
-import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -81,46 +72,18 @@ public class UserZoneActivityFragment extends BaseFragment {
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                List<String> members = new ArrayList<>();
-                members.add(AppStaticValue.getUserID());
-                members.add(otherUserInfo.id);
-
-                AVIMConversationQuery query = AppStaticValue.getImClient().getQuery();
-                query.whereEqualTo("attr.type", StaticField.ConvType.twoPerson);
-                query.withMembers(members);
-                query.whereSizeEqual("m", 2);
-                query.findInBackground(new AVIMConversationQueryCallback() {
+                StartPrivateChat.getNewInstance(new StartPrivateChat.GetConvID() {
                     @Override
-                    public void done(List<AVIMConversation> list, AVIMException e) {
-                        if (e != null) {
-                            Toast.makeText(getActivity(), "出现错误：" + e.getMessage(), Toast.LENGTH_LONG).show();
-                            return;
-                        }
-
-                        switch (list.size()) {
-                            case 0:
-                                NewAVIMConversation.getInstance().setConversationCallBack(
-                                        new NewAVIMConversation.ConversationCallBack() {
-                                            @Override
-                                            public void setConversationID(String conversationID) {
-                                                startChat(conversationID);
-                                            }
-                                        }).newAPrivateChat(otherUserInfo.id);
-                                break;
-                            case 1:
-                                startChat(list.get(0).getConversationId());
-                                break;
-                            default:
-                                startChat(list.get(0).getConversationId());
-                                StringBuilder convIDs = new StringBuilder();
-                                for (AVIMConversation conversation : list) {
-                                    convIDs.append(conversation.getConversationId()).append("\n");
-                                }
-                                Log.e(TAG, "发现多个私聊ConvID：" + convIDs);
-                        }
+                    public void onConvID(String convID) {
+                        startChat(convID);
                     }
-                });
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                    }
+                }).getPrivateChatConvID(otherUserInfo.id);
+
             }
         });
     }

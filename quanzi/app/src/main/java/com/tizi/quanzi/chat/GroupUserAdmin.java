@@ -66,7 +66,7 @@ public class GroupUserAdmin {
      */
     public void addMember(String convID, final String groupID, String userID) {
         Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
-        attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
+        attr = SendMessage.setSysMessAttr(attr, convID,
                 StaticField.SystemMessAttrName.systemFlag.invitation, "");
 
         List<String> clientIds = new ArrayList<>();
@@ -125,7 +125,7 @@ public class GroupUserAdmin {
                 public void onOK(Object ts) {
                     GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
                     Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
-                    attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
+                    attr = SendMessage.setSysMessAttr(attr, convID,
                             StaticField.SystemMessAttrName.systemFlag.kicked, "");
                     SendMessage sendMessage = SendMessage.getInstance().setSendOK(
                             new SendMessage.SendOK() {
@@ -217,7 +217,7 @@ public class GroupUserAdmin {
 
         //LC
         Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.GROUP);
-        attr = SendMessage.setGroupManageSysMessAttr(attr, convID,
+        attr = SendMessage.setSysMessAttr(attr, convID,
                 StaticField.SystemMessAttrName.systemFlag.group_delete, "圈子已解散");
         SendMessage.getInstance().setSendOK(
                 new SendMessage.SendOK() {

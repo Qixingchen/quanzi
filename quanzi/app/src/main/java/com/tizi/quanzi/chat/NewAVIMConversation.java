@@ -89,6 +89,7 @@ public class NewAVIMConversation {
                     }
                 } else {
                     Log.e(TAG, "conversationCallBack = null");
+                    conversationCallBack.setConversationID("0");
                 }
             }
         });

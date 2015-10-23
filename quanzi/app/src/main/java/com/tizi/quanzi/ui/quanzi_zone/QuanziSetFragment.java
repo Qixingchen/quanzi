@@ -106,7 +106,7 @@ public class QuanziSetFragment extends BaseFragment {
                                     SendMessage.getInstance().sendTextMessage(
                                             group.convId,
                                             name,
-                                            SendMessage.setGroupManageSysMessAttr(
+                                            SendMessage.setSysMessAttr(
                                                     SendMessage.setMessAttr(group.ID,
                                                             StaticField.ConvType.GROUP),
                                                     group.convId,

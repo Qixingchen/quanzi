@@ -74,8 +74,8 @@ public class SendMessage {
      *
      * @return 添加了系统参数的列
      */
-    public static Map<String, Object> setGroupManageSysMessAttr(Map<String, Object> attr,
-                                                                String CONVERSATION_ID, int systemFlag, String remark) {
+    public static Map<String, Object> setSysMessAttr(Map<String, Object> attr,
+                                                     String CONVERSATION_ID, int systemFlag, String remark) {
         attr.put(StaticField.ChatMessAttrName.IS_SYS_MESS,
                 StaticField.SystemMessAttrName.MessTypeCode.System_mess);
         attr.put(StaticField.SystemMessAttrName.REMARK, remark);

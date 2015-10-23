@@ -6,10 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.ContantUsers;
+import com.tizi.quanzi.gson.OtherUserInfo;
+import com.tizi.quanzi.network.FindUser;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.GetShareIntent;
 
 import java.util.List;
@@ -20,7 +25,7 @@ import java.util.List;
  */
 public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final int USER_VIEW = 1, SHARE_VIEW = 2;
+    private final int USER_VIEW = 1, SHARE_VIEW = 2, MANU_ADD = 3;
     private List<ContantUsers.MobilesEntity> users;
     private Context context;
     private OnAddUser onAddUser;
@@ -33,9 +38,18 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
+        if (users == null) {
+            if (position == 0) {
+                return SHARE_VIEW;
+            } else {
+                return MANU_ADD;
+            }
+        }
 
-        if (users == null || position == users.size()) {
+        if (position == users.size()) {
             return SHARE_VIEW;
+        } else if (position == users.size() + 1) {
+            return MANU_ADD;
         } else {
             return USER_VIEW;
         }
@@ -70,6 +84,12 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 };
                 return vh;
 
+            case MANU_ADD:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_manu_add, parent, false);
+                vh = new ManuAddViewHolder(v) {
+                };
+
             default:
                 return vh;
         }
@@ -101,11 +121,34 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         }
+        if (ManuAddViewHolder.class.isInstance(holder)) {
+            final ManuAddViewHolder manuAddViewHolder = (ManuAddViewHolder) holder;
+            manuAddViewHolder.ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            if (onAddUser != null) {
+                                onAddUser.add(otherUserInfo.id);
+                            }
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+                            Toast.makeText(context, Message, Toast.LENGTH_LONG).show();
+                        }
+                    }).finduserByAccount(manuAddViewHolder.phone.getText().toString());
+
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return users == null ? 1 : users.size() + 1;
+        return users == null ? 2 : users.size() + 2;
     }
 
     public interface OnAddUser {
@@ -118,6 +161,17 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public ShareViewHolder(View itemView) {
             super(itemView);
             view = itemView;
+        }
+    }
+
+    static class ManuAddViewHolder extends RecyclerView.ViewHolder {
+        private EditText phone;
+        private Button ok;
+
+        public ManuAddViewHolder(View itemView) {
+            super(itemView);
+            phone = (EditText) itemView.findViewById(R.id.phonenumber);
+            ok = (Button) itemView.findViewById(R.id.ok);
         }
     }
 

@@ -104,7 +104,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         Log.w(TAG, "收到消息");
         try {
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
-
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
             /*刷新最后一条消息等信息*/
             switch (chatMessage.ChatBothUserType) {
                 case StaticField.ConvType.GROUP:
@@ -121,7 +121,11 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     }
                     PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
                             ChatMessage.getContentText(chatMessage), chatMessage.create_time);
-                    chatMessage.groupID = chatMessage.sender;
+                    if (chatMessage.sender.compareTo(AppStaticValue.getUserID()) != 0) {
+                        chatMessage.groupID = chatMessage.sender;
+                    } else {
+                        chatMessage.groupID = PrivateMessPairList.getInstance().getGroupIDByConvID(chatMessage.ConversationId);
+                    }
 
                     break;
                 case StaticField.ConvType.BoomGroup:

@@ -26,7 +26,7 @@ public class SystemMessagePair extends ConvGroupAbs implements Serializable {
     }
 
     /**
-     * 从SystemMessage 转换 PrivateMessPair
+     * 从SystemMessage 转换 SysMessPair
      */
     public static SystemMessagePair SysMessPairFromSystemMess(SystemMessage systemMessage) {
         SystemMessagePair systemMessagePair = new SystemMessagePair();
@@ -41,7 +41,7 @@ public class SystemMessagePair extends ConvGroupAbs implements Serializable {
         if (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.complete) {
             systemMessage.setIsread(true);
         }
-        systemMessagePair.UnreadCount = (systemMessage.isread()) ? 0 : 1;
+        systemMessagePair.UnreadCount = (systemMessage.isread) ? 0 : 1;
         return systemMessagePair;
     }
 

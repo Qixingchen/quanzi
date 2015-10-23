@@ -1,6 +1,7 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,16 +81,27 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         /*私信*/
         if (PrivateViewHolder.class.isInstance(holder)) {
             final PrivateViewHolder privateVH = (PrivateViewHolder) holder;
-            final PrivateMessPair privateMess = privateMessPairs.get(position);
-            privateVH.mUserFaceImageNetworkImageView.setImageUrl(privateMess.Face,
+            final PrivateMessPair privateMessPair = privateMessPairs.get(position);
+            privateVH.mUserFaceImageNetworkImageView.setImageUrl(privateMessPair.Face,
                     GetVolley.getmInstance().getImageLoader());
-            privateVH.mUserNameTextViewTextView.setText(privateMess.Name);
-            privateVH.mMessTextViewTextView.setText(privateMess.lastMess);
+            privateVH.mUserNameTextViewTextView.setText(privateMessPair.Name);
+            privateVH.mMessTextViewTextView.setText(privateMessPair.lastMess);
+            if (privateMessPair.UnreadCount != 0) {
+                privateVH.mMessTextViewTextView.setTypeface(Typeface.DEFAULT_BOLD);
+                privateVH.mMessTextViewTextView.setTextColor(mContext.getResources().getColor(R.color.md_black));
+                privateVH.mUserNameTextViewTextView.setTypeface(Typeface.DEFAULT_BOLD);
+                privateVH.mUserNameTextViewTextView.setTextColor(mContext.getResources().getColor(R.color.md_black));
+            } else {
+                privateVH.mMessTextViewTextView.setTypeface(Typeface.DEFAULT);
+                privateVH.mMessTextViewTextView.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
+                privateVH.mUserNameTextViewTextView.setTypeface(Typeface.DEFAULT);
+                privateVH.mUserNameTextViewTextView.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
+            }
             privateVH.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onclick != null) {
-                        onclick.priMessClick(privateMess);
+                        onclick.priMessClick(privateMessPair);
                     } else {
                         Log.w(TAG, "私聊消息被点击,但是没有 onclick 回调");
                     }

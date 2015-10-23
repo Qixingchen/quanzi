@@ -8,7 +8,9 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
+import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.otto.FragmentResume;
 import com.tizi.quanzi.ui.BaseActivity;
@@ -61,7 +63,20 @@ public class MainActivity extends BaseActivity {
         PrivateMessPairList.getInstance().addOnChangeCallBack(new PrivateMessPairList.OnChangeCallBack() {
             @Override
             public void changed() {
-                int num = PrivateMessPairList.getInstance().getAllUnreadCount();
+                int num = PrivateMessPairList.getInstance().getAllUnreadCount()
+                        + SystemMessageList.getInstance().getAllUnreadCount();
+                if (num != 0) {
+                    menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
+                } else {
+                    menu.findItem(R.id.action_notifi_message).setTitle("通知");
+                }
+            }
+        });
+        SystemMessageList.getInstance().addOnChangeCallBack(new ConvGroupAbsList.OnChangeCallBack() {
+            @Override
+            public void changed() {
+                int num = PrivateMessPairList.getInstance().getAllUnreadCount()
+                        + SystemMessageList.getInstance().getAllUnreadCount();
                 if (num != 0) {
                     menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
                 } else {

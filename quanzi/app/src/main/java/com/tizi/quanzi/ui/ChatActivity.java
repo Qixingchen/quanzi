@@ -387,7 +387,7 @@ public class ChatActivity extends BaseActivity {
             attr = SendMessage.setMessAttr(BoomGroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID),
                     ChatType);
         } else {
-            attr = SendMessage.setMessAttr("", ChatType);
+            attr = SendMessage.setMessAttr(PrivateMessPairList.getInstance().getGroupIDByConvID(CONVERSATION_ID), ChatType);
         }
         return attr;
     }

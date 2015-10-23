@@ -1,6 +1,7 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
@@ -80,8 +82,8 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
 
             case StaticField.SystemMessAttrName.systemFlag.dyn_comment:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_system_mess, parent, false);
-                vh = new GroupInviteViewHolder(v);
+                        .inflate(R.layout.item_dyn_notify, parent, false);
+                vh = new DynNotifyViewHolder(v);
                 break;
 
             default:
@@ -103,6 +105,11 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         SystemMessagePair systemMessagePair = systemMessagePairs.get(position);
         final SystemMessage systemMessage = systemMessagePair.systemMessage;
+        if (!systemMessage.isread) {
+            systemMessage.isread = true;
+            systemMessagePair.UnreadCount--;
+            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+        }
 
         /*系统消息*/
         if (GroupInviteViewHolder.class.isInstance(holder)) {
@@ -159,16 +166,47 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                     }
                 }
             });
+            if (systemMessagePair.UnreadCount != 0) {
+                systemHolder.MessTextview.setTypeface(Typeface.DEFAULT_BOLD);
+                systemHolder.MessTextview.setTextColor(mContext.getResources().getColor(R.color.md_black));
+                systemHolder.titleTextview.setTypeface(Typeface.DEFAULT_BOLD);
+                systemHolder.titleTextview.setTextColor(mContext.getResources().getColor(R.color.md_black));
+            } else {
+                systemHolder.MessTextview.setTypeface(Typeface.DEFAULT);
+                systemHolder.MessTextview.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
+                systemHolder.titleTextview.setTypeface(Typeface.DEFAULT);
+                systemHolder.titleTextview.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
+            }
         }
 
         /*动态评论*/
         if (DynNotifyViewHolder.class.isInstance(holder)) {
             DynNotifyViewHolder dynNotifyViewHolder = (DynNotifyViewHolder) holder;
             dynNotifyViewHolder.old_weibo_name.setText(systemMessage.dyn_create_username);
-            dynNotifyViewHolder.weiboName.setText(systemMessage.reply_username);
-            dynNotifyViewHolder.weibo_content.setText(systemMessage.reply_comment);
+            dynNotifyViewHolder.weiboName.setText(systemMessage.user_name);
+            dynNotifyViewHolder.weibo_content.setText(systemMessage.content);
             dynNotifyViewHolder.weibo_date.setText(FriendTime.FriendlyDate(systemMessage.create_time));
             dynNotifyViewHolder.old_weibo_content.setText(systemMessage.dyn_content);
+
+            Picasso.with(mContext).load(systemMessage.user_icon)
+                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                    .into(dynNotifyViewHolder.weiboUser);
+
+            Picasso.with(mContext).load(systemMessage.dyn_icon)
+                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                    .into(dynNotifyViewHolder.oldWeiboUser);
+
+            if (systemMessagePair.UnreadCount != 0) {
+                dynNotifyViewHolder.weiboName.setTypeface(Typeface.DEFAULT_BOLD);
+                dynNotifyViewHolder.weiboName.setTextColor(mContext.getResources().getColor(R.color.md_black));
+                dynNotifyViewHolder.weibo_content.setTypeface(Typeface.DEFAULT_BOLD);
+                dynNotifyViewHolder.weibo_content.setTextColor(mContext.getResources().getColor(R.color.md_black));
+            } else {
+                dynNotifyViewHolder.weiboName.setTypeface(Typeface.DEFAULT);
+                dynNotifyViewHolder.weiboName.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
+                dynNotifyViewHolder.weibo_content.setTypeface(Typeface.DEFAULT);
+                dynNotifyViewHolder.weibo_content.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
+            }
         }
     }
 

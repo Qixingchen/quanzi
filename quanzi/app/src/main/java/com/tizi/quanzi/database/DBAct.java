@@ -410,7 +410,7 @@ public class DBAct {
         ContentValues content = new ContentValues();
         content.put(DataBaseHelper.SystemMessSQLName.id, systemMessage.getId());
         content.put(DataBaseHelper.SystemMessSQLName.create_time, systemMessage.create_time);
-        content.put(DataBaseHelper.SystemMessSQLName.isread, systemMessage.isread());
+        content.put(DataBaseHelper.SystemMessSQLName.isread, systemMessage.isread);
         content.put(DataBaseHelper.SystemMessSQLName.Serializable,
                 SerializedObjectFormat.getSerializedObject(systemMessage));
         db.replace(DataBaseHelper.SystemMessSQLName.TableName, null, content);

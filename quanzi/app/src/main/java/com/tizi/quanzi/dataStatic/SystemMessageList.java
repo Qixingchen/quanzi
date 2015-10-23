@@ -42,7 +42,7 @@ public class SystemMessageList extends ConvGroupAbsList<SystemMessagePair> {
      */
     @Override
     public int getUnreadCount(String convID, String groupID) {
-        return getGroup(groupID).systemMessage.isread() ? 0 : 1;
+        return getGroup(groupID).systemMessage.isread ? 0 : 1;
     }
 
     /**
@@ -52,7 +52,7 @@ public class SystemMessageList extends ConvGroupAbsList<SystemMessagePair> {
         int ans = 0;
         synchronized (groupList) {
             for (SystemMessagePair pair : groupList) {
-                if (!pair.systemMessage.isread()) {
+                if (!pair.systemMessage.isread) {
                     ans += 1;
                 }
             }

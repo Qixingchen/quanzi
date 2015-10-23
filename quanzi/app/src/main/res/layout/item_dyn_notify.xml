@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="4dp"
-    android:layout_marginEnd="4dp"
-    android:layout_marginStart="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="4dp">
 
 
@@ -102,14 +102,13 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="5dp">
 
-            <com.android.volley.toolbox.NetworkImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/old_weibo_avatar"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="@dimen/group_face_small"
+                android:layout_height="@dimen/group_face_small"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
-                tools:background="@drawable/face"
                 tools:src="@drawable/face"/>
 
             <TextView

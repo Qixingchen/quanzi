@@ -117,6 +117,7 @@ public class RetrofitNetwork {
             // TODO: 15/9/25 disable signed url
             Log.i(TAG, String.format("Received response for %s in %.1fms%n",
                     response.request().url(), (t2 - t1) / 1e6d));
+            //Log.i(TAG,response.body().string());
 
             return response;
         }

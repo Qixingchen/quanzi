@@ -103,10 +103,6 @@ public class SystemMessage implements Serializable, Parcelable {
         this.id = id;
     }
 
-    public boolean isread() {
-        return isread;
-    }
-
     public void setIsread(boolean isread) {
         this.isread = isread;
     }

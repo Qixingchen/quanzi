@@ -2,7 +2,6 @@ package com.tizi.quanzi.dataStatic;
 
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.PrivateMessPair;
-import com.tizi.quanzi.tool.StaticField;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -46,11 +45,7 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
         int ans = 0;
         synchronized (groupList) {
             for (PrivateMessPair pair : groupList) {
-                if (pair.Type == StaticField.PrivateMessOrSysMess.SysMess) {
-                    ans += pair.systemMessage.isread() ? 0 : 1;
-                } else {
-                    ans += pair.UnreadCount == 0 ? 0 : 1;
-                }
+                ans += pair.UnreadCount == 0 ? 0 : 1;
             }
         }
         return ans;

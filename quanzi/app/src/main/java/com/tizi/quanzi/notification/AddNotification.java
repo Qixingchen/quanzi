@@ -58,9 +58,17 @@ public class AddNotification {
      * 通知被点击
      * 清空List并取消通知
      */
-    public void notifiClicked() {
+    public void notifiClean() {
         chatMessageArrayList.clear();
         mNotificationManager.cancel(1);
+    }
+
+    public void chatActivityOpened(String convID) {
+        for (ChatMessage chatMessage : chatMessageArrayList) {
+            if (chatMessage.ConversationId.compareTo(convID) == 0) {
+                notifiClean();
+            }
+        }
     }
 
     /**

@@ -38,6 +38,7 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
@@ -282,6 +283,7 @@ public class ChatActivity extends BaseActivity {
         CONVERSATION_ID = getIntent().getStringExtra("conversation");
         AppStaticValue.UI_CONVERSATION_ID = CONVERSATION_ID;
         conversation = AppStaticValue.getImClient().getConversation(CONVERSATION_ID);
+        AddNotification.getInstance().chatActivityOpened(CONVERSATION_ID);
 
         ChatType = getIntent().getIntExtra("chatType", 9);
         //adapt

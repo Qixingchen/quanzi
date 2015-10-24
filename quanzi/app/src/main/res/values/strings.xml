@@ -25,7 +25,7 @@
     <string name="input_quanzi_name">输入圈圈名称</string>
     <string name="complete">完成</string>
     <string name="isFirstRun">isFirstRun</string>
-    <string name="private_message">私信</string>
+    <string name="notify_message">消息</string>
     <string name="title_activity_gallery">GalleryActivity</string>
     <string name="title_activity_user_zone">个人空间</string>
     <string name="title_activity_dyns">动态</string>

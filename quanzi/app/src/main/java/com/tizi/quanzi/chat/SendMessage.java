@@ -68,9 +68,10 @@ public class SendMessage {
     /**
      * 设置系统消息的附加参数
      *
-     * @param attr       原有参数列
-     * @param systemFlag {@link com.tizi.quanzi.tool.StaticField.SystemMessAttrName.systemFlag}
-     * @param remark     附注内容
+     * @param attr            原有参数列
+     * @param CONVERSATION_ID 需要加入的convID
+     * @param systemFlag      {@link com.tizi.quanzi.tool.StaticField.SystemMessAttrName.systemFlag}
+     * @param remark          附注内容
      *
      * @return 添加了系统参数的列
      */

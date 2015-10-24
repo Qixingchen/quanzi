@@ -59,34 +59,33 @@ public class MainActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         this.menu = menu;
+        onChanged();
         return true;
     }
 
     @Subscribe
     public void onChanged(SystemMessageList ignore) {
-        if (menu == null) {
-            return;
-        }
-        int num = PrivateMessPairList.getInstance().getAllUnreadCount()
-                + SystemMessageList.getInstance().getAllUnreadCount();
-        if (num != 0) {
-            menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
-        } else {
-            menu.findItem(R.id.action_notifi_message).setTitle("通知");
-        }
+        onChanged();
     }
 
     @Subscribe
     public void onChanged(PrivateMessPairList ignore) {
+        onChanged();
+    }
+
+    private void onChanged() {
         if (menu == null) {
             return;
         }
+        MenuItem item = menu.findItem(R.id.action_notifi_message);
         int num = PrivateMessPairList.getInstance().getAllUnreadCount()
                 + SystemMessageList.getInstance().getAllUnreadCount();
         if (num != 0) {
-            menu.findItem(R.id.action_notifi_message).setTitle("通知（" + num + "）条");
+
+            item.setTitle("消息(" + num + ")条");
         } else {
-            menu.findItem(R.id.action_notifi_message).setTitle("通知");
+
+            item.setTitle("消息");
         }
     }
 

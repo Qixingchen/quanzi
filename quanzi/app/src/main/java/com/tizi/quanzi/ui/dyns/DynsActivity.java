@@ -46,7 +46,7 @@ public class DynsActivity extends BaseActivity {
                         DynInfoFragment dynInfoFragment = new DynInfoFragment();
                         dynInfoFragment.setDyn(dyns.dyns.get(0));
                         getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynInfoFragment)
-                                .addToBackStack("DynInfoFragment").commit();
+                                .commit();
                     } else {
                         Snackbar.make(view, "找不到对应动态 数量:" + dyns.dyns.size(), Snackbar.LENGTH_LONG).show();
                     }

@@ -28,7 +28,7 @@ public class NotifiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         boolean isDelete = intent.getBooleanExtra(StaticField.NotifiName.NotifiDelete, false);
         boolean isClick = intent.getBooleanExtra(StaticField.NotifiName.NotifiClick, false);
-        AddNotification.getInstance().notifiClicked();
+        AddNotification.getInstance().notifiClean();
         if (isDelete) {
             return;
         }

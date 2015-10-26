@@ -245,7 +245,8 @@ public class DBAct {
                 privateMessCursor.moveToNext();
                 continue;
             }
-            if (PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) == null) {
+            if (PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) == null
+                    && chatMessage.groupID.compareTo(AppStaticValue.getUserID()) != 0) {
                 PrivateMessPairList.getInstance().addGroup(PrivateMessPair.newPrivatePair(chatMessage));
             } else {
                 PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,

@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            android:saveEnabled="false"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -48,7 +49,7 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -83,8 +84,8 @@
         android:id="@+id/user_face"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_gravity="left"
         android:layout_marginStart="16dp"
+        app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|left|end"
         tools:background="@drawable/face"/>
 

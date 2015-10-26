@@ -40,6 +40,7 @@ import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.dyns.DynInfoFragment;
+import com.tizi.quanzi.widget.HideExtraOnScroll;
 
 import java.io.IOException;
 
@@ -57,8 +58,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private RecyclerView groupUsersRecyclerView, groupDynsRecyclerView;
     private GroupUserAdapter groupUserAdapter;
     private DynsAdapter dynsAdapter;
-    private RecyclerView.LayoutManager groupUsersLayoutManager;
-    private RecyclerView.LayoutManager groupDynsLayoutManager;
     private FloatingActionButton changeGroupImageFAB;
     private GroupAllInfo groupAllInfo;
     private GroupClass groupClass;
@@ -117,9 +116,10 @@ public class QuanziIntroduceFragment extends BaseFragment {
                         .addToBackStack("DynInfoFragment").commit();
             }
         });
-        groupDynsLayoutManager = new LinearLayoutManager(mActivity);
-        groupDynsRecyclerView.setLayoutManager(groupDynsLayoutManager);
+        groupDynsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         groupDynsRecyclerView.setAdapter(dynsAdapter);
+
+        groupDynsRecyclerView.addOnScrollListener(new HideExtraOnScroll(groupUsersRecyclerView));
         groupDynsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
@@ -146,11 +146,9 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupUserAdapter = new GroupUserAdapter(mActivity,
                 groupAllInfo == null ? null : groupAllInfo.memlist,
                 groupClass != null && groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0);
-        groupUsersLayoutManager = new GridLayoutManager(mActivity, 6);
-        Log.i(TAG, "groupUsersLayoutManager Heigh:" + groupUsersLayoutManager.getHeight());
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
-        groupUsersRecyclerView.setLayoutManager(groupUsersLayoutManager);
+        groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 6));
         changeGroupImageFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

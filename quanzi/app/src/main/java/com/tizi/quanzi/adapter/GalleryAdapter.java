@@ -77,7 +77,6 @@ public class GalleryAdapter extends PagerAdapter {
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-                image.setImage(ImageSource.resource(R.drawable.face));
                 image.setZoomEnabled(false);
             }
         });

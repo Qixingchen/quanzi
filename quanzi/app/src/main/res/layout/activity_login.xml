@@ -100,7 +100,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="随意看看"
-                android:textColor="@color/md_white"/>
+                android:textColor="@color/md_white"
+                android:textSize="@dimen/normal_edit_text_size"/>
         </LinearLayout>
 
     </LinearLayout>

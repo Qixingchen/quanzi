@@ -67,6 +67,7 @@ public class AddNotification {
         for (ChatMessage chatMessage : chatMessageArrayList) {
             if (chatMessage.ConversationId.compareTo(convID) == 0) {
                 notifiClean();
+                break;
             }
         }
     }

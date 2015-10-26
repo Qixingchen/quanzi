@@ -54,6 +54,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,6 +65,7 @@
             android:layout_height="fill_parent"
             android:orientation="vertical"
             android:paddingTop="24dp">
+
 
             <TextView
                 android:id="@+id/zoneSign"
@@ -76,31 +78,15 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/group_users_item_recycler_view"
                 android:layout_width="fill_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 tools:layout_height="100dp"/>
 
-            <!--<android.support.v4.view.ViewPager-->
-            <!--android:id="@+id/detail_viewpager"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="600dp">-->
-
-            <!--<android.support.v4.view.PagerTabStrip-->
-            <!--android:id="@+id/PagerTab"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="top"/>-->
-            <!--</android.support.v4.view.ViewPager>-->
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/group_dyns_item_recycler_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 tools:layout_height="640dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1222222"/>
 
         </LinearLayout>
 

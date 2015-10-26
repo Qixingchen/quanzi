@@ -109,6 +109,9 @@ public class MainActivity extends BaseActivity {
         if (fragmentResume.FramgentName.compareTo(NotifiMessageFragment.class.getSimpleName()) != 0) {
             return;
         }
+        if (menu == null) {
+            return;
+        }
         if (fragmentResume.resumeOrPause) {
             menu.findItem(R.id.action_notifi_message).setVisible(false);
         } else {

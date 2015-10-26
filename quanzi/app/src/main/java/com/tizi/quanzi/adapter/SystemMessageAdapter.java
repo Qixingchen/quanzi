@@ -209,6 +209,12 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
             dynNotifyViewHolder.weibo_content.setText(systemMessage.content);
             dynNotifyViewHolder.weibo_date.setText(FriendTime.FriendlyDate(systemMessage.create_time));
             dynNotifyViewHolder.old_weibo_content.setText(systemMessage.dyn_content);
+            if (systemMessage.reply_comment == null || systemMessage.reply_comment.compareTo("") == 0) {
+                dynNotifyViewHolder.reply_content.setVisibility(View.GONE);
+            } else {
+                dynNotifyViewHolder.reply_content.setText(systemMessage.reply_comment);
+                dynNotifyViewHolder.reply_content.setVisibility(View.VISIBLE);
+            }
 
             Picasso.with(mContext).load(systemMessage.user_icon)
                     .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
@@ -315,7 +321,8 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
     static class DynNotifyViewHolder extends RecyclerView.ViewHolder {
 
         private CircleImageView weiboUser, oldWeiboUser;
-        private TextView weiboName, weibo_date, weibo_from, weibo_content, old_weibo_content, old_weibo_name;
+        private TextView weiboName, weibo_date, weibo_from, weibo_content, old_weibo_content,
+                old_weibo_name, reply_content;
         private View itemView;
 
         public DynNotifyViewHolder(View itemView) {
@@ -339,7 +346,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
             weibo_content = (TextView) v.findViewById(R.id.weibo_content);
             old_weibo_content = (TextView) v.findViewById(R.id.old_weibo_content);
             old_weibo_name = (TextView) v.findViewById(R.id.old_weibo_name);
-
+            reply_content = (TextView) v.findViewById(R.id.reply_content);
         }
 
     }

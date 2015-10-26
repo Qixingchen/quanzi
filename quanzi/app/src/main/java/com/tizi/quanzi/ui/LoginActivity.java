@@ -11,7 +11,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
@@ -36,7 +35,7 @@ public class LoginActivity extends BaseActivity {
     private android.widget.Button LoginButton;
     private android.support.design.widget.TextInputLayout phoneNumberInputLayout;
     private android.support.design.widget.TextInputLayout passwordInputLayout;
-    private TextView newAccount;
+    private Button newAccount;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +61,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void findView() {
-        this.newAccount = (TextView) findViewById(R.id.new_account);
+        this.newAccount = (Button) findViewById(R.id.new_account);
         this.passwordInputLayout = (TextInputLayout) findViewById(R.id.passwordInputLayout);
         this.phoneNumberInputLayout = (TextInputLayout) findViewById(R.id.phoneNumberInputLayout);
         this.LoginButton = (Button) findViewById(R.id.LoginButton);

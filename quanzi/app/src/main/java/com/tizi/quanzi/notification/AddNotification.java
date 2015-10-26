@@ -179,7 +179,7 @@ public class AddNotification {
             case StaticField.ConvType.GROUP:
 
                 GroupClass group = (GroupClass) GroupList.getInstance().getGroup(chatMessage.groupID);
-                if (group != null && !group.getNeedNotifi()) {
+                if (group == null || !group.getNeedNotifi()) {
                     return;
                 }
                 break;

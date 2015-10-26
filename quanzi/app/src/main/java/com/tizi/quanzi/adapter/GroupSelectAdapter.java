@@ -134,6 +134,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                         @Override
                                         public void OK() {
                                             signUpGroupVH.progressBar.setVisibility(View.GONE);
+                                            signUpGroupVH.groupFace.setClickable(true);
                                         }
                                     }).execute(2000);
                                 }

@@ -20,7 +20,7 @@ import com.tizi.quanzi.gson.ApiInfoGson;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.ApiInfo;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
-import com.tizi.quanzi.ui.LoginActivity;
+import com.tizi.quanzi.ui.login.LoginActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

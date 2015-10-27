@@ -6,30 +6,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/detail_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="活动详情"/>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="360dp">
 
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/theme_icon"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        tools:background="@drawable/face"/>
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/theme_icon"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            tools:background="@drawable/face"/>
 
-    <Button
-        android:id="@+id/participate_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="报名"/>
+        <TextView
+            android:id="@+id/detail_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/participate_button"
+            android:layout_alignParentTop="true"
+            android:text="活动详情"/>
+
+        <Button
+            android:id="@+id/participate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="37dp"
+            android:text="报名"/>
 
 
-    <TextView
-        android:id="@+id/num_of_participants"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="当前1100个圈子"/>
+        <TextView
+            android:id="@+id/num_of_participants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="20dp"
+            tools:text="当前1100个圈子"/>
+
+    </RelativeLayout>
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/dynsViewPager"

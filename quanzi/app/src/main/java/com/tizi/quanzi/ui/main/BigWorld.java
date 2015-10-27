@@ -24,7 +24,7 @@ import com.tizi.quanzi.tool.GetShareIntent;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
-import com.tizi.quanzi.ui.LoginActivity;
+import com.tizi.quanzi.ui.login.LoginActivity;
 
 /**
  */

@@ -119,7 +119,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupDynsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         groupDynsRecyclerView.setAdapter(dynsAdapter);
 
-        groupDynsRecyclerView.addOnScrollListener(new HideExtraOnScroll(groupUsersRecyclerView));
+        groupDynsRecyclerView.addOnScrollListener(new HideExtraOnScroll(mActivity.findViewById(R.id.need_scroll_out)));
         groupDynsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {

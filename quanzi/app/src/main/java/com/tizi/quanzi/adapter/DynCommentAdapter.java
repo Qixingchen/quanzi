@@ -137,7 +137,7 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     }
 
     public interface onCommentClick {
-        void Onclick(Comments.CommentsEntity comment, int postio);
+        void Onclick(Comments.CommentsEntity comment, int position);
     }
 
     /* ClickableString class*/

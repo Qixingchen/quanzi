@@ -7,7 +7,7 @@ public class HideExtraOnScrollHelper {
     public final static int UNKNOWN = -1;
     public final static int TOP = 0;
     public final static int BOTTOM = 1;
-    final int mMinFlingDistance = 100;
+    int mMinFlingDistance = 100;
     int mDraggedAmount;
     int mOldDirection;
     int mDragDirection;
@@ -19,7 +19,7 @@ public class HideExtraOnScrollHelper {
                         mDraggedAmount = UNKNOWN;
 
 
-        mMinFlingDistance = minFlingDistance;
+        mMinFlingDistance = minFlingDistance * 2;
     }
 
 
@@ -43,7 +43,7 @@ public class HideExtraOnScrollHelper {
         mDraggedAmount += dy;
 
 
-        if (mDragDirection == TOP && Math.abs(mDraggedAmount) > mMinFlingDistance) {
+        if (mDragDirection == TOP && Math.abs(mDraggedAmount) > mMinFlingDistance / 2) {
             needHide = false;
         } else if (mDragDirection == BOTTOM && mDraggedAmount > mMinFlingDistance) {
             needHide = true;

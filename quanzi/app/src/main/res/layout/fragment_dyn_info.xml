@@ -1,42 +1,56 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.tizi.quanzi.ui.dyns.DynInfoFragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tizi.quanzi.ui.dyns.DynInfoFragment">
+
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/item_dyns"/>
 
         <LinearLayout
+            android:id="@+id/need_scroll_out"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/plus_one"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/ic_plus_one_48dp"/>
+            <include layout="@layout/item_dyns"/>
 
-            <ImageButton
-                android:id="@+id/comment"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/ic_chat_48dp"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/plus_one"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/ic_plus_one_48dp"/>
+
+                <ImageButton
+                    android:id="@+id/comment"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ic_chat_48dp"/>
+
+            </LinearLayout>
+
 
         </LinearLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dyn_comment_item_recycler_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             tools:layout_height="300dp"/>
+
 
     </LinearLayout>
 

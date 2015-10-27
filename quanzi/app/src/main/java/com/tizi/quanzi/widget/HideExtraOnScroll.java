@@ -2,6 +2,7 @@ package com.tizi.quanzi.widget;
 
 import android.animation.ObjectAnimator;
 import android.os.Build;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -25,7 +26,7 @@ public class HideExtraOnScroll extends RecyclerView.OnScrollListener {
     HideExtraOnScrollHelper mScrollHelper;
 
 
-    boolean isExtraObjectsOutside;
+    boolean isExtraObjectsOutside, isShowBottom;
 
 
     public HideExtraOnScroll(View target) {
@@ -50,10 +51,7 @@ public class HideExtraOnScroll extends RecyclerView.OnScrollListener {
             return;
         }
 
-        if (recyclerView.getLayoutManager().findFirstCompletelyVisibleItemPosition() == 0) {
-            if (!isShowBottom) {
-
-            }
+        if (((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0) {
             isShowBottom = true;
         } else {
             isShowBottom = false;
@@ -63,7 +61,7 @@ public class HideExtraOnScroll extends RecyclerView.OnScrollListener {
         boolean needsToHideExtraObjects = mScrollHelper.needsHideExtraObjects(dy);
 
 
-        if (!isVisible(target) && !needsToHideExtraObjects) {
+        if (!isVisible(target) && !needsToHideExtraObjects && isShowBottom) {
             show(target);
             isExtraObjectsOutside = false;
         } else if (isVisible(target) && needsToHideExtraObjects) {
@@ -91,7 +89,9 @@ public class HideExtraOnScroll extends RecyclerView.OnScrollListener {
 
 
     public void show(final View target) {
+
         target.setVisibility(View.VISIBLE);
+
         ObjectAnimator animator = ObjectAnimator.ofFloat(target, "translationY",
                 target.getTranslationY(), 0f);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {

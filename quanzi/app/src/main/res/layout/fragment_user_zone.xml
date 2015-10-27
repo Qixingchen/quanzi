@@ -65,11 +65,6 @@
                 android:textSize="@dimen/normal_text_size"
                 tools:text="签名：1234"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1222222"/>
-
             <Button
                 android:id="@+id/send_message"
                 android:layout_width="wrap_content"

@@ -31,6 +31,7 @@ import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.widget.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -221,10 +222,12 @@ public class DynInfoFragment extends BaseFragment {
         dynCommentAdapter = new DynCommentAdapter(mActivity);
         commentRecyclerView.setAdapter(dynCommentAdapter);
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        commentRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mContext));
+        //commentRecyclerView.addOnScrollListener(new HideExtraOnScroll(mActivity.findViewById(R.id.need_scroll_out)));
 
         dynCommentAdapter.setOnCommentClick(new DynCommentAdapter.onCommentClick() {
             @Override
-            public void Onclick(Comments.CommentsEntity comment, int postio) {
+            public void Onclick(Comments.CommentsEntity comment, int position) {
                 if (Tool.isGuest()) {
                     Tool.GuestAction(mActivity);
                     return;

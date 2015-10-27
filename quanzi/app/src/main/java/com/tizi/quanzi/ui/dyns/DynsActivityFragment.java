@@ -13,7 +13,6 @@ import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
-import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.ArrayList;
@@ -25,9 +24,6 @@ public class DynsActivityFragment extends BaseFragment {
 
     private DynsAdapter dynsAdapter;
     private RecyclerView recyclerView;
-
-    private boolean hasMoreToGet = true;
-    private int lastIndex = 0;
 
     private String themeID, GroupID;
 
@@ -69,28 +65,23 @@ public class DynsActivityFragment extends BaseFragment {
         dynsAdapter.setNeedMore(new DynsAdapter.NeedMore() {
             @Override
             public void needMore() {
-                if (hasMoreToGet) {
-                    quaryMore(themeID, GroupID, lastIndex);
-                    lastIndex += StaticField.QueryLimit.DynamicLimit;
-                }
+                quaryMore(themeID, GroupID);
+
             }
         });
-        quaryMore(themeID, GroupID, lastIndex);
+        quaryMore(themeID, GroupID);
         recyclerView.setAdapter(dynsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    private void quaryMore(String thmemID, String groupID, int lastIndex) {
-        Log.i(TAG, "查询群动态 lastIndex=" + lastIndex);
+    private void quaryMore(String thmemID, String groupID) {
+        Log.i(TAG, "查询群动态 lastIndex=" + dynsAdapter.getItemCount());
 
         RetrofitNetworkAbs.NetworkListener listener = new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
                 dynsAdapter.addItems(dyns.dyns);
-                if (dyns.dyns.size() != StaticField.QueryLimit.DynamicLimit) {
-                    hasMoreToGet = false;
-                }
             }
 
             @Override
@@ -100,9 +91,10 @@ public class DynsActivityFragment extends BaseFragment {
         };
 
         if (groupID == null) {
-            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, lastIndex);
+            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, dynsAdapter.getItemCount());
         } else {
-            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, lastIndex);
+            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, dynsAdapter.getItemCount());
         }
     }
+
 }

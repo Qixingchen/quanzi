@@ -43,6 +43,7 @@
                 android:layout_width="260dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
+                android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:textSize="@dimen/normal_edit_text_size"/>
         </android.support.design.widget.TextInputLayout>

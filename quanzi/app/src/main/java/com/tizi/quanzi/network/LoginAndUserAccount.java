@@ -11,11 +11,13 @@ import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
+import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
 
 import retrofit.Callback;
+import retrofit.Response;
 import retrofit.Retrofit;
 
 /**
@@ -24,18 +26,18 @@ import retrofit.Retrofit;
  *
  * @see com.tizi.quanzi.network.RetrofitAPI.UserAccount
  */
-public class AutoLogin extends RetrofitNetworkAbs {
+public class LoginAndUserAccount extends RetrofitNetworkAbs {
     private static SharedPreferences preferences;
 
     private RetrofitAPI.UserAccount userAccountService = RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class);
 
-    private AutoLogin() {
+    private LoginAndUserAccount() {
         preferences = App.getApplication().getSharedPreferences(
                 StaticField.Preferences.TOKENFILE, Context.MODE_PRIVATE);
     }
 
-    public static AutoLogin getNewInstance() {
-        return new AutoLogin();
+    public static LoginAndUserAccount getNewInstance() {
+        return new LoginAndUserAccount();
     }
 
     /**
@@ -53,6 +55,17 @@ public class AutoLogin extends RetrofitNetworkAbs {
         AppStaticValue.getNewImClient(ID);
         DBAct.flushDBID();
         AddNotification.getInstance().setSharedPreferences();
+    }
+
+    /**
+     * 使用无加密的密码登陆
+     * 并储存密码
+     * 账号来自  App.getUserPhone()
+     *
+     * @see GetPassword
+     */
+    public void loginNoHash(String password) {
+        loginFromPrePassword(GetPassword.preHASH(password));
     }
 
     /**
@@ -112,9 +125,29 @@ public class AutoLogin extends RetrofitNetworkAbs {
 
     }
 
+    /**
+     * 更改用户密码
+     */
+    public void changePassword(String account, String password) {
+        AppStaticValue.setUserID(account);
+        AppStaticValue.setUserToken(account);
+        password = GetPassword.fullHash(password);
+        userAccountService.changePassword(account, password).enqueue(new Callback<OnlySuccess>() {
+            @Override
+            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
     @SuppressWarnings("unchecked")
     @Override
-    public AutoLogin setNetworkListener(NetworkListener networkListener) {
+    public LoginAndUserAccount setNetworkListener(NetworkListener networkListener) {
         return this.setNetworkListener(networkListener, this);
     }
 

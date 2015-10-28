@@ -15,7 +15,7 @@ import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.network.AutoLogin;
+import com.tizi.quanzi.network.LoginAndUserAccount;
 import com.tizi.quanzi.network.RetrofitAPI;
 import com.tizi.quanzi.network.RetrofitNetwork;
 import com.tizi.quanzi.tool.GetGMSStatue;
@@ -127,7 +127,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
             public void onResponse(Response<Login> response, Retrofit retrofit) {
                 if (response.isSuccess() && response.body().isSuccess()) {
                     Login login = response.body();
-                    AutoLogin.setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(),
+                    LoginAndUserAccount.setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(),
                             login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     PrivateMessPairList.getInstance().getGroupsFromDataBase();

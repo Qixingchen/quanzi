@@ -1,4 +1,4 @@
-<fragment
+<FrameLayout
     android:id="@+id/fragment"
     android:name="com.tizi.quanzi.ui.gallery.GalleryActivityFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"

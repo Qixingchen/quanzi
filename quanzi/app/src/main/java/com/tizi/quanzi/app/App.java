@@ -17,7 +17,7 @@ import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.network.AutoLogin;
+import com.tizi.quanzi.network.LoginAndUserAccount;
 
 
 /**
@@ -67,7 +67,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
-        AutoLogin.getNewInstance().loginFromPrefer();
+        LoginAndUserAccount.getNewInstance().loginFromPrefer();
 
         //test build
 

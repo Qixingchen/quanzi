@@ -1,28 +1,30 @@
 package com.tizi.quanzi.ui.login;
 
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.Login;
-import com.tizi.quanzi.network.AutoLogin;
+import com.tizi.quanzi.network.LoginAndUserAccount;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.otto.OttoLoginActivity;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
@@ -76,7 +78,7 @@ public class LoginFragment extends BaseFragment {
                 App.getApplication().getSharedPreferences(
                         StaticField.Preferences.TOKENFILE, Context.MODE_PRIVATE).edit()
                         .putString(StaticField.Preferences.PASSWORD, "").apply();
-                AutoLogin.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                LoginAndUserAccount.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {
                         //启动主界面
@@ -105,40 +107,7 @@ public class LoginFragment extends BaseFragment {
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String phoneNumber = phoneNumberEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-
-                if (Tool.getPhoneNum(phoneNumber) == null || password.compareTo("") == 0) {
-                    Snackbar.make(view, "手机号未填写或不合法或密码未填写",
-                            Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-
-                AppStaticValue.setUserPhone(phoneNumber);
-                AutoLogin.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
-                    @Override
-                    public void onOK(Object ts) {
-                        Login login = (Login) ts;
-
-                        //储存密码
-                        SharedPreferences preferences =
-                                mActivity.getSharedPreferences(StaticField.Preferences.TOKENFILE,
-                                        Activity.MODE_PRIVATE);
-                        preferences.edit().putString(StaticField.Preferences.PASSWORD,
-                                GetPassword.preHASH(passwordEditText.getText().toString())).apply();
-                        //启动主界面
-                        //start intent
-                        Intent intent = new Intent(mActivity, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(String Message) {
-                        Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
-                    }
-                }).loginFromPrePassword(GetPassword.preHASH(password));
+                login();
             }
         });
         phoneNumberEditText.addTextChangedListener(new TextWatcher() {
@@ -157,6 +126,54 @@ public class LoginFragment extends BaseFragment {
                 checkPhoneNumber();
             }
         });
+
+        /*忘记密码*/
+        mActivity.findViewById(R.id.forgetPassword).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BusProvider.getInstance().post(new OttoLoginActivity(OttoLoginActivity.FORGET_PASSWORD));
+            }
+        });
+
+        /*监听密码的Enter*/
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == KeyEvent.KEYCODE_ENTER || actionId == KeyEvent.KEYCODE_ENDCALL) {
+                    login();
+                }
+                return false;
+            }
+        });
+    }
+
+    private void login() {
+        String phoneNumber = phoneNumberEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+
+        if (Tool.getPhoneNum(phoneNumber) == null || password.compareTo("") == 0) {
+            Snackbar.make(view, "手机号未填写或不合法或密码未填写",
+                    Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        AppStaticValue.setUserPhone(phoneNumber);
+        LoginAndUserAccount.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                Login login = (Login) ts;
+
+                //启动主界面
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onError(String Message) {
+                Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
+            }
+        }).loginFromPrePassword(GetPassword.preHASH(password));
     }
 
     private boolean checkPhoneNumber() {

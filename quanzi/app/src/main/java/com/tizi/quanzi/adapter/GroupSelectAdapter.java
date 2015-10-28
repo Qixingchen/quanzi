@@ -124,6 +124,11 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                             signUpGroupVH.progressBar.setVisibility(View.GONE);
                                             signUpGroupVH.groupFace.setClickable(true);
                                         }
+
+                                        @Override
+                                        public void countdown(int s) {
+
+                                        }
                                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1200);
                                 }
 
@@ -135,6 +140,11 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                         public void OK() {
                                             signUpGroupVH.progressBar.setVisibility(View.GONE);
                                             signUpGroupVH.groupFace.setClickable(true);
+                                        }
+
+                                        @Override
+                                        public void countdown(int s) {
+
                                         }
                                     }).execute(2000);
                                 }

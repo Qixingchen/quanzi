@@ -8,7 +8,11 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.PushService;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -18,6 +22,7 @@ import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.LoginAndUserAccount;
+import com.tizi.quanzi.ui.login.LoginActivity;
 
 
 /**
@@ -48,14 +53,32 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         registerActivityLifecycleCallbacks(this);
 
-        AVAnalytics.setAnalyticsEnabled(true);
+        //LC 注册
         AVOSCloud.initialize(this, "hy5srahijnj9or45ufraqg9delstj8dlz47pj3kfhwjog372",
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
+
+        //LC 分析
+        AVAnalytics.setAnalyticsEnabled(true);
         AVAnalytics.enableCrashReport(this, true);
 
+
+        //LC推送
+        AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    Log.i(TAG, AVInstallation.getCurrentInstallation().getInstallationId());
+                } else {
+                    Log.w(TAG, "AVInstallation注册失败" + e.getMessage());
+                }
+            }
+        });
+        PushService.subscribe(this, "public", LoginActivity.class);
+        PushService.setDefaultPushCallback(this, LoginActivity.class);
+
+        //LC实时通讯
         AVIMClient.setClientEventHandler(MyAVIMClientEventHandler.getInstance());
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
-
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
 
         //facebook Stetho

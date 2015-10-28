@@ -1,8 +1,11 @@
 package com.tizi.quanzi.dataStatic;
 
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.otto.BusProvider;
+
+import java.util.List;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -21,6 +24,12 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
             }
         }
         return mInstance;
+    }
+
+    @Override
+    public void addGroup(PrivateMessPair group) {
+        super.addGroup(group);
+        DBAct.getInstance().addOrReplacePriMessPair(group);
     }
 
     @Override
@@ -44,7 +53,15 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
      * 从数据库加载原有的消息
      */
     public void getGroupsFromDataBase() {
-        DBAct.getInstance().addPrivateMessToList();
+        List<PrivateMessPair> temp = DBAct.getInstance().quaryAllPrivateMessPair();
+        for (PrivateMessPair pair : temp) {
+            ChatMessage message = DBAct.getInstance().queryNewestMessage(pair.convId);
+            if (message != null) {
+                pair.lastMess = ChatMessage.getContentText(message);
+                pair.lastMessTime = message.create_time;
+            }
+        }
+        setGroupList(temp);
     }
 
     /**

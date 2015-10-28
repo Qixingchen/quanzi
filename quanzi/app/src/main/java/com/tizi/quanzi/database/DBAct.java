@@ -7,12 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
-import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,39 +223,6 @@ public class DBAct {
     }
 
     /**
-     * 将数据库中的所有私聊信息加入PrivateList {@link com.tizi.quanzi.dataStatic.PrivateMessPairList}
-     */
-    public void addPrivateMessToList() {
-        Cursor privateMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,
-                null,
-                DataBaseHelper.chatHistorySQLName.conv_type + "=?",
-                new String[]{String.valueOf(StaticField.ConvType.twoPerson)},
-                null,
-                null,
-                DataBaseHelper.chatHistorySQLName.send_time + " DESC",//orderBy
-                null //limit
-        );
-
-        privateMessCursor.moveToFirst();
-        while (!privateMessCursor.isAfterLast()) {
-            ChatMessage chatMessage = chatMessageFromCursor(privateMessCursor);
-            if (chatMessage.groupID == null) {
-                privateMessCursor.moveToNext();
-                continue;
-            }
-            if (PrivateMessPairList.getInstance().getGroup(chatMessage.groupID) == null
-                    && chatMessage.groupID.compareTo(AppStaticValue.getUserID()) != 0) {
-                PrivateMessPairList.getInstance().addGroup(PrivateMessPair.newPrivatePair(chatMessage));
-            } else {
-                PrivateMessPairList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
-                        ChatMessage.getContentText(chatMessage), chatMessage.create_time);
-            }
-            privateMessCursor.moveToNext();
-        }
-        privateMessCursor.close();
-    }
-
-    /**
      * 返回所查询的对话组的未读数量
      *
      * @param ConversationId 所需查询对话组的ConvID
@@ -333,7 +298,6 @@ public class DBAct {
         return systemMessageArrayList;
     }
 
-
     /**
      * 根据 Cursor 转换 SystemMessage
      *
@@ -351,6 +315,52 @@ public class DBAct {
             systemMessage = (SystemMessage) object;
         }
         return systemMessage;
+    }
+
+    /*privateMessGroup*/
+
+    /**
+     * 查找所有私聊对记录
+     */
+    public List<PrivateMessPair> quaryAllPrivateMessPair() {
+        Cursor cursor = db.query(DataBaseHelper.privateMessGroupSQLNmae.TableName,//table name
+                null,//返回的列,null表示全选
+                null,//条件
+                null,//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        List<PrivateMessPair> privateMessPairs = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            PrivateMessPair temp = PriMessPairFromCursor(cursor);
+            if (temp != null) {
+                privateMessPairs.add(temp);
+            }
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return privateMessPairs;
+    }
+
+    /**
+     * 根据 Cursor 转换 PrivateMessPair
+     *
+     * @param cursor 查询到的游标
+     *
+     * @return 返回的 PrivateMessPair
+     */
+    @Nullable
+    private PrivateMessPair PriMessPairFromCursor(Cursor cursor) {
+        PrivateMessPair privateMessPair = new PrivateMessPair();
+        byte[] SerializString = cursor.getBlob(
+                cursor.getColumnIndex(DataBaseHelper.privateMessGroupSQLNmae.Serializable));
+        Object object = SerializedObjectFormat.readSerializedObject(SerializString);
+        if (object != null) {
+            privateMessPair = (PrivateMessPair) object;
+        }
+        return privateMessPair;
     }
 
     /*判断*/
@@ -441,6 +451,24 @@ public class DBAct {
             chatMessageCursor.moveToNext();
         }
         chatMessageCursor.close();
+    }
+
+    /**
+     * 添加或更新 PrivateMessPair
+     * 如果 群ID 为自己,将会被忽略
+     */
+    public void addOrReplacePriMessPair(PrivateMessPair privateMessPair) {
+
+        if (privateMessPair.ID.compareTo(AppStaticValue.getUserID()) == 0) {
+            Log.e(TAG, "添加了自己作为聊天群!");
+            return;
+        }
+
+        ContentValues content = new ContentValues();
+        content.put(DataBaseHelper.privateMessGroupSQLNmae.id, privateMessPair.ID);
+        content.put(DataBaseHelper.privateMessGroupSQLNmae.Serializable,
+                SerializedObjectFormat.getSerializedObject(privateMessPair));
+        db.replace(DataBaseHelper.privateMessGroupSQLNmae.TableName, null, content);
     }
 
 

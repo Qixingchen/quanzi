@@ -4,13 +4,11 @@ import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.tool.StaticField;
 
-import java.io.Serializable;
-
 /**
  * Created by qixingchen on 15/9/3.
  * 私信对信息
  */
-public class PrivateMessPair extends ConvGroupAbs implements Serializable {
+public class PrivateMessPair extends ConvGroupAbs {
     //如果是系统消息
     public SystemMessage systemMessage;
 

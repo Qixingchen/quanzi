@@ -1,11 +1,13 @@
 package com.tizi.quanzi.dataStatic;
 
 
+import java.io.Serializable;
+
 /**
  * Created by qixingchen on 15/9/8.
  * 通讯组抽象类
  */
-public abstract class ConvGroupAbs {
+public abstract class ConvGroupAbs implements Serializable {
 
     public String Name;
     public String Face;

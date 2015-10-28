@@ -22,6 +22,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         /*系统消息记录*/
         db.execSQL("create table systemMess( id varchar(40) PRIMARY KEY not null ,create_time INTEGER, isread varchar(1) ,Serializable blob )");
+
+        /*私聊群*/
+        db.execSQL("create table privateMessGroup( id varchar(40) PRIMARY KEY not null,Serializable blob )");
     }
 
     /* 更改数据库版本的操作*/
@@ -74,6 +77,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         public static final String id = "id";
         public static final String create_time = "create_time";
         public static final String isread = "isread";
+        public static final String Serializable = "Serializable";
+    }
+
+    /**
+     * privateMessGroup 表名
+     */
+    public static class privateMessGroupSQLNmae {
+        public static final String TableName = "privateMessGroup";
+        public static final String id = "id";
         public static final String Serializable = "Serializable";
     }
 }

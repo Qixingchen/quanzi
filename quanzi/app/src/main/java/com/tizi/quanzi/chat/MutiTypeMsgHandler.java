@@ -115,6 +115,11 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
                 case StaticField.ConvType.twoPerson:
 
+                    //如果发信人是自己,不处理
+                    if (chatMessage.sender.compareTo(AppStaticValue.getUserID()) == 0) {
+                        break;
+                    }
+
                     //如果是不存在的私聊纪录，添加这个私聊组
                     if (PrivateMessPairList.getInstance().getGroup(chatMessage.sender) == null) {
                         PrivateMessPairList.getInstance().addGroup(PrivateMessPair.newPrivatePair(chatMessage));

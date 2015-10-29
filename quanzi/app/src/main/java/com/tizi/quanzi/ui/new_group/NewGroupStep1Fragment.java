@@ -7,16 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -27,6 +31,10 @@ public class NewGroupStep1Fragment extends BaseFragment {
     private android.support.design.widget.TextInputLayout quanziNameInputLayout, quanziSignInputLayout;
     private ImageView UserPhotoImageView;
     private String groupFaceUri;
+    private TextView tagView;
+
+
+    private ArrayList<AllTags.TagsEntity> selectTags = new ArrayList<>();
 
     public NewGroupStep1Fragment() {
     }
@@ -43,6 +51,7 @@ public class NewGroupStep1Fragment extends BaseFragment {
         quanziNameInputLayout = (TextInputLayout) mActivity.findViewById(R.id.quanziNameInputLayout);
         quanziSignInputLayout = (TextInputLayout) mActivity.findViewById(R.id.quanziSignInputLayout);
         UserPhotoImageView = (ImageView) mActivity.findViewById(R.id.UserPhotoImageView);
+        tagView = (TextView) view.findViewById(R.id.quanzi_tag);
     }
 
     @Override
@@ -53,6 +62,13 @@ public class NewGroupStep1Fragment extends BaseFragment {
             public void onClick(View v) {
                 requreForImage.showDialogAndCallIntent("圈子头像",
                         StaticField.PermissionRequestCode.new_group_face_photo);
+            }
+        });
+
+        tagView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NewGroupActivity) mActivity).CallForTagFragment(selectTags);
             }
         });
     }
@@ -94,12 +110,22 @@ public class NewGroupStep1Fragment extends BaseFragment {
         ans.groupName = quanziNameInputLayout.getEditText().getText().toString();
         ans.groupSign = quanziSignInputLayout.getEditText().getText().toString();
         ans.groupFaceUri = groupFaceUri;
+        ans.tags = selectTags;
         if (ans.groupName == null || ans.groupSign == null || ans.groupFaceUri == null) {
             ans.complete = false;
             return ans;
         }
         ans.complete = (!ans.groupSign.isEmpty() && !ans.groupName.isEmpty() && !ans.groupFaceUri.isEmpty());
         return ans;
+    }
+
+    public void setTags(ArrayList<AllTags.TagsEntity> tags) {
+        selectTags = tags;
+        String tagsString = "";
+        for (AllTags.TagsEntity tag : tags) {
+            tagsString += tag.tagName + ",";
+        }
+        tagView.setText(tagsString);
     }
 
     /**
@@ -110,6 +136,7 @@ public class NewGroupStep1Fragment extends BaseFragment {
         public String groupName;
         public String groupSign;
         public String groupFaceUri;
+        public ArrayList<AllTags.TagsEntity> tags;
 
     }
 

@@ -119,7 +119,7 @@ public class QuanziSetFragment extends BaseFragment {
                                     quanziName.setText(name);
 
                                     //后台更新
-                                    GroupSetting.getInstance().ChangeName(group.ID, group.Name);
+                                    GroupSetting.getNewInstance().ChangeName(group.ID, group.Name);
 
                                 }
                             }).setNegativeButton("取消", null).show();

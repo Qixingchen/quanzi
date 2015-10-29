@@ -44,5 +44,15 @@
             android:textSize="@dimen/normal_edit_text_size"/>
     </android.support.design.widget.TextInputLayout>
 
+    <TextView
+        android:id="@+id/quanzi_tag"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="圈子标签"
+        android:textSize="@dimen/normal_text_size"/>
+
 
 </LinearLayout>

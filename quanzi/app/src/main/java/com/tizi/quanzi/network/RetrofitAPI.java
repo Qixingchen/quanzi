@@ -2,6 +2,7 @@ package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.AddZan;
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.ApiInfoGson;
 import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.Comments;
@@ -77,7 +78,7 @@ public interface RetrofitAPI {
                 @Query("groupid") String groupID);
 
         @POST("group/findTagF")
-        Call<GroupAllInfo.TagListEntity> queryAllAvailableTag();
+        Call<AllTags> queryAllAvailableTag();
 
         @POST("group/updateFieldF")
         Call<OnlySuccess> changeGroupInfo(
@@ -86,7 +87,7 @@ public interface RetrofitAPI {
                 @Query(value = "value", encoded = true) String value);
 
         @POST("group/findGroupTags")
-        Call<GroupAllInfo.TagListEntity> queryGroupTAG(
+        Call<AllTags> queryGroupTAG(
                 @Query("groupid") String groupID);
 
 

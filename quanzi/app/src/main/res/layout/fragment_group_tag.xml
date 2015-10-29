@@ -1,0 +1,111 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.tizi.quanzi.ui.new_group.GroupTagFragment">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="290dp">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/face"/>
+
+            <TextView
+                android:id="@+id/tag_1"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+
+                android:layout_marginStart="43dp"
+                android:layout_marginTop="32dp"
+                android:background="@color/md_red_500"
+                android:textSize="@dimen/normal_edit_text_size"
+                tools:text="1111"/>
+
+            <TextView
+                android:id="@+id/tag_2"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignStart="@+id/tag_4"
+                android:layout_below="@+id/tag_1"
+                android:background="@color/md_red_500"
+                android:textSize="@dimen/normal_edit_text_size"
+                tools:text="1111"/>
+
+            <TextView
+                android:id="@+id/tag_3"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/tag_1"
+                android:background="@color/md_red_500"
+                android:textSize="@dimen/normal_edit_text_size"
+                tools:text="1111"/>
+
+            <TextView
+                android:id="@+id/tag_4"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_above="@+id/tag_5"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="34dp"
+                android:background="@color/md_red_500"
+                android:textSize="@dimen/normal_edit_text_size"
+                tools:text="1111"/>
+
+            <TextView
+                android:id="@+id/tag_5"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="33dp"
+                android:background="@color/md_red_500"
+                android:textSize="@dimen/normal_edit_text_size"
+                tools:text="1111"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp">
+
+            <TextView
+                android:id="@+id/parent_tag_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/small_title_size"
+                tools:text="哪个是你擅长的?"/>
+
+            <TextView
+                android:id="@+id/change_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="40dp"
+                android:text="换一批"
+                android:textSize="@dimen/small_title_size"/>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tag_recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"/>
+
+
+    </LinearLayout>
+
+</FrameLayout>

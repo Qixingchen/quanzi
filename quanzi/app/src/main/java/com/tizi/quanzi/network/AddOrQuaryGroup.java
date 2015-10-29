@@ -1,10 +1,14 @@
 package com.tizi.quanzi.network;
 
+import com.google.gson.Gson;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.tool.Tool;
+
+import java.util.ArrayList;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -41,9 +45,10 @@ public class AddOrQuaryGroup extends RetrofitNetworkAbs {
      * @param notice    群公告
      * @param tag       群标签
      */
-    public void NewAGroup(String GroupName, String icon, String notice, String tag, String convid) {
+    public void NewAGroup(String GroupName, String icon, String notice,
+                          ArrayList<AllTags.TagsEntity> tags, String convid) {
 
-        String encodedTAG = Tool.getUTF_8String(tag);
+        String encodedTAG = Tool.getUTF_8String(new Gson().toJson(tags));
         groupService.addGroup(GroupName, encodedTAG, icon, Tool.getUTF_8String(notice),
                 AppStaticValue.getUserID(), convid).enqueue(new Callback<Group>() {
             @Override

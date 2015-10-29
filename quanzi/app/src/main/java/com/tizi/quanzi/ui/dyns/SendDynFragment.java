@@ -39,13 +39,10 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class SendDynFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private static final String ARG_PARAM3 = "param3";
+    private static final String THEME_STRING = "themeString";
+    private static final String THEME_ID = "themeID";
+    private static final String GROUP_ID = "groupID";
 
-    // TODO: Rename and change types of parameters
     private String themeString;
     private String themeID;
     private String groupID;
@@ -73,13 +70,12 @@ public class SendDynFragment extends BaseFragment {
      *
      * @return A new instance of fragment SendDynFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SendDynFragment newInstance(String themeString, String groupID, String ThemeID) {
         SendDynFragment fragment = new SendDynFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, themeString);
-        args.putString(ARG_PARAM2, groupID);
-        args.putString(ARG_PARAM3, ThemeID);
+        args.putString(THEME_STRING, themeString);
+        args.putString(THEME_ID, groupID);
+        args.putString(GROUP_ID, ThemeID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -116,9 +112,9 @@ public class SendDynFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            themeString = getArguments().getString(ARG_PARAM1);
-            groupID = getArguments().getString(ARG_PARAM2);
-            themeID = getArguments().getString(ARG_PARAM3);
+            themeString = getArguments().getString(THEME_STRING);
+            groupID = getArguments().getString(THEME_ID);
+            themeID = getArguments().getString(GROUP_ID);
         }
     }
 

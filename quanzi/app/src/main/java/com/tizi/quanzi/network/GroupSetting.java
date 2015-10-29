@@ -1,9 +1,11 @@
 package com.tizi.quanzi.network;
 
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.tool.Tool;
 
 import retrofit.Callback;
+import retrofit.Response;
 import retrofit.Retrofit;
 
 /**
@@ -17,7 +19,7 @@ public class GroupSetting extends RetrofitNetworkAbs {
 
     private RetrofitAPI.Group groupSer = RetrofitNetwork.retrofit.create(RetrofitAPI.Group.class);
 
-    public static GroupSetting getInstance() {
+    public static GroupSetting getNewInstance() {
         return new GroupSetting();
     }
 
@@ -61,6 +63,23 @@ public class GroupSetting extends RetrofitNetworkAbs {
      */
     public void changeIcon(String groupID, String uri) {
         changeField(groupID, "icon", uri);
+    }
+
+    /**
+     * 查找所有TAG
+     */
+    public void findAllTags() {
+        groupSer.queryAllAvailableTag().enqueue(new Callback<AllTags>() {
+            @Override
+            public void onResponse(Response<AllTags> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

@@ -22,7 +22,7 @@ public class GroupAllInfo extends OnlySuccess {
     @SerializedName("memlist")
     public List<MemlistEntity> memlist;
     @SerializedName("tagList")
-    public List<TagListEntity> tagList;
+    public List<AllTags.TagsEntity> tagList;
 
     public static class GroupEntity {
         /**
@@ -96,18 +96,4 @@ public class GroupAllInfo extends OnlySuccess {
         public String name;
     }
 
-    public static class TagListEntity {
-        /**
-         * tagName : 善良
-         * tagId : HTDM0048773c059f042343eeafe426bbf92b2a53
-         * id : HTDM0048dc32dc2ce6a840968b9df65d54fc9de0
-         */
-
-        @SerializedName("tagName")
-        public String tagName;
-        @SerializedName("tagId")
-        public String tagId;
-        @SerializedName("id")
-        public String id;
-    }
 }

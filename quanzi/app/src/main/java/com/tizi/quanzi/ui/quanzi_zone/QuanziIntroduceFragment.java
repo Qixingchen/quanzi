@@ -251,7 +251,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                                 .resizeDimen(R.dimen.group_introduce_face_size, R.dimen.group_introduce_face_size)
                                 .into(groupFaceImageView);
                         //通知后台更改
-                        GroupSetting.getInstance().changeIcon(groupClass.ID, photoUri);
+                        GroupSetting.getNewInstance().changeIcon(groupClass.ID, photoUri);
                         //本地群列表更改
                         groupClass.Face = photoUri;
                         GroupList.getInstance().updateGroup(groupClass);

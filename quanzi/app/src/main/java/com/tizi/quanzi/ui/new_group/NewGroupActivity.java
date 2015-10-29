@@ -11,6 +11,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.NewAVIMConversation;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.AddOrQuaryGroup;
@@ -19,6 +20,8 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
 
+import java.util.ArrayList;
+
 public class NewGroupActivity extends BaseActivity {
     NewGroupStep1Fragment newGroupStep1Fragment;
     NewGroupStep2Fragment newGroupStep2Fragment;
@@ -26,6 +29,8 @@ public class NewGroupActivity extends BaseActivity {
     Toolbar toolbar;
     private String convID;
     private Menu mMenu;
+
+    private GroupTagFragment groupTagFragment;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +73,6 @@ public class NewGroupActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -92,7 +94,6 @@ public class NewGroupActivity extends BaseActivity {
                 String GroupName = ans.groupName;
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
-                String tag = "[{}]";
 
                 AddOrQuaryGroup.getNewInstance().setNetworkListener(
                         new RetrofitNetworkAbs.NetworkListener() {
@@ -120,7 +121,7 @@ public class NewGroupActivity extends BaseActivity {
                                 Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
                             }
                         })
-                        .NewAGroup(GroupName, icon, notice, tag, convID);
+                        .NewAGroup(GroupName, icon, notice, ans.tags, convID);
 
 
             } else {
@@ -133,7 +134,25 @@ public class NewGroupActivity extends BaseActivity {
             startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         }
 
+        if (id == R.id.action_tag_complete) {
+            newGroupStep1Fragment.setTags(groupTagFragment.OnOK());
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction().show(newGroupStep1Fragment).commit();
+            mMenu.findItem(R.id.action_next_step).setVisible(true);
+            mMenu.findItem(R.id.action_tag_complete).setVisible(false);
+            mMenu.findItem(R.id.action_complete).setVisible(false);
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    public void CallForTagFragment(ArrayList<AllTags.TagsEntity> tags) {
+        mMenu.findItem(R.id.action_next_step).setVisible(false);
+        mMenu.findItem(R.id.action_tag_complete).setVisible(true);
+        mMenu.findItem(R.id.action_complete).setVisible(false);
+        groupTagFragment = GroupTagFragment.newInstance(tags);
+        getSupportFragmentManager().beginTransaction().hide(newGroupStep1Fragment)
+                .add(R.id.fragment, groupTagFragment).addToBackStack("GroupTagFragment").commit();
     }
 
 }

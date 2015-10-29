@@ -7,11 +7,15 @@ import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.BaseActivity;
+import com.tizi.quanzi.ui.new_group.GroupTagFragment;
+
+import java.util.ArrayList;
 
 /**
  * 群空间
@@ -21,6 +25,7 @@ public class QuanziZoneActivity extends BaseActivity {
     private QuanziIntroduceFragment quanziIntroduceFragment;
     private QuanziSetFragment quanziSetFragment;
     private GroupAllInfo mGroupAllInfo;
+    private GroupTagFragment groupTagFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,5 +106,17 @@ public class QuanziZoneActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         quanziIntroduceFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void callForTagFragment(ArrayList<AllTags.TagsEntity> tags) {
+        groupTagFragment = GroupTagFragment.newInstance(tags, true);
+        getSupportFragmentManager().beginTransaction().hide(quanziSetFragment)
+                .add(R.id.fragment, groupTagFragment).addToBackStack("GroupTagFragment").commit();
+    }
+
+    public void OnTagsSelectOk(ArrayList<AllTags.TagsEntity> tags) {
+        quanziSetFragment.setTags(tags);
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().beginTransaction().show(quanziSetFragment).commit();
     }
 }

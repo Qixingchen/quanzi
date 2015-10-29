@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 
 import com.avos.avoscloud.AVAnalytics;
@@ -29,6 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Context mContext;
     protected View view;
     protected Activity mActivity;
+    protected Menu mMenu;
 
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
@@ -94,6 +96,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         AVAnalytics.onPause(this);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

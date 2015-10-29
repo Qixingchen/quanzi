@@ -22,6 +22,14 @@ public class AllTags extends OnlySuccess {
     @SerializedName("tags")
     public List<TagsEntity> tags;
 
+    public static String getTagString(List<TagsEntity> tags) {
+        String tagsString = "";
+        for (AllTags.TagsEntity tag : tags) {
+            tagsString += tag.tagName + ",";
+        }
+        return tagsString;
+    }
+
     public static class TagsEntity implements Parcelable {
         public static final Parcelable.Creator<TagsEntity> CREATOR = new Parcelable.Creator<TagsEntity>() {
             public TagsEntity createFromParcel(Parcel source) {

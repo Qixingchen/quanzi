@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
@@ -17,6 +18,7 @@ import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +32,16 @@ public class GroupTagFragment extends BaseFragment {
 
 
     private static final String SELECT_TAGS = "selectTags";
+    private static final String NEED_OK_BTN = "needOkBtn";
+
+    private boolean needOkbtn;
 
 
     private TextView[] tagTextViews = new TextView[5];
     private android.widget.TextView changetags;
     private RecyclerView tagrecyclerview;
     private TextView parentTagView;
+    private Button okBtn;
 
     private ArrayList<AllTags.TagsEntity> selectTags = new ArrayList<>();
     private Map<String, List<AllTags.TagsEntity>> tagsMap = new TreeMap<>();
@@ -45,10 +51,11 @@ public class GroupTagFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static GroupTagFragment newInstance(ArrayList<AllTags.TagsEntity> selectTags) {
+    public static GroupTagFragment newInstance(ArrayList<AllTags.TagsEntity> selectTags, boolean needOkBtn) {
         GroupTagFragment fragment = new GroupTagFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(SELECT_TAGS, selectTags);
+        args.putBoolean(NEED_OK_BTN, needOkBtn);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,6 +65,7 @@ public class GroupTagFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             selectTags = getArguments().getParcelableArrayList(SELECT_TAGS);
+            needOkbtn = getArguments().getBoolean(NEED_OK_BTN);
         }
     }
 
@@ -79,11 +87,13 @@ public class GroupTagFragment extends BaseFragment {
         this.tagTextViews[1] = (TextView) view.findViewById(R.id.tag_2);
         this.tagTextViews[0] = (TextView) view.findViewById(R.id.tag_1);
         parentTagView = (TextView) view.findViewById(R.id.parent_tag_text_view);
+        okBtn = (Button) view.findViewById(R.id.ok_btn);
     }
 
     @Override
     protected void initViewsAndSetEvent() {
         tagrecyclerview.setLayoutManager(new GridLayoutManager(mContext, 4));
+        tagrecyclerview.setHasFixedSize(false);
 
         changetags.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +133,16 @@ public class GroupTagFragment extends BaseFragment {
             });
         }
         setSelectTagsTextView();
+
+        if (needOkbtn) {
+            okBtn.setVisibility(View.VISIBLE);
+            okBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((QuanziZoneActivity) mActivity).OnTagsSelectOk(selectTags);
+                }
+            });
+        }
     }
 
     private void setTags() {
@@ -168,6 +188,10 @@ public class GroupTagFragment extends BaseFragment {
 
     public ArrayList<AllTags.TagsEntity> OnOK() {
         return selectTags;
+    }
+
+    public interface OnOK {
+        void OK(ArrayList<AllTags.TagsEntity> tags);
     }
 
 }

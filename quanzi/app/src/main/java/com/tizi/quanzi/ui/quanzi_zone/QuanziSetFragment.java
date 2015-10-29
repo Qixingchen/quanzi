@@ -21,6 +21,7 @@ import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
@@ -28,6 +29,8 @@ import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.main.MainActivity;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +42,7 @@ public class QuanziSetFragment extends BaseFragment {
     private Switch ignoreNotifiSwitch;
     private Button exitQuanzi;
     private GroupAllInfo groupAllInfo;
+    private View nameView, tagView, signView;
 
 
     public QuanziSetFragment() {
@@ -65,7 +69,9 @@ public class QuanziSetFragment extends BaseFragment {
         deleteMess = (TextView) view.findViewById(R.id.delete_mess);
         ignoreNotifiSwitch = (Switch) view.findViewById(R.id.ignore_notifi_switch);
         exitQuanzi = (Button) view.findViewById(R.id.exit_quanzi);
-
+        nameView = view.findViewById(R.id.quanzi_name_view);
+        tagView = view.findViewById(R.id.quanzi_tag_view);
+        signView = view.findViewById(R.id.quanzi_sign_view);
     }
 
     @Override
@@ -78,10 +84,9 @@ public class QuanziSetFragment extends BaseFragment {
 
         ignoreNotifiSwitch.setChecked(!group.getNeedNotifi());
 
-
         if (groupAllInfo != null) {
             quanziName.setText(group.Name);
-            quanziName.setOnClickListener(new View.OnClickListener() {
+            nameView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -104,8 +109,7 @@ public class QuanziSetFragment extends BaseFragment {
 
                                     //LC发送广播
                                     SendMessage.getInstance().sendTextMessage(
-                                            group.convId,
-                                            name,
+                                            group.convId, name,
                                             SendMessage.setSysMessAttr(
                                                     SendMessage.setMessAttr(group.ID,
                                                             StaticField.ConvType.GROUP),
@@ -125,7 +129,47 @@ public class QuanziSetFragment extends BaseFragment {
                             }).setNegativeButton("取消", null).show();
                 }
             });
-            quanziSign.setText(groupAllInfo.group.groupName);
+            quanziSign.setText(groupAllInfo.group.notice);
+            signView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    LayoutInflater inflater = mActivity.getLayoutInflater();
+                    final View layout = inflater.inflate(R.layout.dialog_one_line,
+                            (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
+                    final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
+                    final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
+
+                    title.setText("输入新的圈子签名");
+                    input.setHint("圈子签名");
+                    input.setText(group.Notice);
+                    builder.setTitle("更改圈子签名").setView(layout)
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String sign = input.getText().toString();
+
+                                    //GroupList更新
+                                    group.Notice = sign;
+                                    GroupList.getInstance().updateGroup(group);
+                                    quanziSign.setText(sign);
+
+                                    //后台更新
+                                    GroupSetting.getNewInstance().ChangeSign(group.ID, group.Notice);
+
+                                }
+                            }).setNegativeButton("取消", null).show();
+                }
+            });
+
+            quanziTag.setText(AllTags.getTagString(groupAllInfo.tagList));
+            tagView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((QuanziZoneActivity) mActivity).callForTagFragment(
+                            new ArrayList<>(groupAllInfo.tagList));
+                }
+            });
 
             if (group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
                 exitQuanzi.setText("解散圈子");
@@ -235,6 +279,11 @@ public class QuanziSetFragment extends BaseFragment {
         Intent mainActivity = new Intent(mActivity, MainActivity.class);
         mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainActivity);
+    }
+
+    public void setTags(ArrayList<AllTags.TagsEntity> tags) {
+        quanziTag.setText(AllTags.getTagString(tags));
+        GroupSetting.getNewInstance().changeTags(groupAllInfo.group.id, tags);
     }
 
 }

@@ -62,6 +62,16 @@ public class GroupSetting extends RetrofitNetworkAbs {
     }
 
     /**
+     * 更改群签名
+     *
+     * @param groupID 群ID
+     * @param sign    更改为的群签名
+     */
+    public void ChangeSign(String groupID, String sign) {
+        changeField(groupID, "notice", sign);
+    }
+
+    /**
      * 更改群头像
      *
      * @param groupID 群ID
@@ -69,6 +79,16 @@ public class GroupSetting extends RetrofitNetworkAbs {
      */
     public void changeIcon(String groupID, String uri) {
         changeField(groupID, "icon", uri);
+    }
+
+    /**
+     * 更改群标签
+     *
+     * @param groupID 群ID
+     * @param oldTags 更改的 TAGS
+     */
+    public void changeTags(String groupID, ArrayList<AllTags.TagsEntity> oldTags) {
+        changeField(groupID, "grouptags", getTagsString(oldTags));
     }
 
     /**
@@ -99,12 +119,7 @@ public class GroupSetting extends RetrofitNetworkAbs {
     public void NewAGroup(String GroupName, String icon, String notice,
                           ArrayList<AllTags.TagsEntity> oldTags, String convid) {
 
-        ArrayList<TAG> tags = new ArrayList<>();
-        for (AllTags.TagsEntity oldtag : oldTags) {
-            tags.add(new TAG(oldtag.id, oldtag.tagName));
-        }
-
-        String encodedTAG = Tool.getUTF_8String(new Gson().toJson(tags));
+        String encodedTAG = Tool.getUTF_8String(getTagsString(oldTags));
         groupSer.addGroup(GroupName, encodedTAG, icon, Tool.getUTF_8String(notice),
                 AppStaticValue.getUserID(), convid).enqueue(new Callback<Group>() {
             @Override
@@ -146,6 +161,14 @@ public class GroupSetting extends RetrofitNetworkAbs {
     @Override
     public GroupSetting setNetworkListener(NetworkListener networkListener) {
         return setNetworkListener(networkListener, this);
+    }
+
+    private String getTagsString(ArrayList<AllTags.TagsEntity> oldTags) {
+        ArrayList<TAG> tags = new ArrayList<>();
+        for (AllTags.TagsEntity oldtag : oldTags) {
+            tags.add(new TAG(oldtag.id, oldtag.tagName));
+        }
+        return new Gson().toJson(tags);
     }
 
     class TAG {

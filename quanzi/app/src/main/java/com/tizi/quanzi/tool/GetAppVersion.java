@@ -28,7 +28,7 @@ public class GetAppVersion {
         ApiInfo.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
-                if (AppStaticValue.getPrefer(StaticField.Preferences.AllowAppUpDate)
+                if (AppStaticValue.getStringPrefer(StaticField.Preferences.AllowAppUpDate)
                         .compareTo(String.valueOf(false)) == 0) {
                     Log.i(TAG, "不允许更新");
                     return;
@@ -51,7 +51,7 @@ public class GetAppVersion {
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            AppStaticValue.setPrefer(StaticField.Preferences.AllowAppUpDate,
+                                            AppStaticValue.setStringPrefer(StaticField.Preferences.AllowAppUpDate,
                                                     String.valueOf(false));
                                             dialog.dismiss();
                                         }

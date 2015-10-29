@@ -100,9 +100,9 @@ public class SaveImageToLeanCloud {
                 @Override
                 public void done(AVException e) {
                     if (e != null) {
-                        Log.w(TAG, String.format("图片%s:%s储存失败", filePath, fileName));
+                        Log.w(TAG, String.format("图片%s:%s储存失败: %s", filePath, fileName, e.getMessage()));
                         if (getImageUri != null) {
-                            getImageUri.onResult(null, false);
+                            getImageUri.onResult(null, false, e.getMessage() + fileName + "储存失败");
                         }
                     } else {
                         String photoUri;
@@ -113,7 +113,7 @@ public class SaveImageToLeanCloud {
                             photoUri = finalFile.getUrl();
                         }
                         if (getImageUri != null) {
-                            getImageUri.onResult(photoUri, true);
+                            getImageUri.onResult(photoUri, true, null);
                         }
                     }
                 }
@@ -121,12 +121,12 @@ public class SaveImageToLeanCloud {
         } catch (IOException e) {
             e.printStackTrace();
             if (getImageUri != null) {
-                getImageUri.onResult(null, false);
+                getImageUri.onResult(null, false, e.getMessage());
             }
         }
     }
 
     public interface GetImageUri {
-        void onResult(String uri, boolean success);
+        void onResult(String uri, boolean success, String errorMessage);
     }
 }

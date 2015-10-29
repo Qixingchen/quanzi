@@ -2,6 +2,7 @@ package com.tizi.quanzi.ui.new_group;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,7 +86,11 @@ public class NewGroupStep1Fragment extends BaseFragment {
 
                     SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                         @Override
-                        public void onResult(String uri, boolean success) {
+                        public void onResult(String uri, boolean success, String errorMessage) {
+                            if (!success) {
+                                Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                                return;
+                            }
                             String photoUri = uri;
                             //finalFile.getThumbnailUrl(false, 200, 200);
                             Picasso.with(mActivity).load(photoUri)

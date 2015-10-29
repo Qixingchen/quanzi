@@ -19,7 +19,7 @@ import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.network.AddOrQuaryGroup;
+import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.network.UserManageInGroup;
@@ -120,7 +120,7 @@ public class GroupUserAdmin {
     public void deleteMember(final String convID, final String groupID, String userID) {
         if (userID.compareTo(AppStaticValue.getUserID()) == 0) {
             //发送系统通知
-            AddOrQuaryGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                 @Override
                 public void onOK(Object ts) {
                     GroupAllInfo groupAllInfo = (GroupAllInfo) ts;

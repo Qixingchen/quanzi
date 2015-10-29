@@ -93,12 +93,29 @@ public class AppStaticValue {
         UserToken = userToken;
     }
 
-    public static String getPrefer(String Name) {
+    /*偏好*/
+    public static String getStringPrefer(String Name) {
         return preferences.getString(Name, "");
     }
 
-    public static void setPrefer(String name, String vaule) {
+    public static void setStringPrefer(String name, String vaule) {
         preferences.edit().putString(name, vaule).apply();
+    }
+
+    public static boolean getBoolenPrefer(String Name) {
+        return preferences.getBoolean(Name, false);
+    }
+
+    public static void setBoolenPrefer(String name, boolean vaule) {
+        preferences.edit().putBoolean(name, vaule).apply();
+    }
+
+    public static int getIntPrefer(String Name, int defaultValue) {
+        return preferences.getInt(Name, defaultValue);
+    }
+
+    public static void setIntPrefer(String name, int vaule) {
+        preferences.edit().putInt(name, vaule).apply();
     }
 
     public static SharedPreferences getNotifiPreferences() {

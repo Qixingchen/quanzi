@@ -142,7 +142,7 @@ public class BigWorld extends BaseFragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppStaticValue.setPrefer(StaticField.Preferences.PASSWORD, "");
+                AppStaticValue.setStringPrefer(StaticField.Preferences.PASSWORD, "");
                 AppStaticValue.getImClient().close(new AVIMClientCallback() {
                     @Override
                     public void done(AVIMClient avimClient, AVIMException e) {

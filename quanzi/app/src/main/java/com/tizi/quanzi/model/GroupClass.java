@@ -20,7 +20,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
     public String background;
     public boolean validation;
     public String createUser;
-    private Boolean needNotifi;
+    private boolean needNotifi;
 
     public GroupClass() {
     }
@@ -98,7 +98,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         return groupClass;
     }
 
-    public Boolean getNeedNotifi() {
+    public boolean getNeedNotifi() {
         return needNotifi;
     }
 
@@ -106,7 +106,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         this.needNotifi = AppStaticValue.getNotifiPreferences().getBoolean(ID, true);
     }
 
-    public void setNeedNotifi(Boolean needNotifi, boolean NeedWrite) {
+    public void setNeedNotifi(boolean needNotifi, boolean NeedWrite) {
         if (NeedWrite) {
             AppStaticValue.getNotifiPreferences().edit().putBoolean(ID, needNotifi).apply();
         }

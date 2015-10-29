@@ -15,6 +15,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -254,12 +255,14 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
             String ans = requreForImage.ZipedFilePathFromIntent(activityResultAns.data);
             SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                 @Override
-                public void onResult(String uri, boolean success) {
+                public void onResult(String uri, boolean success, String errorMessage) {
                     if (success) {
                         MyUserInfo.getInstance().getUserInfo().setIcon(uri);
                         userFaceImageView.setImageUrl(MyUserInfo.getInstance().getUserInfo().getIcon(),
                                 GetVolley.getmInstance().getImageLoader());
                         UserInfoSetting.getNewInstance().changeFace(uri);
+                    } else {
+                        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
                     }
                 }
             }).savePhoto(ans, MyUserInfo.getInstance().getUserInfo().getId() + "face.jpg", 200, 200);

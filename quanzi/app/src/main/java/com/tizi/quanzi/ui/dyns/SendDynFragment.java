@@ -3,6 +3,7 @@ package com.tizi.quanzi.ui.dyns;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ClipData;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,6 +26,7 @@ import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.otto.ActivityResultAns;
+import com.tizi.quanzi.tool.GetFilePath;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
@@ -178,6 +180,10 @@ public class SendDynFragment extends BaseFragment {
         selectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (photoCount >= 9) {
+                    Snackbar.make(view, "您已经选择9张照片了~", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
                 new RequreForImage(mActivity).showDialogAndCallIntent("选择照片",
                         StaticField.PermissionRequestCode.send_dyn, true, 9 - photoCount);
             }
@@ -189,26 +195,57 @@ public class SendDynFragment extends BaseFragment {
     public void onActivityResult(ActivityResultAns activityResultAns) {
         if (activityResultAns.requestCode == StaticField.PermissionRequestCode.send_dyn
                 && activityResultAns.resultCode == Activity.RESULT_OK && activityResultAns.data != null) {
+
+
             ArrayList<Image> images = activityResultAns.data
                     .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
-            photoCount += images.size();
-            for (Image image : images) {
-                SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
-                    @Override
-                    public void onResult(String uri, boolean success) {
-                        if (success) {
-                            photoUrls.add(uri);
-                            flushImages();
-                        }
-                    }
-                }).savePhoto(image.path, image.name);
+            if (images != null) {
+                photoCount += images.size();
+                for (Image image : images) {
+
+                    savePhoto(image.path);
+                }
+            } else {
+                photoFromSystem(activityResultAns);
             }
         }
     }
 
+    /**
+     * 使用系统带的方法获取图片
+     */
+    private void photoFromSystem(ActivityResultAns activityResultAns) {
+        ClipData clipData = activityResultAns.data.getClipData();
+        if (clipData != null) {
+
+
+            int size = activityResultAns.data.getClipData().getItemCount();
+            photoCount += size;
+            if (photoCount > 9) {
+                Snackbar.make(view, String.format("选择数量超过9张,%d张未保存", photoCount - 9),
+                        Snackbar.LENGTH_LONG).show();
+                size -= photoCount - 9;
+                photoCount = 9;
+            }
+
+            for (int i = 0; i < size; i++) {
+
+                String filepath = GetFilePath.getPath(mActivity,
+                        activityResultAns.data.getClipData().getItemAt(i).getUri());
+
+                savePhoto(filepath);
+            }
+        } else {
+            String filepath = new RequreForImage(mActivity).ZipedFilePathFromIntent(activityResultAns.data);
+            photoCount++;
+            savePhoto(filepath);
+        }
+    }
+
+
     private void flushImages() {
         int size = photoUrls.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < Math.min(9, size); i++) {
             weibo_pics[i].setVisibility(View.VISIBLE);
             String uri = GetThumbnailsUri.maxHeiAndWei(photoUrls.get(i), 270, 480);
             ((NetworkImageView) weibo_pics[i].findViewById(R.id.pic)).setImageUrl(uri, GetVolley.getmInstance().getImageLoader());
@@ -216,6 +253,21 @@ public class SendDynFragment extends BaseFragment {
         for (int i = size; i < 9; i++) {
             weibo_pics[i].setVisibility(View.GONE);
         }
+    }
+
+    private void savePhoto(String filepath) {
+        SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+            @Override
+            public void onResult(String uri, boolean success, String errormess) {
+                if (success) {
+                    photoUrls.add(uri);
+                    flushImages();
+                } else {
+                    Snackbar.make(view, errormess, Snackbar.LENGTH_LONG).show();
+                    photoCount--;
+                }
+            }
+        }).savePhoto(filepath);
     }
 
 }

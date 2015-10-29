@@ -50,7 +50,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             //敬请期待
             return -1;
         } else {
-            return 1;
+            return acts.get(position).template;
         }
     }
 
@@ -78,7 +78,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 break;
             default:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_dyns, parent, false);
+                        .inflate(R.layout.item_hope_for_next, parent, false);
                 viewHolder = new DefaultViewHolder(v, mContext);
         }
         return viewHolder;
@@ -95,7 +95,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (TuoDanZuoZanViewHolder.class.isInstance(holder)) {
             Log.i(TAG, position + "is TuoDanZuoZanViewHolder");
             TuoDanZuoZanViewHolder tuodan = (TuoDanZuoZanViewHolder) holder;
-            tuodan.participantsNum.setText(String.valueOf(acts.get(position).participantsNum));
+            tuodan.participantsNum.setText(String.valueOf(acts.get(position).signNum));
             tuodan.detail.setText(acts.get(position).content);
             tuodan.themeIcon.setImageUrl(acts.get(position).icon, GetVolley.getmInstance().getImageLoader());
             tuodan.addHotDyns(acts.get(position).id);

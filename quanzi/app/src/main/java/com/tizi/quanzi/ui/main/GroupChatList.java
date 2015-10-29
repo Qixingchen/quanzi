@@ -95,7 +95,7 @@ public class GroupChatList extends BaseFragment {
     protected void initViewsAndSetEvent() {
         List<GroupClass> groupClasses = GroupList.getInstance().getGroupList();
         /*检查是否第一次运行，是的话刷新纪录*/
-        if (AppStaticValue.getPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID()).compareTo("NO") != 0) {
+        if (AppStaticValue.getStringPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID()).compareTo("NO") != 0) {
             Log.i(TAG, "是第一次运行，开始刷新纪录");
             Log.i(TAG, String.format("共有%d个群", groupClasses.size()));
             for (GroupClass groupClass : groupClasses) {
@@ -103,7 +103,7 @@ public class GroupChatList extends BaseFragment {
                 FlushMess.getInstance().Flush(groupClass.convId);
             }
         }
-        AppStaticValue.setPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID(), "NO");
+        AppStaticValue.setStringPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID(), "NO");
     }
 
     @Override

@@ -3,11 +3,14 @@ package com.tizi.quanzi.tool;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 
@@ -18,8 +21,11 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 
 /**
@@ -43,6 +49,39 @@ public class RequreForImage {
             BusProvider.getInstance().register(this);
         } catch (IllegalArgumentException ignore) {
         }
+    }
+
+    /*For Google Photo*/
+    private static String getImageUrlWithAuthority(Context context, Uri uri) {
+        InputStream is = null;
+        if (uri.getAuthority() != null) {
+            try {
+                is = context.getContentResolver().openInputStream(uri);
+                Bitmap bmp = BitmapFactory.decodeStream(is);
+                return writeToTempImageAndGetPathUri(context, bmp);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    private static String writeToTempImageAndGetPathUri(Context context, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+
+        String RootPath = context.getCacheDir().getAbsolutePath();
+        String FilePath = RootPath + "/image/" + "temp_group_image.jpg";
+        ZipPic.saveMyBitmap(FilePath, inImage, 100);
+
+
+        return FilePath;
     }
 
     @Override
@@ -141,12 +180,62 @@ public class RequreForImage {
     }
 
     /*发起多选,包括如果本身应该是多选,只是因为已经选了多张而使得limit=1的情况*/
-    private void intentForMultiple(int limit, int eventCode) {
-        Intent intent = new Intent(mActivity, AlbumSelectActivity.class);
-        intent.putExtra(Constants.INTENT_EXTRA_LIMIT, limit);
-        mActivity.startActivityForResult(intent, eventCode);
+    private void intentForMultiple(final int limit, final int eventCode) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            intentFor3pMultiple(limit, eventCode);
+        }
+        int selector = AppStaticValue.getIntPrefer("MULTIPLE_SELECTOR", 9);
+        if (selector == 9) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+
+            builder.setMessage("我们将优先使用系统照片选择器,如果您发现无法多选,请点击\"使用自带选择器\"")
+                    .setTitle("选择器的提示");
+
+            builder.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    intentForSysMultiple(eventCode);
+                }
+            });
+            builder.setNegativeButton("使用自带选择器", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    intentFor3pMultiple(limit, eventCode);
+                    AppStaticValue.setIntPrefer("MULTIPLE_SELECTOR", 0);
+                }
+            });
+            builder.setNeutralButton("没遇到问题", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    intentForSysMultiple(eventCode);
+                    AppStaticValue.setIntPrefer("MULTIPLE_SELECTOR", 1);
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        if (selector == 0) {
+            intentFor3pMultiple(limit, eventCode);
+        }
+        if (selector == 1) {
+            intentForSysMultiple(eventCode);
+        }
     }
 
+    /*系统多选*/
+    private void intentForSysMultiple(int eventCode) {
+        Intent intentFromGallery = new Intent(Intent.ACTION_GET_CONTENT, null);
+        intentFromGallery.setType("image/*");
+        intentFromGallery.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        mActivity.startActivityForResult(intentFromGallery, eventCode);
+    }
+
+    /*第三方库多选*/
+    private void intentFor3pMultiple(int limit, int eventCode) {
+        Intent intentFromGallery = new Intent(mActivity, AlbumSelectActivity.class);
+        intentFromGallery.putExtra(Constants.INTENT_EXTRA_LIMIT, limit);
+        mActivity.startActivityForResult(intentFromGallery, eventCode);
+    }
 
     /**
      * todo 裁剪图片方法实现
@@ -217,7 +306,11 @@ public class RequreForImage {
             FilePath = photoTakenUri;
         } else {
             FilePath = GetFilePath.getPath(mActivity, data.getData());
+            if (FilePath == null) {
+                return getImageUrlWithAuthority(mActivity, data.getData());
+            }
         }
+
         if (ZipPic.getSize(FilePath) < 150 * 1024) {
             return FilePath;
         }

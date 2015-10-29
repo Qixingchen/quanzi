@@ -1,8 +1,14 @@
 package com.tizi.quanzi.network;
 
+import com.google.gson.Gson;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.AllTags;
+import com.tizi.quanzi.gson.Group;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.tool.Tool;
+
+import java.util.ArrayList;
 
 import retrofit.Callback;
 import retrofit.Response;
@@ -82,9 +88,73 @@ public class GroupSetting extends RetrofitNetworkAbs {
         });
     }
 
+    /**
+     * 创建一个群
+     *
+     * @param GroupName 群名
+     * @param icon      群头像
+     * @param notice    群公告
+     * @param oldTags   群标签
+     */
+    public void NewAGroup(String GroupName, String icon, String notice,
+                          ArrayList<AllTags.TagsEntity> oldTags, String convid) {
+
+        ArrayList<TAG> tags = new ArrayList<>();
+        for (AllTags.TagsEntity oldtag : oldTags) {
+            tags.add(new TAG(oldtag.id, oldtag.tagName));
+        }
+
+        String encodedTAG = Tool.getUTF_8String(new Gson().toJson(tags));
+        groupSer.addGroup(GroupName, encodedTAG, icon, Tool.getUTF_8String(notice),
+                AppStaticValue.getUserID(), convid).enqueue(new Callback<Group>() {
+            @Override
+            public void onResponse(Response<Group> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
+
+    /**
+     * 查询群信息
+     * 通过回调返回值
+     *
+     * @param GroupID 群ID
+     */
+    public void queryGroup(String GroupID) {
+        groupSer.queryGroup(GroupID).enqueue(new Callback<GroupAllInfo>() {
+            @Override
+            public void onResponse(Response<GroupAllInfo> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+
+    }
+
+
     @SuppressWarnings("unchecked")
     @Override
     public GroupSetting setNetworkListener(NetworkListener networkListener) {
         return setNetworkListener(networkListener, this);
+    }
+
+    class TAG {
+        public String tagid;
+        public String tagName;
+
+        public TAG(String tagid, String tagName) {
+            this.tagid = tagid;
+            this.tagName = tagName;
+        }
     }
 }

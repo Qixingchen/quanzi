@@ -14,7 +14,7 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.network.AddOrQuaryGroup;
+import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
@@ -95,7 +95,7 @@ public class NewGroupActivity extends BaseActivity {
                 String icon = ans.groupFaceUri;
                 String notice = ans.groupSign;
 
-                AddOrQuaryGroup.getNewInstance().setNetworkListener(
+                GroupSetting.getNewInstance().setNetworkListener(
                         new RetrofitNetworkAbs.NetworkListener() {
                             @Override
                             public void onOK(Object ts) {
@@ -111,6 +111,7 @@ public class NewGroupActivity extends BaseActivity {
                                 groupClass.Type = StaticField.ConvType.GROUP;
                                 groupClass.Notice = ans.groupSign;
                                 groupClass.convId = convID;
+                                groupClass.setNeedNotifi(true, true);
                                 groupClass.createUser = AppStaticValue.getUserID();
                                 groupClass.UnreadCount = 0;
                                 GroupList.getInstance().addGroup(groupClass);

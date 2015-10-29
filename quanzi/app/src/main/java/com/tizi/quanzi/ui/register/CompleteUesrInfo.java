@@ -118,8 +118,9 @@ public class CompleteUesrInfo extends BaseFragment {
             if (filePath != null) {
                 SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                     @Override
-                    public void onResult(String uri, boolean success) {
+                    public void onResult(String uri, boolean success, String errorMessage) {
                         if (!success) {
+                            Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
                             return;
                         }
                         UserPhotoImageView.setBackground(null);

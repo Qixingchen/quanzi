@@ -20,6 +20,7 @@ import com.tizi.quanzi.gson.Theme;
 import retrofit.Call;
 import retrofit.http.POST;
 import retrofit.http.Query;
+import rx.Observable;
 
 /**
  * Created by qixingchen on 15/9/15.
@@ -75,6 +76,10 @@ public interface RetrofitAPI {
 
         @POST("group/findGroupAllInfoF")
         Call<GroupAllInfo> queryGroup(
+                @Query("groupid") String groupID);
+
+        @POST("group/findGroupAllInfoF")
+        public Observable<GroupAllInfo> queryGroupRX(
                 @Query("groupid") String groupID);
 
         @POST("group/findTagF")

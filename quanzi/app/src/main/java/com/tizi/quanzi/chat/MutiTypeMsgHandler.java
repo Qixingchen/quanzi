@@ -20,6 +20,8 @@ import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.model.SystemMessagePair;
 import com.tizi.quanzi.notification.AddNotification;
+import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.otto.ExitChatActivity;
 import com.tizi.quanzi.tool.StaticField;
 
 /**
@@ -78,9 +80,24 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
             /*圈子解散*/
         if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.group_delete) {
-
-            GroupList.getInstance().deleteGroup(systemMessage.getGroup_id());
+            String groupID = systemMessage.getGroup_id();
+            GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupID);
+            if (groupClass != null) {
+                String ConvID = groupClass.convId;
+                BusProvider.getInstance().post(new ExitChatActivity(ConvID, 9));
+                GroupList.getInstance().deleteGroup(groupID);
+            }
             systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
+        }
+        /*被踢出*/
+        if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.kicked) {
+            String groupID = systemMessage.getGroup_id();
+            GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupID);
+            if (groupClass != null) {
+                String ConvID = groupClass.convId;
+                BusProvider.getInstance().post(new ExitChatActivity(ConvID, 9));
+                GroupList.getInstance().deleteGroup(groupID);
+            }
         }
 
         SystemMessageList.getInstance().addGroup(
@@ -100,7 +117,8 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
      * @see com.tizi.quanzi.chat.MutiTypeMsgHandler.OnMessage
      */
     @Override
-    public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+    public void onMessage(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient
+            client) {
         Log.w(TAG, "收到消息");
         try {
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
@@ -174,7 +192,8 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
      * @param client       消息来源的AVIMClient
      */
     @Override
-    public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+    public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation
+            conversation, AVIMClient client) {
         // 请加入你自己需要的逻辑...
         super.onMessageReceipt(message, conversation, client);
         Log.d(TAG, " 消息成功送达");
@@ -193,6 +212,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
      *
      * @param onMessage 回调监听
      */
+
     public void setOnMessage(@Nullable OnMessage onMessage) {
         this.onMessage = onMessage;
     }

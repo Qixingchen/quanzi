@@ -19,6 +19,7 @@ import java.util.TreeMap;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 
 /**
  * Created by qixingchen on 15/9/15.
@@ -34,6 +35,7 @@ public class RetrofitNetwork {
             .baseUrl(URL)
             .client(getclient())
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .build();
 
     private static OkHttpClient getclient() {

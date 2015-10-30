@@ -53,7 +53,6 @@ public class QuanziZoneActivity extends BaseActivity {
             @Override
             public void onOK(Object ts) {
                 GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
-
                 mGroupAllInfo = groupAllInfo;
                 if (quanziIntroduceFragment != null) {
                     mGroupAllInfo.group.groupNo = GroupID;
@@ -67,7 +66,6 @@ public class QuanziZoneActivity extends BaseActivity {
 
             }
         }).queryGroup(GroupID);
-
     }
 
     @Override

@@ -38,6 +38,8 @@ import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
 import java.util.List;
 
+import rx.functions.Action1;
+
 /**
  * Created by qixingchen on 15/9/2.
  * 圈子用户
@@ -50,10 +52,12 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
     private boolean isCreater;
     private String groupID;
 
-    public GroupUserAdapter(Context mContext, @Nullable List<GroupAllInfo.MemlistEntity> memlist, boolean isCreater) {
+    public GroupUserAdapter(Context mContext, @Nullable List<GroupAllInfo.MemlistEntity> memlist,
+                            boolean isCreater, String groupID) {
         this.mContext = mContext;
         this.memlist = memlist;
         this.isCreater = isCreater;
+        this.groupID = groupID;
         BusProvider.getInstance().register(this);
     }
 
@@ -247,19 +251,19 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String ConvID = GroupList.getInstance().getGroup(groupID).convId;
-                        GroupUserAdmin.getInstance(mContext).setOnResult(
-                                new GroupUserAdmin.OnResult() {
+                        GroupUserAdmin.getInstance(mContext).deleteMemberByRX(ConvID, groupID, userID)
+                                .subscribe(new Action1<Object>() {
                                     @Override
-                                    public void OK() {
+                                    public void call(Object o) {
                                         memlist.remove(postion);
+                                        notifyItemRemoved(postion);
                                     }
-
+                                }, new Action1<Throwable>() {
                                     @Override
-                                    public void error(String errorMessage) {
-
+                                    public void call(Throwable throwable) {
+                                        Toast.makeText(mContext, throwable.getMessage(), Toast.LENGTH_LONG).show();
                                     }
-                                }
-                        ).deleteMember(ConvID, groupID, userID);
+                                });
                     }
                 }).setNegativeButton("取消", null).show();
     }

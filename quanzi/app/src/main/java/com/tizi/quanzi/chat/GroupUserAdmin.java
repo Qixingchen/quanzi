@@ -20,6 +20,8 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GroupSetting;
+import com.tizi.quanzi.network.RetrofitAPI;
+import com.tizi.quanzi.network.RetrofitNetwork;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.network.UserManageInGroup;
@@ -29,6 +31,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -192,6 +199,90 @@ public class GroupUserAdmin {
                 }
             }
         }).deleteUser(groupID, userID);
+    }
+
+    /**
+     * 在组类删除用户
+     *
+     * @param convID  组的convID
+     * @param groupID 组ID
+     * @param userID  成员ID
+     */
+    public Observable deleteMemberByRX(final String convID, final String groupID, final String userID) {
+
+
+        return RetrofitNetwork.retrofit.create(RetrofitAPI.Group.class).queryGroupRX(groupID)
+                .subscribeOn(Schedulers.io())
+                .flatMap(new Func1<GroupAllInfo, Observable<SendMessage.RXSendOK>>() {
+                    @Override
+                    public Observable<SendMessage.RXSendOK> call(GroupAllInfo groupAllInfo) {
+
+
+                        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
+                        attr = SendMessage.setSysMessAttr(attr, convID,
+                                StaticField.SystemMessAttrName.systemFlag.kicked, "");
+
+                        if (groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
+                            return SendMessage.getInstance().sendRXTextMessage(convID,
+                                    String.format("你被 %s 踢出了群 %s OAQ",
+                                            MyUserInfo.getInstance().getUserInfo().getUserName(),
+                                            groupAllInfo.group.groupName), attr);
+                        } else {
+                            return SendMessage.getInstance().sendRXTextMessage(convID,
+                                    MyUserInfo.getInstance().getUserInfo().getUserName() +
+                                            "退出了圈子" + groupAllInfo.group.groupName, attr);
+                        }
+                    }
+                })
+                .flatMap(new Func1<SendMessage.RXSendOK, Observable<Object>>() {
+                    @Override
+                    public Observable<Object> call(SendMessage.RXSendOK rxSendOK) {
+                        return Observable.create(new Observable.OnSubscribe<Object>() {
+                            @Override
+                            public void call(final Subscriber<? super Object> subscriber) {
+                                //LeanCloud删除
+                                List<String> userIds = new ArrayList<>();
+                                userIds.add(userID);
+                                AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
+                                conversation.kickMembers(userIds, new AVIMConversationCallback() {
+                                    @Override
+                                    public void done(AVIMException e) {
+                                        if (e != null) {
+                                            Log.w(TAG, "LC删除好友失败");
+                                            subscriber.onError(new Throwable("LC删除好友失败" + e.getMessage()));
+                                        } else {
+                                            subscriber.onNext(null);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }).flatMap(new Func1<Object, Observable<Object>>() {
+
+                    @Override
+                    public Observable<Object> call(Object objectObservable) {
+                        return Observable.create(new Observable.OnSubscribe<Object>() {
+                            @Override
+                            public void call(final Subscriber<? super Object> subscriber) {
+                                //后台删除
+                                UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                                    @Override
+                                    public void onOK(Object ts) {
+                                        subscriber.onNext(null);
+                                    }
+
+                                    @Override
+                                    public void onError(String Message) {
+                                        subscriber.onError(new Throwable("后台删除好友失败:" + Message));
+                                    }
+                                }).deleteUser(groupID, userID);
+                            }
+                        });
+                    }
+                });
+
+
     }
 
     /**

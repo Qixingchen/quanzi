@@ -32,7 +32,6 @@ public class ReadContact {
 
             phoneNumber = Tool.getPhoneNum(phoneNumber);
             if (phoneNumber != null) {
-                Log.i(name, phoneNumber);
                 Mobiles mobile = new Mobiles();
                 mobile.mobile = phoneNumber;
                 mobilesList.add(mobile);

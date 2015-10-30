@@ -40,6 +40,7 @@ import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
+import com.tizi.quanzi.otto.ExitChatActivity;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
@@ -92,6 +93,17 @@ public class ChatActivity extends BaseActivity {
             return;
         }
         toolbar.setTitle(avimNetworkEvents.isNetWorkAvailable ? toolbarTitle : "等待网络");
+    }
+
+    /*需要退出*/
+    @Subscribe
+    public void shouldExit(ExitChatActivity exitChatActivity) {
+        if (CONVERSATION_ID.compareTo(exitChatActivity.convID) == 0) {
+            finish();
+        }
+        if (ChatType == exitChatActivity.TYPE) {
+            finish();
+        }
     }
 
     @Override
@@ -297,6 +309,7 @@ public class ChatActivity extends BaseActivity {
             chatmessagerecyclerView.scrollToPosition(chatMessageAdapter.lastReadPosition());
         }
         toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
+
     }
 
     @Override

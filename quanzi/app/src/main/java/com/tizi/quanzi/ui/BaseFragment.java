@@ -13,6 +13,9 @@ import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.FragmentResume;
 import com.tizi.quanzi.tool.Tool;
 
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
 /**
  * Created by qixingchen on 15/8/31.
  * Fragment 的抽象
@@ -22,6 +25,8 @@ public abstract class BaseFragment extends Fragment {
     protected Activity mActivity;
     protected Context mContext;
     protected View view;
+
+    private CompositeSubscription mCompositeSubscription;
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container,
                                       Bundle savedInstanceState);
@@ -62,6 +67,9 @@ public abstract class BaseFragment extends Fragment {
             BusProvider.getInstance().unregister(this);
         } catch (IllegalArgumentException ignore) {
         }
+        if (this.mCompositeSubscription != null) {
+            this.mCompositeSubscription.unsubscribe();
+        }
     }
 
     protected abstract void findViews(View view);
@@ -80,5 +88,13 @@ public abstract class BaseFragment extends Fragment {
         super.onPause();
         AVAnalytics.onFragmentEnd(TAG);
         BusProvider.getInstance().post(new FragmentResume(false, TAG));
+    }
+
+    public void addSubscription(Subscription s) {
+        if (this.mCompositeSubscription == null) {
+            this.mCompositeSubscription = new CompositeSubscription();
+        }
+
+        this.mCompositeSubscription.add(s);
     }
 }

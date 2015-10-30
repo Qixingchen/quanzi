@@ -20,6 +20,9 @@ import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.Tool;
 
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
 /**
  * Created by qixingchen on 15/8/31.
  * Activity 的抽象类
@@ -31,6 +34,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected View view;
     protected Activity mActivity;
     protected Menu mMenu;
+
+    private CompositeSubscription mCompositeSubscription;
+
+    public void addSubscription(Subscription s) {
+        if (this.mCompositeSubscription == null) {
+            this.mCompositeSubscription = new CompositeSubscription();
+        }
+
+        this.mCompositeSubscription.add(s);
+    }
 
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
@@ -79,6 +92,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         try {
             BusProvider.getInstance().unregister(this);
         } catch (IllegalArgumentException ignore) {
+        }
+        if (this.mCompositeSubscription != null) {
+            this.mCompositeSubscription.unsubscribe();
         }
     }
 

@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
+import rx.Observable;
+import rx.Subscriber;
+
 /**
  * Created by qixingchen on 15/9/2.
  * 发送信息的调用接口
@@ -179,6 +182,37 @@ public class SendMessage {
         );
     }
 
+    /*RX*/
+    public Observable<RXSendOK> sendRXTextMessage(
+            final String convID, final String text, final Map<String, Object> attr) {
+
+        Observable<RXSendOK> okObservable = Observable.create(new Observable.OnSubscribe<RXSendOK>() {
+            @Override
+            public void call(final Subscriber<? super RXSendOK> subscriber) {
+                final AVIMTextMessage message = new AVIMTextMessage();
+                message.setText(text);
+                message.setAttrs(attr);
+                final AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
+                conversation.sendMessage(message,
+                        new AVIMConversationCallback() {
+                            @Override
+                            public void done(AVIMException e) {
+                                if (null != e) {
+                                    e.printStackTrace();
+                                    subscriber.onError(e);
+                                } else {
+                                    subscriber.onNext(new RXSendOK(message, conversation.getConversationId()));
+                                }
+                            }
+                        }
+
+                );
+            }
+        });
+        return okObservable;
+
+    }
+
     /**
      * 消息发送成功时的处理
      * 加入列表并跳转到最后
@@ -225,5 +259,15 @@ public class SendMessage {
         void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID);
 
         void sendError(String errorMessage, String CONVERSATION_ID);
+    }
+
+    public class RXSendOK {
+        public AVIMTypedMessage Message;
+        public String CONVERSATION_ID;
+
+        public RXSendOK(AVIMTypedMessage message, String CONVERSATION_ID) {
+            Message = message;
+            this.CONVERSATION_ID = CONVERSATION_ID;
+        }
     }
 }

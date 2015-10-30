@@ -145,7 +145,8 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         groupUserAdapter = new GroupUserAdapter(mActivity,
                 groupAllInfo == null ? null : groupAllInfo.memlist,
-                groupClass != null && groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0);
+                groupClass != null && groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0,
+                groupClass == null ? null : groupClass.ID);
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
         groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 6));

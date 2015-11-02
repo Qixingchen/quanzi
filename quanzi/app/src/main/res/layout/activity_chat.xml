@@ -81,7 +81,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="#ffffffff"
                 android:orientation="horizontal"
                 android:paddingLeft="13dp">
 
@@ -97,10 +96,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="6dp"
-                    android:text="00:00"
-                    android:textColor="#4d4c4b"
-                    android:textSize="16dp"/>
+                    android:text="0s"
+                    android:textColor="@color/md_grey_400"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
         </com.tizi.quanzi.widget.swipe_to_cancel.FrameLayoutFixed>

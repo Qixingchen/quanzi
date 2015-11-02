@@ -28,6 +28,9 @@ public class Timer extends AsyncTask<Integer, Integer, Integer> {
         } else {
             int times = params[0] / 1000;
             for (int i = 0; i < times; i++) {
+                if (isCancelled()) {
+                    return 0;
+                }
                 try {
                     Thread.sleep(1000);
                     publishProgress(times - i - 1);
@@ -42,14 +45,14 @@ public class Timer extends AsyncTask<Integer, Integer, Integer> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        if (onResult != null) {
+        if (onResult != null && !isCancelled()) {
             onResult.countdown(values[0]);
         }
     }
 
     @Override
     protected void onPostExecute(Integer a) {
-        if (onResult != null) {
+        if (onResult != null && !isCancelled()) {
             onResult.OK();
         }
     }

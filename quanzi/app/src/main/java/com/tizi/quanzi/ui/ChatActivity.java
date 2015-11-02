@@ -3,6 +3,7 @@ package com.tizi.quanzi.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -47,6 +48,7 @@ import com.tizi.quanzi.otto.ExitChatActivity;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 import com.tizi.quanzi.widget.swipe_to_cancel.ViewProxy;
@@ -87,7 +89,7 @@ public class ChatActivity extends BaseActivity {
     private View slideText;
     private float startedDraggingX = -1;
     private float distCanMove = 200;
-    private long startTime = 0L;
+    private Timer timer;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,47 +147,9 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void setViewEvent() {
         //录音
-        //        insertVoiceButton.setOnTouchListener(new View.OnTouchListener() {
-        //            @Override
-        //            public boolean onTouch(View v, MotionEvent event) {
-        //                switch (event.getAction()) {
-        //                    case MotionEvent.ACTION_DOWN:
-        //                        recodeAudio = RecodeAudio.getInstance(AppStaticValue.getActivity(ChatActivity.class.getSimpleName()));
-        //                        if (recodeAudio.start()) {
-        //                            Toast.makeText(context, "录音中", Toast.LENGTH_SHORT).show();
-        //                        } else if (recodeAudio.AllPermissionGrant()) {
-        //                            Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
-        //                        }
-        //                        break;
-        //                    case MotionEvent.ACTION_UP:
-        //                        String Filepath = recodeAudio.stopAndReturnFilePath();
-        //                        if (Filepath != null) {
-        //                            Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
-        //                            SendMessage.getInstance().setSendOK(new SendMessage.SendOK() {
-        //                                @Override
-        //                                public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-        //                                    onMessageSendOK(Message);
-        //                                }
-        //
-        //                                @Override
-        //                                public void sendError(String errorMessage, String CONVERSATION_ID) {
-        //                                    onMessageSendError(errorMessage);
-        //                                }
-        //                            })
-        //                                    .sendAudioMessage(CONVERSATION_ID, Filepath,
-        //                                            setAttrs());
-        //                        } else if (recodeAudio.AllPermissionGrant()) {
-        //                            Toast.makeText(context, "时间过短，不发送", Toast.LENGTH_SHORT).show();
-        //                        }
-        //                }
-        //                return false;
-        //            }
-        //        });
-
         insertVoiceButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) slideText
                             .getLayoutParams();
@@ -198,6 +162,37 @@ public class ChatActivity extends BaseActivity {
                         InputMessage.setVisibility(View.GONE);
                         Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                         v.vibrate(100);
+                        recordTimeText.setText("0s");
+                        timer = new Timer();
+                        timer.setOnResult(new Timer.OnResult() {
+                            @Override
+                            public void OK() {
+                                String Filepath = recodeAudio.stopAndReturnFilePath();
+                                if (Filepath != null && Filepath.compareTo("less") != 0) {
+                                    Toast.makeText(context, "录音最长60s", Toast.LENGTH_SHORT).show();
+                                    Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                                    v.vibrate(200);
+                                    SendMessage.getInstance().setSendOK(new SendMessage.SendOK() {
+                                        @Override
+                                        public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                                            onMessageSendOK(Message);
+                                        }
+
+                                        @Override
+                                        public void sendError(String errorMessage, String CONVERSATION_ID) {
+                                            onMessageSendError(errorMessage);
+                                        }
+                                    })
+                                            .sendAudioMessage(CONVERSATION_ID, Filepath,
+                                                    setAttrs());
+                                }
+                            }
+
+                            @Override
+                            public void countdown(int s) {
+                                recordTimeText.setText((60 - s) + "s");
+                            }
+                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 60 * 1000);
                     } else if (recodeAudio.AllPermissionGrant()) {
                         Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
                     }
@@ -210,6 +205,7 @@ public class ChatActivity extends BaseActivity {
                     recordPanel.setVisibility(View.GONE);
                     InputMessage.setVisibility(View.VISIBLE);
                     String Filepath = recodeAudio.stopAndReturnFilePath();
+                    timer.cancel(false);
                     if (Filepath != null && Filepath.compareTo("less") != 0) {
                         Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
                         Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
@@ -236,6 +232,7 @@ public class ChatActivity extends BaseActivity {
                     Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                     if (x < -distCanMove) {
                         v.vibrate(100);
+                        timer.cancel(false);
                         recodeAudio.stopAndReturnFilePath();
                         recordPanel.setVisibility(View.GONE);
                         InputMessage.setVisibility(View.VISIBLE);

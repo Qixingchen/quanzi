@@ -195,8 +195,6 @@ public class SendDynFragment extends BaseFragment {
     public void onActivityResult(ActivityResultAns activityResultAns) {
         if (activityResultAns.requestCode == StaticField.PermissionRequestCode.send_dyn
                 && activityResultAns.resultCode == Activity.RESULT_OK && activityResultAns.data != null) {
-
-
             ArrayList<Image> images = activityResultAns.data
                     .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
             if (images != null) {
@@ -217,8 +215,6 @@ public class SendDynFragment extends BaseFragment {
     private void photoFromSystem(ActivityResultAns activityResultAns) {
         ClipData clipData = activityResultAns.data.getClipData();
         if (clipData != null) {
-
-
             int size = activityResultAns.data.getClipData().getItemCount();
             photoCount += size;
             if (photoCount > 9) {
@@ -231,8 +227,10 @@ public class SendDynFragment extends BaseFragment {
             for (int i = 0; i < size; i++) {
 
                 String filepath = GetFilePath.getPath(mActivity,
-                        activityResultAns.data.getClipData().getItemAt(i).getUri());
-
+                        clipData.getItemAt(i).getUri());
+                if (filepath == null) {
+                    filepath = RequreForImage.getImageUrlWithAuthority(mContext, clipData.getItemAt(i).getUri());
+                }
                 savePhoto(filepath);
             }
         } else {

@@ -3,6 +3,7 @@ package com.tizi.quanzi.app;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
@@ -90,7 +91,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
-        LoginAndUserAccount.getNewInstance().loginFromPrefer();
+        if (!LoginAndUserAccount.getNewInstance().loginFromPrefer()) {
+            Intent log_in = new Intent(application, LoginActivity.class);
+            log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(log_in);
+        }
 
         //test build
 

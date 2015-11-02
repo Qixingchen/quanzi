@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 
@@ -52,7 +51,7 @@ public class RequreForImage {
     }
 
     /*For Google Photo*/
-    private static String getImageUrlWithAuthority(Context context, Uri uri) {
+    public static String getImageUrlWithAuthority(Context context, Uri uri) {
         InputStream is = null;
         if (uri.getAuthority() != null) {
             try {
@@ -181,9 +180,6 @@ public class RequreForImage {
 
     /*发起多选,包括如果本身应该是多选,只是因为已经选了多张而使得limit=1的情况*/
     private void intentForMultiple(final int limit, final int eventCode) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            intentFor3pMultiple(limit, eventCode);
-        }
         int selector = AppStaticValue.getIntPrefer("MULTIPLE_SELECTOR", 9);
         if (selector == 9) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);

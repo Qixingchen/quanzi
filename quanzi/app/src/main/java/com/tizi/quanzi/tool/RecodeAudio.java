@@ -35,7 +35,6 @@ public class RecodeAudio {
 
     private RecodeAudio(Activity mActivity) {
         this.mActivity = mActivity;
-        recorder = new MediaRecorder();
     }
 
     public static RecodeAudio getInstance(Activity mActivity) {
@@ -62,6 +61,7 @@ public class RecodeAudio {
             requestAllPermission();
             return false;
         }
+        recorder = new MediaRecorder();
         recorder.reset();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -98,14 +98,19 @@ public class RecodeAudio {
     public String stopAndReturnFilePath() {
         try {
             recorder.stop();
-            recorder.release();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+        try {
+            recorder.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        recorder = null;
         endTime = Calendar.getInstance().getTimeInMillis();
         if (endTime - startTime < 1000) {
-            return null;
+            return "less";
         }
         if (file != null && file.exists()) {
             return file.getAbsolutePath();

@@ -16,7 +16,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -46,6 +48,7 @@ import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
+import com.tizi.quanzi.widget.swipe_to_cancel.ViewProxy;
 
 import java.util.List;
 import java.util.Map;
@@ -57,6 +60,9 @@ public class ChatActivity extends BaseActivity {
 
     private static final int QueryLimit = StaticField.QueryLimit.MessageLimit;
     private static final String TAG = ChatActivity.class.getSimpleName();
+    long timeInMilliseconds = 0L;
+    long timeSwapBuff = 0L;
+    long updatedTime = 0L;
     private Context context;
     private RecyclerView chatmessagerecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -74,7 +80,13 @@ public class ChatActivity extends BaseActivity {
     //toolbar
     private Toolbar toolbar;
     private String toolbarTitle;
-
+    //swipe to cancel
+    private TextView recordTimeText;
+    private View recordPanel;
+    private View slideText;
+    private float startedDraggingX = -1;
+    private float distCanMove = 80;
+    private long startTime = 0L;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +96,7 @@ public class ChatActivity extends BaseActivity {
 
         context = this;
         setMessageCallback();
+        recodeAudio = RecodeAudio.getInstance(AppStaticValue.getActivity(ChatActivity.class.getSimpleName()));
     }
 
     /*LC网络状态更改*/
@@ -116,6 +129,12 @@ public class ChatActivity extends BaseActivity {
         insertImageButton = (ImageButton) findViewById(R.id.insertImageButton);
         insertVoiceButton = (ImageButton) findViewById(R.id.insertVoiceButton);
         this.chatmessagerecyclerView = (RecyclerView) findViewById(R.id.chat_message_recyclerView);
+
+        recordPanel = findViewById(R.id.record_panel);
+        recordTimeText = (TextView) findViewById(R.id.recording_time_text);
+        slideText = findViewById(R.id.slideText);
+        TextView textView = (TextView) findViewById(R.id.slideToCancelTextView);
+        textView.setText("SlideToCancel");
     }
 
     @Override
@@ -125,40 +144,132 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void setViewEvent() {
         //录音
+        //        insertVoiceButton.setOnTouchListener(new View.OnTouchListener() {
+        //            @Override
+        //            public boolean onTouch(View v, MotionEvent event) {
+        //                switch (event.getAction()) {
+        //                    case MotionEvent.ACTION_DOWN:
+        //                        recodeAudio = RecodeAudio.getInstance(AppStaticValue.getActivity(ChatActivity.class.getSimpleName()));
+        //                        if (recodeAudio.start()) {
+        //                            Toast.makeText(context, "录音中", Toast.LENGTH_SHORT).show();
+        //                        } else if (recodeAudio.AllPermissionGrant()) {
+        //                            Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
+        //                        }
+        //                        break;
+        //                    case MotionEvent.ACTION_UP:
+        //                        String Filepath = recodeAudio.stopAndReturnFilePath();
+        //                        if (Filepath != null) {
+        //                            Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
+        //                            SendMessage.getInstance().setSendOK(new SendMessage.SendOK() {
+        //                                @Override
+        //                                public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+        //                                    onMessageSendOK(Message);
+        //                                }
+        //
+        //                                @Override
+        //                                public void sendError(String errorMessage, String CONVERSATION_ID) {
+        //                                    onMessageSendError(errorMessage);
+        //                                }
+        //                            })
+        //                                    .sendAudioMessage(CONVERSATION_ID, Filepath,
+        //                                            setAttrs());
+        //                        } else if (recodeAudio.AllPermissionGrant()) {
+        //                            Toast.makeText(context, "时间过短，不发送", Toast.LENGTH_SHORT).show();
+        //                        }
+        //                }
+        //                return false;
+        //            }
+        //        });
+
         insertVoiceButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        recodeAudio = RecodeAudio.getInstance(AppStaticValue.getActivity(ChatActivity.class.getSimpleName()));
-                        if (recodeAudio.start()) {
-                            Toast.makeText(context, "录音中", Toast.LENGTH_SHORT).show();
-                        } else if (recodeAudio.AllPermissionGrant()) {
-                            Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        String Filepath = recodeAudio.stopAndReturnFilePath();
-                        if (Filepath != null) {
-                            Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
-                            SendMessage.getInstance().setSendOK(new SendMessage.SendOK() {
-                                @Override
-                                public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                                    onMessageSendOK(Message);
-                                }
+            public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                                @Override
-                                public void sendError(String errorMessage, String CONVERSATION_ID) {
-                                    onMessageSendError(errorMessage);
-                                }
-                            })
-                                    .sendAudioMessage(CONVERSATION_ID, Filepath,
-                                            setAttrs());
-                        } else if (recodeAudio.AllPermissionGrant()) {
-                            Toast.makeText(context, "时间过短，不发送", Toast.LENGTH_SHORT).show();
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) slideText
+                            .getLayoutParams();
+                    params.leftMargin = 30;
+                    slideText.setLayoutParams(params);
+                    ViewProxy.setAlpha(slideText, 1);
+                    startedDraggingX = -1;
+                    // startRecording();
+                    if (recodeAudio.start()) {
+                        InputMessage.setVisibility(View.GONE);
+                    } else if (recodeAudio.AllPermissionGrant()) {
+                        Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
+                    }
+                    insertVoiceButton.getParent()
+                            .requestDisallowInterceptTouchEvent(true);
+                    recordPanel.setVisibility(View.VISIBLE);
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP
+                        || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
+                    startedDraggingX = -1;
+                    recordPanel.setVisibility(View.GONE);
+                    InputMessage.setVisibility(View.VISIBLE);
+                    String Filepath = recodeAudio.stopAndReturnFilePath();
+                    if (Filepath != null && Filepath.compareTo("less") != 0) {
+                        Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
+                        SendMessage.getInstance().setSendOK(new SendMessage.SendOK() {
+                            @Override
+                            public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                                onMessageSendOK(Message);
+                            }
+
+                            @Override
+                            public void sendError(String errorMessage, String CONVERSATION_ID) {
+                                onMessageSendError(errorMessage);
+                            }
+                        })
+                                .sendAudioMessage(CONVERSATION_ID, Filepath,
+                                        setAttrs());
+                    } else if (recodeAudio.AllPermissionGrant() && Filepath != null
+                            && Filepath.compareTo("less") == 0) {
+                        Toast.makeText(context, "press to recode,release to send", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    float x = motionEvent.getX();
+                    if (x < -distCanMove) {
+                        recodeAudio.stopAndReturnFilePath();
+                        recordPanel.setVisibility(View.GONE);
+                        InputMessage.setVisibility(View.VISIBLE);
+                    }
+                    x = x + ViewProxy.getX(insertVoiceButton);
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) slideText
+                            .getLayoutParams();
+                    if (startedDraggingX != -1) {
+                        float dist = (x - startedDraggingX);
+                        params.leftMargin = 30 + (int) dist;
+                        slideText.setLayoutParams(params);
+                        float alpha = 1.0f + dist / distCanMove;
+                        if (alpha > 1) {
+                            alpha = 1;
+                        } else if (alpha < 0) {
+                            alpha = 0;
                         }
+                        ViewProxy.setAlpha(slideText, alpha);
+                    }
+                    if (x <= ViewProxy.getX(slideText) + slideText.getWidth()
+                            + 30) {
+                        if (startedDraggingX == -1) {
+                            startedDraggingX = x;
+                            distCanMove = (recordPanel.getMeasuredWidth()
+                                    - slideText.getMeasuredWidth() - 48) / 2.0f;
+                            if (distCanMove <= 0) {
+                                distCanMove = 80;
+                            } else if (distCanMove > 80) {
+                                distCanMove = 80;
+                            }
+                        }
+                    }
+                    if (params.leftMargin > 30) {
+                        params.leftMargin = 30;
+                        slideText.setLayoutParams(params);
+                        ViewProxy.setAlpha(slideText, 1);
+                        startedDraggingX = -1;
+                    }
                 }
-                return false;
+                view.onTouchEvent(motionEvent);
+                return true;
             }
         });
 

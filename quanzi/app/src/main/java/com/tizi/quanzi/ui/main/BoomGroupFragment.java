@@ -2,6 +2,7 @@ package com.tizi.quanzi.ui.main;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +20,9 @@ import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
 
@@ -33,20 +36,27 @@ public class BoomGroupFragment extends BaseFragment {
 
     //get Intent
     private static final String ACT_ID = "actID";
+    private static final String START_TIME = "START_TIME";
+    private static final String END_TIME = "END_TIME";
+
     private android.widget.TextView countdownTime;
     private android.widget.TextView groupNums;
     private android.support.v7.widget.RecyclerView boomGroupItemRecyclerview;
     private BoomGroupListAdapter boomGroupListAdapter;
     private String themeID;
+    private String startTime, endTime;
+    private Timer timer;
 
     public BoomGroupFragment() {
         // Required empty public constructor
     }
 
-    public static BoomGroupFragment newInstance(String actID) {
+    public static BoomGroupFragment newInstance(String actID, String startTime, String endTime) {
         BoomGroupFragment fragment = new BoomGroupFragment();
         Bundle args = new Bundle();
         args.putString(ACT_ID, actID);
+        args.putString(START_TIME, startTime);
+        args.putString(END_TIME, endTime);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,6 +66,8 @@ public class BoomGroupFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             themeID = getArguments().getString(ACT_ID);
+            startTime = getArguments().getString(START_TIME);
+            endTime = getArguments().getString(END_TIME);
         }
 
     }
@@ -121,5 +133,27 @@ public class BoomGroupFragment extends BaseFragment {
         if (boomGroupListAdapter != null) {
             boomGroupListAdapter.notifyDataSetChanged();
         }
+        int countDown = FriendTime.getThemeCountDown(startTime, endTime);
+
+        timer = new Timer();
+        timer.setOnResult(new Timer.OnResult() {
+            @Override
+            public void OK() {
+                getFragmentManager().popBackStack();
+            }
+
+            @Override
+            public void countdown(int s) {
+                countdownTime.setText(String.format("%d:%d:%d", s / 3600, (s % 3600) / 60,
+                        s % 60));
+            }
+        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, countDown * 1000);
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        timer.cancel(false);
     }
 }

@@ -68,7 +68,7 @@ public class LockLock extends BaseFragment {
                 if (//Statue.IsDev.now == Statue.IsDev.dev ||
                         FriendTime.isInThemeTime(act.beginTime, act.endTime)) {
                     getParentFragment().getFragmentManager().beginTransaction()
-                            .replace(R.id.fragment, BoomGroupFragment.newInstance(act.id))
+                            .replace(R.id.fragment, BoomGroupFragment.newInstance(act.id, act.beginTime, act.endTime))
                             .addToBackStack("BoomGroupFragment").commit();
                 } else {
                     getParentFragment().getFragmentManager().beginTransaction()

@@ -18,28 +18,21 @@ public class Timer extends AsyncTask<Integer, Integer, Integer> {
 
     @Override
     protected Integer doInBackground(Integer... params) {
-        if (params[0] <= 5000) {
+
+        int times = params[0] / 1000;
+        for (int i = 0; i < times; i++) {
+            if (isCancelled()) {
+                return 0;
+            }
             try {
-                Thread.sleep(params[0]);
+                Thread.sleep(1000);
+                publishProgress(times - i - 1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return 0;
-        } else {
-            int times = params[0] / 1000;
-            for (int i = 0; i < times; i++) {
-                if (isCancelled()) {
-                    return 0;
-                }
-                try {
-                    Thread.sleep(1000);
-                    publishProgress(times - i - 1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return 0;
         }
+        return 0;
+
     }
 
     @Override

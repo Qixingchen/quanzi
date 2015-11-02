@@ -112,7 +112,7 @@ public class FriendTime {
      *
      * @return 第几秒
      */
-    private static int getDayMs(int[] time) {
+    private static int getDayS(int[] time) {
         return time[0] * 3600 + time[1] * 60 + time[2];
     }
 
@@ -125,9 +125,9 @@ public class FriendTime {
      * @return 是否在时间内
      */
     public static boolean isInThemeTime(String startTime, String endTime) {
-        int now = getDayMs(getDayTimeFromUNIX(Tool.getBeijinTime()));
-        int start = getDayMs(getDayTimeFromString(startTime));
-        int end = getDayMs(getDayTimeFromString(endTime));
+        int now = getDayS(getDayTimeFromUNIX(Tool.getBeijinTime()));
+        int start = getDayS(getDayTimeFromString(startTime));
+        int end = getDayS(getDayTimeFromString(endTime));
 
         //如果是跨天的活动
         if (start > end) {
@@ -144,5 +144,28 @@ public class FriendTime {
         } else {
             return true;
         }
+    }
+
+    /**
+     * 获取活动结束倒计时 (s)
+     */
+    public static int getThemeCountDown(String startTime, String endTime) {
+        if (!isInThemeTime(startTime, endTime)) {
+            return 0;
+        }
+        final int AllDayS = 24 * 3600;
+        int now = getDayS(getDayTimeFromUNIX(Tool.getBeijinTime()));
+        int start = getDayS(getDayTimeFromString(startTime));
+        int end = getDayS(getDayTimeFromString(endTime));
+        //如果是跨天的活动
+        if (start > end) {
+            if (now > start) {
+                return end + AllDayS - now;
+            } else {
+                return end - now;
+            }
+        }
+        //并不是跨天的
+        return end - now;
     }
 }

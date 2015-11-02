@@ -40,8 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="100dp"
-                android:layout_marginTop="30dp"
-                android:background="@color/md_red_500"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/num_pop"
                 android:textSize="@dimen/normal_text_size"
                 tools:text="123"/>
         </RelativeLayout>

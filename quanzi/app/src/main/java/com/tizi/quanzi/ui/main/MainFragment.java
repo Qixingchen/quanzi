@@ -35,17 +35,18 @@ public class MainFragment extends BaseFragment {
 
         TextView tab = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.custom_tab, null);
         tab.setText("小圈子");
-        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_photo_36dp, 0, 0);
+        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.group, 0, 0);
+        tab.setSelected(true);
         tabLayout.getTabAt(0).setCustomView(tab);
 
         tab = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.custom_tab, null);
         tab.setText("看一看");
-        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_photo_36dp, 0, 0);
+        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.theme_park, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tab);
 
         tab = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.custom_tab, null);
         tab.setText("大世界");
-        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_photo_36dp, 0, 0);
+        tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.my, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tab);
     }
 

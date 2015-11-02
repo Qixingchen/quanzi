@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="还有24min"
-            android:textSize="@dimen/small_title_size"/>
+            android:textSize="@dimen/small_title_text_size"/>
 
         <TextView
             android:id="@+id/group_nums"

@@ -181,6 +181,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
             }
         }
         if (isUpdated) {
+            updateUnreadCount();
             sort();
             noticeAllCallBack();
         }

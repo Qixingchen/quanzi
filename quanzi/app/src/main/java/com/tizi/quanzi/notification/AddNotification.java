@@ -137,7 +137,7 @@ public class AddNotification {
             mBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         }
         if (needVibrate && chatMessageArrayList.size() == 1) {
-            mBuilder.setVibrate(new long[]{200, 1000});
+            mBuilder.setVibrate(new long[]{0, 400});
         }
 
         if (chatMessageArrayList.size() == 1) {

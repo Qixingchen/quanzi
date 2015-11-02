@@ -71,6 +71,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .inflate(R.layout.item_hope_for_next, parent, false);
                 viewHolder = new HopeForNext(v, mContext);
                 break;
+            case 0:
             case 1:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_tuo_dan_zuo_zan, parent, false);

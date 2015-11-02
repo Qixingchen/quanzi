@@ -14,6 +14,7 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.List;
@@ -84,7 +85,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
             myViewHolder.unreadCountTextview.setVisibility(View.GONE);
             if (position == groupClasses.size()) {
                 myViewHolder.groupNameTextview.setText("创建圈子");
-                Picasso.with(context).load(R.drawable.face)
+                Picasso.with(context).load(R.drawable.add_group)
                         .resizeDimen(R.dimen.group_face, R.dimen.group_face)
                         .into(myViewHolder.groupFaceImageView);
 
@@ -95,6 +96,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                 }
                 myViewHolder.groupNameTextview.setText(groupClasses.get(position).Name);
                 myViewHolder.lastMessTextview.setText(groupClasses.get(position).lastMess);
+                myViewHolder.lastTimeTextview.setText(FriendTime.FriendlyDate(groupClasses.get(position).lastMessTime));
                 Picasso.with(context)
                         .load(groupClasses.get(position).Face.toString())
                         .resizeDimen(R.dimen.group_face, R.dimen.group_face)
@@ -166,7 +168,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
             groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
             lastMessTextview = (TextView) itemView.findViewById(R.id.last_mess_text_view);
             unreadCountTextview = (TextView) itemView.findViewById(R.id.unread_count);
-            //lastTimeTextview = (TextView) view.findViewById(R.id.last_dyns_text_view);
+            lastTimeTextview = (TextView) itemView.findViewById(R.id.last_mess_time_text_view);
         }
     }
 

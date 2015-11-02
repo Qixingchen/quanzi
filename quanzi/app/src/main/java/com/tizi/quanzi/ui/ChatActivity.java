@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -85,7 +86,7 @@ public class ChatActivity extends BaseActivity {
     private View recordPanel;
     private View slideText;
     private float startedDraggingX = -1;
-    private float distCanMove = 80;
+    private float distCanMove = 200;
     private long startTime = 0L;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +196,8 @@ public class ChatActivity extends BaseActivity {
                     // startRecording();
                     if (recodeAudio.start()) {
                         InputMessage.setVisibility(View.GONE);
+                        Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        v.vibrate(100);
                     } else if (recodeAudio.AllPermissionGrant()) {
                         Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
                     }
@@ -209,6 +212,8 @@ public class ChatActivity extends BaseActivity {
                     String Filepath = recodeAudio.stopAndReturnFilePath();
                     if (Filepath != null && Filepath.compareTo("less") != 0) {
                         Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
+                        Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        v.vibrate(200);
                         SendMessage.getInstance().setSendOK(new SendMessage.SendOK() {
                             @Override
                             public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
@@ -228,7 +233,9 @@ public class ChatActivity extends BaseActivity {
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     float x = motionEvent.getX();
+                    Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                     if (x < -distCanMove) {
+                        v.vibrate(100);
                         recodeAudio.stopAndReturnFilePath();
                         recordPanel.setVisibility(View.GONE);
                         InputMessage.setVisibility(View.VISIBLE);

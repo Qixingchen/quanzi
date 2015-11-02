@@ -1,13 +1,14 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="#F3F3F3"
-             tools:context="com.tizi.quanzi.ui.main.BigWorld">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tizi.quanzi.ui.main.BigWorld">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="@color/colorPrimaryDark"
         android:orientation="vertical">
 
         <LinearLayout
@@ -15,7 +16,6 @@
             android:layout_width="fill_parent"
             android:layout_height="98dp"
             android:layout_marginTop="11dp"
-            android:background="@color/md_white"
             android:orientation="horizontal">
 
             <com.android.volley.toolbox.NetworkImageView
@@ -73,7 +73,6 @@
             android:layout_width="fill_parent"
             android:layout_height="48dp"
             android:layout_marginTop="11dp"
-            android:background="@color/md_white"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -97,7 +96,6 @@
             android:layout_width="fill_parent"
             android:layout_height="48dp"
             android:layout_marginTop="11dp"
-            android:background="@color/md_white"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

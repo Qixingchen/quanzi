@@ -29,6 +29,7 @@
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:maxWidth="@dimen/max_chat_width"
+            android:textColor="@color/md_grey_800"
             android:textSize="@dimen/normal_edit_text_size"
             android:visibility="gone"
             tools:text="聊天内容ssssssssssss

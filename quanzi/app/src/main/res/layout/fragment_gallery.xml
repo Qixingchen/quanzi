@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/md_red_500"
-        android:textSize="@dimen/small_title_size"
+        android:textSize="@dimen/small_title_text_size"
         tools:text="1/9"/>
 
 </RelativeLayout>

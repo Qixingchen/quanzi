@@ -13,8 +13,6 @@
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
         android:paddingTop="@dimen/statue_bar_top_padding"
-        app:popupTheme="@style/AppTheme.Revert"
-        app:theme="@style/AppTheme.Revert"
         app:title="创建"/>
 
     <FrameLayout

@@ -205,7 +205,9 @@ public class ChatActivity extends BaseActivity {
                     recordPanel.setVisibility(View.GONE);
                     InputMessage.setVisibility(View.VISIBLE);
                     String Filepath = recodeAudio.stopAndReturnFilePath();
-                    timer.cancel(false);
+                    if (timer != null) {
+                        timer.cancel(false);
+                    }
                     if (Filepath != null && Filepath.compareTo("less") != 0) {
                         Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
                         Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
@@ -232,7 +234,9 @@ public class ChatActivity extends BaseActivity {
                     Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                     if (x < -distCanMove) {
                         v.vibrate(100);
-                        timer.cancel(false);
+                        if (timer != null) {
+                            timer.cancel(false);
+                        }
                         recodeAudio.stopAndReturnFilePath();
                         recordPanel.setVisibility(View.GONE);
                         InputMessage.setVisibility(View.VISIBLE);

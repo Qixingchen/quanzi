@@ -50,6 +50,10 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
         mContext = context;
         mActivity = getActivity();
+        try {
+            BusProvider.getInstance().register(this);
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
     /**
@@ -62,6 +66,10 @@ public abstract class BaseFragment extends Fragment {
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
         }
+        try {
+            BusProvider.getInstance().unregister(this);
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
     protected abstract void findViews(View view);
@@ -71,10 +79,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            BusProvider.getInstance().register(this);
-        } catch (IllegalArgumentException ignore) {
-        }
         AVAnalytics.onFragmentStart(TAG);
         BusProvider.getInstance().post(new FragmentResume(true, TAG));
     }
@@ -84,10 +88,6 @@ public abstract class BaseFragment extends Fragment {
         super.onPause();
         AVAnalytics.onFragmentEnd(TAG);
         BusProvider.getInstance().post(new FragmentResume(false, TAG));
-        try {
-            BusProvider.getInstance().unregister(this);
-        } catch (IllegalArgumentException ignore) {
-        }
     }
 
     public void addSubscription(Subscription s) {

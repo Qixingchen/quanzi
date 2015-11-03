@@ -65,10 +65,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppStaticValue.setActivitys(this);
-        try {
-            BusProvider.getInstance().register(this);
-        } catch (IllegalArgumentException ignore) {
-        }
     }
 
     /**
@@ -89,10 +85,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            BusProvider.getInstance().unregister(this);
-        } catch (IllegalArgumentException ignore) {
-        }
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
         }
@@ -103,6 +95,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         AVAnalytics.onResume(this);
+        try {
+            BusProvider.getInstance().register(this);
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
     /**
@@ -112,6 +108,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         AVAnalytics.onPause(this);
+        try {
+            BusProvider.getInstance().unregister(this);
+        } catch (IllegalArgumentException ignore) {
+        }
     }
 
 

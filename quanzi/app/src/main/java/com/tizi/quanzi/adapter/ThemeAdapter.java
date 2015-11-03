@@ -11,13 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
+import com.tizi.quanzi.otto.BusProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,21 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public ThemeAdapter(List<Theme.ActsEntity> acts, Context mContext) {
         this.mContext = mContext;
         this.acts = acts;
+        try {
+            BusProvider.getInstance().register(this);
+        } catch (Exception ignore) {
+
+        }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        try {
+            BusProvider.getInstance().unregister(this);
+        } catch (Exception ignore) {
+
+        }
     }
 
     /**
@@ -97,7 +115,13 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Log.i(TAG, position + "is TuoDanZuoZanViewHolder");
             TuoDanZuoZanViewHolder tuodan = (TuoDanZuoZanViewHolder) holder;
             tuodan.participantsNum.setText(String.valueOf(acts.get(position).signNum));
-            tuodan.detail.setText(acts.get(position).content);
+            if (BoomGroupList.getInstance().getAllUnreadCount() == 0) {
+                tuodan.unreadNum.setVisibility(View.GONE);
+            } else {
+                tuodan.unreadNum.setVisibility(View.VISIBLE);
+                tuodan.unreadNum.setText(String.valueOf(BoomGroupList.getInstance().getAllUnreadCount()));
+            }
+            //tuodan.detailButton.setText(acts.get(position).content);
             tuodan.themeIcon.setImageUrl(acts.get(position).icon, GetVolley.getmInstance().getImageLoader());
             tuodan.addHotDyns(acts.get(position).id);
             tuodan.participateButton.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +174,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return this;
     }
 
+    @Subscribe
+    public void unreadCountChange(BoomGroupList boomGroupList) {
+        notifyDataSetChanged();
+    }
+
     /**
      * 报名监听
      */
@@ -190,8 +219,8 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
      */
     public static class DefaultViewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView detail, participantsNum;
-        protected Button participateButton;
+        protected TextView participantsNum, unreadNum;
+        protected Button participateButton, detailButton;
         protected NetworkImageView themeIcon;
         protected View view;
         protected ViewPager dynsViewPager;
@@ -205,11 +234,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         protected void findViews() {
-            detail = (TextView) view.findViewById(R.id.detail_text_view);
+            detailButton = (Button) view.findViewById(R.id.detail_button);
             themeIcon = (NetworkImageView) view.findViewById(R.id.theme_icon);
             participateButton = (Button) view.findViewById(R.id.participate_button);
             participantsNum = (TextView) view.findViewById(R.id.num_of_participants);
             dynsViewPager = (ViewPager) view.findViewById(R.id.dynsViewPager);
+            unreadNum = (TextView) view.findViewById(R.id.unread_count);
         }
 
         protected void addHotDyns(final String themeID) {

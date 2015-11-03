@@ -16,6 +16,7 @@
             android:id="@+id/need_scroll_out"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:background="@color/md_white"
             android:orientation="vertical">
 
             <include layout="@layout/item_dyns"/>
@@ -37,7 +38,7 @@
                     android:id="@+id/comment"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/ic_chat_48dp"/>
+                    android:background="@drawable/ic_chat_24dp"/>
 
             </LinearLayout>
 

@@ -126,17 +126,6 @@ public class DynsActivity extends BaseActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_send_dyn) {
-            if (Tool.isGuest()) {
-                Tool.GuestAction(this);
-                return true;
-            }
-            sendDynFragment = SendDynFragment.newInstance(themeString, groupID, themeID);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, sendDynFragment)
-                    .addToBackStack("SendDynFragment").commit();
-            return true;
-        }
         if (id == R.id.action_send) {
             if (sendDynFragment.SendDyn()) {
                 getSupportFragmentManager().popBackStack();
@@ -147,15 +136,23 @@ public class DynsActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void toSendDyn() {
+        if (Tool.isGuest()) {
+            Tool.GuestAction(this);
+            return;
+        }
+        sendDynFragment = SendDynFragment.newInstance(themeString, groupID, themeID);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, sendDynFragment)
+                .addToBackStack("SendDynFragment").commit();
+    }
+
     /*Fragment 启动与停止*/
     @Subscribe
     public void onFragmentResume(FragmentResume fragmentResume) {
         if (fragmentResume.FramgentName.compareTo(SendDynFragment.class.getSimpleName()) == 0) {
             if (fragmentResume.resumeOrPause) {
-                menu.findItem(R.id.action_send_dyn).setVisible(false);
                 menu.findItem(R.id.action_send).setVisible(true);
             } else {
-                menu.findItem(R.id.action_send_dyn).setVisible(true);
                 menu.findItem(R.id.action_send).setVisible(false);
             }
         }

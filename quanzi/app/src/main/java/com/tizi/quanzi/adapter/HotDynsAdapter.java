@@ -5,18 +5,20 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.Dyns;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.ui.dyns.DynsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by qixingchen on 15/9/11.
@@ -58,10 +60,20 @@ public class HotDynsAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View v = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_topic_hot_dyns, container, false);
+        ImageView[] hotdynimage = new ImageView[3];
+        hotdynimage[2] = (ImageView) v.findViewById(R.id.weibo_pic2);
+        hotdynimage[1] = (ImageView) v.findViewById(R.id.weibo_pic1);
+        hotdynimage[0] = (ImageView) v.findViewById(R.id.weibo_pic0);
+        TextView dynText = (TextView) v.findViewById(R.id.weibo_content);
+        TextView groupnametextview = (TextView) v.findViewById(R.id.weibo_name);
+        CircleImageView userfaceimage = (CircleImageView) v.findViewById(R.id.weibo_avatar);
         Dyns.DynsEntity dyn = dyns.get(position);
-        NetworkImageView dynPic = (NetworkImageView) v.findViewById(R.id.dyn_pic);
-        TextView dynText = (TextView) v.findViewById(R.id.dyn_text);
         LinearLayout pointGroup = (LinearLayout) v.findViewById(R.id.point_group);
+
+        TextView attitudesTextView = (TextView) v.findViewById(R.id.weibo_attitudes);
+        TextView commentsTextView = (TextView) v.findViewById(R.id.weibo_comments);
+        attitudesTextView.setText(String.valueOf(dyn.zan));
+        commentsTextView.setText(String.valueOf(dyn.commentNum));
 
         for (int i = 0; i < getCount(); i++) {
             View view = new View(container.getContext());
@@ -77,12 +89,24 @@ public class HotDynsAdapter extends PagerAdapter {
             pointGroup.addView(view);// 向线性布局中添加点
         }
 
-        if (dyn.pics.size() == 0) {
-            dynPic.setImageUrl(dyn.icon, GetVolley.getmInstance().getImageLoader());
-        } else {
-            dynPic.setImageUrl(dyn.pics.get(0).url, GetVolley.getmInstance().getImageLoader());
+
+        for (int i = 0; i < Math.min(3, dyn.pics.size()); i++) {
+            Picasso.with(v.getContext()).load(dyn.pics.get(i).url)
+                    .resizeDimen(R.dimen.dyn_image, R.dimen.dyn_image)
+                    .into(hotdynimage[i]);
+            hotdynimage[i].setVisibility(View.VISIBLE);
         }
+        for (int i = dyn.pics.size(); i < 3; i++) {
+            hotdynimage[i].setVisibility(View.GONE);
+        }
+
+
         dynText.setText(dyn.content);
+        groupnametextview.setText(dyn.nickName);
+        Picasso.with(v.getContext()).load(dyn.icon)
+                .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
+                .into(userfaceimage);
+
         container.addView(v);
 
         v.setOnClickListener(new View.OnClickListener() {

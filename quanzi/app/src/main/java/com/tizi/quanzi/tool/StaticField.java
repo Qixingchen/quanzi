@@ -92,6 +92,7 @@ public class StaticField {
             public final static int kicked = 4;
             public final static int group_change_name = 5;
             public final static int dyn_comment = 6;
+            public final static int jiong_pic = 7;
         }
     }
 

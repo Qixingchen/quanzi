@@ -40,6 +40,12 @@ public class DynsActivityFragment extends BaseFragment {
     @Override
     protected void findViews(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.dyns_item_recycler_view);
+        view.findViewById(R.id.send_dyn_fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((DynsActivity) mActivity).toSendDyn();
+            }
+        });
     }
 
     @Override

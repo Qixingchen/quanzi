@@ -150,6 +150,9 @@ public class LoginFragment extends BaseFragment {
     private void login() {
         String phoneNumber = phoneNumberEditText.getText().toString();
         String password = passwordEditText.getText().toString();
+        //test
+        //        phoneNumber = "18012345677";
+        //        password = "111111";
 
         if (Tool.getPhoneNum(phoneNumber) == null || password.compareTo("") == 0) {
             Snackbar.make(view, "手机号未填写或不合法或密码未填写",

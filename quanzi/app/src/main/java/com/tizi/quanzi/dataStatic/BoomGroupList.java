@@ -36,6 +36,17 @@ public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
     }
 
     /**
+     * 获取所有未读数量
+     */
+    public int getAllUnreadCount() {
+        int ans = 0;
+        for (BoomGroupClass boom : groupList) {
+            ans += boom.UnreadCount;
+        }
+        return ans;
+    }
+
+    /**
      * 通知所有回调
      */
     @Override

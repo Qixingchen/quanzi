@@ -5,35 +5,40 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.main.CountdownFragment">
 
-    <RelativeLayout
+
+    <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:background="@drawable/count_down_background"/>
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/face"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="60dp"
+        android:orientation="horizontal">
 
-        <ImageButton
+        <Button
             android:id="@+id/share_app"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/hot_dyns"
-            android:layout_marginStart="76dp"
-            android:background="@drawable/face"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="80dp"
+            android:background="@drawable/white_cloud"
+            android:gravity="center"
+            android:text="分享应用"
+            android:textColor="#445456"
+            android:textSize="15sp"/>
 
-        <ImageButton
+        <Button
             android:id="@+id/hot_dyns"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="73dp"
-            android:layout_marginEnd="39dp"
-            android:background="@drawable/face"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/red_cloud"
+            android:text="最热"
+            android:textColor="#FFF"
+            android:textSize="15sp"/>
 
+    </LinearLayout>
 
-    </RelativeLayout>
 
 </FrameLayout>

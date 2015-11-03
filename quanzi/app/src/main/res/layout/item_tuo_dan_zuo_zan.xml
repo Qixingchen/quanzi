@@ -8,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="360dp">
+        android:layout_height="wrap_content"
+        tools:layout_height="200dp">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/theme_icon"
@@ -17,31 +18,55 @@
             tools:background="@drawable/face"/>
 
         <TextView
-            android:id="@+id/detail_text_view"
+            android:id="@+id/unread_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/participate_button"
-            android:layout_alignParentTop="true"
-            android:text="活动详情"/>
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/num_pop"
+            tools:text="12"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="活动动态"/>
 
         <Button
-            android:id="@+id/participate_button"
+            android:id="@+id/detail_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="37dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/participate_button"
+            android:text="详情"/>
+
+        <Button
+            android:id="@id/participate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/num_of_participants"
             android:text="报名"/>
 
 
         <TextView
-            android:id="@+id/num_of_participants"
+            android:id="@id/num_of_participants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="20dp"
-            tools:text="当前1100个圈子"/>
+            android:layout_marginTop="20dp"
+            tools:text="1100"/>
 
     </RelativeLayout>
 
@@ -49,7 +74,8 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/dynsViewPager"
         android:layout_width="fill_parent"
-        android:layout_height="230dp"
-        tools:background="@color/md_green_400"/>
+        android:layout_height="220dp"
+        tools:background="@color/md_green_400"
+        tools:layout_height="120dp"/>
 
 </LinearLayout>

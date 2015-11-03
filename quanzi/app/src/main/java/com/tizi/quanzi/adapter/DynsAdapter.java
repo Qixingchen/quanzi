@@ -5,15 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 
 import java.util.ArrayList;
@@ -70,29 +70,31 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     @Override
     public void onBindViewHolder(DynsViewHolder holder, final int position) {
         final Dyns.DynsEntity dyns = dynsList.get(position);
-        holder.weibo_avatar_NetworkImageView.setImageUrl(dyns.icon,
-                GetVolley.getmInstance().getImageLoader());
+
+        Picasso.with(holder.view.getContext()).load(dyns.icon)
+                .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
+                .into(holder.weibo_avatar_ImageView);
         holder.userNameTextView.setText(dyns.nickName);
         holder.contentTextView.setText(dyns.content);
         holder.dateTextView.setText(dyns.createTime);
         holder.attitudesTextView.setText(String.valueOf(dyns.zan));
         holder.commentsTextView.setText(String.valueOf(dyns.commentNum));
         int picsNum = dyns.pics.size();
-        if (picsNum > 9) {
-            picsNum = 9;
+        if (picsNum > 3) {
+            picsNum = 3;
         }
         int hei = mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_hei);
         int wei = mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_wei);
         for (int i = 0; i < picsNum; i++) {
             String thumUri = GetThumbnailsUri.maxHeiAndWei(dyns.pics.get(i).url, hei, wei);
-            holder.weibo_pics_NetworkImageView[i].setImageUrl(thumUri,
-                    GetVolley.getmInstance().getImageLoader());
+            Picasso.with(holder.view.getContext()).load(thumUri)
+                    .resizeDimen(R.dimen.weibo_pic_hei, R.dimen.weibo_pic_wei)
+                    .into(holder.weibo_pics_ImageView[i]);
             final int finalI = i;
-            holder.weibo_pics_NetworkImageView[i].setOnClickListener(new View.OnClickListener() {
+            holder.weibo_pics_ImageView[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     StartGalleryActivity.startByStringList(getPicsInfo(position), finalI, mContext);
-
                 }
             });
         }
@@ -182,10 +184,10 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     public static class DynsViewHolder extends RecyclerView.ViewHolder {
 
         //界面元素
-        private NetworkImageView weibo_avatar_NetworkImageView;
+        private ImageView weibo_avatar_ImageView;
         private TextView userNameTextView, contentTextView, dateTextView,
                 attitudesTextView, commentsTextView;
-        private NetworkImageView[] weibo_pics_NetworkImageView = new NetworkImageView[9];
+        private ImageView[] weibo_pics_ImageView = new ImageView[3];
         private LinearLayout weibo_pics_linearLayout;
         private View view;
 
@@ -201,21 +203,21 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
          */
         private void FindViewByID(View v) {
             view = v;
-            weibo_avatar_NetworkImageView = (NetworkImageView) v.findViewById(R.id.weibo_avatar);
+            weibo_avatar_ImageView = (ImageView) v.findViewById(R.id.weibo_avatar);
             userNameTextView = (TextView) v.findViewById(R.id.weibo_name);
             contentTextView = (TextView) v.findViewById(R.id.weibo_content);
             dateTextView = (TextView) v.findViewById(R.id.weibo_date);
             attitudesTextView = (TextView) v.findViewById(R.id.weibo_attitudes);
             commentsTextView = (TextView) v.findViewById(R.id.weibo_comments);
-            weibo_pics_NetworkImageView[0] = (NetworkImageView) v.findViewById(R.id.weibo_pic0);
-            weibo_pics_NetworkImageView[1] = (NetworkImageView) v.findViewById(R.id.weibo_pic1);
-            weibo_pics_NetworkImageView[2] = (NetworkImageView) v.findViewById(R.id.weibo_pic2);
-            weibo_pics_NetworkImageView[3] = (NetworkImageView) v.findViewById(R.id.weibo_pic3);
-            weibo_pics_NetworkImageView[4] = (NetworkImageView) v.findViewById(R.id.weibo_pic4);
-            weibo_pics_NetworkImageView[5] = (NetworkImageView) v.findViewById(R.id.weibo_pic5);
-            weibo_pics_NetworkImageView[6] = (NetworkImageView) v.findViewById(R.id.weibo_pic6);
-            weibo_pics_NetworkImageView[7] = (NetworkImageView) v.findViewById(R.id.weibo_pic7);
-            weibo_pics_NetworkImageView[8] = (NetworkImageView) v.findViewById(R.id.weibo_pic8);
+            weibo_pics_ImageView[0] = (ImageView) v.findViewById(R.id.weibo_pic0);
+            weibo_pics_ImageView[1] = (ImageView) v.findViewById(R.id.weibo_pic1);
+            weibo_pics_ImageView[2] = (ImageView) v.findViewById(R.id.weibo_pic2);
+            //            weibo_pics_ImageView[3] = (NetworkImageView) v.findViewById(R.id.weibo_pic3);
+            //            weibo_pics_ImageView[4] = (NetworkImageView) v.findViewById(R.id.weibo_pic4);
+            //            weibo_pics_ImageView[5] = (NetworkImageView) v.findViewById(R.id.weibo_pic5);
+            //            weibo_pics_ImageView[6] = (NetworkImageView) v.findViewById(R.id.weibo_pic6);
+            //            weibo_pics_ImageView[7] = (NetworkImageView) v.findViewById(R.id.weibo_pic7);
+            //            weibo_pics_ImageView[8] = (NetworkImageView) v.findViewById(R.id.weibo_pic8);
             weibo_pics_linearLayout = (LinearLayout) v.findViewById(R.id.weibo_pics);
         }
 
@@ -233,11 +235,11 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
             }
             weibo_pics_linearLayout.setVisibility(View.VISIBLE);
             for (int i = 0; i < picsNum; i++) {
-                weibo_pics_NetworkImageView[i].setVisibility(View.VISIBLE);
+                weibo_pics_ImageView[i].setVisibility(View.VISIBLE);
             }
-            for (int i = picsNum; i < 9; i++) {
-                weibo_pics_NetworkImageView[i].setVisibility(View.GONE);
-                weibo_pics_NetworkImageView[i].setOnClickListener(null);
+            for (int i = picsNum; i < 3; i++) {
+                weibo_pics_ImageView[i].setVisibility(View.GONE);
+                weibo_pics_ImageView[i].setOnClickListener(null);
             }
         }
     }

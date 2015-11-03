@@ -5,10 +5,29 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.dyns.DynsActivityFragment">
 
+    <ImageView
+        android:id="@+id/dyn_intro"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dyn_intro"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dyns_item_recycler_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/dyn_intro"
         tools:layout_height="640dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/send_dyn_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:clickable="true"
+        android:src="@drawable/ic_add_24dp"/>
 
 </RelativeLayout>

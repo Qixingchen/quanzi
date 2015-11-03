@@ -87,7 +87,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupUsersRecyclerView = (RecyclerView) view.findViewById(R.id.group_users_item_recycler_view);
         groupDynsRecyclerView = (RecyclerView) view.findViewById(R.id.group_dyns_item_recycler_view);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        changeGroupImageFAB = (FloatingActionButton) view.findViewById(R.id.change_image_fab);
+        changeGroupImageFAB = (FloatingActionButton) view.findViewById(R.id.send_dyn_fab);
     }
 
     @Override

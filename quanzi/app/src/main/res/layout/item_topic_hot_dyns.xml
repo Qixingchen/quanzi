@@ -1,38 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:layout_height="400dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/dyn_pic"
-        android:layout_width="fill_parent"
-        android:layout_height="150dp"
-        tools:background="@drawable/face"/>
+    <include
+        layout="@layout/item_dyns"/>
 
     <LinearLayout
         android:id="@+id/point_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         tools:background="@color/md_red_300"
         tools:layout_height="15dp"
         tools:layout_width="60dp"/>
-
-    <TextView
-        android:id="@+id/dyn_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="3"
-        tools:text="1222222
-        1222
-        1222
-        1222"/>
-
 </LinearLayout>

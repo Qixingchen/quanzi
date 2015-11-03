@@ -27,7 +27,7 @@ public class NewGroupActivity extends BaseActivity {
     NewGroupStep2Fragment newGroupStep2Fragment;
     NewGroupStep1Fragment.NewGroupStep1Ans ans;
     Toolbar toolbar;
-    private String convID;
+    private String convID = "0";
     private Menu mMenu;
 
     private GroupTagFragment groupTagFragment;

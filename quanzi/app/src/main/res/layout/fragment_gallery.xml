@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.gallery.GalleryActivityFragment">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="图片下载中"
+        android:textColor="@color/md_red_500"
+        android:textSize="32sp"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/picsViewPager"
         android:layout_width="fill_parent"

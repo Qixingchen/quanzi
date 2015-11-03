@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/color_fragment_background"
         android:orientation="vertical">
 
         <LinearLayout
@@ -23,14 +23,12 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="9dp"
                 android:layout_marginStart="9dp"
                 tools:background="@drawable/face"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
                 android:layout_marginStart="14dp"
                 android:orientation="vertical">
 
@@ -52,7 +50,7 @@
                         android:id="@+id/userSex"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         tools:background="@drawable/man"/>
                 </LinearLayout>
 
@@ -61,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#B6B6B6"
-                    android:textSize="9sp"
+                    android:textSize="12sp"
                     tools:text="122222222222"/>
 
             </LinearLayout>
@@ -79,7 +77,6 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="33dp"
                 android:layout_marginStart="33dp"
                 android:src="@drawable/ic_share_light_36dp"/>
 
@@ -87,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="分享"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold"/>
         </LinearLayout>
 
@@ -102,7 +99,6 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="33dp"
                 android:layout_marginStart="33dp"
                 android:src="@drawable/ic_settings_light_36dp"/>
 
@@ -110,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="系统设置"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:textStyle="bold"/>
         </LinearLayout>
 

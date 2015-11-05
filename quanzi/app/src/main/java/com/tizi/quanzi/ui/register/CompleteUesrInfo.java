@@ -2,7 +2,6 @@ package com.tizi.quanzi.ui.register;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -13,8 +12,10 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
@@ -25,13 +26,10 @@ import com.tizi.quanzi.ui.BaseFragment;
  **/
 public class CompleteUesrInfo extends BaseFragment {
 
-    /* 请求码 */
-    private static final String IMAGE_FILE_NAME = "faceImage";
     private TextInputLayout nickNameInputLayout;
     private NetworkImageView UserPhotoImageView;
     private RadioGroup sexGroup;
     private Button submitButton;
-    private String photoTakenUri;
     private String photoOnlineUri;
 
     private RequreForImage requreForImage;
@@ -105,16 +103,11 @@ public class CompleteUesrInfo extends BaseFragment {
         });
     }
 
-    /**
-     * Intent回调
-     *
-     * @param requestCode 请求码
-     * @param resultCode  结果码（是否完成）
-     * @param data        数据
-     */
-    public void onIntentResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            String filePath = requreForImage.ZipedFilePathFromIntent(data);
+    @Subscribe
+    public void onResult(ActivityResultAns activityResultAns) {
+        if (activityResultAns.requestCode == StaticField.PermissionRequestCode.register_user_face
+                && activityResultAns.resultCode == Activity.RESULT_OK) {
+            String filePath = requreForImage.ZipedFilePathFromIntent(activityResultAns.data);
             if (filePath != null) {
                 SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                     @Override
@@ -144,5 +137,4 @@ public class CompleteUesrInfo extends BaseFragment {
          */
         void CompUserInfoOK(String userName, int sex, String faceUri);
     }
-
 }

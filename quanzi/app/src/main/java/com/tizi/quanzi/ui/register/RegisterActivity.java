@@ -155,13 +155,4 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
 
     }
 
-    /**
-     * 选图 拍照返回值
-     *
-     * @see CompleteUesrInfo
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        completeUesrInfo.onIntentResult(requestCode, resultCode, data);
-    }
 }

@@ -148,6 +148,9 @@ public class GroupTagFragment extends BaseFragment {
     private void setTags() {
         String[] parentnames = new String[tagsMap.size()];
         tagsMap.keySet().toArray(parentnames);
+        if (tagsMap.size() == 0) {
+            return;
+        }
         String nowParent = parentnames[(parentLastPosition++) % tagsMap.size()];
         parentTagView.setText(nowParent);
         TagSelectAdapter tagSelectAdapter = new TagSelectAdapter(

@@ -173,11 +173,11 @@ public class GroupSetting extends RetrofitNetworkAbs {
 
     class TAG {
         public String tagid;
-        public String tagName;
+        public String tagname;
 
         public TAG(String tagid, String tagName) {
             this.tagid = tagid;
-            this.tagName = tagName;
+            this.tagname = tagName;
         }
     }
 }

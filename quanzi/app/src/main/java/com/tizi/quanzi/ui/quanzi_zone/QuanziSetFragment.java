@@ -296,6 +296,8 @@ public class QuanziSetFragment extends BaseFragment {
     public void setTags(ArrayList<AllTags.TagsEntity> tags) {
         quanziTag.setText(AllTags.getTagString(tags));
         GroupSetting.getNewInstance().changeTags(groupAllInfo.group.id, tags);
+        groupAllInfo.tagList.clear();
+        groupAllInfo.tagList.addAll(tags);
     }
 
 }

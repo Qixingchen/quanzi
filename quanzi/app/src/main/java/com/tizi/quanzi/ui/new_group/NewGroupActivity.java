@@ -78,7 +78,15 @@ public class NewGroupActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_next_step) {
             if (convID.compareTo("0") == 0) {
-                Snackbar.make(view, "LC ConvID 为空", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "LC ConvID 为空,请稍等正在重试", Snackbar.LENGTH_LONG).show();
+                NewAVIMConversation.getInstance().setConversationCallBack(
+                        new NewAVIMConversation.ConversationCallBack() {
+                            @Override
+                            public void setConversationID(String conversationID) {
+                                convID = conversationID;
+                            }
+                        }
+                ).newAChatGroup();
                 return true;
             }
 

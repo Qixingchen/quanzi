@@ -88,10 +88,10 @@ public class Register1stepFragment extends BaseFragment {
                             public void done(AVException e) {
                                 if (e == null) {
                                     countdownToSignCode();
-                                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                                    Snackbar.make(view,
                                             "验证码发送成功", Snackbar.LENGTH_LONG).show();
                                 } else {
-                                    Snackbar.make(getActivity().findViewById(R.id.register_fragment),
+                                    Snackbar.make(view,
                                             e.getCode() + e.getMessage(), Snackbar.LENGTH_LONG).show();
 
                                 }
@@ -111,10 +111,10 @@ public class Register1stepFragment extends BaseFragment {
                             public void done(AVException e) {
                                 if (e == null) {
                                     countdownToSignCode();
-                                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                                    Snackbar.make(view,
                                             "请等待接听电话", Snackbar.LENGTH_LONG).show();
                                 } else {
-                                    Snackbar.make(getActivity().findViewById(R.id.register_fragment),
+                                    Snackbar.make(view,
                                             e.getCode() + e.getMessage(), Snackbar.LENGTH_LONG).show();
 
                                 }
@@ -128,7 +128,7 @@ public class Register1stepFragment extends BaseFragment {
             public void onClick(View v) {
 
                 if (!agree) {
-                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                    Snackbar.make(view,
                             "您必须阅读并同意我们的条款", Snackbar.LENGTH_LONG).show();
                     return;
                 }
@@ -139,12 +139,12 @@ public class Register1stepFragment extends BaseFragment {
 
 
                 if (phoneNumber.compareTo("") == 0 || Tool.getPhoneNum(phoneNumber) == null) {
-                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                    Snackbar.make(view,
                             "手机号为空或不合法", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (password.compareTo("") == 0) {
-                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                    Snackbar.make(view,
                             "密码为空", Snackbar.LENGTH_LONG).show();
                     return;
                 }
@@ -153,7 +153,7 @@ public class Register1stepFragment extends BaseFragment {
                     if (Statue.IsDev.isDev) {
                         nextStep.register1stepOK(phoneNumber, password);
                     } else {
-                        Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                        Snackbar.make(view,
                                 "验证码为空", Snackbar.LENGTH_LONG).show();
                         return;
                     }
@@ -164,11 +164,11 @@ public class Register1stepFragment extends BaseFragment {
                     @Override
                     public void done(AVException e) {
                         if (e != null) {
-                            Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                            Snackbar.make(view,
                                     e.getCode() + e.getMessage(), Snackbar.LENGTH_LONG).show();
                             return;
                         }
-                        Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                        Snackbar.make(view,
                                 "验证成功", Snackbar.LENGTH_LONG).show();
                         nextStep.register1stepOK(phoneNumber, password);
                     }

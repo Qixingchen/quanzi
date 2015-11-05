@@ -41,6 +41,7 @@ public class StartPrivateChat {
                     if (getConvID != null) {
                         getConvID.onError(e.getMessage());
                     }
+                    return;
                 }
 
                 switch (list.size()) {

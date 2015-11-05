@@ -85,6 +85,7 @@ public class ZipPic {
         }
         // 设置好缩放比例后，加载图片进内容；
         opts.inJustDecodeBounds = false;
+        opts.inPreferredConfig = Bitmap.Config.RGB_565;
         bitmap = BitmapFactory.decodeFile(pathName, opts);
         return bitmap;
     }

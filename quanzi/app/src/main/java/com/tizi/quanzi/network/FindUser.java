@@ -1,14 +1,13 @@
 package com.tizi.quanzi.network;
 
 import com.google.gson.Gson;
-import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.ReadContact;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
-import com.tizi.quanzi.ui.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +63,7 @@ public class FindUser extends RetrofitNetworkAbs {
     }
 
     public void findContactUsers() {
-        List<ReadContact.Mobiles> mobilesList = ReadContact.readContact(
-                AppStaticValue.getActivity(MainActivity.class.getSimpleName()));
+        List<ReadContact.Mobiles> mobilesList = ReadContact.readContact(App.getApplication());
 
         //每次只传 ContactLimit 个
         int contactLimit = StaticField.QueryLimit.ContactLimit;
@@ -80,30 +78,30 @@ public class FindUser extends RetrofitNetworkAbs {
             Log.i(TAG, mobileString[i] + "\n \n");
             findUserService.findContactUser(Tool.getUTF_8String(mobileString[i]))
                     .enqueue(new Callback<ContantUsers>() {
-                @Override
-                public void onResponse(Response<ContantUsers> response, Retrofit retrofit) {
-                    if (response.isSuccess() && response.body().success) {
-                        Log.i(TAG, "success");
-                        ansTimes[0]++;
-                        mobiles.addAll(response.body().mobiles);
-                        if (ansTimes[0] == times) {
-                            response.body().mobiles = mobiles;
-                            findContactUsersComplete(response);
+                        @Override
+                        public void onResponse(Response<ContantUsers> response, Retrofit retrofit) {
+                            if (response.isSuccess() && response.body().success) {
+                                Log.i(TAG, "success");
+                                ansTimes[0]++;
+                                mobiles.addAll(response.body().mobiles);
+                                if (ansTimes[0] == times) {
+                                    response.body().mobiles = mobiles;
+                                    findContactUsersComplete(response);
+                                }
+                            } else {
+                                String mess = response.isSuccess() ? response.body().msg : response.message();
+                                Log.w(TAG, mess);
+                                if (networkListener != null) {
+                                    networkListener.onError(mess);
+                                }
+                            }
                         }
-                    } else {
-                        String mess = response.isSuccess() ? response.body().msg : response.message();
-                        Log.w(TAG, mess);
-                        if (networkListener != null) {
-                            networkListener.onError(mess);
-                        }
-                    }
-                }
 
-                @Override
-                public void onFailure(Throwable t) {
-                    myOnFailure(t);
-                }
-            });
+                        @Override
+                        public void onFailure(Throwable t) {
+                            myOnFailure(t);
+                        }
+                    });
         }
     }
 

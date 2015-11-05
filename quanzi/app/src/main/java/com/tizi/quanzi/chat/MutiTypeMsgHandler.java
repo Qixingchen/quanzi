@@ -13,6 +13,7 @@ import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
@@ -62,8 +63,11 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         }
 
         /*自己发出的信息 忽略*/
-        if (systemMessage.user_id.compareTo(MyUserInfo.getInstance().getUserInfo().getId()) == 0) {
-            return;
+        Login.UserEntity userinfo = MyUserInfo.getInstance().getUserInfo();
+        if (userinfo != null) {
+            if (systemMessage.user_id.compareTo(userinfo.getId()) == 0) {
+                return;
+            }
         }
 
          /*圈子改名*/

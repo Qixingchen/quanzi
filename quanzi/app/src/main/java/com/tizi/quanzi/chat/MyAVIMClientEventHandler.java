@@ -50,4 +50,9 @@ public class MyAVIMClientEventHandler extends AVIMClientEventHandler {
         isNetworkAvailable = true;
     }
 
+    @Override
+    public void onClientOffline(AVIMClient avimClient, int i) {
+        // TODO: 15/11/5 no document
+    }
+
 }

@@ -1,10 +1,9 @@
 package com.tizi.quanzi.dataStatic;
 
-import android.content.Intent;
+import android.support.annotation.Nullable;
 
-import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.Login;
-import com.tizi.quanzi.ui.login.LoginActivity;
+import com.tizi.quanzi.network.LoginAndUserAccount;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -28,11 +27,10 @@ public class MyUserInfo {
         return mInstance;
     }
 
+    @Nullable
     public Login.UserEntity getUserInfo() {
         if (userInfo == null || userInfo.getIcon() == null) {
-            Intent log_in = new Intent(App.getApplication(), LoginActivity.class);
-            log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            App.getApplication().startActivity(log_in);
+            LoginAndUserAccount.getNewInstance().loginFromPrefer();
         }
         return userInfo;
     }

@@ -75,12 +75,12 @@ dependencies {
     //缩放图
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.9'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.10'
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.9@aar'
+    compile 'cn.leancloud.android:avoscloud-push:v3.10@aar'
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
     //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.9@aar'
+    compile 'cn.leancloud.android:avoscloud-statistics:v3.10@aar'
     //gms
     compile 'com.google.android.gms:play-services-gcm:8.1.0'
     //debug

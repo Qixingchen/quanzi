@@ -8,11 +8,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -20,6 +20,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.tool.ZipPic;
@@ -61,28 +62,40 @@ public class GalleryAdapter extends PagerAdapter {
         final View vRoot = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_big_pic, container, false);
         final SubsamplingScaleImageView image = (SubsamplingScaleImageView) vRoot.findViewById(R.id.pic);
+        final Bitmap[] mBitmap = {null};
+        final ProgressBar loadProgressBar = (ProgressBar) vRoot.findViewById(R.id.image_progressBar);
 
         Picasso.with(activity).load(pics.get(position)).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                mBitmap[0] = bitmap;
+                Log.i(TAG, "onBitmapLoaded:" + position);
                 image.setImage(ImageSource.bitmap(bitmap));
                 image.setZoomEnabled(true);
+                loadProgressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-                image.setImage(ImageSource.resource(R.drawable.girl));
+                Log.i(TAG, "onBitmapFailed:" + position);
+                image.setImage(ImageSource.resource(R.drawable.face));
                 image.setZoomEnabled(false);
+                loadProgressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
+                Log.i(TAG, "onPrepareLoad:" + position);
                 image.setZoomEnabled(false);
+                loadProgressBar.setVisibility(View.VISIBLE);
             }
         });
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(final View v) {
+                if (mBitmap[0] == null) {
+                    return false;
+                }
                 String[] items = {"保存图片"};
                 new AlertDialog.Builder(activity)
                         .setItems(items, new DialogInterface.OnClickListener() {
@@ -91,22 +104,7 @@ public class GalleryAdapter extends PagerAdapter {
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
                                             case 0:
-                                                Picasso.with(activity).load(pics.get(position)).into(new Target() {
-                                                    @Override
-                                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                                        saveBitmap(bitmap, position);
-                                                    }
-
-                                                    @Override
-                                                    public void onBitmapFailed(Drawable errorDrawable) {
-                                                        Snackbar.make(vRoot, "下载失败", Snackbar.LENGTH_LONG).show();
-                                                    }
-
-                                                    @Override
-                                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                                        Snackbar.make(vRoot, "下载失败", Snackbar.LENGTH_LONG).show();
-                                                    }
-                                                });
+                                                saveBitmap(mBitmap[0], position);
                                                 break;
                                         }
                                     }

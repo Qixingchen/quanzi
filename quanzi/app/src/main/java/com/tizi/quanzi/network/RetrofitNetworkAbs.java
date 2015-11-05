@@ -20,14 +20,6 @@ public abstract class RetrofitNetworkAbs {
 
     public abstract <T extends RetrofitNetworkAbs> T setNetworkListener(NetworkListener networkListener);
 
-    // TODO: 15/9/17 T 抽象
-    public interface NetworkListener<T extends Object> {
-        // TODO: 15/8/20 why
-        void onOK(T ts);
-
-        void onError(String Message);
-    }
-
     /**
      * 检查Response是否成功
      *
@@ -52,15 +44,27 @@ public abstract class RetrofitNetworkAbs {
         }
     }
 
-
     /**
      * OnFailure
      */
     protected void myOnFailure(Throwable t) {
         Log.w(TAG, t.getMessage());
         if (networkListener != null) {
-            networkListener.onError(t.getMessage());
+            if (t.getMessage().compareTo("") == 0) {
+                networkListener.onError("网络错误");
+            } else {
+                networkListener.onError(t.getMessage());
+            }
         }
+    }
+
+
+    // TODO: 15/9/17 T 抽象
+    public interface NetworkListener<T extends Object> {
+        // TODO: 15/8/20 why
+        void onOK(T ts);
+
+        void onError(String Message);
     }
 
     // TODO: 15/9/16 how to abstract

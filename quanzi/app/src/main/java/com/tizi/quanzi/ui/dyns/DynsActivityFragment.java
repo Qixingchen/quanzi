@@ -1,6 +1,7 @@
 package com.tizi.quanzi.ui.dyns;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class DynsActivityFragment extends BaseFragment {
     private RecyclerView recyclerView;
 
     private String themeID, GroupID;
+    private boolean isAllLoaded = false;
 
 
     public DynsActivityFragment() {
@@ -81,18 +84,27 @@ public class DynsActivityFragment extends BaseFragment {
     }
 
     private void quaryMore(String thmemID, String groupID) {
+        if (isAllLoaded && dynsAdapter.getItemCount() != 0) {
+            Log.i(TAG, "查询群动态完成,一共:" + dynsAdapter.getItemCount());
+            return;
+        }
         Log.i(TAG, "查询群动态 lastIndex=" + dynsAdapter.getItemCount());
 
         RetrofitNetworkAbs.NetworkListener listener = new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
+                if (dyns.dyns.size() < StaticField.QueryLimit.DynamicLimit) {
+                    isAllLoaded = true;
+                } else {
+                    isAllLoaded = false;
+                }
                 dynsAdapter.addItems(dyns.dyns);
             }
 
             @Override
             public void onError(String Message) {
-
+                Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
             }
         };
 

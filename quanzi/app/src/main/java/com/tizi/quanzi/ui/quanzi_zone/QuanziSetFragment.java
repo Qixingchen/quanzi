@@ -38,21 +38,33 @@ import java.util.ArrayList;
  */
 public class QuanziSetFragment extends BaseFragment {
 
+    private static final String GROUP_ALL_INFO = "GroupAllInfo";
     private TextView quanziName, quanziTag, quanziSign, deleteMess;
     private Switch ignoreNotifiSwitch;
     private Button exitQuanzi;
-    private GroupAllInfo groupAllInfo;
     private View nameView, tagView, signView;
+    private GroupAllInfo groupAllInfo;
 
-
+    @Deprecated
     public QuanziSetFragment() {
         // Required empty public constructor
     }
 
-    public void setGroupAllInfo(GroupAllInfo groupAllInfo) {
-        this.groupAllInfo = groupAllInfo;
+    public static QuanziSetFragment newInstance(GroupAllInfo groupAllInfo) {
+        QuanziSetFragment fragment = new QuanziSetFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(GROUP_ALL_INFO, groupAllInfo);
+        fragment.setArguments(args);
+        return fragment;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            groupAllInfo = (GroupAllInfo) getArguments().getSerializable(GROUP_ALL_INFO);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -122,7 +123,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                             public void onOK(Object ts) {
                                 OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
                                 Intent otherUser = new Intent(mContext, UserZoneActivity.class);
-                                otherUser.putExtra(StaticField.IntentName.OtherUserInfo, otherUserInfo);
+                                otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
                                 mContext.startActivity(otherUser);
                             }
 

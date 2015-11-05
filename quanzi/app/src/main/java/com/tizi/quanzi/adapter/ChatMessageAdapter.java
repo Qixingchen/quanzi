@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -267,7 +268,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                     public void onOK(Object ts) {
                         OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
                         Intent otherUser = new Intent(mContext, UserZoneActivity.class);
-                        otherUser.putExtra(StaticField.IntentName.OtherUserInfo, otherUserInfo);
+                        otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
                         mContext.startActivity(otherUser);
                     }
 

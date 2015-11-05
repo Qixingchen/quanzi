@@ -89,8 +89,7 @@ public class QuanziZoneActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            quanziSetFragment = new QuanziSetFragment();
-            quanziSetFragment.setGroupAllInfo(mGroupAllInfo);
+            quanziSetFragment = QuanziSetFragment.newInstance(mGroupAllInfo);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment, quanziSetFragment)
                     .addToBackStack("quanziSetFragment").commit();

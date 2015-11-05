@@ -2,6 +2,7 @@ package com.tizi.quanzi.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Comments;
-import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
@@ -81,7 +81,7 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
                         @Override
                         public void onOK(Object ts) {
                             Intent userZone = new Intent(activity, UserZoneActivity.class);
-                            userZone.putExtra(StaticField.IntentName.OtherUserInfo, (OtherUserInfo) ts);
+                            userZone.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) ts);
                             activity.startActivity(userZone);
                         }
 

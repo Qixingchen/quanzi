@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
@@ -22,8 +22,8 @@ public class CountdownFragment extends BaseFragment {
     private static final String ARG_PARAM2 = "param2";
     private String startTime;
     private String themeID;
-    private android.widget.ImageButton shareapp;
-    private android.widget.ImageButton hotdyns;
+    private Button shareapp;
+    private Button hotdyns;
 
 
     public CountdownFragment() {
@@ -58,8 +58,8 @@ public class CountdownFragment extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        this.hotdyns = (ImageButton) view.findViewById(R.id.hot_dyns);
-        this.shareapp = (ImageButton) view.findViewById(R.id.share_app);
+        this.hotdyns = (Button) view.findViewById(R.id.hot_dyns);
+        this.shareapp = (Button) view.findViewById(R.id.share_app);
     }
 
     @Override

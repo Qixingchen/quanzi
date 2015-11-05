@@ -40,7 +40,6 @@ import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.dyns.DynInfoFragment;
-import com.tizi.quanzi.widget.HideExtraOnScroll;
 
 import java.io.IOException;
 
@@ -119,7 +118,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupDynsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         groupDynsRecyclerView.setAdapter(dynsAdapter);
 
-        groupDynsRecyclerView.addOnScrollListener(new HideExtraOnScroll(mActivity.findViewById(R.id.need_scroll_out)));
+        // groupDynsRecyclerView.addOnScrollListener(new HideExtraOnScroll(mActivity.findViewById(R.id.need_scroll_out)));
         groupDynsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {

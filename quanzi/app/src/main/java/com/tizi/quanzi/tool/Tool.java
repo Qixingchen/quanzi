@@ -179,7 +179,6 @@ public class Tool {
      * Hide keyboard on touch of UI
      */
     public static void hideKeyboard(View view, final Activity activity) {
-
         if (view instanceof ViewGroup) {
 
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {

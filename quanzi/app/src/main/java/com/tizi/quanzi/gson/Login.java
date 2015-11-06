@@ -78,7 +78,7 @@ public class Login extends OnlySuccess {
         @SerializedName("groupNum")
         public String groupNum;
         @SerializedName("bg")
-        public Object bg;
+        public String bg;
         @SerializedName("userName")
         public String userName;
         @SerializedName("account")
@@ -142,14 +142,6 @@ public class Login extends OnlySuccess {
 
         public void setGroupNum(String groupNum) {
             this.groupNum = groupNum;
-        }
-
-        public Object getBg() {
-            return bg;
-        }
-
-        public void setBg(Object bg) {
-            this.bg = bg;
         }
 
         public String getUserName() {

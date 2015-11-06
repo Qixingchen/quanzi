@@ -12,9 +12,9 @@ import android.widget.Toast;
  */
 public class  MainFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[]{"小圈子", "看一看", "大世界"};
-    private Context context;
     public Fragment[] fragments = new Fragment[3];
+    private String tabTitles[] = new String[]{"圈子", "主题", "个人"};
+    private Context context;
 
     public MainFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);

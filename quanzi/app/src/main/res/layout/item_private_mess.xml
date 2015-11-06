@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/user_face_image"
@@ -15,6 +17,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/user_face_image"
         android:orientation="vertical">
 
         <TextView
@@ -33,5 +36,12 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/last_mess_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        tools:text="12"/>
 
-</LinearLayout>
+
+</RelativeLayout>

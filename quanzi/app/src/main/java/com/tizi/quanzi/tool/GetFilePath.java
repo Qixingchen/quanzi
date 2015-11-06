@@ -1,6 +1,5 @@
 package com.tizi.quanzi.tool;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresPermission;
 
 /**
  * Created by qixingchen on 15/7/20.
@@ -74,8 +72,7 @@ public class GetFilePath {
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
         }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
             return getDataColumn(context, uri, null, null);
         }
         // File
@@ -97,7 +94,6 @@ public class GetFilePath {
      *
      * @return The value of the _data column, which is typically a file path.
      */
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 

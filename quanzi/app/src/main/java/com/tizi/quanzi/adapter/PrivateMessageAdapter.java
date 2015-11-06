@@ -16,6 +16,7 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.tool.FriendTime;
 
 import java.util.List;
 
@@ -90,20 +91,21 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (PrivateViewHolder.class.isInstance(holder)) {
             final PrivateViewHolder privateVH = (PrivateViewHolder) holder;
             final PrivateMessPair privateMessPair = privateMessPairs.get(position);
-            privateVH.mUserFaceImageNetworkImageView.setImageUrl(privateMessPair.Face,
+            privateVH.mUserFaceImage.setImageUrl(privateMessPair.Face,
                     GetVolley.getmInstance().getImageLoader());
-            privateVH.mUserNameTextViewTextView.setText(privateMessPair.Name);
-            privateVH.mMessTextViewTextView.setText(privateMessPair.lastMess);
+            privateVH.mUserNameText.setText(privateMessPair.Name);
+            privateVH.mMessTextView.setText(privateMessPair.lastMess);
+            privateVH.lastMessTimeTextView.setText(FriendTime.FriendlyDate(privateMessPair.lastMessTime));
             if (privateMessPair.UnreadCount != 0) {
-                privateVH.mMessTextViewTextView.setTypeface(Typeface.DEFAULT_BOLD);
-                privateVH.mMessTextViewTextView.setTextColor(mContext.getResources().getColor(R.color.md_black));
-                privateVH.mUserNameTextViewTextView.setTypeface(Typeface.DEFAULT_BOLD);
-                privateVH.mUserNameTextViewTextView.setTextColor(mContext.getResources().getColor(R.color.md_black));
+                privateVH.mMessTextView.setTypeface(Typeface.DEFAULT_BOLD);
+                privateVH.mMessTextView.setTextColor(mContext.getResources().getColor(R.color.md_red_500));
+                privateVH.mUserNameText.setTypeface(Typeface.DEFAULT_BOLD);
+                privateVH.mUserNameText.setTextColor(mContext.getResources().getColor(R.color.md_red_500));
             } else {
-                privateVH.mMessTextViewTextView.setTypeface(Typeface.DEFAULT);
-                privateVH.mMessTextViewTextView.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
-                privateVH.mUserNameTextViewTextView.setTypeface(Typeface.DEFAULT);
-                privateVH.mUserNameTextViewTextView.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
+                privateVH.mMessTextView.setTypeface(Typeface.DEFAULT);
+                privateVH.mMessTextView.setTextColor(mContext.getResources().getColor(R.color.md_red_100));
+                privateVH.mUserNameText.setTypeface(Typeface.DEFAULT);
+                privateVH.mUserNameText.setTextColor(mContext.getResources().getColor(R.color.md_red_100));
             }
             privateVH.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -141,17 +143,19 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public static class PrivateViewHolder extends RecyclerView.ViewHolder {
 
-        private NetworkImageView mUserFaceImageNetworkImageView;
-        private TextView mUserNameTextViewTextView;
-        private TextView mMessTextViewTextView;
+        private NetworkImageView mUserFaceImage;
+        private TextView mUserNameText;
+        private TextView mMessTextView;
+        private TextView lastMessTimeTextView;
         private View itemView;
 
         public PrivateViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            mUserFaceImageNetworkImageView = (NetworkImageView) itemView.findViewById(R.id.user_face_image);
-            mUserNameTextViewTextView = (TextView) itemView.findViewById(R.id.user_name_text_view);
-            mMessTextViewTextView = (TextView) itemView.findViewById(R.id.mess_text_view);
+            mUserFaceImage = (NetworkImageView) itemView.findViewById(R.id.user_face_image);
+            mUserNameText = (TextView) itemView.findViewById(R.id.user_name_text_view);
+            mMessTextView = (TextView) itemView.findViewById(R.id.mess_text_view);
+            lastMessTimeTextView = (TextView) itemView.findViewById(R.id.last_mess_time_text_view);
         }
     }
 

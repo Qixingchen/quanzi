@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -227,7 +228,11 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                 }
                 InviteListAdapter inviteListAdapter = new InviteListAdapter(users.mobiles, activity, onAddUser);
                 phoneList.setAdapter(inviteListAdapter);
-                builder.setView(layout).show();
+                AlertDialog alertDialog;
+                alertDialog = builder.setView(layout).create();
+                alertDialog.show();
+                alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             }
 
             @Override

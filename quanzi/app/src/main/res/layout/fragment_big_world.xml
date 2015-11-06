@@ -1,5 +1,6 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,16 +12,26 @@
         android:background="@color/color_fragment_background"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/user_background"
-            android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            tools:src="@drawable/face"/>
+        <android.support.percent.PercentRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/user_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_aspectRatio="178%"
+                app:layout_widthPercent="100%"
+                tools:src="@drawable/face"/>
+
+        </android.support.percent.PercentRelativeLayout>
+
 
         <LinearLayout
             android:id="@+id/userInfoLayout"
             android:layout_width="fill_parent"
-            android:layout_height="98dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
             android:orientation="horizontal">
 
@@ -35,6 +46,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="14dp"
                 android:orientation="vertical">
 
@@ -89,6 +101,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:text="分享"
                 android:textSize="12sp"
                 android:textStyle="bold"/>
@@ -111,6 +124,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:text="系统设置"
                 android:textSize="12sp"
                 android:textStyle="bold"/>
@@ -121,7 +135,9 @@
             android:layout_width="273dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:background="?selectableItemBackground"
-            android:text="退出登陆"/>
+            android:layout_marginTop="24dp"
+            android:foreground="?selectableItemBackground"
+            android:text="退出登陆"
+            android:textSize="18sp"/>
     </LinearLayout>
 </FrameLayout>

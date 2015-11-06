@@ -113,8 +113,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void findViews(View view) {
-        userFaceImageView = (NetworkImageView) view.findViewById(R.id.user_face);
-        userFaceImageView.setOnClickListener(this);
+        userFaceImageView = (NetworkImageView) view.findViewById(R.id.user_face_image);
+        view.findViewById(R.id.userface).setOnClickListener(this);
         view.findViewById(R.id.userName).setOnClickListener(this);
         userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
         view.findViewById(R.id.userSex).setOnClickListener(this);
@@ -150,7 +150,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         builder.setView(layout).setNegativeButton("取消", null);
 
         switch (view.getId()) {
-            case R.id.user_face:
+            case R.id.userface:
                 requreForImage = new RequreForImage(getActivity());
                 requreForImage.showDialogAndCallIntent("选择头像",
                         StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo);

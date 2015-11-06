@@ -37,7 +37,7 @@ public class BigWorld extends BaseFragment {
 
     private TextView userName, userSign;
     private NetworkImageView userFace;
-    private ImageView userSex;
+    private ImageView userSex, userBackground;
     private View Share, Setting, userInfoLayout;
     private Button logout;
 
@@ -93,6 +93,7 @@ public class BigWorld extends BaseFragment {
         Setting = view.findViewById(R.id.setting);
         userInfoLayout = view.findViewById(R.id.userInfoLayout);
         logout = (Button) view.findViewById(R.id.log_out);
+        userBackground = (ImageView) view.findViewById(R.id.user_background);
     }
 
     @Override
@@ -103,6 +104,13 @@ public class BigWorld extends BaseFragment {
         }
         userFace.setImageUrl(userInfo.getIcon(),
                 GetVolley.getmInstance().getImageLoader());
+
+        if (userInfo.bg == null) {
+            Picasso.with(mContext).load(R.drawable.face).resize(1080, 608).into(userBackground);
+        } else {
+            Picasso.with(mContext).load(userInfo.bg).resize(1080, 608).into(userBackground);
+        }
+
         userName.setText(userInfo.getUserName());
 
         if (userInfo.getSex() == 0) {

@@ -52,6 +52,9 @@ public class FriendTime {
      * @return M月d日 HH:mm:ss （“”、昨日、前日）
      */
     public static String FriendlyDate(long timestamp) {
+        if (timestamp == 0) {
+            return "";
+        }
         Date nowDate = new Date();
         Date compareDate = new Date(timestamp);
         int dayDiff = getDiffOfTwoDays(nowDate, compareDate);

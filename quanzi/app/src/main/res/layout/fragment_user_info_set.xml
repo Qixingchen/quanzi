@@ -1,89 +1,202 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:paddingLeft="15dp"
-             tools:context="com.tizi.quanzi.ui.main.UserInfoSetFragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    tools:context="com.tizi.quanzi.ui.main.UserInfoSetFragment">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/user_face"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            tools:background="@drawable/face"/>
+        <RelativeLayout
+            android:id="@+id/userface"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
 
-        <Button
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="头像"
+                android:textSize="18sp"/>
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/user_face_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                tools:background="@drawable/face"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/md_red_500"/>
+
+        <RelativeLayout
             android:id="@+id/userName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="昵称"/>
+            android:layout_width="fill_parent"
+            android:layout_height="48dp">
 
-        <TextView
-            android:id="@+id/userNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:textSize="18sp"
-            tools:text="123"/>
+            <TextView
 
-        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="昵称"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/userNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="3dp"
+                android:textSize="18sp"
+                tools:text="123"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/md_red_500"/>
+
+        <RelativeLayout
             android:id="@+id/userSex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="性别"/>
+            android:layout_width="fill_parent"
+            android:layout_height="48dp">
 
-        <TextView
-            android:id="@+id/userSexTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:textSize="18sp"
-            tools:text="123"/>
+            <TextView
 
-        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="性别"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/userSexTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="3dp"
+                android:textSize="18sp"
+                tools:text="123"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/md_red_500"/>
+
+        <RelativeLayout
             android:id="@+id/userAge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="年龄"/>
+            android:layout_width="fill_parent"
+            android:layout_height="48dp">
 
-        <TextView
-            android:id="@+id/userAgeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:textSize="18sp"
-            tools:text="123"/>
+            <TextView
 
-        <Button
-            android:id="@+id/userLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="位置"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="年龄"
+                android:textSize="18sp"/>
 
-        <TextView
-            android:id="@+id/userLocationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:textSize="18sp"
-            tools:text="123"/>
+            <TextView
+                android:id="@+id/userAgeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="3dp"
+                android:textSize="18sp"
+                tools:text="123"/>
 
-        <Button
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/md_red_500"/>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="48dp">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="位置"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/userLocationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="3dp"
+                android:layout_marginEnd="4dp"
+                android:layout_toStartOf="@+id/userLocation"
+                android:textSize="18sp"
+                tools:text="123"/>
+
+            <Button
+                android:id="@id/userLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="获取"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/md_red_500"/>
+
+        <RelativeLayout
             android:id="@+id/userSign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="签名"/>
+            android:layout_width="fill_parent"
+            android:layout_height="48dp">
 
-        <TextView
-            android:id="@+id/userSignTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            tools:text="123"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="签名"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/userSignTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                tools:text="123"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 

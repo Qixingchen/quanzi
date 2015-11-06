@@ -142,6 +142,7 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     protected void setViewEvent() {
+        final boolean[] isRecoeding = new boolean[1];//防止多次震动
         //录音
         insertVoiceButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -153,6 +154,7 @@ public class ChatActivity extends BaseActivity {
                     slideText.setLayoutParams(params);
                     ViewProxy.setAlpha(slideText, 1);
                     startedDraggingX = -1;
+                    isRecoeding[0] = true;
                     // startRecording();
                     if (recodeAudio.start()) {
                         InputMessage.setVisibility(View.GONE);
@@ -186,7 +188,7 @@ public class ChatActivity extends BaseActivity {
 
                             @Override
                             public void countdown(int s) {
-                                recordTimeText.setText((60 - s) + "s");
+                                recordTimeText.setText(String.format("%ds  /  -%ds", 60 - s, s));
                             }
                         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 60 * 1000);
                     } else if (recodeAudio.AllPermissionGrant()) {
@@ -229,13 +231,16 @@ public class ChatActivity extends BaseActivity {
                     float x = motionEvent.getX();
                     Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                     if (x < -distCanMove) {
-                        v.vibrate(100);
+                        if (isRecoeding[0]) {
+                            v.vibrate(100);
+                        }
                         if (timer != null) {
                             timer.cancel(false);
                         }
                         recodeAudio.stopAndReturnFilePath();
                         recordPanel.setVisibility(View.GONE);
                         InputMessage.setVisibility(View.VISIBLE);
+                        isRecoeding[0] = false;
                     }
                     x = x + ViewProxy.getX(insertVoiceButton);
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) slideText

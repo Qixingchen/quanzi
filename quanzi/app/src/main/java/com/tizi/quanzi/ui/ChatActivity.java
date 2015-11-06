@@ -132,8 +132,6 @@ public class ChatActivity extends BaseActivity {
         recordPanel = findViewById(R.id.record_panel);
         recordTimeText = (TextView) findViewById(R.id.recording_time_text);
         slideText = findViewById(R.id.slideText);
-        TextView textView = (TextView) findViewById(R.id.slideToCancelTextView);
-        textView.setText("SlideToCancel");
     }
 
     @Override
@@ -225,7 +223,7 @@ public class ChatActivity extends BaseActivity {
                                         setAttrs());
                     } else if (recodeAudio.AllPermissionGrant() && Filepath != null
                             && Filepath.compareTo("less") == 0) {
-                        Toast.makeText(context, "press to recode,release to send", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "按住录音,放开发送", Toast.LENGTH_SHORT).show();
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                     float x = motionEvent.getX();

@@ -96,11 +96,12 @@ public class RecodeAudio {
      */
     @Nullable
     public String stopAndReturnFilePath() {
+        boolean flag = true;//已经被释放,说明是取消的
         try {
             recorder.stop();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            flag = false;
         }
         try {
             recorder.release();
@@ -111,6 +112,9 @@ public class RecodeAudio {
         endTime = Calendar.getInstance().getTimeInMillis();
         if (endTime - startTime < 1000) {
             return "less";
+        }
+        if (!flag) {
+            return null;
         }
         if (file != null && file.exists()) {
             return file.getAbsolutePath();

@@ -68,13 +68,13 @@
                     android:src="@drawable/ic_keyboard_arrow_left_24dp"/>
 
                 <TextView
-                    android:id="@+id/slideToCancelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="6dp"
-                    android:textColor="#999999"
-                    android:textSize="12dp"/>
+                    android:text="向此滑动来取消录音"
+                    android:textColor="#99ff0000"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -107,7 +107,7 @@
             android:id="@+id/insertVoiceButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:background="?selectableItemBackground"
             android:src="@drawable/ic_mic_36dp"/>
 

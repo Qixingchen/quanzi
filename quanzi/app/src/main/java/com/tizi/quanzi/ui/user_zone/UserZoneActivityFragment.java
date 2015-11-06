@@ -15,10 +15,13 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.StartPrivateChat;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.OtherUserInfo;
+import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.GetVolley;
@@ -76,9 +79,35 @@ public class UserZoneActivityFragment extends BaseFragment {
                 .into(userFace);
 
         boolean isFriend = false;
+        //在自己圈内查找
         List<GroupClass> AllGroup = GroupList.getInstance().getGroupList();
         for (GroupClass groupClass : AllGroup) {
             for (GroupAllInfo.MemberEntity member : groupClass.memlist) {
+                if (otherUserInfo.id.compareTo(member.id) == 0) {
+                    isFriend = true;
+                    break;
+                }
+            }
+            if (isFriend) {
+                break;
+            }
+        }
+        //在碰撞圈查找
+        List<BoomGroupClass> allBoomGroup = BoomGroupList.getInstance().getGroupList();
+        for (BoomGroupClass boom : allBoomGroup) {
+            if (isFriend) {
+                break;
+            }
+            for (BoomGroup.GroupmatchEntity.GrpmemEntity member : boom.groupMenber1) {
+                if (otherUserInfo.id.compareTo(member.id) == 0) {
+                    isFriend = true;
+                    break;
+                }
+            }
+            if (isFriend) {
+                break;
+            }
+            for (BoomGroup.GroupmatchEntity.GrpmemEntity member : boom.groupMenber2) {
                 if (otherUserInfo.id.compareTo(member.id) == 0) {
                     isFriend = true;
                     break;

@@ -50,7 +50,7 @@ public abstract class RetrofitNetworkAbs {
     protected void myOnFailure(Throwable t) {
         Log.w(TAG, t.getMessage());
         if (networkListener != null) {
-            if (t.getMessage().compareTo("") == 0) {
+            if (t.getMessage() == null || t.getMessage().compareTo("") == 0) {
                 networkListener.onError("网络错误");
             } else {
                 networkListener.onError(t.getMessage());

@@ -15,14 +15,19 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.StartPrivateChat;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.OtherUserInfo;
+import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -69,6 +74,25 @@ public class UserZoneActivityFragment extends BaseFragment {
         int px = GetThumbnailsUri.getPXs(mContext, 60);
         Picasso.with(mContext).load(otherUserInfo.icon).resize(px, px)
                 .into(userFace);
+
+        boolean isFriend = false;
+        List<GroupClass> AllGroup = GroupList.getInstance().getGroupList();
+        for (GroupClass groupClass : AllGroup) {
+            for (GroupAllInfo.MemberEntity member : groupClass.memlist) {
+                if (otherUserInfo.id.compareTo(member.id) == 0) {
+                    isFriend = true;
+                    break;
+                }
+            }
+            if (isFriend) {
+                break;
+            }
+        }
+        if (isFriend) {
+            sendMessage.setVisibility(View.VISIBLE);
+        } else {
+            sendMessage.setVisibility(View.GONE);
+        }
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

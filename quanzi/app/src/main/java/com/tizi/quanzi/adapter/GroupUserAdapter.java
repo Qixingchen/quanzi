@@ -49,11 +49,11 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
 
     private static final String TAG = GroupUserAdapter.class.getSimpleName();
     private Context mContext;
-    private List<GroupAllInfo.MemlistEntity> memlist;
+    private List<GroupAllInfo.MemberEntity> memlist;
     private boolean isCreater;
     private String groupID;
 
-    public GroupUserAdapter(Context mContext, @Nullable List<GroupAllInfo.MemlistEntity> memlist,
+    public GroupUserAdapter(Context mContext, @Nullable List<GroupAllInfo.MemberEntity> memlist,
                             boolean isCreater, String groupID) {
         this.mContext = mContext;
         this.memlist = memlist;
@@ -100,7 +100,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             });
 
         } else if (position < memlist.size()) {
-            final GroupAllInfo.MemlistEntity mem = memlist.get(position);
+            final GroupAllInfo.MemberEntity mem = memlist.get(position);
             holder.weibo_avatar_NetworkImageView.setImageUrl(mem.icon,
                     GetVolley.getmInstance().getImageLoader());
             //自己是群主并且点击的不是自己：长按删除
@@ -150,7 +150,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
     /**
      * 设置memlist
      */
-    public void setMemlist(List<GroupAllInfo.MemlistEntity> memlist) {
+    public void setMemlist(List<GroupAllInfo.MemberEntity> memlist) {
         this.memlist = memlist;
         notifyDataSetChanged();
     }

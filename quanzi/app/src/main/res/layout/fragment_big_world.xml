@@ -11,6 +11,12 @@
         android:background="@color/color_fragment_background"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/user_background"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            tools:src="@drawable/face"/>
+
         <LinearLayout
             android:id="@+id/userInfoLayout"
             android:layout_width="fill_parent"

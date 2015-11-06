@@ -10,16 +10,41 @@ import java.util.List;
  */
 public class Login extends OnlySuccess {
 
+
     /**
-     * msg : null
-     * success : true
-     * user :
+     * id : HTDM0048dfb55dde7dc34f14939467870757af1b
+     * birthday : 2002-7-17
+     * icon : http://ac-hy5srahi.clouddn.com/6Y13Qyz4z2qPrbBm23uKLgUGxLYAaV64lmIH4wNb.jpg?imageView/1/w/200/h/200/q/100/format/png
+     * sex : 0
+     * area : FujianXiamen
+     * token : HTDM004872b5afd166b449a19d6e9da5937d0743
+     * groupNum : 3
+     * bg : null
+     * userName : 星辰
+     * account : 18059237967
+     * signature : 你好
+     * mobile : 18059237967
      */
 
     @SerializedName("user")
-    private UserEntity user;
+    public UserEntity user;
+    /**
+     * id : HTDM0048f1970aba49a34c19a173979f31f3b70c
+     * groupNo :
+     * groupName : 6666
+     * notice : 你好1111
+     * type : 0
+     * convId : 5620bc3e60b296e59750d737
+     * icon : http://ac-hy5srahi.clouddn.com/M0z3DClgsluwza7SPiVU4K3lLfgxVsCs7mSUZtdx.jpg?imageView/1/w/200/h/200/q/100/format/png
+     * bg : null
+     * remark : null
+     * validation : Y
+     * createUser : HTDM0048dfb55dde7dc34f14939467870757af1b
+     * memlist : [{"id":"HTDM0048dfb55dde7dc34f14939467870757af1b","birthday":"2002-7-17","icon":"http://ac-hy5srahi.clouddn.com/6Y13Qyz4z2qPrbBm23uKLgUGxLYAaV64lmIH4wNb.jpg?imageView/1/w/200/h/200/q/100/format/png","sex":"0","area":"FujianXiamen","name":"星辰","bg":null,"signature":"你好"}]
+     */
+
     @SerializedName("group")
-    private List<GroupEntity> group;
+    public List<GroupEntity> group;
 
     public UserEntity getUser() {
         return user;
@@ -38,45 +63,30 @@ public class Login extends OnlySuccess {
     }
 
     public static class UserEntity {
-        /**
-         * id : HTDM004825b32141fe9c41f09846e85f0902f0bd
-         * birthday : null
-         * icon : http://ac-hy5srahi.clouddn.com/caLxbdJcpOapVD1UR2yoJvD.jpeg
-         * sex : 1
-         * area : null
-         * token : HTDM004887328d430d664e2d9396c88216bac375
-         * groupNum : 6
-         * bg : null
-         * userName : 232
-         * account : 1
-         * signature : null
-         * mobile : 1
-         */
-
         @SerializedName("id")
-        private String id;
+        public String id;
         @SerializedName("birthday")
-        private String birthday;
+        public String birthday;
         @SerializedName("icon")
-        private String icon;
+        public String icon;
         @SerializedName("sex")
-        private int sex;
+        public int sex;
         @SerializedName("area")
-        private String area;
+        public String area;
         @SerializedName("token")
-        private String token;
+        public String token;
         @SerializedName("groupNum")
-        private int groupNum;
+        public String groupNum;
         @SerializedName("bg")
-        private String bg;
+        public Object bg;
         @SerializedName("userName")
-        private String userName;
+        public String userName;
         @SerializedName("account")
-        private String account;
+        public String account;
         @SerializedName("signature")
-        private String signature;
+        public String signature;
         @SerializedName("mobile")
-        private String mobile;
+        public String mobile;
 
         public String getId() {
             return id;
@@ -126,19 +136,19 @@ public class Login extends OnlySuccess {
             this.token = token;
         }
 
-        public int getGroupNum() {
+        public String getGroupNum() {
             return groupNum;
         }
 
-        public void setGroupNum(int groupNum) {
+        public void setGroupNum(String groupNum) {
             this.groupNum = groupNum;
         }
 
-        public String getBg() {
+        public Object getBg() {
             return bg;
         }
 
-        public void setBg(String bg) {
+        public void setBg(Object bg) {
             this.bg = bg;
         }
 
@@ -175,130 +185,9 @@ public class Login extends OnlySuccess {
         }
     }
 
-    public static class GroupEntity {
-        /**
-         * id : HTDM0048f4c2d7967c6f4011b69aaaa7af17b4e2
-         * groupNo :
-         * groupName : 圈子
-         * notice : 圈子1
-         * type : 0
-         * convId : 55dea61a00b0afd40404a73d
-         * icon : http://ac-hy5srahi.clouddn.com/fnwlHqNa7BPXdAfs8bZAFID.jpeg
-         * bg : null
-         * remark : null
-         * validation : Y
-         * createUser : HTDM004825b32141fe9c41f09846e85f0902f0bd
-         */
+    public static class GroupEntity extends GroupAllInfo.GroupEntity {
 
-        @SerializedName("id")
-        public String id;
-        @SerializedName("groupNo")
-        public String groupNo;
-        @SerializedName("groupName")
-        public String groupName;
-        @SerializedName("notice")
-        public String notice;
-        @SerializedName("type")
-        public int type;
-        @SerializedName("convId")
-        public String convId;
-        @SerializedName("icon")
-        public String icon;
-        @SerializedName("bg")
-        public String bg;
-        @SerializedName("remark")
-        public String remark;
-        @SerializedName("validation")
-        public boolean validation;
-        @SerializedName("createUser")
-        public String createUser;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getGroupNo() {
-            return groupNo;
-        }
-
-        public void setGroupNo(String groupNo) {
-            this.groupNo = groupNo;
-        }
-
-        public String getGroupName() {
-            return groupName;
-        }
-
-        public void setGroupName(String groupName) {
-            this.groupName = groupName;
-        }
-
-        public String getNotice() {
-            return notice;
-        }
-
-        public void setNotice(String notice) {
-            this.notice = notice;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        public String getConvId() {
-            return convId;
-        }
-
-        public void setConvId(String convId) {
-            this.convId = convId;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public String getBg() {
-            return bg;
-        }
-
-        public void setBg(String bg) {
-            this.bg = bg;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
-
-        public boolean isValidation() {
-            return validation;
-        }
-
-        public void setValidation(boolean validation) {
-            this.validation = validation;
-        }
-
-        public String getCreateUser() {
-            return createUser;
-        }
-
-        public void setCreateUser(String createUser) {
-            this.createUser = createUser;
-        }
+        @SerializedName("memlist")
+        public List<GroupAllInfo.MemberEntity> memlist;
     }
 }

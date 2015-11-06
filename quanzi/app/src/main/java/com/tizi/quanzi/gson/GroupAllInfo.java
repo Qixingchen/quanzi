@@ -20,7 +20,7 @@ public class GroupAllInfo extends OnlySuccess {
     @SerializedName("group")
     public GroupEntity group;
     @SerializedName("memlist")
-    public List<MemlistEntity> memlist;
+    public List<MemberEntity> memlist;
     @SerializedName("tagList")
     public List<AllTags.TagsEntity> tagList;
 
@@ -61,7 +61,7 @@ public class GroupAllInfo extends OnlySuccess {
         @SerializedName("hold")
         public String hold;
         @SerializedName("type")
-        public String type;
+        public int type;
         @SerializedName("id")
         public String id;
         @SerializedName("groupNo")
@@ -76,9 +76,137 @@ public class GroupAllInfo extends OnlySuccess {
         public int rowStatus;
         @SerializedName("notice")
         public String notice;
+
+        public String getKeyIndexCode() {
+            return keyIndexCode;
+        }
+
+        public void setKeyIndexCode(String keyIndexCode) {
+            this.keyIndexCode = keyIndexCode;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public String getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
+        }
+
+        public String getGroupName() {
+            return groupName;
+        }
+
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
+
+        public void setRemark(String remark) {
+            this.remark = remark;
+        }
+
+        public String getValidation() {
+            return validation;
+        }
+
+        public void setValidation(String validation) {
+            this.validation = validation;
+        }
+
+        public String getConvId() {
+            return convId;
+        }
+
+        public void setConvId(String convId) {
+            this.convId = convId;
+        }
+
+        public String getHold() {
+            return hold;
+        }
+
+        public void setHold(String hold) {
+            this.hold = hold;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getGroupNo() {
+            return groupNo;
+        }
+
+        public void setGroupNo(String groupNo) {
+            this.groupNo = groupNo;
+        }
+
+        public String getCreateUser() {
+            return createUser;
+        }
+
+        public void setCreateUser(String createUser) {
+            this.createUser = createUser;
+        }
+
+        public boolean isDirty() {
+            return dirty;
+        }
+
+        public void setDirty(boolean dirty) {
+            this.dirty = dirty;
+        }
+
+        public String getBg() {
+            return bg;
+        }
+
+        public void setBg(String bg) {
+            this.bg = bg;
+        }
+
+        public int getRowStatus() {
+            return rowStatus;
+        }
+
+        public void setRowStatus(int rowStatus) {
+            this.rowStatus = rowStatus;
+        }
+
+        public String getNotice() {
+            return notice;
+        }
+
+        public void setNotice(String notice) {
+            this.notice = notice;
+        }
     }
 
-    public static class MemlistEntity {
+    public static class MemberEntity {
         /**
          * id : HTDM0048c94f8a6d0e8543a3b7c7e5f3470ae359
          * icon : http://ac-hy5srahi.clouddn.com/GoHGsMSbB9rHwSDju25hChB.jpeg

@@ -3,6 +3,7 @@ package com.tizi.quanzi.model;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.Login;
 
@@ -20,6 +21,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
     public String background;
     public boolean validation;
     public String createUser;
+    public List<GroupAllInfo.MemberEntity> memlist;
     private boolean needNotifi;
 
     public GroupClass() {
@@ -57,8 +59,9 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         groupClass.Notice = groupEntity.getNotice();
         groupClass.convId = groupEntity.getConvId();
         groupClass.background = groupEntity.getBg();
-        groupClass.validation = groupEntity.isValidation();
+        groupClass.validation = (groupEntity.validation.compareTo("Y") == 0);
         groupClass.createUser = groupEntity.getCreateUser();
+        groupClass.memlist = groupEntity.memlist;
         if (groupOld != null) {
             groupClass.lastMess = groupOld.lastMess;
             groupClass.lastMessTime = groupOld.lastMessTime;

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +26,7 @@ import com.tizi.quanzi.adapter.DynsAdapter;
 import com.tizi.quanzi.adapter.GroupUserAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
@@ -52,12 +52,11 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private Toolbar toolbar;
     private ImageView groupFaceImageView;
     private NetworkImageView zoneBackgroundImageView, userface[];
-    private TextView zoneSignTextview;
+    private TextView zoneSignTextview, zoneTagTextview;
     private CollapsingToolbarLayout collapsingtoolbar;
     private RecyclerView groupUsersRecyclerView, groupDynsRecyclerView;
     private GroupUserAdapter groupUserAdapter;
     private DynsAdapter dynsAdapter;
-    private FloatingActionButton changeGroupImageFAB;
     private GroupAllInfo groupAllInfo;
     private GroupClass groupClass;
     private boolean hasMoreToGet = true;
@@ -86,7 +85,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupUsersRecyclerView = (RecyclerView) view.findViewById(R.id.group_users_item_recycler_view);
         groupDynsRecyclerView = (RecyclerView) view.findViewById(R.id.group_dyns_item_recycler_view);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        changeGroupImageFAB = (FloatingActionButton) view.findViewById(R.id.send_dyn_fab);
+        zoneTagTextview = (TextView) view.findViewById(R.id.group_tag);
     }
 
     @Override
@@ -149,7 +148,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
         groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 6));
-        changeGroupImageFAB.setOnClickListener(new View.OnClickListener() {
+        groupFaceImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requreForImage = new RequreForImage(mActivity);
@@ -172,6 +171,13 @@ public class QuanziIntroduceFragment extends BaseFragment {
             groupUserAdapter.setIsCreater(isCreate);
             groupUserAdapter.setGroupID(groupClass.ID);
         }
+        for (GroupAllInfo.MemberEntity member : groupAllInfo.memlist) {
+            if (member.id.compareTo(AppStaticValue.getUserID()) == 0) {
+                ((QuanziZoneActivity) mActivity).showSetting();
+                groupUserAdapter.setIsMember(true);
+                break;
+            }
+        }
         showGroupInfo();
 
     }
@@ -185,7 +191,12 @@ public class QuanziIntroduceFragment extends BaseFragment {
                     .into(groupFaceImageView);
             zoneBackgroundImageView.setImageUrl(groupClass.background,
                     GetVolley.getmInstance().getImageLoader());
-            zoneSignTextview.setText("签名是：" + groupClass.Notice);
+            zoneSignTextview.setText(String.format("签名：%s", groupClass.Notice));
+            String tagsString = "";
+            for (AllTags.TagsEntity tag : groupAllInfo.tagList) {
+                tagsString += tag.tagName + ",";
+            }
+            zoneTagTextview.setText(tagsString);
             quaryMore(groupClass.ID, lastIndex);
             lastIndex += StaticField.QueryLimit.DynamicLimit;
         }
@@ -193,7 +204,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
             groupUsersRecyclerView.getLayoutParams().height = (int) (105 * GetThumbnailsUri.getDpi(mActivity)
                     * ((groupAllInfo.memlist.size() / 6) + 1));
         }
-
     }
 
     private void quaryMore(String groupID, int lastIndex) {

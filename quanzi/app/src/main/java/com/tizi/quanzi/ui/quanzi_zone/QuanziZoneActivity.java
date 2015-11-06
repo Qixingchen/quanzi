@@ -77,7 +77,8 @@ public class QuanziZoneActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_quanzi_zone, menu);
-        return true;
+        menu.findItem(R.id.action_settings).setVisible(false);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -103,6 +104,10 @@ public class QuanziZoneActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         quanziIntroduceFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void showSetting() {
+        mMenu.findItem(R.id.action_settings).setVisible(true);
     }
 
     public void callForTagFragment(ArrayList<AllTags.TagsEntity> tags) {

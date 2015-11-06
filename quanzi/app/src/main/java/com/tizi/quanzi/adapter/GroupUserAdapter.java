@@ -51,7 +51,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
     private static final String TAG = GroupUserAdapter.class.getSimpleName();
     private Context mContext;
     private List<GroupAllInfo.MemberEntity> memlist;
-    private boolean isCreater;
+    private boolean isCreater, isMember;
     private String groupID;
 
     public GroupUserAdapter(Context mContext, @Nullable List<GroupAllInfo.MemberEntity> memlist,
@@ -92,7 +92,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         holder.weibo_avatar_NetworkImageView.setOnLongClickListener(null);
         holder.weibo_avatar_NetworkImageView.setOnClickListener(null);
         if (memlist == null || position == memlist.size()) {
-            holder.weibo_avatar_NetworkImageView.setDefaultImageResId(R.drawable.face);
+            holder.weibo_avatar_NetworkImageView.setDefaultImageResId(R.drawable.ic_add_24dp);
             holder.weibo_avatar_NetworkImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -145,7 +145,8 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      */
     @Override
     public int getItemCount() {
-        return memlist == null ? 1 : memlist.size() + 1;
+        int addtion = isMember ? 1 : 0;
+        return memlist == null ? addtion : memlist.size() + addtion;
     }
 
     /**
@@ -161,6 +162,14 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      */
     public void setIsCreater(boolean isCreater) {
         this.isCreater = isCreater;
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 设置当前用户是否是成员
+     */
+    public void setIsMember(boolean isMember) {
+        this.isMember = isMember;
         notifyDataSetChanged();
     }
 

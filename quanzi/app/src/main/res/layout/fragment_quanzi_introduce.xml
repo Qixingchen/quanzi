@@ -33,13 +33,45 @@
                 app:layout_collapseMode="parallax"
                 tools:background="@drawable/face"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/gruop_face"
-                android:layout_width="@dimen/group_introduce_face_size"
-                android:layout_height="@dimen/group_introduce_face_size"
-                android:layout_gravity="center"
-                app:layout_collapseMode="parallax"
-                tools:src="@drawable/face"/>
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#5000">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/gruop_face"
+                    android:layout_width="@dimen/group_introduce_face_size"
+                    android:layout_height="@dimen/group_introduce_face_size"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    app:layout_collapseMode="parallax"
+                    tools:src="@drawable/face"/>
+
+
+                <TextView
+                    android:id="@+id/zoneSign"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_toEndOf="@id/gruop_face"
+                    android:textSize="@dimen/sub_title_text_size"
+                    tools:text="签名：1234"/>
+
+                <TextView
+                    android:id="@+id/group_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_toEndOf="@id/gruop_face"
+                    android:textSize="@dimen/sub_title_text_size"
+                    tools:text="12333"/>
+
+
+            </RelativeLayout>
+
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -67,12 +99,6 @@
             android:orientation="vertical"
             app:layout_scrollFlags="scroll">
 
-            <TextView
-                android:id="@+id/zoneSign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/normal_text_size"
-                tools:text="签名：1234"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/group_users_item_recycler_view"
@@ -91,16 +117,5 @@
 
 
     </LinearLayout>
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/send_dyn_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        android:src="@drawable/ic_camera_alt_48dp"
-        app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

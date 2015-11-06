@@ -83,7 +83,7 @@ dependencies {
     //avoscloud-statistics 为 LeanCloud 统计包
     compile 'cn.leancloud.android:avoscloud-statistics:v3.10@aar'
     //gms
-    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
     //debug
     compile 'com.facebook.stetho:stetho:1.2.0'
     //leak canary

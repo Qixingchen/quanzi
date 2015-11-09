@@ -10,7 +10,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "0.1.2-nightly"
+        versionName "0.1.3-dev"
 
         //multiDexEnabled true
     }
@@ -65,7 +65,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:23.1.0'
-    compile 'com.android.support:support-v13:23.1.0'
+    compile 'com.android.support:preference-v7:23.1.0'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.android.support:cardview-v7:23.1.0'

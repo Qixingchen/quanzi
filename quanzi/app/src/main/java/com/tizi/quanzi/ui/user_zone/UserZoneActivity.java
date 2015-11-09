@@ -32,7 +32,7 @@ public class UserZoneActivity extends BaseActivity {
         OtherUserInfo otherUserInfo = getIntent().getParcelableExtra(StaticField.IntentName.OtherUserInfo);
         UserZoneActivityFragment user = new UserZoneActivityFragment();
         user.setOtherUserInfo(otherUserInfo);
-        getFragmentManager().beginTransaction().replace(R.id.fragment, user)
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, user)
                 .commit();
     }
 

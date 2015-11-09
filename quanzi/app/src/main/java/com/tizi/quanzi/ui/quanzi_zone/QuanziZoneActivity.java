@@ -43,7 +43,7 @@ public class QuanziZoneActivity extends BaseActivity {
     @Override
     protected void initView() {
         quanziIntroduceFragment = new QuanziIntroduceFragment();
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, quanziIntroduceFragment).commit();
 
         Intent intent = getIntent();
@@ -91,7 +91,7 @@ public class QuanziZoneActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             quanziSetFragment = QuanziSetFragment.newInstance(mGroupAllInfo);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment, quanziSetFragment)
                     .addToBackStack("quanziSetFragment").commit();
             return true;
@@ -112,13 +112,13 @@ public class QuanziZoneActivity extends BaseActivity {
 
     public void callForTagFragment(ArrayList<AllTags.TagsEntity> tags) {
         groupTagFragment = GroupTagFragment.newInstance(tags, true);
-        getFragmentManager().beginTransaction().hide(quanziSetFragment)
+        getSupportFragmentManager().beginTransaction().hide(quanziSetFragment)
                 .add(R.id.fragment, groupTagFragment).addToBackStack("GroupTagFragment").commit();
     }
 
     public void OnTagsSelectOk(ArrayList<AllTags.TagsEntity> tags) {
         quanziSetFragment.setTags(tags);
-        getFragmentManager().popBackStack();
-        getFragmentManager().beginTransaction().show(quanziSetFragment).commit();
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().beginTransaction().show(quanziSetFragment).commit();
     }
 }

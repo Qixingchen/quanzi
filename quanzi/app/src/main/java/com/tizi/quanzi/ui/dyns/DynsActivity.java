@@ -35,7 +35,7 @@ public class DynsActivity extends BaseActivity {
         String dynID = getIntent().getStringExtra("dynID");
         if (dynID == null) {
             dynsActivityFragment = new DynsActivityFragment();
-            getFragmentManager().beginTransaction().add(R.id.fragment, dynsActivityFragment)
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynsActivityFragment)
                     .commit();
         } else {
             DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
@@ -45,7 +45,7 @@ public class DynsActivity extends BaseActivity {
                     if (dyns.dyns.size() == 1) {
                         DynInfoFragment dynInfoFragment = new DynInfoFragment();
                         dynInfoFragment.setDyn(dyns.dyns.get(0));
-                        getFragmentManager().beginTransaction().add(R.id.fragment, dynInfoFragment)
+                        getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynInfoFragment)
                                 .commit();
                     } else {
                         Snackbar.make(view, "找不到对应动态 数量:" + dyns.dyns.size(), Snackbar.LENGTH_LONG).show();
@@ -142,7 +142,7 @@ public class DynsActivity extends BaseActivity {
             return;
         }
         sendDynFragment = SendDynFragment.newInstance(themeString, groupID, themeID);
-        getFragmentManager().beginTransaction().replace(R.id.fragment, sendDynFragment)
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, sendDynFragment)
                 .addToBackStack("SendDynFragment").commit();
     }
 

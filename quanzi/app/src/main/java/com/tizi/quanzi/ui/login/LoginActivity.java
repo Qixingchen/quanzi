@@ -48,7 +48,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        getFragmentManager().beginTransaction().add(R.id.fragment, new LoginFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment, new LoginFragment()).commit();
 
     }
 
@@ -60,7 +60,7 @@ public class LoginActivity extends BaseActivity {
     @Subscribe
     public void ForgetPassword(OttoLoginActivity ottoLoginActivity) {
         if (ottoLoginActivity.event == OttoLoginActivity.FORGET_PASSWORD) {
-            getFragmentManager().beginTransaction().replace(R.id.fragment, new ForgetPasswordFragment())
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ForgetPasswordFragment())
                     .addToBackStack("ForgetPasswordFragment").commit();
         }
     }

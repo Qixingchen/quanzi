@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ import java.util.List;
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHolder> {
 
-    public List<ChatMessage> chatMessageList;
+    public SortedList<ChatMessage> chatMessageList;
     private Context mContext;
     private VoicePlayAsync voicePlayAsync;
 
@@ -49,7 +50,45 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
      * @see ChatMessage
      */
     public ChatMessageAdapter(List<ChatMessage> chatMessageList, Context context) {
-        this.chatMessageList = chatMessageList;
+        this.chatMessageList = new SortedList<>(ChatMessage.class, new SortedList.Callback<ChatMessage>() {
+            @Override
+            public int compare(ChatMessage o1, ChatMessage o2) {
+                return (int) (o1.create_time - o2.create_time);
+            }
+
+            @Override
+            public void onInserted(int position, int count) {
+                notifyItemRangeInserted(position, count);
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                notifyItemRangeRemoved(position, count);
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                notifyItemMoved(fromPosition, toPosition);
+            }
+
+            @Override
+            public void onChanged(int position, int count) {
+                notifyItemRangeChanged(position, count);
+            }
+
+            @Override
+            public boolean areContentsTheSame(ChatMessage oldItem, ChatMessage newItem) {
+                return oldItem.equals(newItem);
+            }
+
+            @Override
+            public boolean areItemsTheSame(ChatMessage item1, ChatMessage item2) {
+                return item1.messID.compareTo(item2.messID) == 0;
+            }
+        });
+        this.chatMessageList.beginBatchedUpdates();
+        this.chatMessageList.addAll(chatMessageList);
+        this.chatMessageList.endBatchedUpdates();
         this.mContext = context;
     }
 
@@ -136,7 +175,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                                         switch (which) {
                                             case 0:
                                                 DBAct.getInstance().deleteMessage(chatMessage.messID);
-                                                chatMessageList.remove(position);
+                                                chatMessageList.remove(chatMessage);
                                                 notifyDataSetChanged();
                                                 if (chatMessageList.size() > 0) {
                                                     ChatMessage last = chatMessageList.get(chatMessageList.size() - 1);
@@ -238,7 +277,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
             chatMessage.isread = true;
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
         }
-        holder.voiceDuration.setText(String.valueOf((int) chatMessage.voice_duration) + " s");
+        holder.voiceDuration.setText(String.format("%d s", (int) chatMessage.voice_duration));
 
         /*播放按钮*/
         holder.videoPlayButton.setOnClickListener(new View.OnClickListener() {
@@ -296,23 +335,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
      * @param chatMessage 需要新增或更新的消息
      */
     public void addOrUpdateMessage(ChatMessage chatMessage) {
-        // TODO: 15/8/13 更好的方式查找消息
-        int length = chatMessageList.size();
-        long time = chatMessage.create_time;
-        int insertPosition = length;
-        for (int i = length - 1; i >= 0; i--) {
-            ChatMessage tempchatMessage = chatMessageList.get(i);
-            if (tempchatMessage.messID.compareTo(chatMessage.messID) == 0) {
-                chatMessageList.remove(i);
-                chatMessageList.add(i, chatMessage);
-                return;
-            }
-            if (tempchatMessage.create_time > time) {
-                insertPosition = i;
-            }
-        }
-        chatMessageList.add(insertPosition, chatMessage);
-        notifyItemInserted(insertPosition);
+        chatMessageList.add(chatMessage);
     }
 
     /**

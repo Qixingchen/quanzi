@@ -46,7 +46,7 @@ public class NewGroupActivity extends BaseActivity {
     @Override
     protected void initView() {
         setSupportActionBar(toolbar);
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .add(R.id.fragment, newGroupStep1Fragment).commit();
     }
 
@@ -110,7 +110,7 @@ public class NewGroupActivity extends BaseActivity {
                                 Group group = (Group) ts;
 
                                 newGroupStep2Fragment.setGroupID(group.getGroupId());
-                                getSupportFragmentManager().beginTransaction()
+                                getFragmentManager().beginTransaction()
                                         .replace(R.id.fragment, newGroupStep2Fragment).commit();
                                 GroupClass groupClass = new GroupClass();
                                 groupClass.ID = group.getGroupId();
@@ -146,8 +146,8 @@ public class NewGroupActivity extends BaseActivity {
 
         if (id == R.id.action_tag_complete) {
             newGroupStep1Fragment.setTags(groupTagFragment.OnOK());
-            getSupportFragmentManager().popBackStack();
-            getSupportFragmentManager().beginTransaction().show(newGroupStep1Fragment).commit();
+            getFragmentManager().popBackStack();
+            getFragmentManager().beginTransaction().show(newGroupStep1Fragment).commit();
             mMenu.findItem(R.id.action_next_step).setVisible(true);
             mMenu.findItem(R.id.action_tag_complete).setVisible(false);
             mMenu.findItem(R.id.action_complete).setVisible(false);
@@ -161,7 +161,7 @@ public class NewGroupActivity extends BaseActivity {
         mMenu.findItem(R.id.action_tag_complete).setVisible(true);
         mMenu.findItem(R.id.action_complete).setVisible(false);
         groupTagFragment = GroupTagFragment.newInstance(tags, false);
-        getSupportFragmentManager().beginTransaction().hide(newGroupStep1Fragment)
+        getFragmentManager().beginTransaction().hide(newGroupStep1Fragment)
                 .add(R.id.fragment, groupTagFragment).addToBackStack("GroupTagFragment").commit();
     }
 

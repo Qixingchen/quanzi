@@ -61,7 +61,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
     protected void initView() {
         Register1stepFragment register1StepFragment = new Register1stepFragment();
         register1StepFragment.setNextStep(this);
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .add(R.id.register_fragment, register1StepFragment).commit();
     }
 
@@ -104,7 +104,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
         AppStaticValue.setUserID(phoneNumber);
         completeUesrInfo = new CompleteUesrInfo();
         completeUesrInfo.setAllDone(this);
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .replace(R.id.register_fragment, completeUesrInfo).commit();
     }
 

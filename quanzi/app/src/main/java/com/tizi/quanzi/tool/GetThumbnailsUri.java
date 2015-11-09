@@ -55,7 +55,7 @@ public class GetThumbnailsUri {
     public static String maxDPHeiAndWei(String imageSourceUri, int MaxHei, int MaxWei, Context context) {
         int hei = getPXs(context, MaxHei);
         int wei = getPXs(context, MaxWei);
-        String ans = imageSourceUri + addUri + "/2/w/" + wei;
+        String ans = imageSourceUri + addUri + "/1/w/" + wei;
 
         ans += "/h/" + hei;
 
@@ -72,7 +72,7 @@ public class GetThumbnailsUri {
      * @return 处理后的uri
      */
     public static String maxHeiAndWei(String imageSourceUri, int MaxHei, int MaxWei) {
-        String ans = imageSourceUri + addUri + "/2/w/" + MaxWei;
+        String ans = imageSourceUri + addUri + "/1/w/" + MaxWei;
 
         ans += "/h/" + MaxHei;
 

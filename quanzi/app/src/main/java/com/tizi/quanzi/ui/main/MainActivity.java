@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         setSupportActionBar(toolbar);
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .add(R.id.fragment, mainFragment).commit();
     }
 
@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity {
 
         if (id == R.id.action_notifi_message) {
             notifiMessageFragment = new NotifiMessageFragment();
-            getSupportFragmentManager().beginTransaction()
+            getFragmentManager().beginTransaction()
                     .replace(R.id.fragment, notifiMessageFragment)
                     .addToBackStack("notifiMessageFragment").commit();
         }
@@ -136,7 +136,7 @@ public class MainActivity extends BaseActivity {
 
     public void StartUserInfoSet() {
         userInfoSetFragment = new UserInfoSetFragment();
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .replace(R.id.fragment, userInfoSetFragment).addToBackStack("userInfoSetFragment").commit();
     }
 }

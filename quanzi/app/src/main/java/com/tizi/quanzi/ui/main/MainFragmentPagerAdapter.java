@@ -1,16 +1,16 @@
 package com.tizi.quanzi.ui.main;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
 /**
  * Created by qixingchen on 15/7/13.
  * 主界面 FragmentPagerAdapter
  */
-public class  MainFragmentPagerAdapter extends FragmentPagerAdapter {
+public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
     public Fragment[] fragments = new Fragment[3];
     private String tabTitles[] = new String[]{"圈子", "主题", "个人"};

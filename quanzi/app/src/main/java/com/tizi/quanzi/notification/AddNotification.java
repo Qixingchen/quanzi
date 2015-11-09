@@ -175,6 +175,9 @@ public class AddNotification {
      * @param chatMessage 需要发布通知的消息
      */
     public void AddMessage(ChatMessage chatMessage) {
+        if (!needNotifi) {
+            return;
+        }
         if (App.isAppForeground && !needInAppNotifi) {
             return;
         }
@@ -216,5 +219,8 @@ public class AddNotification {
         needZanNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needZanNotifi, true);
         needSysNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needSystemNotifi, true);
 
+        if (!needNotifi) {
+            notifiClean();
+        }
     }
 }

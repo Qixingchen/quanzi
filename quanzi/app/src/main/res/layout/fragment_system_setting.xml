@@ -40,7 +40,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="协议"
-                    android:textSize="@dimen/normal_text_size"/>
+                    android:textColor="@color/md_blue_300"
+                    android:textSize="@dimen/sub_title_text_size"/>
 
 
             </LinearLayout>

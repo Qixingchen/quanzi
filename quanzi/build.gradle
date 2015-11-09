@@ -5,6 +5,7 @@ buildscript {
         jcenter()
         maven { url "http://mvn.leancloud.cn/nexus/content/repositories/releases" }
         maven { url "https://jitpack.io" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.4.0-beta6'

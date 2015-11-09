@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         multiDexEnabled true
@@ -12,11 +12,12 @@ android {
         versionCode 1
         versionName "0.1.2-nightly"
 
-        multiDexEnabled true
+        //multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            //minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -50,7 +51,12 @@ buildscript {
     repositories {
         mavenCentral()
     }
+    dependencies {
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.2.1'
+    }
 }
+
+apply plugin: 'com.getkeepsafe.dexcount'
 
 repositories {
     mavenCentral()
@@ -67,7 +73,7 @@ dependencies {
     compile 'com.android.support:support-annotations:23.1.0'
     compile 'com.android.support:percent:23.1.0'
     //65K
-    compile 'com.android.support:multidex:1.0.1'
+    //compile 'com.android.support:multidex:1.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.google.code.gson:gson:2.4'
     //图像加载

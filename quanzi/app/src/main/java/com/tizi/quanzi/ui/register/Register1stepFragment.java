@@ -164,12 +164,16 @@ public class Register1stepFragment extends BaseFragment {
                     @Override
                     public void done(AVException e) {
                         if (e != null) {
-                            Snackbar.make(view,
-                                    e.getCode() + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                            if (isAttached) {
+                                Snackbar.make(view,
+                                        e.getCode() + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                            }
                             return;
                         }
-                        Snackbar.make(view,
-                                "验证成功", Snackbar.LENGTH_LONG).show();
+                        if (isAttached) {
+                            Snackbar.make(view,
+                                    "验证成功", Snackbar.LENGTH_LONG).show();
+                        }
                         nextStep.register1stepOK(phoneNumber, password);
                     }
                 });

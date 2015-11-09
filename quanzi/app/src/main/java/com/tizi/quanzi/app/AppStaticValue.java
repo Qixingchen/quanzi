@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.preference.PreferenceManager;
 
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
@@ -48,8 +49,7 @@ public class AppStaticValue {
         UserToken = preferences.getString(StaticField.Preferences.USERTOKEN, "");
         UserPhone = preferences.getString(StaticField.Preferences.USERPHONE, "");
 
-        notifiPreferences = application.getSharedPreferences(UserID + "Notifi",
-                App.MODE_PRIVATE);
+        notifiPreferences = PreferenceManager.getDefaultSharedPreferences(application);
 
         if (UserID.compareTo("") != 0) {
             setDataBaseHelper(UserID);

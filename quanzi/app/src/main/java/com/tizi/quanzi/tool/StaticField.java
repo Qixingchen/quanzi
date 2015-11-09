@@ -178,8 +178,12 @@ public class StaticField {
 
     /*系统设置字段*/
     public static class SystemSettingString {
-        public static final String needVibrate = "needVibrate";
-        public static final String needSound = "needSound";
-        public static final String needInAppNotifi = "needInAppNotifi";
+        public static final String needVibrate = "notifications_vibrate";
+        public static final String needSound = "notifications_sound";
+        public static final String needInAppNotifi = "notifications_in_app";
+        public static final String needNotifi = "notifications";
+        public static final String needPriMessNotifi = "notifications_pri_mess";
+        public static final String needZanNotifi = "notifications_zan";
+        public static final String needSystemNotifi = "notifications_system";
     }
 }

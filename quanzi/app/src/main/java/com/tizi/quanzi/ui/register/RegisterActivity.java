@@ -39,6 +39,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
     private String password;
     private CompleteUesrInfo completeUesrInfo;
     private Context context = this;
+    private boolean isRegistering = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
     protected void initView() {
         Register1stepFragment register1StepFragment = new Register1stepFragment();
         register1StepFragment.setNextStep(this);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.register_fragment, register1StepFragment).commit();
     }
 
@@ -104,7 +105,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
         AppStaticValue.setUserID(phoneNumber);
         completeUesrInfo = new CompleteUesrInfo();
         completeUesrInfo.setAllDone(this);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.register_fragment, completeUesrInfo).commit();
     }
 
@@ -118,6 +119,10 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
     @Override
     public void CompUserInfoOK(String userName, int sex, String faceUri) {
 
+        if (isRegistering) {
+            return;
+        }
+        isRegistering = true;
         AppStaticValue.setUserToken(AppStaticValue.getUserID());
         RetrofitNetwork.retrofit.create(RetrofitAPI.UserAccount.class).register(phoneNumber, userName,
                 GetPassword.fullHash(password), String.valueOf(sex), faceUri, "2",
@@ -125,6 +130,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
                 , Build.MODEL + "  " + Build.DEVICE).enqueue(new Callback<Login>() {
             @Override
             public void onResponse(Response<Login> response, Retrofit retrofit) {
+                isRegistering = false;
                 if (response.isSuccess() && response.body().isSuccess()) {
                     Login login = response.body();
                     LoginAndUserAccount.setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(),
@@ -140,16 +146,15 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
                 } else {
                     String mess = response.isSuccess() ? response.body().msg : response.message();
                     Log.w(TAG, mess);
-                    Snackbar.make(findViewById(R.id.register_fragment),
-                            mess, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, mess, Snackbar.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
+                isRegistering = false;
                 Log.w(TAG, t.getMessage());
-                Snackbar.make(findViewById(R.id.register_fragment),
-                        t.getMessage(), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, t.getMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
 

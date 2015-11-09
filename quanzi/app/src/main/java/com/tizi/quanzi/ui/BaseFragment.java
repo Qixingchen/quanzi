@@ -1,9 +1,9 @@
 package com.tizi.quanzi.ui;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ public abstract class BaseFragment extends Fragment {
     protected Activity mActivity;
     protected Context mContext;
     protected View view;
+    protected boolean isAttached = false;
 
     private CompositeSubscription mCompositeSubscription;
 
@@ -50,6 +51,7 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
         mContext = context;
         mActivity = getActivity();
+        isAttached = true;
         try {
             BusProvider.getInstance().register(this);
         } catch (IllegalArgumentException ignore) {
@@ -63,6 +65,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        isAttached = false;
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
         }

@@ -35,12 +35,14 @@ public class AddNotification {
     SharedPreferences systemSetting;
     //通知设置
     private boolean needVibrate, needSound, needInAppNotifi;
+    private boolean needNotifi, needPriMessNotifi, needZanNotifi, needSysNotifi;
 
     private AddNotification() {
         mContext = App.getApplication();
         chatMessageArrayList = new ArrayList<>();
         mNotificationManager = (NotificationManager) mContext.
                 getSystemService(Context.NOTIFICATION_SERVICE);
+        systemSetting = AppStaticValue.getNotifiPreferences();
     }
 
     public static AddNotification getInstance() {
@@ -201,38 +203,18 @@ public class AddNotification {
         setNotification();
     }
 
-
-    public boolean isNeedVibrate() {
-        return needVibrate;
-    }
-
-    public void setNeedVibrate(boolean needVibrate) {
-        this.needVibrate = needVibrate;
-        systemSetting.edit().putBoolean(StaticField.SystemSettingString.needVibrate, needVibrate).apply();
-    }
-
-    public boolean isNeedSound() {
-        return needSound;
-    }
-
-    public void setNeedSound(boolean needSound) {
-        this.needSound = needSound;
-        systemSetting.edit().putBoolean(StaticField.SystemSettingString.needSound, needSound).apply();
-    }
-
-    public boolean isNeedInAppNotifi() {
-        return needInAppNotifi;
-    }
-
-    public void setNeedInAppNotifi(boolean needInAppNotifi) {
-        this.needInAppNotifi = needInAppNotifi;
-        systemSetting.edit().putBoolean(StaticField.SystemSettingString.needInAppNotifi, needInAppNotifi).apply();
-    }
-
+    /**
+     * 从偏好文件加载设置
+     */
     public void setSharedPreferences() {
-        systemSetting = AppStaticValue.getNotifiPreferences();
         needVibrate = systemSetting.getBoolean(StaticField.SystemSettingString.needVibrate, true);
         needSound = systemSetting.getBoolean(StaticField.SystemSettingString.needSound, true);
         needInAppNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needInAppNotifi, true);
+
+        needNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needNotifi, true);
+        needPriMessNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needPriMessNotifi, true);
+        needZanNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needZanNotifi, true);
+        needSysNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needSystemNotifi, true);
+
     }
 }

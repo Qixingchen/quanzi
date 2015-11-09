@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="通知">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:icon="@drawable/ic_notifications_24dp"
+            android:key="notifications"
+            android:summary="开启:在收到新消息时发出系统通知"
+            android:title="新消息通知"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:dependency="notifications"
+            android:icon="@drawable/ic_volume_up_24dp"
+            android:key="notifications_sound"
+            android:summary="开启:收到通知时发出通知声"
+            android:title="声音"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:dependency="notifications"
+            android:icon="@drawable/ic_vibration_24dp"
+            android:key="notifications_vibrate"
+            android:summary="开启:收到通知时有震动"
+            android:title="震动"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:dependency="notifications"
+            android:icon="@drawable/ic_notifications_24dp"
+            android:key="notifications_in_app"
+            android:summary="开启:在应用运行时也会收到其他聊天组的新消息通知"
+            android:title="应用内通知"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:dependency="notifications"
+            android:icon="@drawable/ic_chat_24dp"
+            android:key="notifications_pri_mess"
+            android:summary="开启:收到私信时发出通知"
+            android:title="私信"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:dependency="notifications"
+            android:icon="@drawable/ic_plus_one_48dp"
+            android:key="notifications_zan"
+            android:summary="开启:收评论或赞时发出通知"
+            android:title="评论/赞"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:dependency="notifications"
+            android:icon="@drawable/ic_settings_applications_24dp"
+            android:key="notifications_system"
+            android:summary="开启:收系统消息时发出通知"
+            android:title="系统消息"/>
+    </PreferenceCategory>
+</PreferenceScreen>

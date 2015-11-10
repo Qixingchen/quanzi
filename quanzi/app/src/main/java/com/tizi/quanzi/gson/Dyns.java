@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,9 +16,21 @@ public class Dyns extends OnlySuccess {
 
 
     /**
-     * msg : null
-     * success : true
+     * icon : http://ac-hy5srahi.clouddn.com/lQ4xXWF1UO6oiXxSw9Rt4HOtv6qE9WRdL6Ok2cRS.jpg?imageView/1/w/200/h/200/q/100/format/png
+     * createTime : 20151107174409
+     * sex : 1
+     * groupName : 随变
+     * senderId : HTDM00484ef4c47c7f044c11b8956f3fe5374ceb
+     * content : 英语英语
+     * commentNum : 0
+     * createUser : HTDM0048eb9fbba903444b53b372de62b0f0c21f
+     * pics : [{"url":"http://ac-hy5srahi.clouddn.com/JT1dG4uWNK4GZTZGzS70lwkow2EzpEBLniapVmYM.gif"}]
+     * groupIcon : http://ac-hy5srahi.clouddn.com/C9suz7o2cCsQRzgUYi0SHaQg236MwgGM4aAbqmE5.jpg
+     * nickName : 不见
+     * zan : 1
+     * dynid : HTDM0048e8ec4429348441d5896a9f2d5252adde
      */
+
     @SerializedName("dyns")
     public List<DynsEntity> dyns;
 
@@ -31,37 +44,34 @@ public class Dyns extends OnlySuccess {
                 return new DynsEntity[size];
             }
         };
-        /**
-         * commentNum : 0
-         * content : jy
-         * createTime : 20150908145122
-         * icon : http://ac-hy5srahi.clouddn.com/DfoMrTPn9NMvAFtP5nPLLwA.jpeg
-         * pics : [{"url":"http://ac-hy5srahi.clouddn.com/9AEsakFeTW4fJTiHnrH5JnD.jpeg"},{"url":"http://ac-hy5srahi.clouddn.com/VX7EO9O7OHRQABsh0fOJIwD.jpeg"},{"url":"http://ac-hy5srahi.clouddn.com/xlWdQaFfyXl2BEFrvaIrMLB.jpeg"}]
-         * sex : 0
-         * createUser : HTDM0048e1347f922f5d4d6c837ab27d407c1859
-         * zan : 0
-         * nickName : 炸鸡腿
-         * dynid : HTDM0048abb3908b636e431c96589bcbc1901e61
-         */
-
-        @SerializedName("commentNum")
-        public int commentNum;
-        @SerializedName("content")
-        public String content;
-        @SerializedName("createTime")
-        public String createTime;
         @SerializedName("icon")
         public String icon;
+        @SerializedName("createTime")
+        public String createTime;
         @SerializedName("sex")
         public String sex;
+        @SerializedName("groupName")
+        public String groupName;
+        @SerializedName("senderId")
+        public String senderId;
+        @SerializedName("content")
+        public String content;
+        @SerializedName("commentNum")
+        public int commentNum;
         @SerializedName("createUser")
         public String createUser;
-        @SerializedName("zan")
-        public int zan;
+        @SerializedName("groupIcon")
+        public String groupIcon;
         @SerializedName("nickName")
         public String nickName;
+        @SerializedName("zan")
+        public int zan;
         @SerializedName("dynid")
         public String dynid;
+        /**
+         * url : http://ac-hy5srahi.clouddn.com/JT1dG4uWNK4GZTZGzS70lwkow2EzpEBLniapVmYM.gif
+         */
+
         @SerializedName("pics")
         public List<PicsEntity> pics;
 
@@ -70,16 +80,20 @@ public class Dyns extends OnlySuccess {
         }
 
         protected DynsEntity(Parcel in) {
-            this.commentNum = in.readInt();
-            this.content = in.readString();
-            this.createTime = in.readString();
             this.icon = in.readString();
+            this.createTime = in.readString();
             this.sex = in.readString();
+            this.groupName = in.readString();
+            this.senderId = in.readString();
+            this.content = in.readString();
+            this.commentNum = in.readInt();
             this.createUser = in.readString();
-            this.zan = in.readInt();
+            this.groupIcon = in.readString();
             this.nickName = in.readString();
+            this.zan = in.readInt();
             this.dynid = in.readString();
-            this.pics = in.createTypedArrayList(PicsEntity.CREATOR);
+            this.pics = new ArrayList<PicsEntity>();
+            in.readList(this.pics, List.class.getClassLoader());
         }
 
         @Override
@@ -89,53 +103,24 @@ public class Dyns extends OnlySuccess {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(this.commentNum);
-            dest.writeString(this.content);
-            dest.writeString(this.createTime);
             dest.writeString(this.icon);
+            dest.writeString(this.createTime);
             dest.writeString(this.sex);
+            dest.writeString(this.groupName);
+            dest.writeString(this.senderId);
+            dest.writeString(this.content);
+            dest.writeInt(this.commentNum);
             dest.writeString(this.createUser);
-            dest.writeInt(this.zan);
+            dest.writeString(this.groupIcon);
             dest.writeString(this.nickName);
+            dest.writeInt(this.zan);
             dest.writeString(this.dynid);
-            dest.writeTypedList(pics);
+            dest.writeList(this.pics);
         }
 
-        public static class PicsEntity implements Parcelable {
-            public static final Creator<PicsEntity> CREATOR = new Creator<PicsEntity>() {
-                public PicsEntity createFromParcel(Parcel source) {
-                    return new PicsEntity(source);
-                }
-
-                public PicsEntity[] newArray(int size) {
-                    return new PicsEntity[size];
-                }
-            };
-            /**
-             * url : http://ac-hy5srahi.clouddn.com/9AEsakFeTW4fJTiHnrH5JnD.jpeg
-             */
-
+        public static class PicsEntity {
             @SerializedName("url")
             public String url;
-
-            public PicsEntity() {
-            }
-
-            protected PicsEntity(Parcel in) {
-                this.url = in.readString();
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeString(this.url);
-            }
         }
     }
-
-
 }

@@ -2,7 +2,9 @@ package com.tizi.quanzi.ui.dyns;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,10 +28,16 @@ import com.tizi.quanzi.gson.AddZan;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.IsZan;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.network.DynamicAct;
+import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.GetThumbnailsUri;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
+import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 import com.tizi.quanzi.widget.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -53,6 +61,7 @@ public class DynInfoFragment extends BaseFragment {
 
     private Dyns.DynsEntity dyn;
     private boolean iszan;
+    private boolean showUser;
 
     public DynInfoFragment() {
         // Required empty public constructor
@@ -60,6 +69,10 @@ public class DynInfoFragment extends BaseFragment {
 
     public void setDyn(Dyns.DynsEntity dyn) {
         this.dyn = dyn;
+    }
+
+    public void setShowUser(boolean showUser) {
+        this.showUser = showUser;
     }
 
     @Override
@@ -94,11 +107,45 @@ public class DynInfoFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-        Picasso.with(mContext).load(dyn.icon)
-                .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
-                .into(weibo_avatar_ImageView);
 
-        userNameTextView.setText(dyn.nickName);
+        if (showUser) {
+            Picasso.with(mContext).load(dyn.icon)
+                    .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
+                    .into(weibo_avatar_ImageView);
+            userNameTextView.setText(dyn.nickName);
+            weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            Intent otherUser = new Intent(mContext, UserZoneActivity.class);
+                            otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
+                            mContext.startActivity(otherUser);
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+                            Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
+                        }
+                    }).findUserByID(dyn.createUser);
+                }
+            });
+        } else {
+            Picasso.with(mContext).load(dyn.groupIcon)
+                    .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
+                    .into(weibo_avatar_ImageView);
+            userNameTextView.setText(dyn.groupName);
+            weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, QuanziZoneActivity.class);
+                    intent.putExtra("groupID", dyn.senderId);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
         contentTextView.setText(dyn.content);
         dateTextView.setText(dyn.createTime);
         attitudesTextView.setText(String.valueOf(dyn.zan));
@@ -127,6 +174,9 @@ public class DynInfoFragment extends BaseFragment {
         }
         for (int i = 0; i < picsNum; i++) {
             String thumUri = dyn.pics.get(i).url;
+            thumUri = GetThumbnailsUri.maxHeiAndWei(thumUri,
+                    mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_hei),
+                    mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_hei));
             Picasso.with(mContext).load(thumUri)
                     .resizeDimen(R.dimen.weibo_pic_hei, R.dimen.weibo_pic_wei)
                     .into(weibo_pics_ImageView[i]);
@@ -206,6 +256,7 @@ public class DynInfoFragment extends BaseFragment {
      *
      * @param picsNum 图片数量
      */
+
     private void setPicVisbility(int picsNum) {
         if (picsNum == 0) {
             weibo_pics_linearLayout.setVisibility(View.GONE);

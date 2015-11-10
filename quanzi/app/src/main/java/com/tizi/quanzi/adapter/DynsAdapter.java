@@ -1,6 +1,8 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.network.FindUser;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
+import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
+import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +40,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     private Context mContext;
     private NeedMore needMore;
     private Onclick onclick;
+    private boolean showUser = false;
 
     /**
      * @param dynsList 动态List
@@ -41,6 +51,11 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     public DynsAdapter(List<Dyns.DynsEntity> dynsList, Context context) {
         this.dynsList = dynsList;
         this.mContext = context;
+    }
+
+    public void setShowUser(boolean showUser) {
+        this.showUser = showUser;
+        notifyDataSetChanged();
     }
 
     /**
@@ -71,10 +86,46 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     public void onBindViewHolder(DynsViewHolder holder, final int position) {
         final Dyns.DynsEntity dyns = dynsList.get(position);
 
-        Picasso.with(holder.view.getContext()).load(dyns.icon)
-                .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
-                .into(holder.weibo_avatar_ImageView);
-        holder.userNameTextView.setText(dyns.nickName);
+        if (showUser) {
+            Picasso.with(holder.view.getContext()).load(dyns.icon)
+                    .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
+                    .into(holder.weibo_avatar_ImageView);
+            holder.userNameTextView.setText(dyns.nickName);
+            holder.weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            Intent otherUser = new Intent(mContext, UserZoneActivity.class);
+                            otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
+                            mContext.startActivity(otherUser);
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+                            Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
+                        }
+                    }).findUserByID(dyns.createUser);
+                }
+            });
+        } else {
+            Picasso.with(holder.view.getContext()).load(dyns.groupIcon)
+                    .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
+                    .into(holder.weibo_avatar_ImageView);
+            holder.userNameTextView.setText(dyns.groupName);
+            holder.weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, QuanziZoneActivity.class);
+                    intent.putExtra("groupID", dyns.senderId);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+
+
         holder.contentTextView.setText(dyns.content);
         holder.dateTextView.setText(dyns.createTime);
         holder.attitudesTextView.setText(String.valueOf(dyns.zan));

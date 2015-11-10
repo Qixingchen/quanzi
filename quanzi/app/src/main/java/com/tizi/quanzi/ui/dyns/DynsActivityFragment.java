@@ -62,11 +62,13 @@ public class DynsActivityFragment extends BaseFragment {
         GroupID = getActivity().getIntent().getStringExtra("groupID");
 
         dynsAdapter = new DynsAdapter(dynsList, getContext());
+        dynsAdapter.setShowUser(false);
         dynsAdapter.setOnclick(new DynsAdapter.Onclick() {
             @Override
             public void click(Dyns.DynsEntity dyn) {
                 DynInfoFragment dynInfoFragment = new DynInfoFragment();
                 dynInfoFragment.setDyn(dyn);
+                dynInfoFragment.setShowUser(false);
                 getFragmentManager().beginTransaction().replace(R.id.fragment, dynInfoFragment)
                         .addToBackStack("DynInfoFragment").commit();
             }

@@ -9,7 +9,6 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.GroupAllInfo;
-import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.BaseActivity;
@@ -48,7 +47,12 @@ public class QuanziZoneActivity extends BaseActivity {
 
         Intent intent = getIntent();
         final String convID = intent.getStringExtra("conversation");
-        final String GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
+        final String GroupID;
+        if (convID == null || convID.equals("")) {
+            GroupID = intent.getStringExtra("groupID");
+        } else {
+            GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
+        }
         GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
@@ -56,8 +60,7 @@ public class QuanziZoneActivity extends BaseActivity {
                 mGroupAllInfo = groupAllInfo;
                 if (quanziIntroduceFragment != null) {
                     mGroupAllInfo.group.groupNo = GroupID;
-                    quanziIntroduceFragment.setGroupInfo(
-                            groupAllInfo, (GroupClass) GroupList.getInstance().getGroup(GroupID));
+                    quanziIntroduceFragment.setGroupInfo(groupAllInfo);
                 }
             }
 

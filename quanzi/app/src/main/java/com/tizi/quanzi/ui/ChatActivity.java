@@ -59,9 +59,6 @@ public class ChatActivity extends BaseActivity {
 
     private static final int QueryLimit = StaticField.QueryLimit.MessageLimit;
     private static final String TAG = ChatActivity.class.getSimpleName();
-    long timeInMilliseconds = 0L;
-    long timeSwapBuff = 0L;
-    long updatedTime = 0L;
     private Context context;
     private RecyclerView chatmessagerecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;

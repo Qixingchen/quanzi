@@ -25,11 +25,13 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.DynsAdapter;
 import com.tizi.quanzi.adapter.GroupUserAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.GetVolley;
@@ -58,7 +60,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private GroupUserAdapter groupUserAdapter;
     private DynsAdapter dynsAdapter;
     private GroupAllInfo groupAllInfo;
-    private GroupClass groupClass;
     private boolean hasMoreToGet = true;
     private int lastIndex = 0;
 
@@ -94,30 +95,39 @@ public class QuanziIntroduceFragment extends BaseFragment {
         ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
 
         groupDynsRecyclerView.setHasFixedSize(true);
+
+        /*用户*/
+        groupUserAdapter = new GroupUserAdapter(mActivity,
+                groupAllInfo == null ? null : groupAllInfo.memlist,
+                groupAllInfo != null && groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0,
+                groupAllInfo == null ? null : groupAllInfo.group.id);
+
+        groupUsersRecyclerView.setAdapter(groupUserAdapter);
+        groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 6));
+        groupFaceImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requreForImage = new RequreForImage(mActivity);
+                requreForImage.showDialogAndCallIntent("选择圈子照片",
+                        StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face);
+
+            }
+        });
+        groupFaceImageView.setEnabled(false);
+        /*动态*/
         dynsAdapter = new DynsAdapter(null, mActivity);
         lastIndex = 0;
         dynsAdapter.setNeedMore(new DynsAdapter.NeedMore() {
             @Override
             public void needMore() {
                 if (hasMoreToGet) {
-                    quaryMore(groupClass.ID, lastIndex);
+                    quaryMore(groupAllInfo.group.id, lastIndex);
                     lastIndex += StaticField.QueryLimit.DynamicLimit;
                 }
             }
         });
-        dynsAdapter.setOnclick(new DynsAdapter.Onclick() {
-            @Override
-            public void click(Dyns.DynsEntity dyn) {
-                DynInfoFragment dynInfoFragment = new DynInfoFragment();
-                dynInfoFragment.setDyn(dyn);
-                getFragmentManager().beginTransaction().replace(R.id.fragment, dynInfoFragment)
-                        .addToBackStack("DynInfoFragment").commit();
-            }
-        });
         groupDynsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         groupDynsRecyclerView.setAdapter(dynsAdapter);
-
-        // groupDynsRecyclerView.addOnScrollListener(new HideExtraOnScroll(mActivity.findViewById(R.id.need_scroll_out)));
         groupDynsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
@@ -141,35 +151,20 @@ public class QuanziIntroduceFragment extends BaseFragment {
             }
         });
 
-        groupUserAdapter = new GroupUserAdapter(mActivity,
-                groupAllInfo == null ? null : groupAllInfo.memlist,
-                groupClass != null && groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0,
-                groupClass == null ? null : groupClass.ID);
-
-        groupUsersRecyclerView.setAdapter(groupUserAdapter);
-        groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 6));
-        groupFaceImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requreForImage = new RequreForImage(mActivity);
-                requreForImage.showDialogAndCallIntent("选择圈子照片",
-                        StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face);
-            }
-        });
         showGroupInfo();
     }
 
     /**
      * 设置群的信息
      */
-    public void setGroupInfo(GroupAllInfo groupAllInfo, final GroupClass groupClass) {
+    public void setGroupInfo(GroupAllInfo groupAllInfo) {
         this.groupAllInfo = groupAllInfo;
-        this.groupClass = groupClass;
-        boolean isCreate = groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0;
+
+        boolean isCreate = groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0;
         if (groupUserAdapter != null) {
             groupUserAdapter.setMemlist(groupAllInfo.memlist);
             groupUserAdapter.setIsCreater(isCreate);
-            groupUserAdapter.setGroupID(groupClass.ID);
+            groupUserAdapter.setGroupID(groupAllInfo.group.id);
         }
         for (GroupAllInfo.MemberEntity member : groupAllInfo.memlist) {
             if (member.id.compareTo(AppStaticValue.getUserID()) == 0) {
@@ -179,29 +174,70 @@ public class QuanziIntroduceFragment extends BaseFragment {
             }
         }
         showGroupInfo();
-
     }
 
     private void showGroupInfo() {
-        if (groupClass != null) {
-            collapsingtoolbar.setTitle(groupClass.Name);
-            Picasso.with(mActivity).load(groupClass.Face)
+        if (groupAllInfo != null) {
+
+            /*判断是否可以显示用户*/
+            boolean showUsers = false;
+            boolean isMember = false;
+
+            if (GroupList.getInstance().getGroup(groupAllInfo.group.id) != null) {
+                showUsers = true;
+                isMember = true;
+            }
+            if (isMember) {
+                groupFaceImageView.setEnabled(true);
+            }
+            if (!showUsers) {
+                for (BoomGroupClass boomGroupClass : BoomGroupList.getInstance().getGroupList()) {
+                    if (boomGroupClass.groupId1.equals(groupAllInfo.group.id) ||
+                            boomGroupClass.groupId2.equals(groupAllInfo.group.id)) {
+                        showUsers = true;
+                        break;
+                    }
+                }
+            }
+            dynsAdapter.setShowUser(showUsers);
+            final boolean finalShowUsers = showUsers;
+            dynsAdapter.setOnclick(new DynsAdapter.Onclick() {
+                @Override
+                public void click(Dyns.DynsEntity dyn) {
+                    DynInfoFragment dynInfoFragment = new DynInfoFragment();
+                    dynInfoFragment.setDyn(dyn);
+                    dynInfoFragment.setShowUser(finalShowUsers);
+                    getFragmentManager().beginTransaction().replace(R.id.fragment, dynInfoFragment)
+                            .addToBackStack("DynInfoFragment").commit();
+                }
+            });
+
+            /*用户*/
+            if (showUsers) {
+                groupUsersRecyclerView.setVisibility(View.VISIBLE);
+            } else {
+                groupUsersRecyclerView.setVisibility(View.GONE);
+            }
+
+
+            collapsingtoolbar.setTitle(groupAllInfo.group.groupName);
+            Picasso.with(mActivity).load(groupAllInfo.group.icon)
                     .resize(GetThumbnailsUri.getPXs(mActivity, 120),
                             GetThumbnailsUri.getPXs(mActivity, 120))
                     .into(groupFaceImageView);
-            zoneBackgroundImageView.setImageUrl(groupClass.background,
+            zoneBackgroundImageView.setImageUrl(groupAllInfo.group.bg,
                     GetVolley.getmInstance().getImageLoader());
-            zoneSignTextview.setText(String.format("签名：%s", groupClass.Notice));
+            zoneSignTextview.setText(String.format("签名：%s", groupAllInfo.group.notice));
             String tagsString = "";
             for (AllTags.TagsEntity tag : groupAllInfo.tagList) {
                 tagsString += tag.tagName + ",";
             }
             zoneTagTextview.setText(tagsString);
-            quaryMore(groupClass.ID, lastIndex);
+            quaryMore(groupAllInfo.group.id, lastIndex);
             lastIndex += StaticField.QueryLimit.DynamicLimit;
         }
-        if (groupAllInfo != null) {
-            groupUsersRecyclerView.getLayoutParams().height = (int) (105 * GetThumbnailsUri.getDpi(mActivity)
+        if (groupAllInfo != null && groupUsersRecyclerView.getVisibility() == View.VISIBLE) {
+            groupUsersRecyclerView.getLayoutParams().height = (int) (70 * GetThumbnailsUri.getDpi(mActivity)
                     * ((groupAllInfo.memlist.size() / 6) + 1));
         }
     }
@@ -261,10 +297,14 @@ public class QuanziIntroduceFragment extends BaseFragment {
                                 .resizeDimen(R.dimen.group_introduce_face_size, R.dimen.group_introduce_face_size)
                                 .into(groupFaceImageView);
                         //通知后台更改
-                        GroupSetting.getNewInstance().changeIcon(groupClass.ID, photoUri);
+                        GroupSetting.getNewInstance().changeIcon(groupAllInfo.group.id, photoUri);
                         //本地群列表更改
-                        groupClass.Face = photoUri;
-                        GroupList.getInstance().updateGroup(groupClass);
+                        GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupAllInfo.group.id);
+                        if (groupClass != null) {
+                            groupClass.Face = photoUri;
+                            GroupList.getInstance().updateGroup(groupClass);
+                        }
+
                     }
                 }
             });

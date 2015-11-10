@@ -171,4 +171,25 @@ public class FriendTime {
         //并不是跨天的
         return end - now;
     }
+
+    public static int getAge(String birthday) {
+        String[] bir = birthday.split("-");
+        return getNowYear() - Integer.valueOf(bir[0]);
+    }
+
+    public static String getXingzuo(String birthday) {
+        String[] bir = birthday.split("-");
+        int m = Integer.valueOf(bir[1]);
+        int d = Integer.valueOf(bir[2]);
+        String s = "魔羯水瓶双鱼牡羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯";
+        Integer[] arr = {20, 19, 21, 21, 21, 22, 23, 23, 23, 23, 22, 22};
+        Integer num = m * 2 - (d < arr[m - 1] ? 2 : 0);
+        return s.substring(num, num + 2);
+
+    }
+
+    private static int getNowYear() {
+        String date = new SimpleDateFormat("yyyy", Locale.CHINESE).format(new Date());
+        return Integer.valueOf(date);
+    }
 }

@@ -70,7 +70,8 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
-            android:label="@string/title_activity_main"/>
+            android:label="@string/title_activity_main"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.register.RegisterActivity"
             android:label="@string/title_activity_register"

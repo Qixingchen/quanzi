@@ -10,7 +10,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "0.1.3-nightly"
+        versionName "0.1.4-dev"
 
         //multiDexEnabled true
     }
@@ -57,6 +57,8 @@ buildscript {
 }
 
 apply plugin: 'com.getkeepsafe.dexcount'
+//./gradlew assembleDebug
+// app/build/outputs/dexcount/debug.txt
 
 repositories {
     mavenCentral()

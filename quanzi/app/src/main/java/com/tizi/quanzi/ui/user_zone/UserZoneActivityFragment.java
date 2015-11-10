@@ -25,6 +25,7 @@ import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
@@ -42,7 +43,7 @@ public class UserZoneActivityFragment extends BaseFragment {
     private CoordinatorLayout mainContent;
     private CollapsingToolbarLayout collapsingToolbar;
     private NetworkImageView zoneBackground;
-    private TextView zoneSign;
+    private TextView zoneSign, userAge, userXingzuo, userLocation;
     private CircleImageView userFace;
     private Button sendMessage;
     private OtherUserInfo otherUserInfo;
@@ -61,9 +62,12 @@ public class UserZoneActivityFragment extends BaseFragment {
         mainContent = (CoordinatorLayout) view.findViewById(R.id.main_content);
         collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         zoneBackground = (NetworkImageView) view.findViewById(R.id.zoneBackground);
-        zoneSign = (TextView) view.findViewById(R.id.zoneSign);
+        zoneSign = (TextView) view.findViewById(R.id.user_sign);
         sendMessage = (Button) view.findViewById(R.id.send_message);
         userFace = (CircleImageView) view.findViewById(R.id.user_face);
+        userAge = (TextView) view.findViewById(R.id.user_age);
+        userXingzuo = (TextView) view.findViewById(R.id.user_xingzuo);
+        userLocation = (TextView) view.findViewById(R.id.user_location);
     }
 
     @Override
@@ -74,6 +78,9 @@ public class UserZoneActivityFragment extends BaseFragment {
         collapsingToolbar.setTitle(otherUserInfo.userName);
         zoneBackground.setImageUrl(otherUserInfo.bg, GetVolley.getmInstance().getImageLoader());
         zoneSign.setText(otherUserInfo.signatrue);
+        userAge.setText(String.valueOf(FriendTime.getAge(otherUserInfo.birthday)));
+        userXingzuo.setText(FriendTime.getXingzuo(otherUserInfo.birthday));
+        userLocation.setText(otherUserInfo.area);
         int px = GetThumbnailsUri.getPXs(mContext, 60);
         Picasso.with(mContext).load(otherUserInfo.icon).resize(px, px)
                 .into(userFace);

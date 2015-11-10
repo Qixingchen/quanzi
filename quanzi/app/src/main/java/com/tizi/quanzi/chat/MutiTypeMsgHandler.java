@@ -82,7 +82,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             return;
         }
 
-            /*圈子解散*/
+        /*圈子解散*/
         if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.group_delete) {
             String groupID = systemMessage.getGroup_id();
             GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupID);
@@ -107,6 +107,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         SystemMessageList.getInstance().addGroup(
                 SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
         DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+        AddNotification.getInstance().addMessage(systemMessage);
     }
 
     /**
@@ -173,7 +174,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     onMessage.OnMessageGet(chatMessage);
                 }
             } else {
-                AddNotification.getInstance().AddMessage(chatMessage);
+                AddNotification.getInstance().addMessage(chatMessage);
             }
 
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);

@@ -8,17 +8,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.provider.Settings;
+import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by qixingchen on 15/8/21.
@@ -30,7 +35,7 @@ public class AddNotification {
     private static final String TAG = "通知";
     private static Context mContext;
     private static AddNotification mInstance;
-    private static ArrayList<ChatMessage> chatMessageArrayList;
+    private static List<NotifiContact> notifiContacts;
     private static NotificationManager mNotificationManager;
     SharedPreferences systemSetting;
     //通知设置
@@ -39,7 +44,7 @@ public class AddNotification {
 
     private AddNotification() {
         mContext = App.getApplication();
-        chatMessageArrayList = new ArrayList<>();
+        notifiContacts = new ArrayList<>();
         mNotificationManager = (NotificationManager) mContext.
                 getSystemService(Context.NOTIFICATION_SERVICE);
         systemSetting = AppStaticValue.getNotifiPreferences();
@@ -61,13 +66,13 @@ public class AddNotification {
      * 清空List并取消通知
      */
     public void notifiClean() {
-        chatMessageArrayList.clear();
+        notifiContacts.clear();
         mNotificationManager.cancel(1);
     }
 
     public void chatActivityOpened(String convID) {
-        for (ChatMessage chatMessage : chatMessageArrayList) {
-            if (chatMessage.ConversationId.compareTo(convID) == 0) {
+        for (NotifiContact notifiContact : notifiContacts) {
+            if (notifiContact.convID.compareTo(convID) == 0) {
                 notifiClean();
                 break;
             }
@@ -108,8 +113,11 @@ public class AddNotification {
         /*click*/
         Intent clickIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
         clickIntent.putExtra(StaticField.NotifiName.NotifiClick, true);
-        if (chatMessageArrayList.size() == 1) {
-            clickIntent.putExtra(StaticField.NotifiName.Conversation, chatMessageArrayList.get(0).ConversationId);
+        if (notifiContacts.size() == 1) {
+            NotifiContact temp = notifiContacts.get(0);
+            if (temp.type == NotifiContact.GROUP || temp.type == NotifiContact.PRI_MESS) {
+                clickIntent.putExtra(StaticField.NotifiName.Conversation, notifiContacts.get(0).convID);
+            }
         }
         mBuilder.setContentIntent(PendingIntent.getBroadcast(
                 mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT));
@@ -128,39 +136,35 @@ public class AddNotification {
     private NotificationCompat.Builder setBuildStyle(NotificationCompat.Builder mBuilder) {
         mBuilder.setSmallIcon(R.mipmap.ic_launcher)
                 .setCategory(Notification.CATEGORY_MESSAGE)
-                .setWhen(chatMessageArrayList.get(0).create_time)
+                .setWhen(notifiContacts.get(0).createTime)
                 .setVisibility(Notification.VISIBILITY_PRIVATE)
-                .setNumber(chatMessageArrayList.size())
+                .setNumber(notifiContacts.size())
                 .setLights(Color.WHITE, 1000, 500)
                 .setAutoCancel(false)
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary));
 
-        if (needSound && chatMessageArrayList.size() == 1) {
+        if (needSound && notifiContacts.size() == 1) {
             mBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         }
-        if (needVibrate && chatMessageArrayList.size() == 1) {
+        if (needVibrate && notifiContacts.size() == 1) {
             mBuilder.setVibrate(new long[]{0, 400});
         }
 
-        if (chatMessageArrayList.size() == 1) {
-            ChatMessage chatMessage = chatMessageArrayList.get(0);
-            mBuilder.setContentTitle(chatMessage.userName)
-                    .setContentText(ChatMessage.getContentText(chatMessage));
-            if (chatMessage.type == StaticField.ChatContantType.IMAGE) {
-                NotificationCompat.BigPictureStyle pictureStyle = new NotificationCompat.BigPictureStyle();
-                // TODO: 15/10/12 BigPictureStyle
-            }
+        if (notifiContacts.size() == 1) {
+            NotifiContact notifiContact = notifiContacts.get(0);
+            mBuilder.setContentTitle(notifiContact.messFrom)
+                    .setContentText(notifiContact.contact);
         } else {
             /*多条消息*/
-            mBuilder.setContentTitle("圈子")
-                    .setContentText("收到" + chatMessageArrayList.size() + "条消息");
+            mBuilder.setContentTitle(mContext.getString(R.string.app_name))
+                    .setContentText("收到" + notifiContacts.size() + "条消息");
             /*inbox*/
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             inboxStyle.setBigContentTitle("圈子");
-            for (ChatMessage chatMessage : chatMessageArrayList) {
-                inboxStyle.addLine(ChatMessage.getContentText(chatMessage));
+            for (NotifiContact notifiContact : notifiContacts) {
+                inboxStyle.addLine(notifiContact.contact);
             }
-            inboxStyle.setSummaryText("收到" + chatMessageArrayList.size() + "条消息");
+            inboxStyle.setSummaryText("收到" + notifiContacts.size() + "条消息");
             mBuilder.setStyle(inboxStyle);
         }
 
@@ -174,7 +178,7 @@ public class AddNotification {
      *
      * @param chatMessage 需要发布通知的消息
      */
-    public void AddMessage(ChatMessage chatMessage) {
+    public void addMessage(ChatMessage chatMessage) {
         if (!needNotifi) {
             return;
         }
@@ -191,18 +195,48 @@ public class AddNotification {
                 break;
 
             case StaticField.ConvType.twoPerson:
-                if (!systemSetting.getBoolean(chatMessage.sender, true))
+                if (!systemSetting.getBoolean(chatMessage.sender, true)) {
                     return;
+                }
                 break;
+
             case StaticField.ConvType.BoomGroup:
-                if (!systemSetting.getBoolean(chatMessage.groupID, true))
+                if (!systemSetting.getBoolean(chatMessage.groupID, true)) {
                     return;
+                }
                 break;
+
             default:
                 break;
         }
+        addMessage(NotifiContact.fromMessage(chatMessage));
+    }
 
-        chatMessageArrayList.add(chatMessage);
+    public void addMessage(SystemMessage systemMessage) {
+        if (!needNotifi) {
+            return;
+        }
+        int flag = systemMessage.sys_msg_flag;
+        if (flag == StaticField.SystemMessAttrName.systemFlag.notice ||
+                flag == StaticField.SystemMessAttrName.systemFlag.invitation ||
+                flag == StaticField.SystemMessAttrName.systemFlag.kicked ||
+                flag == StaticField.SystemMessAttrName.systemFlag.group_delete) {
+            if (needSysNotifi) {
+                addMessage(NotifiContact.sysMessage(systemMessage.content, systemMessage.create_time, "系统消息"));
+            }
+            return;
+        }
+        if (needZanNotifi) {
+            addMessage(NotifiContact.sysMessage(systemMessage.reply_comment, systemMessage.create_time, systemMessage.content));
+        }
+
+    }
+
+    private void addMessage(NotifiContact notifiContact) {
+        if (notifiContact == null) {
+            return;
+        }
+        notifiContacts.add(notifiContact);
         setNotification();
     }
 
@@ -222,5 +256,86 @@ public class AddNotification {
         if (!needNotifi) {
             notifiClean();
         }
+    }
+
+    static class NotifiContact {
+
+        public static final int GROUP = 1;
+        public static final int BOOM_GROUP = 4;
+        public static final int PRI_MESS = 2;
+        public static final int SYSTEM = 3;
+        public int type;
+        public String convID;
+        public String contact;
+        public String groupID;
+        public long createTime;
+        public String messFrom;//消息来源,用于显示标题
+
+        public NotifiContact(@TYPE_DEF int type, String convID, String contact, String groupID, long createTime, String messFrom) {
+            this.type = type;
+            this.convID = convID;
+            this.contact = contact;
+            this.groupID = groupID;
+            this.createTime = createTime;
+            this.messFrom = messFrom;
+        }
+
+        public NotifiContact(int type, String contact, long createTime, String messFrom) {
+            this.type = type;
+            this.contact = contact;
+            this.createTime = createTime;
+            this.messFrom = messFrom;
+        }
+
+        public static NotifiContact groupMessage(String convID, String contact, String groupID, long createTime, String messFrom) {
+            return new NotifiContact(NotifiContact.GROUP, convID, contact, groupID, createTime, messFrom);
+        }
+
+        public static NotifiContact boomGroupMessage(String convID, String contact, String groupID, long createTime, String messFrom) {
+            return new NotifiContact(NotifiContact.BOOM_GROUP, convID, contact, groupID, createTime, messFrom);
+        }
+
+        public static NotifiContact priMessage(String convID, String contact, String userID, long createTime, String messFrom) {
+            return new NotifiContact(NotifiContact.PRI_MESS, convID, contact, userID, createTime, messFrom);
+        }
+
+        public static NotifiContact sysMessage(String contact, long createTime, String messFrom) {
+            return new NotifiContact(NotifiContact.SYSTEM, contact, createTime, messFrom);
+        }
+
+        @Nullable
+        public static NotifiContact fromMessage(ChatMessage chatMessage) {
+            String groupID;
+            switch (chatMessage.ChatBothUserType) {
+
+                case StaticField.ConvType.GROUP:
+                    groupID = GroupList.getInstance().getGroupIDByConvID(chatMessage.ConversationId);
+                    if (groupID.equals("")) {
+                        return null;
+                    }
+                    return groupMessage(chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
+                            groupID, chatMessage.create_time, chatMessage.userName);
+
+                case StaticField.ConvType.twoPerson:
+                    return priMessage(chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
+                            chatMessage.sender, chatMessage.create_time, chatMessage.userName);
+
+                case StaticField.ConvType.BoomGroup:
+                    groupID = BoomGroupList.getInstance().getGroupIDByConvID(chatMessage.ConversationId);
+                    if (groupID.equals("")) {
+                        return null;
+                    }
+                    return groupMessage(chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
+                            groupID, chatMessage.create_time, chatMessage.userName);
+
+                default:
+                    return null;
+            }
+        }
+
+        @IntDef({GROUP, PRI_MESS, SYSTEM, BOOM_GROUP})
+        public @interface TYPE_DEF {
+        }
+
     }
 }

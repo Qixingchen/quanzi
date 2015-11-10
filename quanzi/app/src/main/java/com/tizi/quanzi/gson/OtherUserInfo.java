@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 public class OtherUserInfo extends OnlySuccess implements Parcelable {
 
 
-    public static final Parcelable.Creator<OtherUserInfo> CREATOR = new Parcelable.Creator<OtherUserInfo>() {
+    public static final Creator<OtherUserInfo> CREATOR = new Creator<OtherUserInfo>() {
         public OtherUserInfo createFromParcel(Parcel source) {
             return new OtherUserInfo(source);
         }
@@ -21,20 +21,22 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
         }
     };
     /**
-     * id : HTDM004825b32141fe9c41f09846e85f0902f0bd
-     * icon : http://ac-hy5srahi.clouddn.com/caLxbdJcpOapVD1UR2yoJvD.jpeg
+     * id : HTDM00486dd5ad1afaa044658d118889c2bdc202
+     * icon : http://ac-hy5srahi.clouddn.com/MnZUnRS6mu6YrowIBdikNpfZq3DKgpdTrdROzwGa.jpg?imageView/1/w/200/h/200/q/100/format/png
+     * birthday : 2010-12-3
      * sex : 1
-     * area : null
-     * signatrue : null
+     * area : FujianXiamen
+     * signatrue : 2333
      * bg : null
-     * userName : 232
-     * success : true
+     * userName : 星辰
      */
 
     @SerializedName("id")
     public String id;
     @SerializedName("icon")
     public String icon;
+    @SerializedName("birthday")
+    public String birthday;
     @SerializedName("sex")
     public String sex;
     @SerializedName("area")
@@ -52,6 +54,7 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
     protected OtherUserInfo(Parcel in) {
         this.id = in.readString();
         this.icon = in.readString();
+        this.birthday = in.readString();
         this.sex = in.readString();
         this.area = in.readString();
         this.signatrue = in.readString();
@@ -68,6 +71,7 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
         dest.writeString(this.icon);
+        dest.writeString(this.birthday);
         dest.writeString(this.sex);
         dest.writeString(this.area);
         dest.writeString(this.signatrue);

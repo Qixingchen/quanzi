@@ -58,6 +58,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="30dp"
                     android:layout_toEndOf="@id/gruop_face"
+                    android:textColor="@color/md_white"
                     android:textSize="@dimen/sub_title_text_size"
                     tools:text="签名：1234"/>
 
@@ -68,6 +69,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="60dp"
                     android:layout_toEndOf="@id/gruop_face"
+                    android:textColor="@color/md_white"
                     android:textSize="@dimen/sub_title_text_size"
                     tools:text="12333"/>
 

@@ -213,7 +213,6 @@ public class DBAct {
         chatMessageCursor.moveToFirst();
         if (chatMessageCursor.getCount() == 1) {
             ChatMessage chatMessage = chatMessageFromCursor(chatMessageCursor);
-            Log.w(TAG, "最旧的消息是：" + chatMessage.toString());
             chatMessageCursor.close();
             return chatMessage;
         }

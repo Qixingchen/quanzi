@@ -3,11 +3,11 @@
     <color name="window_background">#FFF5F5F5</color>
 
     <color name="colorPrimary">#162230</color>
-    <color name="colorPrimaryDark">@color/md_blue_grey_900</color>
+    <color name="colorPrimaryDark">#463859</color>
     <color name="colorAccent">@color/md_green_500</color>
     <color name="textColorPrimary">#000000</color>
-    <color name="color_fragment_background">@color/colorPrimary</color>
-    <color name="color_fragment_background_dark">@color/colorPrimaryDark</color>
+    <color name="color_fragment_background">@color/md_grey_200</color>
+    <color name="color_fragment_background_dark">@color/md_grey_500</color>
 
     <!-- red -->
     <color name="md_red_50">#fde0dc</color>
@@ -303,4 +303,5 @@
     <color name="md_blue_grey_700">#455a64</color>
     <color name="md_blue_grey_800">#37474f</color>
     <color name="md_blue_grey_900">#263238</color>
+    <color name="primary_text_default_material_light">#de000000</color>
 </resources>

@@ -19,4 +19,6 @@
 
     <dimen name="dyn_user_icon">50dp</dimen>
     <dimen name="dyn_image">56dp</dimen>
+    <dimen name="text_size">16sp</dimen>
+    <item name="disable_text_alphe" format="float" type="dimen">0.6</item>
 </resources>

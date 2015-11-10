@@ -48,6 +48,10 @@ public interface RetrofitAPI {
         Call<HotDyns> getHotDyns(
                 @Query("actid") String themeID);
 
+        @POST("grpdyn/getTop")
+        Call<HotDyns> getTopDyns(
+                @Query("actid") String themeID);
+
         @POST("act/mysign")
         Call<GroupIDs> querySignedGroup(
                 @Query("actid") String ThemeID);
@@ -84,6 +88,11 @@ public interface RetrofitAPI {
 
         @POST("group/findTagF")
         Call<AllTags> queryAllAvailableTag();
+
+        @POST("group/findTagF")
+        Call<AllTags> queryAllAvailableUserTag(
+                @Query("type") String type //user:1 group:0/null
+        );
 
         @POST("group/updateFieldF")
         Call<OnlySuccess> changeGroupInfo(

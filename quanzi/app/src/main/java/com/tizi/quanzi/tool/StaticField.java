@@ -139,8 +139,7 @@ public class StaticField {
 
     /*数量限制*/
     public static class QueryLimit {
-        //        public static final int MessageLimit = 1000;
-        public static final int MessageLimit = 10;
+        public static final int MessageLimit = 1000;
         public static final int FlushMaxTimes = 10;
         public static final int DynamicLimit = 50;
         public static final int ContactLimit = 100;

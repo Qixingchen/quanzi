@@ -11,6 +11,7 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
+import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,29 @@ public class DBAct {
                 null,//groupBy
                 null,//having
                 DataBaseHelper.chatHistorySQLName.send_time //+ " DESC"//orderBy
+        );
+
+        List<ChatMessage> chatMessages = new ArrayList<>();
+        chatMessageCursor.moveToFirst();
+        while (!chatMessageCursor.isAfterLast()) {
+            chatMessages.add(chatMessageFromCursor(chatMessageCursor));
+            chatMessageCursor.moveToNext();
+        }
+        chatMessageCursor.close();
+        return chatMessages;
+
+    }
+
+    @NonNull
+    public List<ChatMessage> queryMessage(String ConversationId, int start) {
+        Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
+                new String[]{ConversationId},//条件的参数
+                null,//groupBy
+                null,//having
+                DataBaseHelper.chatHistorySQLName.send_time + " DESC",//orderBy
+                String.format("%d,%d", start, StaticField.QueryLimit.MessageLimit)
         );
 
         List<ChatMessage> chatMessages = new ArrayList<>();

@@ -309,6 +309,12 @@ public class ChatActivity extends BaseActivity {
         ChatSwipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
+                List<ChatMessage> chatMessageList =
+                        DBAct.getInstance().queryMessage(CONVERSATION_ID, chatMessageAdapter.getItemCount());
+
+                chatMessageAdapter.addOrUpdateMessages(chatMessageList);
+
                 ChatSwipeToRefresh.setRefreshing(false);
                 // TODO: 15/9/18 fresh from database
             }
@@ -402,7 +408,7 @@ public class ChatActivity extends BaseActivity {
         ChatType = getIntent().getIntExtra("chatType", 9);
         //adapt
         List<ChatMessage> chatMessageList =
-                DBAct.getInstance().queryMessage(CONVERSATION_ID);
+                DBAct.getInstance().queryMessage(CONVERSATION_ID, 0);
         chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);
         chatmessagerecyclerView.setAdapter(chatMessageAdapter);
         if (LastPosition != -1) {

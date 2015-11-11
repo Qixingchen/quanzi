@@ -3,6 +3,7 @@ package com.tizi.quanzi.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -22,10 +23,10 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,44 @@ import java.util.List;
  */
 public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.CommentViewHolder> {
 
-    private List<Comments.CommentsEntity> commentses;
+    private SortedList<Comments.CommentsEntity> commentses = new SortedList<Comments.CommentsEntity>(Comments.CommentsEntity.class, new SortedList.Callback<Comments.CommentsEntity>() {
+        @Override
+        public int compare(Comments.CommentsEntity o1, Comments.CommentsEntity o2) {
+            return (int) (FriendTime.getTimeFromServerString(o1.createTime) -
+                    FriendTime.getTimeFromServerString(o2.createTime));
+        }
+
+        @Override
+        public void onInserted(int position, int count) {
+            notifyItemRangeInserted(position, count);
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+            notifyItemRangeRemoved(position, count);
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+            notifyItemMoved(fromPosition, toPosition);
+        }
+
+        @Override
+        public void onChanged(int position, int count) {
+            notifyItemRangeChanged(position, count);
+        }
+
+        @Override
+        public boolean areContentsTheSame(Comments.CommentsEntity oldItem, Comments.CommentsEntity newItem) {
+            return oldItem.content.equals(newItem.content);
+        }
+
+        @Override
+        public boolean areItemsTheSame(Comments.CommentsEntity item1, Comments.CommentsEntity item2) {
+            return item1.id.equals(item2.id);
+        }
+    });
+    ;
     private Activity activity;
     private onCommentClick onCommentClick;
 
@@ -46,17 +84,14 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
         return this;
     }
 
-    public void addComment(Comments.CommentsEntity commentsEntity, int postion) {
-        if (commentses == null) {
-            commentses = new ArrayList<>();
-        }
-        commentses.add(postion, commentsEntity);
-        notifyItemInserted(postion);
+    public void addComment(Comments.CommentsEntity commentsEntity) {
+        commentses.add(commentsEntity);
     }
 
     public void setCommentses(List<Comments.CommentsEntity> commentses) {
-        this.commentses = commentses;
-        notifyDataSetChanged();
+        this.commentses.beginBatchedUpdates();
+        this.commentses.addAll(commentses);
+        this.commentses.endBatchedUpdates();
     }
 
     @Override
@@ -100,7 +135,7 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
             holder.comment.setText(comment.content);
         }
         holder.userName.setText(comment.createUserName);
-        holder.createTime.setText(comment.createTime);
+        holder.createTime.setText(FriendTime.FriendlyDate(FriendTime.getTimeFromServerString(comment.createTime)));
         holder.addComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

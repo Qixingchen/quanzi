@@ -1,7 +1,7 @@
 package com.tizi.quanzi.tool;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -20,8 +20,29 @@ public class FriendTime {
      */
     public static String timeStringFromUNIX(long timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
-        String date = sdf.format(new Date(timestamp));
-        return date;
+        return sdf.format(new Date(timestamp));
+    }
+
+    /**
+     * 从服务器时间 ( yyyyMMddHHmmss ) 转化为 UNIX time
+     *
+     * @param time 服务器时间 ( yyyyMMddHHmmss )
+     *
+     * @return UNIX time or 0 if format not match
+     */
+    public static long getTimeFromServerString(String time) {
+        SimpleDateFormat fromServer = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINESE);
+        try {
+            return fromServer.parse(time).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static String getServerTime() {
+        SimpleDateFormat fromServer = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINESE);
+        return fromServer.format(new Date());
     }
 
     /**
@@ -34,13 +55,11 @@ public class FriendTime {
      * @return 天数差异
      */
     private static int getDiffOfTwoDays(Date originalDate, Date compareDateDate) {
-        Calendar aCalendar = Calendar.getInstance();
-        aCalendar.setTime(originalDate);
-        int originalDay = aCalendar.get(Calendar.DAY_OF_YEAR);
-        aCalendar.setTime(compareDateDate);
-        int compareDay = aCalendar.get(Calendar.DAY_OF_YEAR);
+        int sForDay = 24 * 3600 * 1000;
+        int day1 = (int) (originalDate.getTime() / sForDay);
+        int day2 = (int) (compareDateDate.getTime() / sForDay);
 
-        return originalDay - compareDay;
+        return day1 - day2;
     }
 
 
@@ -172,11 +191,17 @@ public class FriendTime {
         return end - now;
     }
 
+    /**
+     * 获取用户年龄
+     */
     public static int getAge(String birthday) {
         String[] bir = birthday.split("-");
         return getNowYear() - Integer.valueOf(bir[0]);
     }
 
+    /**
+     * 获取用户星座
+     */
     public static String getXingzuo(String birthday) {
         String[] bir = birthday.split("-");
         int m = Integer.valueOf(bir[1]);
@@ -188,6 +213,9 @@ public class FriendTime {
 
     }
 
+    /**
+     * 获取当前年份
+     */
     private static int getNowYear() {
         String date = new SimpleDateFormat("yyyy", Locale.CHINESE).format(new Date());
         return Integer.valueOf(date);

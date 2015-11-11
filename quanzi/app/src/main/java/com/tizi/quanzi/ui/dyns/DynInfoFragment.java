@@ -32,6 +32,7 @@ import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
@@ -41,7 +42,6 @@ import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 import com.tizi.quanzi.widget.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * 动态详情界面
@@ -147,7 +147,7 @@ public class DynInfoFragment extends BaseFragment {
             });
         }
         contentTextView.setText(dyn.content);
-        dateTextView.setText(dyn.createTime);
+        dateTextView.setText(FriendTime.FriendlyDate(FriendTime.getTimeFromServerString(dyn.createTime)));
         attitudesTextView.setText(String.valueOf(dyn.zan));
         commentsTextView.setText(String.valueOf(dyn.commentNum));
         DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
@@ -336,7 +336,7 @@ public class DynInfoFragment extends BaseFragment {
                                 Comments.CommentsEntity newComment = new Comments.CommentsEntity();
                                 newComment.id = addComment.cid;
                                 newComment.content = commentString;
-                                newComment.createTime = String.valueOf(Calendar.getInstance().getTimeInMillis());
+                                newComment.createTime = FriendTime.getServerTime();
                                 newComment.createUser = AppStaticValue.getUserID();
                                 newComment.createUserName = MyUserInfo.getInstance().getUserInfo().getUserName();
                                 newComment.dynamicId = dyn.dynid;
@@ -347,7 +347,7 @@ public class DynInfoFragment extends BaseFragment {
                                     newComment.atUserId = comment.createUser;
                                     newComment.replyId = comment.id;
                                 }
-                                dynCommentAdapter.addComment(newComment, 0);
+                                dynCommentAdapter.addComment(newComment);
                                 dyn.commentNum++;
                                 commentsTextView.setText(String.valueOf(dyn.commentNum));
                             }

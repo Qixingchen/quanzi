@@ -20,6 +20,7 @@ import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
@@ -127,7 +128,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
 
 
         holder.contentTextView.setText(dyns.content);
-        holder.dateTextView.setText(dyns.createTime);
+        holder.dateTextView.setText(FriendTime.FriendlyDate(FriendTime.getTimeFromServerString(dyns.createTime)));
         holder.attitudesTextView.setText(String.valueOf(dyns.zan));
         holder.commentsTextView.setText(String.valueOf(dyns.commentNum));
         int picsNum = dyns.pics.size();

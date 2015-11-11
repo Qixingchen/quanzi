@@ -24,6 +24,7 @@ public abstract class BaseFragment extends Fragment {
     protected final String TAG = this.getClass().getSimpleName();
     protected Activity mActivity;
     protected Context mContext;
+    protected Fragment mFragment;
     protected View view;
     protected boolean isAttached = false;
 
@@ -51,6 +52,7 @@ public abstract class BaseFragment extends Fragment {
         super.onAttach(context);
         mContext = context;
         mActivity = getActivity();
+        mFragment = this;
         isAttached = true;
         try {
             BusProvider.getInstance().register(this);

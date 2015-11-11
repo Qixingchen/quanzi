@@ -31,6 +31,7 @@ public class DynsActivityFragment extends BaseFragment {
 
     private String themeID, GroupID;
     private boolean isAllLoaded = false;
+    private int page = 0;
 
 
     public DynsActivityFragment() {
@@ -72,7 +73,7 @@ public class DynsActivityFragment extends BaseFragment {
                 DynInfoFragment dynInfoFragment = new DynInfoFragment();
                 dynInfoFragment.setDyn(dyn);
                 dynInfoFragment.setShowUser(false);
-                getFragmentManager().beginTransaction().replace(R.id.fragment, dynInfoFragment)
+                getFragmentManager().beginTransaction().hide(mFragment).add(R.id.fragment, dynInfoFragment)
                         .addToBackStack("DynInfoFragment").commit();
             }
         });
@@ -93,9 +94,9 @@ public class DynsActivityFragment extends BaseFragment {
         });
     }
 
-    private void quaryMore(final String thmemID, final String groupID, final int nowCount) {
+    private void quaryMore(final String thmemID, final String groupID, final int nowPageCount) {
         swipeRefreshLayout.setRefreshing(true);
-        Log.i(TAG, "查询群动态 Index=" + nowCount);
+        Log.i(TAG, "查询群动态 PageIndex=" + nowPageCount);
 
         RetrofitNetworkAbs.NetworkListener listener = new RetrofitNetworkAbs.NetworkListener() {
             @Override
@@ -108,11 +109,14 @@ public class DynsActivityFragment extends BaseFragment {
                     isAllLoaded = false;
                 }
                 dynsAdapter.addItems(dyns.dyns);
-                if (!isAllLoaded && nowCount != 0 && dynsAdapter.getItemCount() - oldCount < StaticField.QueryLimit.DynamicLimit) {
-                    quaryMore(thmemID, groupID, oldCount + StaticField.QueryLimit.DynamicLimit);
+                if (!isAllLoaded && nowPageCount != 0 && dynsAdapter.getItemCount() - oldCount < StaticField.QueryLimit.DynamicLimit) {
+                    quaryMore(thmemID, groupID);
                 }
-                if (nowCount == 0) {
+                if (nowPageCount == 0) {
                     recyclerView.scrollToPosition(0);
+                }
+                if (nowPageCount < page - 2 && dynsAdapter.getItemCount() - oldCount < StaticField.QueryLimit.DynamicLimit) {
+                    quaryMore(thmemID, groupID, nowPageCount + 1);
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -123,17 +127,22 @@ public class DynsActivityFragment extends BaseFragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         };
-
+        int count = nowPageCount * StaticField.QueryLimit.DynamicLimit;
         if (groupID == null) {
-            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, nowCount);
+            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, count);
         } else {
-            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, nowCount);
+            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, count);
         }
 
     }
 
+    /**
+     * 查询动态 按照上次的page数查询
+     * 查询后,page会+1
+     */
     private void quaryMore(final String thmemID, final String groupID) {
-        quaryMore(thmemID, groupID, dynsAdapter.getItemCount());
+        quaryMore(thmemID, groupID, page);
+        page++;
     }
 
 }

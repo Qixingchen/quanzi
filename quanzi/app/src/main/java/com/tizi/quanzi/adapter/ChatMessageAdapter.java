@@ -86,9 +86,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                 return item1.messID.compareTo(item2.messID) == 0;
             }
         });
-        this.chatMessageList.beginBatchedUpdates();
-        this.chatMessageList.addAll(chatMessageList);
-        this.chatMessageList.endBatchedUpdates();
+        if (chatMessageList != null) {
+            this.chatMessageList.beginBatchedUpdates();
+            this.chatMessageList.addAll(chatMessageList);
+            this.chatMessageList.endBatchedUpdates();
+        }
         this.mContext = context;
     }
 
@@ -336,6 +338,21 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
      */
     public void addOrUpdateMessage(ChatMessage chatMessage) {
         chatMessageList.add(chatMessage);
+    }
+
+    /**
+     * 新增或更新一堆消息
+     * 将按照 create_time 插入正确的位置
+     *
+     * @param chatMessages 需要新增或更新的一堆消息
+     */
+    public void addOrUpdateMessages(List<ChatMessage> chatMessages) {
+        if (chatMessages == null) {
+            return;
+        }
+        chatMessageList.beginBatchedUpdates();
+        chatMessageList.addAll(chatMessages);
+        chatMessageList.endBatchedUpdates();
     }
 
     /**

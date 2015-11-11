@@ -51,9 +51,9 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public int getItemViewType(int position) {
         if (users == null) {
             if (position == 0) {
-                return SHARE_VIEW;
-            } else {
                 return MANU_ADD;
+            } else {
+                return SHARE_VIEW;
             }
         }
 

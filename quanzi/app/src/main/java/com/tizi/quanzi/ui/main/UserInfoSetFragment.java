@@ -229,7 +229,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                 Log.i(TAG, "定位中");
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
-
+                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, mLocationListener, null);
+                locationManager.requestSingleUpdate(LocationManager.PASSIVE_PROVIDER, mLocationListener, null);
                 break;
             case R.id.userSign:
                 input.setHint("输入签名");
@@ -280,6 +281,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                 Log.i(TAG, "定位中");
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
+                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, mLocationListener, null);
+                locationManager.requestSingleUpdate(LocationManager.PASSIVE_PROVIDER, mLocationListener, null);
                 break;
             default:
                 Log.e(TAG, "unKnow permission code" + permissionAnser.requestCode);

@@ -222,6 +222,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             }
         };
 
+        /*没有通讯录权限,显示分享和查找*/
         if (dontHavePermissionButIgnore) {
             InviteListAdapter inviteListAdapter = new InviteListAdapter(null, null, activity, onAddUser);
             phoneList.setAdapter(inviteListAdapter);
@@ -229,26 +230,28 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             return;
         }
 
+        List<String> nowUsers = new ArrayList<>();
+        for (GroupAllInfo.MemberEntity member : memlist) {
+            nowUsers.add(member.id);
+        }
+
+        final InviteListAdapter inviteListAdapter = new InviteListAdapter(null, nowUsers, activity, onAddUser);
+        phoneList.setAdapter(inviteListAdapter);
+        AlertDialog alertDialog;
+        alertDialog = builder.setView(layout).create();
+        alertDialog.show();
+        alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
         FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 ContantUsers users = (ContantUsers) ts;
                 if (users.mobiles.size() == 0) {
                     Toast.makeText(mContext, "没有好友", Toast.LENGTH_LONG).show();
+                    return;
                 }
-
-                List<String> nowUsers = new ArrayList<>();
-                for (GroupAllInfo.MemberEntity member : memlist) {
-                    nowUsers.add(member.id);
-                }
-
-                InviteListAdapter inviteListAdapter = new InviteListAdapter(users.mobiles, nowUsers, activity, onAddUser);
-                phoneList.setAdapter(inviteListAdapter);
-                AlertDialog alertDialog;
-                alertDialog = builder.setView(layout).create();
-                alertDialog.show();
-                alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-                alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                inviteListAdapter.addUser(users.mobiles);
             }
 
             @Override

@@ -63,7 +63,7 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
 
         @Override
         public boolean areContentsTheSame(Comments.CommentsEntity oldItem, Comments.CommentsEntity newItem) {
-            return oldItem.content.equals(newItem.content);
+            return oldItem.content != null && oldItem.content.equals(newItem.content);
         }
 
         @Override
@@ -85,10 +85,16 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     }
 
     public void addComment(Comments.CommentsEntity commentsEntity) {
+        if (commentsEntity == null) {
+            return;
+        }
         commentses.add(commentsEntity);
     }
 
     public void setCommentses(List<Comments.CommentsEntity> commentses) {
+        if (commentses == null) {
+            return;
+        }
         this.commentses.beginBatchedUpdates();
         this.commentses.addAll(commentses);
         this.commentses.endBatchedUpdates();

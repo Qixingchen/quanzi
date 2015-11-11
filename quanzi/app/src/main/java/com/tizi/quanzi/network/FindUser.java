@@ -74,7 +74,7 @@ public class FindUser extends RetrofitNetworkAbs {
         //分批次
         for (int i = 0; i < times; i++) {
             mobileString[i] = new Gson().toJson(mobilesList.subList(i * contactLimit,
-                    Math.min((i + 1) * contactLimit - 1, mobilesList.size())));
+                    Math.min((i + 1) * contactLimit, mobilesList.size())));
             Log.i(TAG, mobileString[i] + "\n \n");
             findUserService.findContactUser(Tool.getUTF_8String(mobileString[i]))
                     .enqueue(new Callback<ContantUsers>() {

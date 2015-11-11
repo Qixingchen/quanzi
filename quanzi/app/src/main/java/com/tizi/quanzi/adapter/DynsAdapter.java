@@ -3,6 +3,7 @@ package com.tizi.quanzi.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,44 @@ import java.util.List;
 public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder> {
 
     private static final String TAG = DynsAdapter.class.getSimpleName();
-    private List<Dyns.DynsEntity> dynsList;
+    private SortedList<Dyns.DynsEntity> dynsList = new SortedList<Dyns.DynsEntity>(Dyns.DynsEntity.class,
+            new SortedList.Callback<Dyns.DynsEntity>() {
+                @Override
+                public int compare(Dyns.DynsEntity o1, Dyns.DynsEntity o2) {
+                    return (int) -(FriendTime.getTimeFromServerString(o1.createTime) -
+                            FriendTime.getTimeFromServerString(o2.createTime));
+                }
+
+                @Override
+                public void onInserted(int position, int count) {
+                    notifyItemRangeInserted(position, count);
+                }
+
+                @Override
+                public void onRemoved(int position, int count) {
+                    notifyItemRangeRemoved(position, count);
+                }
+
+                @Override
+                public void onMoved(int fromPosition, int toPosition) {
+                    notifyItemMoved(fromPosition, toPosition);
+                }
+
+                @Override
+                public void onChanged(int position, int count) {
+                    notifyItemRangeChanged(position, count);
+                }
+
+                @Override
+                public boolean areContentsTheSame(Dyns.DynsEntity oldItem, Dyns.DynsEntity newItem) {
+                    return oldItem.content != null && oldItem.content.equals(newItem.content);
+                }
+
+                @Override
+                public boolean areItemsTheSame(Dyns.DynsEntity item1, Dyns.DynsEntity item2) {
+                    return item1.dynid.equals(item2.dynid);
+                }
+            });
     private Context mContext;
     private NeedMore needMore;
     private Onclick onclick;
@@ -50,7 +88,11 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
      * @see com.tizi.quanzi.gson.Dyns.DynsEntity
      */
     public DynsAdapter(List<Dyns.DynsEntity> dynsList, Context context) {
-        this.dynsList = dynsList;
+        if (dynsList != null) {
+            this.dynsList.beginBatchedUpdates();
+            this.dynsList.addAll(dynsList);
+            this.dynsList.endBatchedUpdates();
+        }
         this.mContext = context;
     }
 
@@ -205,13 +247,9 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
      * @param dynsEntities 需要添加的内容List
      */
     public void addItems(List<Dyns.DynsEntity> dynsEntities) {
-        if (dynsList == null) {
-            dynsList = new ArrayList<>();
-        }
-        for (Dyns.DynsEntity dynsEntity : dynsEntities) {
-            dynsList.add(dynsEntity);
-        }
-        notifyDataSetChanged();
+        this.dynsList.beginBatchedUpdates();
+        this.dynsList.addAll(dynsEntities);
+        this.dynsList.endBatchedUpdates();
     }
 
     public void setNeedMore(NeedMore needMore) {

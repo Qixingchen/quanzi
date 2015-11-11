@@ -2,6 +2,7 @@ package com.tizi.quanzi.ui.dyns;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ public class DynsActivityFragment extends BaseFragment {
 
     private DynsAdapter dynsAdapter;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private String themeID, GroupID;
     private boolean isAllLoaded = false;
@@ -43,6 +45,7 @@ public class DynsActivityFragment extends BaseFragment {
     @Override
     protected void findViews(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.dyns_item_recycler_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.SwipeToRefresh);
         view.findViewById(R.id.send_dyn_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,44 +80,60 @@ public class DynsActivityFragment extends BaseFragment {
             @Override
             public void needMore() {
                 quaryMore(themeID, GroupID);
-
             }
         });
         quaryMore(themeID, GroupID);
         recyclerView.setAdapter(dynsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                quaryMore(themeID, GroupID, 0);
+            }
+        });
     }
 
-    private void quaryMore(String thmemID, String groupID) {
-        if (isAllLoaded && dynsAdapter.getItemCount() != 0) {
-            Log.i(TAG, "查询群动态完成,一共:" + dynsAdapter.getItemCount());
-            return;
-        }
-        Log.i(TAG, "查询群动态 lastIndex=" + dynsAdapter.getItemCount());
+    private void quaryMore(final String thmemID, final String groupID, final int nowCount) {
+        swipeRefreshLayout.setRefreshing(true);
+        Log.i(TAG, "查询群动态 Index=" + nowCount);
 
         RetrofitNetworkAbs.NetworkListener listener = new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
+                int oldCount = dynsAdapter.getItemCount();
                 if (dyns.dyns.size() < StaticField.QueryLimit.DynamicLimit) {
                     isAllLoaded = true;
                 } else {
                     isAllLoaded = false;
                 }
                 dynsAdapter.addItems(dyns.dyns);
+                if (!isAllLoaded && nowCount != 0 && dynsAdapter.getItemCount() - oldCount < StaticField.QueryLimit.DynamicLimit) {
+                    quaryMore(thmemID, groupID, oldCount + StaticField.QueryLimit.DynamicLimit);
+                }
+                if (nowCount == 0) {
+                    recyclerView.scrollToPosition(0);
+                }
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onError(String Message) {
                 Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
+                swipeRefreshLayout.setRefreshing(false);
             }
         };
 
         if (groupID == null) {
-            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, dynsAdapter.getItemCount());
+            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, nowCount);
         } else {
-            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, dynsAdapter.getItemCount());
+            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, nowCount);
         }
+
+    }
+
+    private void quaryMore(final String thmemID, final String groupID) {
+        quaryMore(thmemID, groupID, dynsAdapter.getItemCount());
     }
 
 }

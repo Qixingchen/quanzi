@@ -2,21 +2,28 @@ package com.tizi.quanzi.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.GetShareIntent;
+import com.tizi.quanzi.tool.ReadContact;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,12 +33,16 @@ import java.util.List;
 public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int USER_VIEW = 1, SHARE_VIEW = 2, MANU_ADD = 3;
+    List<String> nowUsers = new ArrayList<>();
     private List<ContantUsers.MobilesEntity> users;
+    private List<ContantUsers.MobilesEntity> backUpUsers;
     private Context context;
     private OnAddUser onAddUser;
 
-    public InviteListAdapter(List<ContantUsers.MobilesEntity> users, Context context, OnAddUser onAddUser) {
+    public InviteListAdapter(List<ContantUsers.MobilesEntity> users, List<String> nowUsers, Context context, OnAddUser onAddUser) {
         this.users = users;
+        this.backUpUsers = users;
+        this.nowUsers = nowUsers;
         this.context = context;
         this.onAddUser = onAddUser;
     }
@@ -46,10 +57,10 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         }
 
-        if (position == users.size()) {
-            return SHARE_VIEW;
-        } else if (position == users.size() + 1) {
+        if (position == 0) {
             return MANU_ADD;
+        } else if (position == users.size() + 1) {
+            return SHARE_VIEW;
         } else {
             return USER_VIEW;
         }
@@ -96,19 +107,37 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder == null) {
             return;
         }
         if (AvailableUserViewHolder.class.isInstance(holder)) {
-            AvailableUserViewHolder vh = (AvailableUserViewHolder) holder;
-            vh.userPhone.setText(users.get(position).mobile);
+            final AvailableUserViewHolder vh = (AvailableUserViewHolder) holder;
+            final ContantUsers.MobilesEntity mobile = users.get(position - 1);
+            vh.userPhone.setText(mobile.mobile);
+            vh.userName.setText(String.format("%s名字: %s",
+                    App.getApplication().getString(R.string.app_name), mobile.userName));
+            vh.contactUserName.setText(ReadContact.findName(mobile.mobile));
+            Picasso.with(vh.userFace.getContext()).load(mobile.icon)
+                    .resizeDimen(R.dimen.invite_user_face, R.dimen.invite_user_face)
+                    .into(vh.userFace);
+
+            vh.setNotAdded();
+            for (String id : nowUsers) {
+                if (mobile.userId.equals(id)) {
+                    vh.setAdded();
+                    break;
+                }
+            }
+
             vh.inviteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onAddUser != null) {
-                        onAddUser.add(users.get(position).userId);
+                        onAddUser.add(mobile.userId);
                     }
+                    nowUsers.add(mobile.userId);
+                    vh.setAdded();
                 }
             });
         }
@@ -122,8 +151,33 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
         }
         if (ManuAddViewHolder.class.isInstance(holder)) {
-            final ManuAddViewHolder manuAddViewHolder = (ManuAddViewHolder) holder;
-            manuAddViewHolder.ok.setOnClickListener(new View.OnClickListener() {
+            final ManuAddViewHolder vh = (ManuAddViewHolder) holder;
+
+            vh.phone.requestFocus();
+
+            vh.phone.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.toString().equals("")) {
+                        users = backUpUsers;
+                        notifyDataSetChanged();
+                        return;
+                    }
+                    selectUsers(s.toString());
+                }
+            });
+
+            vh.ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
@@ -139,7 +193,7 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         public void onError(String Message) {
                             Toast.makeText(context, Message, Toast.LENGTH_LONG).show();
                         }
-                    }).finduserByAccount(manuAddViewHolder.phone.getText().toString());
+                    }).finduserByAccount(vh.phone.getText().toString());
 
                 }
             });
@@ -149,6 +203,17 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         return users == null ? 2 : users.size() + 2;
+    }
+
+    private void selectUsers(String input) {
+        List<ContantUsers.MobilesEntity> selectUsers = new ArrayList<>();
+        for (ContantUsers.MobilesEntity mobiles : backUpUsers) {
+            if (mobiles.mobile.contains(input)) {
+                selectUsers.add(mobiles);
+            }
+        }
+        users = selectUsers;
+        notifyDataSetChanged();
     }
 
     public interface OnAddUser {
@@ -179,6 +244,8 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private TextView userPhone;
         private Button inviteButton;
+        private TextView contactUserName, userName;
+        private ImageView userFace;
         private View view;
 
         public AvailableUserViewHolder(View itemView) {
@@ -190,6 +257,19 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private void findViews() {
             userPhone = (TextView) view.findViewById(R.id.phonenumber);
             inviteButton = (Button) view.findViewById(R.id.invite_button);
+            contactUserName = (TextView) view.findViewById(R.id.contact_user_name);
+            userName = (TextView) view.findViewById(R.id.user_name_text_view);
+            userFace = (ImageView) view.findViewById(R.id.user_face_image);
+        }
+
+        private void setAdded() {
+            inviteButton.setEnabled(false);
+            inviteButton.setText("已添加");
+        }
+
+        private void setNotAdded() {
+            inviteButton.setEnabled(true);
+            inviteButton.setText("添加");
         }
     }
 }

@@ -2,6 +2,7 @@
 <resources>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:colorButtonNormal">@color/md_grey_700</item>
     </style>
 </resources>

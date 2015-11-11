@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.log.Log;
 
 import java.util.ArrayList;
@@ -40,8 +41,28 @@ public class ReadContact {
             }
             phones.close();
         }
-        Log.i("通讯录", String.valueOf(mobilesList.size()));
+        if (Statue.IsDev.isDev) {
+            Log.i("通讯录", String.valueOf(mobilesList.size()));
+        }
         return mobilesList;
+    }
+
+    public static String findName(String phone) {
+        Cursor phones = App.getApplication().getContentResolver().query
+                (ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        String ans = "";
+        if (phones != null) {
+            while (phones.moveToNext()) {
+                String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                phoneNumber = Tool.getPhoneNum(phoneNumber);
+                if (phoneNumber != null && phoneNumber.equals(phone)) {
+                    ans = name;
+                }
+            }
+            phones.close();
+        }
+        return ans;
     }
 
     public static class Mobiles {

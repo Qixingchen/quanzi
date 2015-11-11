@@ -38,6 +38,7 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -222,7 +223,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         };
 
         if (dontHavePermissionButIgnore) {
-            InviteListAdapter inviteListAdapter = new InviteListAdapter(null, activity, onAddUser);
+            InviteListAdapter inviteListAdapter = new InviteListAdapter(null, null, activity, onAddUser);
             phoneList.setAdapter(inviteListAdapter);
             builder.setView(layout).show();
             return;
@@ -235,7 +236,13 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                 if (users.mobiles.size() == 0) {
                     Toast.makeText(mContext, "没有好友", Toast.LENGTH_LONG).show();
                 }
-                InviteListAdapter inviteListAdapter = new InviteListAdapter(users.mobiles, activity, onAddUser);
+
+                List<String> nowUsers = new ArrayList<>();
+                for (GroupAllInfo.MemberEntity member : memlist) {
+                    nowUsers.add(member.id);
+                }
+
+                InviteListAdapter inviteListAdapter = new InviteListAdapter(users.mobiles, nowUsers, activity, onAddUser);
                 phoneList.setAdapter(inviteListAdapter);
                 AlertDialog alertDialog;
                 alertDialog = builder.setView(layout).create();

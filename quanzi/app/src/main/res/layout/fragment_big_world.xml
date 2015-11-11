@@ -6,138 +6,143 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.main.BigWorld">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/color_fragment_background"
-        android:orientation="vertical">
-
-        <android.support.percent.PercentRelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/user_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                app:layout_aspectRatio="178%"
-                app:layout_widthPercent="100%"
-                tools:src="@drawable/face"/>
-
-        </android.support.percent.PercentRelativeLayout>
-
+        android:layout_height="fill_parent">
 
         <LinearLayout
-            android:id="@+id/userInfoLayout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:orientation="horizontal">
+            android:layout_height="fill_parent"
+            android:background="@color/color_fragment_background"
+            android:orientation="vertical">
 
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/userFace"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="9dp"
-                tools:background="@drawable/face"/>
+            <android.support.percent.PercentRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/user_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    app:layout_aspectRatio="178%"
+                    app:layout_widthPercent="100%"
+                    tools:src="@drawable/face"/>
+
+            </android.support.percent.PercentRelativeLayout>
+
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/userInfoLayout"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="14dp"
-                android:orientation="vertical">
+                android:layout_marginTop="11dp"
+                android:orientation="horizontal">
 
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/userFace"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="9dp"
+                    tools:background="@drawable/face"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="5dp">
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/userName"
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        tools:text="马云"/>
+                        android:orientation="horizontal"
+                        android:paddingTop="5dp">
 
-                    <ImageView
-                        android:id="@+id/userSex"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="5dp"
-                        tools:background="@drawable/man"/>
+                        <TextView
+                            android:id="@+id/userName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            tools:text="马云"/>
+
+                        <ImageView
+                            android:id="@+id/userSex"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="5dp"
+                            tools:background="@drawable/man"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/userSign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#B6B6B6"
+                        android:textSize="12sp"
+                        tools:text="122222222222"/>
+
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/userSign"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#B6B6B6"
-                    android:textSize="12sp"
-                    tools:text="122222222222"/>
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/share"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="11dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="33dp"
+                    android:src="@drawable/ic_share_light_36dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="分享"
+                    android:textSize="12sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="11dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="33dp"
+                    android:src="@drawable/ic_settings_light_36dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="系统设置"
+                    android:textSize="12sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/log_out"
+                android:layout_width="273dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:foreground="?selectableItemBackground"
+                android:text="退出登陆"
+                android:textSize="18sp"/>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/share"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="11dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="33dp"
-                android:src="@drawable/ic_share_light_36dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="分享"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/setting"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="11dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="33dp"
-                android:src="@drawable/ic_settings_light_36dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="系统设置"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/log_out"
-            android:layout_width="273dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:foreground="?selectableItemBackground"
-            android:text="退出登陆"
-            android:textSize="18sp"/>
-    </LinearLayout>
+    </ScrollView>
 </FrameLayout>

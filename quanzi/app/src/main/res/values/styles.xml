@@ -14,9 +14,14 @@
         <item name="android:textColorSecondary">@color/secondary_text_material</item>
         <item name="actionMenuTextColor">@color/md_white</item>
         <item name="titleTextColor">@color/md_white</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Button">
+        <item name="android:background">@drawable/custom_btn</item>
     </style>
 
     <style name="Theme.WtfPreference" parent="@style/PreferenceThemeOverlay">

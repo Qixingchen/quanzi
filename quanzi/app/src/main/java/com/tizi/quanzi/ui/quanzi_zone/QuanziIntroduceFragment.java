@@ -242,6 +242,20 @@ public class QuanziIntroduceFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (groupAllInfo != null) {
+            for (GroupAllInfo.MemberEntity member : groupAllInfo.memlist) {
+                if (member.id.compareTo(AppStaticValue.getUserID()) == 0) {
+                    ((QuanziZoneActivity) mActivity).showSetting();
+                    groupUserAdapter.setIsMember(true);
+                    break;
+                }
+            }
+        }
+    }
+
     private void quaryMore(String groupID, int lastIndex) {
         Log.i(TAG, "查询群动态 lastIndex=" + lastIndex);
         DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {

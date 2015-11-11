@@ -78,8 +78,13 @@ public class UserZoneActivityFragment extends BaseFragment {
         collapsingToolbar.setTitle(otherUserInfo.userName);
         zoneBackground.setImageUrl(otherUserInfo.bg, GetVolley.getmInstance().getImageLoader());
         zoneSign.setText(otherUserInfo.signatrue);
-        userAge.setText(String.valueOf(FriendTime.getAge(otherUserInfo.birthday)));
-        userXingzuo.setText(FriendTime.getXingzuo(otherUserInfo.birthday));
+        if (otherUserInfo.birthday != null) {
+            userAge.setText(String.valueOf(FriendTime.getAge(otherUserInfo.birthday)));
+            userXingzuo.setText(FriendTime.getXingzuo(otherUserInfo.birthday));
+        } else {
+            userAge.setText("不知道哦");
+            userXingzuo.setText("不知道哦");
+        }
         userLocation.setText(otherUserInfo.area);
         int px = GetThumbnailsUri.getPXs(mContext, 60);
         Picasso.with(mContext).load(otherUserInfo.icon).resize(px, px)

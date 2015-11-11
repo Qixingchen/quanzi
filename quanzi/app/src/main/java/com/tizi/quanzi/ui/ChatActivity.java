@@ -120,6 +120,7 @@ public class ChatActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.SendButton = (ImageButton) findViewById(R.id.SendButton);
+        SendButton.setOnTouchListener(null);
         this.InputMessage = (EditText) findViewById(R.id.InputMessage);
         this.ChatSwipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.ChatSwipeToRefresh);
         insertImageButton = (ImageButton) findViewById(R.id.insertImageButton);

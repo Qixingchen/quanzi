@@ -78,7 +78,7 @@ public class NewGroupStep2Fragment extends BaseFragment {
         shareRecyclerView.setHasFixedSize(true);
         shareRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
-        inviteListAdapter = new InviteListAdapter(null, mActivity,
+        inviteListAdapter = new InviteListAdapter(null, null, mActivity,
                 new InviteListAdapter.OnAddUser() {
                     @Override
                     public void add(String userID) {

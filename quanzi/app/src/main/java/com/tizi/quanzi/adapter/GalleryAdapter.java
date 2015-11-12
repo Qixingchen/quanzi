@@ -1,13 +1,18 @@
 package com.tizi.quanzi.adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +25,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
@@ -96,7 +102,7 @@ public class GalleryAdapter extends PagerAdapter {
                 if (mBitmap[0] == null) {
                     return false;
                 }
-                String[] items = {"保存图片"};
+                String[] items = {"保存图片", "分享图片"};
                 new AlertDialog.Builder(activity)
                         .setItems(items, new DialogInterface.OnClickListener() {
 
@@ -106,19 +112,14 @@ public class GalleryAdapter extends PagerAdapter {
                                             case 0:
                                                 saveBitmap(mBitmap[0], position);
                                                 break;
+                                            case 1:
+                                                shareBitmap(mBitmap[0], position);
+                                                break;
                                         }
                                     }
                                 }
 
-                        ).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }
-
-                ).show();
+                        ).show();
                 return false;
             }
         });
@@ -138,8 +139,39 @@ public class GalleryAdapter extends PagerAdapter {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         activity.sendBroadcast(mediaScanIntent);
+    }
 
+    private void shareBitmap(Bitmap bitmap, int position) {
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            String RootPath = App.getApplication().getCacheDir().toString();
+            String FilePath = RootPath + "/image/" + Tool.getFileName(pics.get(position));
+            ZipPic.saveMyBitmap(FilePath, bitmap, 100);
+
+            Intent share = new Intent();
+            Uri contentUri = FileProvider.getUriForFile(activity,
+                    App.getApplication().getPackageName(), new File(FilePath));
+            activity.grantUriPermission(App.getApplication().getPackageName(),
+                    contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            share.setData(contentUri);
+            share.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            activity.startActivity(Intent.createChooser(share, "分享图像"));
+        } else {
+            String RootPath = App.getApplication().getExternalCacheDir().toString();
+            String FilePath = RootPath + "/image/" + Tool.getFileName(pics.get(position));
+            ZipPic.saveMyBitmap(FilePath, bitmap, 100);
+
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(FilePath)));
+            shareIntent.setData(Uri.parse(FilePath));
+            shareIntent.setType("image/*");
+            activity.startActivity(Intent.createChooser(shareIntent, "分享图像"));
+        }
     }
 
 }

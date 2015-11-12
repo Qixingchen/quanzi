@@ -45,17 +45,6 @@ public class RecodeAudio {
      * 开始录音
      */
     public boolean start() {
-
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestAllPermission();
-            return false;
-        }
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestAllPermission();
-            return false;
-        }
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             requestAllPermission();
@@ -140,14 +129,6 @@ public class RecodeAudio {
 
         List<String> permissionList = new ArrayList<>();
 
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.RECORD_AUDIO);
@@ -165,14 +146,6 @@ public class RecodeAudio {
     public boolean AllPermissionGrant() {
         List<String> permissionList = new ArrayList<>();
 
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.RECORD_AUDIO);

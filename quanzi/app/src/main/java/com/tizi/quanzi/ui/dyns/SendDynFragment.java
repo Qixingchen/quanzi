@@ -31,6 +31,7 @@ import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.ArrayList;
@@ -158,7 +159,7 @@ public class SendDynFragment extends BaseFragment {
                 }
             });
             groupItemRecyclerview.setAdapter(groupSelectAdapter);
-            groupItemRecyclerview.setLayoutManager(new GridLayoutManager(mActivity, 4));
+            groupItemRecyclerview.setLayoutManager(new GridLayoutManager(mActivity, Tool.getSrceenWidthDP() / 90));
         } else {
             selectGroupID = groupID;
             groupItemRecyclerview.setVisibility(View.GONE);

@@ -14,6 +14,7 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.Map;
@@ -68,7 +69,7 @@ public class ThemeSignUpFragment extends BaseFragment {
         groupSelectAdapter = new GroupSelectAdapter(GroupList.getInstance().getGroupList(),
                 mActivity, actID, GroupSelectAdapter.Theme_Sign_UP_Group);
         mGroupListRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(mActivity, 3);
+        mLayoutManager = new GridLayoutManager(mActivity, Tool.getSrceenWidthDP() / 120);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
         mGroupListRecyclerView.setAdapter(groupSelectAdapter);
 

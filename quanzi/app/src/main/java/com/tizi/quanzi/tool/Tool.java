@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.ApiInfoGson;
@@ -71,6 +72,17 @@ public class Tool {
             imagePixel[1] = Weith;
         }
         return imagePixel;
+    }
+
+    /**
+     * 获取屏幕宽度(DP)
+     */
+    public static int getSrceenWidthDP() {
+        DisplayMetrics displayMetrics = App.getApplication().getResources().getDisplayMetrics();
+
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) dpWidth;
     }
 
     /**

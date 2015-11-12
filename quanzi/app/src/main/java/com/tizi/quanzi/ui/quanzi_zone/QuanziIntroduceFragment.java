@@ -40,6 +40,7 @@ import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.dyns.DynInfoFragment;
 
@@ -103,7 +104,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 groupAllInfo == null ? null : groupAllInfo.group.id);
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
-        groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 6));
+        groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, Tool.getSrceenWidthDP() / 60));
         groupFaceImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,7 +239,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         }
         if (groupAllInfo != null && groupUsersRecyclerView.getVisibility() == View.VISIBLE) {
             groupUsersRecyclerView.getLayoutParams().height = (int) (70 * GetThumbnailsUri.getDpi(mActivity)
-                    * ((groupAllInfo.memlist.size() / 6) + 1));
+                    * ((groupAllInfo.memlist.size() / (Tool.getSrceenWidthDP() / 60)) + 1));
         }
     }
 

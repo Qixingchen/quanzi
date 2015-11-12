@@ -149,4 +149,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         BusProvider.getInstance().post(new ActivityResultAns(requestCode, resultCode, data));
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+    }
 }

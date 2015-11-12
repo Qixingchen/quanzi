@@ -1,14 +1,23 @@
 package com.tizi.quanzi.tool;
 
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+
+import com.tizi.quanzi.log.Log;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by qixingchen on 15/7/20.
@@ -97,25 +106,55 @@ public class GetFilePath {
     public static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
+            ContentResolver cr = context.getContentResolver();
+            FileInputStream fis = (FileInputStream) cr.openInputStream(uri);
+
+            String filepath = context.getCacheDir() + "/input/" + new Date().getTime();
+            File f = new File(filepath);
+            if (!f.getParentFile().exists()) {
+                f.getParentFile().mkdirs();
             }
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                Log.e("在保存图片时出错：", e.toString());
+            }
+            FileOutputStream fOut = null;
+            try {
+                fOut = new FileOutputStream(f);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fOut.write(buffer);
+            fOut.flush();
+            fOut.close();
+            return filepath;
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (cursor != null)
-                cursor.close();
         }
+
+        //        Cursor cursor = null;
+        //        final String column = "_data";
+        //        final String[] projection = {
+        //                column
+        //        };
+        //
+        //        try {
+        //            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+        //                    null);
+        //            if (cursor != null && cursor.moveToFirst()) {
+        //                final int column_index = cursor.getColumnIndexOrThrow(column);
+        //                return cursor.getString(column_index);
+        //            }
+        //        } catch (Exception e) {
+        //            e.printStackTrace();
+        //        } finally {
+        //            if (cursor != null)
+        //                cursor.close();
+        //        }
 
         return null;
     }

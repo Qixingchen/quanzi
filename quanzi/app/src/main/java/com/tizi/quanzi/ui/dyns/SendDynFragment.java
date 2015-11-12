@@ -26,7 +26,6 @@ import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.otto.ActivityResultAns;
-import com.tizi.quanzi.tool.GetFilePath;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
@@ -227,8 +226,9 @@ public class SendDynFragment extends BaseFragment {
 
             for (int i = 0; i < size; i++) {
 
-                String filepath = GetFilePath.getPath(mActivity,
-                        clipData.getItemAt(i).getUri());
+                String filepath = RequreForImage.getImageUrlWithAuthority(mActivity, clipData.getItemAt(i).getUri());
+                //                        GetFilePath.getPath(mActivity,
+                //                        clipData.getItemAt(i).getUri());
                 if (filepath == null) {
                     filepath = RequreForImage.getImageUrlWithAuthority(mContext, clipData.getItemAt(i).getUri());
                 }

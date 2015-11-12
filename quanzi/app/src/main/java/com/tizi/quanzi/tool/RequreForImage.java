@@ -1,12 +1,10 @@
 package com.tizi.quanzi.tool;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -115,16 +113,16 @@ public class RequreForImage {
         lastSelectLimit = selectLimit;
         lastAllowMultiple = allowMultiple;
 
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, eventCode);
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, eventCode);
-            return;
-        }
+        //        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+        //                != PackageManager.PERMISSION_GRANTED) {
+        //            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, eventCode);
+        //            return;
+        //        }
+        //        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        //                != PackageManager.PERMISSION_GRANTED) {
+        //            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, eventCode);
+        //            return;
+        //        }
         new AlertDialog.Builder(mActivity)
                 .setTitle(Title)
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -301,10 +299,10 @@ public class RequreForImage {
         if (data == null || data.getData() == null) {
             FilePath = photoTakenUri;
         } else {
-            FilePath = GetFilePath.getPath(mActivity, data.getData());
-            if (FilePath == null) {
+            //            FilePath = GetFilePath.getPath(mActivity, data.getData());
+            //            if (FilePath == null) {
                 return getImageUrlWithAuthority(mActivity, data.getData());
-            }
+            //            }
         }
 
         if (ZipPic.getSize(FilePath) < 150 * 1024) {

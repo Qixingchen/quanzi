@@ -9,9 +9,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/Theme.WtfPreference</item>
         <item name="android:colorForeground">@color/color_fragment_background_dark</item>
-        <item name="android:textColor">@color/md_black</item>
-        <item name="android:textColorPrimary">@color/primary_text_material</item>
-        <item name="android:textColorSecondary">@color/secondary_text_material</item>
+        <!--<item name="android:textColor">@color/md_black</item>-->
+        <!--<item name="android:textColorPrimary">@color/primary_text_material</item>-->
+        <!--<item name="android:textColorSecondary">@color/secondary_text_material</item>-->
         <item name="actionMenuTextColor">@color/md_white</item>
         <item name="titleTextColor">@color/md_white</item>
         <item name="android:buttonStyle">@style/ButtonStyle</item>

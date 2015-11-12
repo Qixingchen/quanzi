@@ -74,6 +74,7 @@ public class ForgetPasswordFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
+
         phoneNumberInputLayout.setError(mActivity.getString(R.string.phone_number_error));
 
         getSignButton.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +163,9 @@ public class ForgetPasswordFragment extends BaseFragment {
     }
 
     private void verifyCodeOK(final String phoneNumber, final String password) {
+        if (!isAttached) {
+            return;
+        }
         Snackbar.make(view, "验证成功", Snackbar.LENGTH_LONG).show();
         LoginAndUserAccount.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override

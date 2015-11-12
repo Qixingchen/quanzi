@@ -28,20 +28,25 @@ public abstract class RetrofitNetworkAbs {
      * @return 是否成功
      */
     protected boolean myOnResponse(retrofit.Response<? extends OnlySuccess> response) {
-        if (response.isSuccess() && response.body().success) {
-            Log.i(TAG, "success");
-            if (networkListener != null) {
-                networkListener.onOK(response.body());
+        try {
+            if (response.isSuccess() && response.body().success) {
+                Log.i(TAG, "success");
+                if (networkListener != null) {
+                    networkListener.onOK(response.body());
+                }
+                return true;
+            } else {
+                String mess = response.isSuccess() ? response.body().msg : response.message();
+                Log.w(TAG, mess);
+                if (networkListener != null) {
+                    networkListener.onError(mess);
+                }
+                return false;
             }
-            return true;
-        } else {
-            String mess = response.isSuccess() ? response.body().msg : response.message();
-            Log.w(TAG, mess);
-            if (networkListener != null) {
-                networkListener.onError(mess);
-            }
-            return false;
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
         }
+        return false;
     }
 
     /**
@@ -49,12 +54,16 @@ public abstract class RetrofitNetworkAbs {
      */
     protected void myOnFailure(Throwable t) {
         Log.w(TAG, t.getMessage());
-        if (networkListener != null) {
-            if (t.getMessage() == null || t.getMessage().compareTo("") == 0) {
-                networkListener.onError("网络错误");
-            } else {
-                networkListener.onError(t.getMessage());
+        try {
+            if (networkListener != null) {
+                if (t.getMessage() == null || t.getMessage().compareTo("") == 0) {
+                    networkListener.onError("网络错误");
+                } else {
+                    networkListener.onError(t.getMessage());
+                }
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

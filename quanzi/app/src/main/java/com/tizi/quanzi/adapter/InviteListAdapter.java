@@ -35,13 +35,15 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int USER_VIEW = 1, SHARE_VIEW = 2, MANU_ADD = 3;
     List<String> nowUsers = new ArrayList<>();
     private List<ContantUsers.MobilesEntity> users;
-    private List<ContantUsers.MobilesEntity> backUpUsers;
+    private List<ContantUsers.MobilesEntity> backUpUsers = new ArrayList<>();
     private Context context;
     private OnAddUser onAddUser;
 
     public InviteListAdapter(List<ContantUsers.MobilesEntity> users, List<String> nowUsers, Context context, OnAddUser onAddUser) {
         this.users = users;
-        this.backUpUsers = users;
+        if (users != null) {
+            this.backUpUsers.addAll(users);
+        }
         this.nowUsers = nowUsers;
         this.context = context;
         this.onAddUser = onAddUser;
@@ -72,6 +74,7 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             this.users.addAll(users);
         }
+        backUpUsers.addAll(users);
         notifyDataSetChanged();
     }
 

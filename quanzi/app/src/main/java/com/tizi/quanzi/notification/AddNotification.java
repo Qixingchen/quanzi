@@ -72,7 +72,7 @@ public class AddNotification {
 
     public void chatActivityOpened(String convID) {
         for (NotifiContact notifiContact : notifiContacts) {
-            if (notifiContact.convID.compareTo(convID) == 0) {
+            if (notifiContact.convID == null || notifiContact.convID.compareTo(convID) == 0) {
                 notifiClean();
                 break;
             }

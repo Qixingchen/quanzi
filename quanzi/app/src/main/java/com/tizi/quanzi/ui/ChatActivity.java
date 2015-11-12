@@ -314,9 +314,7 @@ public class ChatActivity extends BaseActivity {
                         DBAct.getInstance().queryMessage(CONVERSATION_ID, chatMessageAdapter.getItemCount());
 
                 chatMessageAdapter.addOrUpdateMessages(chatMessageList);
-
                 ChatSwipeToRefresh.setRefreshing(false);
-                // TODO: 15/9/18 fresh from database
             }
         });
 

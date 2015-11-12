@@ -199,15 +199,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                                     }
                                 }
 
-                        ).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }
-
-                ).show();
+                        ).show();
                 return false;
             }
         });

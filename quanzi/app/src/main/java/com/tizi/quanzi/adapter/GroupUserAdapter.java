@@ -222,11 +222,16 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
             }
         };
 
+        AlertDialog alertDialog;
+        alertDialog = builder.setView(layout).create();
+
         /*没有通讯录权限,显示分享和查找*/
         if (dontHavePermissionButIgnore) {
             InviteListAdapter inviteListAdapter = new InviteListAdapter(null, null, activity, onAddUser);
             phoneList.setAdapter(inviteListAdapter);
-            builder.setView(layout).show();
+            alertDialog.show();
+            alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             return;
         }
 
@@ -237,8 +242,6 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
 
         final InviteListAdapter inviteListAdapter = new InviteListAdapter(null, nowUsers, activity, onAddUser);
         phoneList.setAdapter(inviteListAdapter);
-        AlertDialog alertDialog;
-        alertDialog = builder.setView(layout).create();
         alertDialog.show();
         alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);

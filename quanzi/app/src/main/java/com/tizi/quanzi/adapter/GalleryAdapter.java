@@ -1,37 +1,20 @@
 package com.tizi.quanzi.adapter;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.App;
-import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.ShareImage;
 import com.tizi.quanzi.tool.Tool;
-import com.tizi.quanzi.tool.ZipPic;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -67,35 +50,12 @@ public class GalleryAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, final int position) {
         final View vRoot = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_big_pic, container, false);
-        final SubsamplingScaleImageView image = (SubsamplingScaleImageView) vRoot.findViewById(R.id.pic);
+        final ImageView image = (ImageView) vRoot.findViewById(R.id.pic);
         final Bitmap[] mBitmap = {null};
-        final ProgressBar loadProgressBar = (ProgressBar) vRoot.findViewById(R.id.image_progressBar);
 
-        Picasso.with(activity).load(pics.get(position)).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                mBitmap[0] = bitmap;
-                Log.i(TAG, "onBitmapLoaded:" + position);
-                image.setImage(ImageSource.bitmap(bitmap));
-                image.setZoomEnabled(true);
-                loadProgressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-                Log.i(TAG, "onBitmapFailed:" + position);
-                image.setImage(ImageSource.resource(R.drawable.face));
-                image.setZoomEnabled(false);
-                loadProgressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                Log.i(TAG, "onPrepareLoad:" + position);
-                image.setZoomEnabled(false);
-                loadProgressBar.setVisibility(View.VISIBLE);
-            }
-        });
+        Picasso.with(activity).load(pics.get(position))
+                .placeholder(R.drawable.face)
+                .into(image);
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(final View v) {
@@ -110,10 +70,12 @@ public class GalleryAdapter extends PagerAdapter {
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
                                             case 0:
-                                                saveBitmap(mBitmap[0], position);
+                                                ShareImage.getInstance().saveImage(activity, mBitmap[0],
+                                                        Tool.getFileName(pics.get(position)));
                                                 break;
                                             case 1:
-                                                shareBitmap(mBitmap[0], position);
+                                                ShareImage.getInstance().shareImage(mBitmap[0],
+                                                        Tool.getFileName(pics.get(position)));
                                                 break;
                                         }
                                     }
@@ -126,52 +88,6 @@ public class GalleryAdapter extends PagerAdapter {
 
         container.addView(vRoot);
         return vRoot;
-    }
-
-    private void saveBitmap(Bitmap bitmap, int position) {
-        String RootPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-        String FilePath = RootPath + "/" + StaticField.AppName.AppEngName + "/" + Tool.getFileName(pics.get(position));
-        ZipPic.saveMyBitmap(FilePath, bitmap, 100);
-        Toast.makeText(activity, "保存成功在：" + FilePath, Toast.LENGTH_LONG).show();
-
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(FilePath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        activity.sendBroadcast(mediaScanIntent);
-    }
-
-    private void shareBitmap(Bitmap bitmap, int position) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            String RootPath = App.getApplication().getCacheDir().toString();
-            String FilePath = RootPath + "/image/" + Tool.getFileName(pics.get(position));
-            ZipPic.saveMyBitmap(FilePath, bitmap, 100);
-
-            Intent share = new Intent();
-            Uri contentUri = FileProvider.getUriForFile(activity,
-                    App.getApplication().getPackageName(), new File(FilePath));
-            activity.grantUriPermission(App.getApplication().getPackageName(),
-                    contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            share.setData(contentUri);
-            share.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            activity.startActivity(Intent.createChooser(share, "分享图像"));
-        } else {
-            String RootPath = App.getApplication().getExternalCacheDir().toString();
-            String FilePath = RootPath + "/image/" + Tool.getFileName(pics.get(position));
-            ZipPic.saveMyBitmap(FilePath, bitmap, 100);
-
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(FilePath)));
-            shareIntent.setData(Uri.parse(FilePath));
-            shareIntent.setType("image/*");
-            activity.startActivity(Intent.createChooser(shareIntent, "分享图像"));
-        }
     }
 
 }

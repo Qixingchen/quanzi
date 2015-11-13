@@ -4,6 +4,7 @@ package com.tizi.quanzi.ui.dyns;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ClipData;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
@@ -34,6 +35,13 @@ import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.ArrayList;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -214,7 +222,7 @@ public class SendDynFragment extends BaseFragment {
      */
     private void photoFromSystem(ActivityResultAns activityResultAns) {
         // TODO: 15/11/13 in work thread
-        ClipData clipData = activityResultAns.data.getClipData();
+        final ClipData clipData = activityResultAns.data.getClipData();
         if (clipData != null) {
             int size = activityResultAns.data.getClipData().getItemCount();
             photoCount += size;
@@ -224,12 +232,32 @@ public class SendDynFragment extends BaseFragment {
                 size -= photoCount - 9;
                 photoCount = 9;
             }
-
-            for (int i = 0; i < size; i++) {
-
-                String filepath = RequreForImage.getImageUrlWithAuthority(mActivity, clipData.getItemAt(i).getUri());
-                savePhoto(filepath);
-            }
+            final int finalSize = size;
+            Observable.create(new Observable.OnSubscribe<Uri>() {
+                @Override
+                public void call(Subscriber<? super Uri> subscriber) {
+                    for (int i = 0; i < finalSize; i++) {
+                        subscriber.onNext(clipData.getItemAt(i).getUri());
+                    }
+                    subscriber.onCompleted();
+                }
+            }).flatMap(new Func1<Uri, Observable<String>>() {
+                @Override
+                public Observable<String> call(final Uri uri) {
+                    return Observable.create(new Observable.OnSubscribe<String>() {
+                        @Override
+                        public void call(Subscriber<? super String> subscriber) {
+                            subscriber.onNext(RequreForImage.getImageUrlWithAuthority(mActivity, uri));
+                        }
+                    });
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
+                @Override
+                public void call(String s) {
+                    savePhoto(s);
+                }
+            });
         } else {
             String filepath = new RequreForImage(mActivity).ZipedFilePathFromIntent(activityResultAns.data);
             photoCount++;

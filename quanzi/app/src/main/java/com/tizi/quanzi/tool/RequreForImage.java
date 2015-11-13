@@ -1,19 +1,24 @@
 package com.tizi.quanzi.tool;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
+import android.widget.Toast;
 
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.squareup.otto.Subscribe;
+import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
@@ -32,13 +37,10 @@ import java.util.Date;
 public class RequreForImage {
 
     private static final String IMAGE_FILE_NAME = "faceImage";
-    private String[] items = new String[]{"选择本地图片", "拍照"};
+    private String[] items = new String[]{"选择图片", "拍照"};
     private String photoTakenUri;
     private Activity mActivity;
-    private String lastTitle;
-    private int lastSelectLimit;
-    private boolean lastAllowMultiple;
-
+    private int lastEventCode;
 
     public RequreForImage(Activity mActivity) {
         this.mActivity = mActivity;
@@ -48,14 +50,16 @@ public class RequreForImage {
         }
     }
 
-    /*For Google Photo*/
+    /*get Image Path*/
     public static String getImageUrlWithAuthority(Context context, Uri uri) {
         InputStream is = null;
         if (uri.getAuthority() != null) {
             try {
                 is = context.getContentResolver().openInputStream(uri);
-                Bitmap bmp = BitmapFactory.decodeStream(is);
-                return writeToTempImageAndGetPathUri(context, bmp);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                Bitmap bmp = BitmapFactory.decodeStream(is, null, options);
+                return writeToTempImageAndGetPathUri(context, bmp, getImageFileName(uri));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -69,16 +73,19 @@ public class RequreForImage {
         return null;
     }
 
-    private static String writeToTempImageAndGetPathUri(Context context, Bitmap inImage) {
+    private static String writeToTempImageAndGetPathUri(Context context, Bitmap inImage, String fileName) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
         String RootPath = context.getCacheDir().getAbsolutePath();
-        String FilePath = RootPath + "/image/" + "temp_group_image.jpg";
+        String FilePath = RootPath + "/image/" + fileName;
         ZipPic.saveMyBitmap(FilePath, inImage, 100);
 
-
         return FilePath;
+    }
+
+    private static String getImageFileName(Uri uri) {
+        return Tool.getFileName(uri.toString());
     }
 
     @Override
@@ -109,20 +116,7 @@ public class RequreForImage {
      * @param selectLimit   允许采集的最大数量
      */
     public void showDialogAndCallIntent(String Title, final int eventCode, final boolean allowMultiple, final int selectLimit) {
-        lastTitle = Title;
-        lastSelectLimit = selectLimit;
-        lastAllowMultiple = allowMultiple;
-
-        //        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
-        //                != PackageManager.PERMISSION_GRANTED) {
-        //            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, eventCode);
-        //            return;
-        //        }
-        //        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        //                != PackageManager.PERMISSION_GRANTED) {
-        //            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, eventCode);
-        //            return;
-        //        }
+        lastEventCode = eventCode;
         new AlertDialog.Builder(mActivity)
                 .setTitle(Title)
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -138,35 +132,13 @@ public class RequreForImage {
                                         }
                                         break;
                                     case 1:
-                                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                        // Ensure that there's a camera activity to handle the intent
-                                        if (takePictureIntent.resolveActivity(
-                                                mActivity.getPackageManager()) != null) {
-                                            // Create the File where the photo should go
-                                            File photoFile = createImageFile();
-
-                                            // Continue only if the File was successfully created
-                                            if (photoFile != null) {
-                                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                                        Uri.fromFile(photoFile));
-                                                mActivity.startActivityForResult(takePictureIntent,
-                                                        StaticField.ImageRequreCode.CAMERA_REQUEST_CODE);
-                                            }
-                                        }
+                                        takePhoto(eventCode, false);
                                         break;
                                 }
                             }
                         }
 
-                ).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }
-
-        ).show();
+                ).show();
     }
 
     /*发起单选*/
@@ -239,7 +211,7 @@ public class RequreForImage {
     public void startPhotoZoom(Uri uri) {
 
         Intent intent = new Intent("com.android.camera.action.CROP");
-        String path = GetFilePath.getPath(mActivity, uri);
+        String path = getImageUrlWithAuthority(mActivity, uri);
         intent.setDataAndType(Uri.parse(path), "image/*");
         // 设置裁剪
         intent.putExtra("crop", "true");
@@ -262,13 +234,21 @@ public class RequreForImage {
     /**
      * 根据用户ID和时间建立临时图片
      *
+     * @param isExternal 是否储存在外置空间
+     *
      * @return 创建的文件
      */
-    private File createImageFile() {
+    private File createImageFile(boolean isExternal) {
         // Create an image file name
         String imageFileName = String.valueOf(new Date().getTime() / 1000) + ".jpg";
+        String rootDir;
+        if (isExternal) {
+            rootDir = mActivity.getExternalCacheDir().getAbsolutePath();
+        } else {
+            rootDir = mActivity.getCacheDir().getAbsolutePath();
+        }
 
-        String Dirpath = mActivity.getExternalCacheDir().getAbsolutePath() + "/image/" + AppStaticValue.getUserID();
+        String Dirpath = rootDir + "/image/" + AppStaticValue.getUserID();
         File storageDir = new File(Dirpath);
         if (!storageDir.exists()) {
             storageDir.mkdirs();
@@ -299,10 +279,7 @@ public class RequreForImage {
         if (data == null || data.getData() == null) {
             FilePath = photoTakenUri;
         } else {
-            //            FilePath = GetFilePath.getPath(mActivity, data.getData());
-            //            if (FilePath == null) {
-                return getImageUrlWithAuthority(mActivity, data.getData());
-            //            }
+            FilePath = getImageUrlWithAuthority(mActivity, data.getData());
         }
 
         if (ZipPic.getSize(FilePath) < 150 * 1024) {
@@ -316,11 +293,55 @@ public class RequreForImage {
         return FilePath;
     }
 
+    private void takePhoto(int eventCode, boolean ignorePermission) {
+        if (!ignorePermission) {
+            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, eventCode);
+                return;
+            }
+            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, eventCode);
+                return;
+            }
+        }
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(
+                mActivity.getPackageManager()) != null) {
+            Uri uri;
+
+            if (hasPermission()) {
+                // Create the File where the photo should go
+                File photoFile = createImageFile(true);
+                uri = Uri.fromFile(photoFile);
+            } else {
+                File photoFile = createImageFile(false);
+                uri = FileProvider.getUriForFile(mActivity,
+                        App.getApplication().getPackageName(), photoFile);
+                mActivity.grantUriPermission(App.getApplication().getPackageName(),
+                        uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
+
+            // Continue only if the File was successfully created
+            if (uri != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                mActivity.startActivityForResult(takePictureIntent,
+                        StaticField.ImageRequreCode.CAMERA_REQUEST_CODE);
+            }
+        } else {
+            Toast.makeText(mActivity, "诶!没有发现相机呢!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
     /**
      * 取得授权
      *
      * @param permission 需要授权的权限
      */
+
     private void requestPermission(String permission, int eventCode) {
         ActivityCompat.requestPermissions(mActivity, new String[]{permission}, eventCode);
     }
@@ -328,13 +349,21 @@ public class RequreForImage {
     /*授权回调*/
     @Subscribe
     public void onRequestPermissionsResult(PermissionAnser permissionAnser) {
-        if (!permissionAnser.allGreen) {
-            return;
-        }
         if (StaticField.PermissionRequestCode.isImagePermissionEvent(permissionAnser.requestCode)) {
-
-            showDialogAndCallIntent(lastTitle, permissionAnser.requestCode, lastAllowMultiple, lastSelectLimit);
-
+            takePhoto(lastEventCode, true);
         }
+    }
+
+    private boolean hasPermission() {
+
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        return true;
     }
 }

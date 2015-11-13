@@ -217,20 +217,17 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 datePickerDialog.show();
                 break;
             case R.id.userLocation:
-                if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+                if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
                     Log.w(TAG, "没有位置权限");
                     ActivityCompat.requestPermissions(mActivity,
-                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                    Manifest.permission.ACCESS_FINE_LOCATION},
+                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                             StaticField.PermissionRequestCode.userInfoSetFragment_location);
                     return;
                 }
                 locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                 Log.i(TAG, "定位中");
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
-                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, mLocationListener, null);
-                locationManager.requestSingleUpdate(LocationManager.PASSIVE_PROVIDER, mLocationListener, null);
                 break;
             case R.id.userSign:
                 input.setHint("输入签名");
@@ -281,8 +278,6 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                 Log.i(TAG, "定位中");
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
-                locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, mLocationListener, null);
-                locationManager.requestSingleUpdate(LocationManager.PASSIVE_PROVIDER, mLocationListener, null);
                 break;
             default:
                 Log.e(TAG, "unKnow permission code" + permissionAnser.requestCode);

@@ -89,12 +89,12 @@ public class SendDynFragment extends BaseFragment {
      */
     public boolean SendDyn() {
         String comment = dynComment.getText().toString();
-        if (comment.compareTo("") == 0 || selectGroupID == null) {
-            Snackbar.make(view, "状态为空或没有选择群", Snackbar.LENGTH_LONG).show();
-            return false;
-        }
         if (photoCount != photoUrls.size()) {
             Snackbar.make(view, "正在上传照片中!", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        if (comment.compareTo("") == 0 || selectGroupID == null) {
+            Snackbar.make(view, "状态为空或没有选择群", Snackbar.LENGTH_LONG).show();
             return false;
         }
         if (photoUrls.size() == 0) {
@@ -213,6 +213,7 @@ public class SendDynFragment extends BaseFragment {
      * 使用系统带的方法获取图片
      */
     private void photoFromSystem(ActivityResultAns activityResultAns) {
+        // TODO: 15/11/13 in work thread
         ClipData clipData = activityResultAns.data.getClipData();
         if (clipData != null) {
             int size = activityResultAns.data.getClipData().getItemCount();
@@ -227,11 +228,6 @@ public class SendDynFragment extends BaseFragment {
             for (int i = 0; i < size; i++) {
 
                 String filepath = RequreForImage.getImageUrlWithAuthority(mActivity, clipData.getItemAt(i).getUri());
-                //                        GetFilePath.getPath(mActivity,
-                //                        clipData.getItemAt(i).getUri());
-                if (filepath == null) {
-                    filepath = RequreForImage.getImageUrlWithAuthority(mContext, clipData.getItemAt(i).getUri());
-                }
                 savePhoto(filepath);
             }
         } else {

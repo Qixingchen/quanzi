@@ -51,7 +51,6 @@ public class GalleryAdapter extends PagerAdapter {
         final View vRoot = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_big_pic, container, false);
         final ImageView image = (ImageView) vRoot.findViewById(R.id.pic);
-        final Bitmap[] mBitmap = {null};
 
         Picasso.with(activity).load(pics.get(position))
                 .placeholder(R.drawable.face)
@@ -59,9 +58,9 @@ public class GalleryAdapter extends PagerAdapter {
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(final View v) {
-                if (mBitmap[0] == null) {
-                    return false;
-                }
+                image.buildDrawingCache();
+                final Bitmap bitmap = image.getDrawingCache();
+
                 String[] items = {"保存图片", "分享图片"};
                 new AlertDialog.Builder(activity)
                         .setItems(items, new DialogInterface.OnClickListener() {
@@ -70,11 +69,11 @@ public class GalleryAdapter extends PagerAdapter {
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
                                             case 0:
-                                                ShareImage.getInstance().saveImage(activity, mBitmap[0],
+                                                ShareImage.getInstance().saveImage(activity, bitmap,
                                                         Tool.getFileName(pics.get(position)));
                                                 break;
                                             case 1:
-                                                ShareImage.getInstance().shareImage(mBitmap[0],
+                                                ShareImage.getInstance().shareImage(activity, bitmap,
                                                         Tool.getFileName(pics.get(position)));
                                                 break;
                                         }

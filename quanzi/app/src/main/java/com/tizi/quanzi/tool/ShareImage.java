@@ -55,7 +55,7 @@ public class ShareImage {
         }
     }
 
-    public void shareImage(Bitmap bitmap, String fileName) {
+    public void shareImage(Activity activity, Bitmap bitmap, String fileName) {
         String RootPath;
         if (useProvider()) {
             RootPath = App.getApplication().getCacheDir().toString();
@@ -63,11 +63,11 @@ public class ShareImage {
             RootPath = App.getApplication().getExternalCacheDir().toString();
         }
         String filePath = RootPath + "/image/" + fileName;
-        ZipPic.saveMyBitmap(fileName, bitmap, 100);
-        shareImage(filePath);
+        ZipPic.saveMyBitmap(filePath, bitmap, 100);
+        shareImage(activity, filePath);
     }
 
-    public void shareImage(String filePath) {
+    public void shareImage(Activity activity, String filePath) {
         Intent shareIntent = new Intent();
         if (useProvider()) {
             Uri contentUri = FileProvider.getUriForFile(App.getApplication(),
@@ -82,7 +82,7 @@ public class ShareImage {
             shareIntent.setData(Uri.parse(filePath));
             shareIntent.setType("image/*");
         }
-        App.getApplication().startActivity(Intent.createChooser(shareIntent, "分享图像"));
+        activity.startActivity(Intent.createChooser(shareIntent, "分享图像"));
     }
 
     /**

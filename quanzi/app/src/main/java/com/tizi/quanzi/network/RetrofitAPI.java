@@ -18,6 +18,7 @@ import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.gson.Theme;
 
 import retrofit.Call;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Query;
 import rx.Observable;
@@ -260,6 +261,14 @@ public interface RetrofitAPI {
                 @Query("userid") String userID);
 
 
+    }
+
+    interface BaiduLocation {
+        @GET("/location/ip")
+        Call<com.tizi.quanzi.gson.BaiduLocation> getLocation(
+                @Query("ak") String ak,
+                @Query("coor") String coor
+        );
     }
 
 }

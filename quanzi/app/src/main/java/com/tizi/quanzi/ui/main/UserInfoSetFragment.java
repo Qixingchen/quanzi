@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -29,6 +31,7 @@ import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.network.GetLocationFromBaidu;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.UserInfoSetting;
 import com.tizi.quanzi.otto.ActivityResultAns;
@@ -36,6 +39,7 @@ import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.io.IOException;
@@ -51,22 +55,25 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     private TextView userSexTextView;
     private TextView userAgeTextView;
     private TextView userLocationTextView;
+    private NetworkImageView userFaceImageView;
+    private TextView userSignTextView;
+    private Calendar calendar = Calendar.getInstance();
+    private LocationManager locationManager;
+    private RequreForImage requreForImage;
+    private ProgressBar progressBar;
+    private boolean isGetLocation;
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
             //your code here
-            Log.i(TAG, "定位完成");
+            Log.i(TAG, "系统定位完成");
             try {
                 double Latitude = location.getLatitude();
                 double Longitude = location.getLongitude();
-                UserInfoSetting.getNewInstance().changeLatitude(Latitude);
-                UserInfoSetting.getNewInstance().changeLongitude(Longitude);
-                Log.i(TAG, String.format("Latitude:%f,Longitude:%f", Latitude, Longitude));
                 List<Address> address = new Geocoder(mContext).getFromLocation(Latitude, Longitude, 1);
                 String area = address.get(0).getAdminArea() + address.get(0).getLocality();
-                userLocationTextView.setText(area);
-                UserInfoSetting.getNewInstance().changeArea(area);
-                MyUserInfo.getInstance().getUserInfo().setArea(area);
+                setLocation(area, Longitude, Latitude);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -88,12 +95,6 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         }
     };
-    private NetworkImageView userFaceImageView;
-    private TextView userSignTextView;
-    private Calendar calendar = Calendar.getInstance();
-    private LocationManager locationManager;
-    private RequreForImage requreForImage;
-
 
     public UserInfoSetFragment() {
         // Required empty public constructor
@@ -125,6 +126,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         userLocationTextView = (TextView) view.findViewById(R.id.userLocationTextView);
         view.findViewById(R.id.userSign).setOnClickListener(this);
         userSignTextView = (TextView) view.findViewById(R.id.userSignTextView);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
     }
 
     @Override
@@ -146,8 +148,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         final View layout = inflater.inflate(R.layout.dialog_one_line,
                 (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
         final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
-        TextView title = (TextView) layout.findViewById(R.id.dialog_title);
-        builder.setView(layout).setNegativeButton("取消", null);
+        builder.setView(layout);
 
         switch (view.getId()) {
             case R.id.userface:
@@ -228,6 +229,22 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                 Log.i(TAG, "定位中");
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
+                progressBar.setVisibility(View.VISIBLE);
+                isGetLocation = false;
+                new Timer().setOnResult(new Timer.OnResult() {
+                    @Override
+                    public void OK() {
+                        if (!isGetLocation) {
+                            Log.w(TAG, "系统定位超时");
+                            getLocationFromBaidu();
+                        }
+                    }
+
+                    @Override
+                    public void countdown(int s) {
+
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 10 * 1000);
                 break;
             case R.id.userSign:
                 input.setHint("输入签名");
@@ -270,6 +287,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     @Subscribe
     public void onPermissionAns(PermissionAnser permissionAnser) {
         if (!permissionAnser.allGreen) {
+            getLocationFromBaidu();
             return;
         }
 
@@ -283,6 +301,39 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 Log.e(TAG, "unKnow permission code" + permissionAnser.requestCode);
                 break;
         }
+    }
+
+    private void setLocation(String area, double Longitude, double Latitude) {
+        UserInfoSetting.getNewInstance().changeLatitude(Latitude);
+        UserInfoSetting.getNewInstance().changeLongitude(Longitude);
+        Log.i(TAG, String.format("Latitude:%f,Longitude:%f", Latitude, Longitude));
+        UserInfoSetting.getNewInstance().changeArea(area);
+        MyUserInfo.getInstance().getUserInfo().setArea(area);
+        if (!isAttached) {
+            return;
+        }
+        userLocationTextView.setText(area);
+        isGetLocation = true;
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void getLocationFromBaidu() {
+        GetLocationFromBaidu.getNewInstance(new GetLocationFromBaidu.onResult() {
+            @Override
+            public void ok(String area, Double Longitude, Double Latitude) {
+                Log.i(TAG, "百度定位完成");
+                setLocation(area, Longitude, Latitude);
+            }
+
+            @Override
+            public void error(String errorMessage) {
+                Log.i(TAG, "百度定位失败");
+                if (isAttached) {
+                    progressBar.setVisibility(View.GONE);
+                    Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        }).getLocation();
     }
 }
 

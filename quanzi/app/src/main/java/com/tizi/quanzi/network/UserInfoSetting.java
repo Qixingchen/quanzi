@@ -90,14 +90,14 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
      * 更改用户 Latitude
      */
     public void changeLatitude(double Latitude) {
-        changeFiled("Latitude", String.valueOf(Latitude));
+        changeFiled("latitude", String.valueOf(Latitude));
     }
 
     /**
      * 更改用户 Longitude
      */
     public void changeLongitude(double Longitude) {
-        changeFiled("Longitude", String.valueOf(Longitude));
+        changeFiled("longitude", String.valueOf(Longitude));
     }
 
     @SuppressWarnings("unchecked")

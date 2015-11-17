@@ -44,7 +44,11 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (users != null) {
             this.backUpUsers.addAll(users);
         }
-        this.nowUsers = nowUsers;
+        if (nowUsers == null) {
+            this.nowUsers = new ArrayList<>();
+        } else {
+            this.nowUsers = nowUsers;
+        }
         this.context = context;
         this.onAddUser = onAddUser;
     }
@@ -187,6 +191,10 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         @Override
                         public void onOK(Object ts) {
                             OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            if (otherUserInfo.id == null) {
+                                Toast.makeText(context, "没有这个人哦~", Toast.LENGTH_LONG).show();
+                                return;
+                            }
                             if (onAddUser != null) {
                                 onAddUser.add(otherUserInfo.id);
                             }

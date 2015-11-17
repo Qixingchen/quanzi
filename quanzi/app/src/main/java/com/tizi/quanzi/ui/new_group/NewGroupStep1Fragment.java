@@ -116,11 +116,11 @@ public class NewGroupStep1Fragment extends BaseFragment {
         ans.groupSign = quanziSignInputLayout.getEditText().getText().toString();
         ans.groupFaceUri = groupFaceUri;
         ans.tags = selectTags;
-        if (ans.groupName == null || ans.groupSign == null || ans.groupFaceUri == null || ans.tags.size() == 0) {
+        if (ans.groupName == null || ans.groupFaceUri == null) {
             ans.complete = false;
             return ans;
         }
-        ans.complete = (!ans.groupSign.isEmpty() && !ans.groupName.isEmpty() && !ans.groupFaceUri.isEmpty());
+        ans.complete = (!ans.groupName.isEmpty() && !ans.groupFaceUri.isEmpty());
         return ans;
     }
 

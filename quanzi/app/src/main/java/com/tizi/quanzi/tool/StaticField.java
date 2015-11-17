@@ -169,7 +169,7 @@ public class StaticField {
     /*APP Name*/
     public static class AppName {
         public final static String AppEngName = "GiMi";
-        public final static String AppZHName = "GiMi";
+        public final static String AppZHName = "基蜜";
     }
 
     /*Intent 名称*/

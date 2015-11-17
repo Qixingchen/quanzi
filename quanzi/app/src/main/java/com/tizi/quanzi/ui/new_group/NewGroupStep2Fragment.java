@@ -2,10 +2,14 @@ package com.tizi.quanzi.ui.new_group;
 
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -107,9 +111,25 @@ public class NewGroupStep2Fragment extends BaseFragment {
 
         if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
+            new AlertDialog.Builder(mContext).setTitle(StaticField.AppName.AppZHName + "请求您的通讯录权限")
+                    .setMessage("您的通讯录将帮助您找到您的好友，通讯录即传即用，我们不会储存您的通讯录")
+                    .setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int code = StaticField.PermissionRequestCode.addContactUsersInNewGroup;
+                            ActivityCompat.requestPermissions(mActivity,
+                                    new String[]{Manifest.permission.READ_CONTACTS}, code);
+                        }
+                    }).setNegativeButton("不好", null)
+                    .setNeutralButton("查看权限说明", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent releaseNotice = new Intent(Intent.ACTION_VIEW);
+                            releaseNotice.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/uses-permission"));
+                            startActivity(releaseNotice);
+                        }
+                    }).show();
 
-            int code = StaticField.PermissionRequestCode.addContactUsersInNewGroup;
-            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.READ_CONTACTS}, code);
             return;
         }
 

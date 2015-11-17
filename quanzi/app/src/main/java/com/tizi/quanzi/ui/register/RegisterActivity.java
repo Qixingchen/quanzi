@@ -138,6 +138,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
                     PrivateMessPairList.getInstance().getGroupsFromDataBase();
                     List<Login.GroupEntity> groups = new ArrayList<>();
+                    groups.addAll(login.group);
                     ((GroupList) GroupList.getInstance()).setGroupListByLoginGroup(groups);
                     //start intent
                     Intent intent = new Intent(context, MainActivity.class);

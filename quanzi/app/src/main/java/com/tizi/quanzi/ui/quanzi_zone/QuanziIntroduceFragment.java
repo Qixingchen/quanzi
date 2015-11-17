@@ -230,7 +230,9 @@ public class QuanziIntroduceFragment extends BaseFragment {
                     .into(groupFaceImageView);
             zoneBackgroundImageView.setImageUrl(groupAllInfo.group.bg,
                     GetVolley.getmInstance().getImageLoader());
-            zoneSignTextview.setText(String.format("签名：%s", groupAllInfo.group.notice));
+            if (groupAllInfo.group.notice != null) {
+                zoneSignTextview.setText(String.format("签名：%s", groupAllInfo.group.notice));
+            }
             String tagsString = "";
             for (AllTags.TagsEntity tag : groupAllInfo.tagList) {
                 tagsString += tag.tagName + ",";

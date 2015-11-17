@@ -10,6 +10,7 @@ import com.tizi.quanzi.tool.Tool;
 
 import java.util.ArrayList;
 
+import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -118,10 +119,17 @@ public class GroupSetting extends RetrofitNetworkAbs {
      */
     public void NewAGroup(String GroupName, String icon, String notice,
                           ArrayList<AllTags.TagsEntity> oldTags, String convid) {
+        Call<Group> groupCall;
+        String userid = AppStaticValue.getUserID();
+        if (oldTags.size() == 0) {
+            groupCall = groupSer.addGroup(userid, GroupName, icon, notice, convid);
 
-        String encodedTAG = Tool.getUTF_8String(getTagsString(oldTags));
-        groupSer.addGroup(GroupName, encodedTAG, icon, Tool.getUTF_8String(notice),
-                AppStaticValue.getUserID(), convid).enqueue(new Callback<Group>() {
+        } else {
+            String encodedTAG = Tool.getUTF_8String(getTagsString(oldTags));
+            groupCall = groupSer.addGroup(userid, GroupName, encodedTAG, icon, notice, convid);
+        }
+
+        groupCall.enqueue(new Callback<Group>() {
             @Override
             public void onResponse(Response<Group> response, Retrofit retrofit) {
                 myOnResponse(response);

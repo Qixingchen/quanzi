@@ -78,7 +78,7 @@ public class NewGroupActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_next_step) {
             if (convID.compareTo("0") == 0) {
-                Snackbar.make(view, "LC ConvID 为空,请稍等正在重试", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "LC ConvID 为空,请稍等,正在重试", Snackbar.LENGTH_LONG).show();
                 NewAVIMConversation.getInstance().setConversationCallBack(
                         new NewAVIMConversation.ConversationCallBack() {
                             @Override
@@ -135,7 +135,7 @@ public class NewGroupActivity extends BaseActivity {
 
 
             } else {
-                Snackbar.make(view, "信息未填写完毕", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "头像和群名是必须的哦~", Snackbar.LENGTH_LONG).show();
             }
             return true;
         }

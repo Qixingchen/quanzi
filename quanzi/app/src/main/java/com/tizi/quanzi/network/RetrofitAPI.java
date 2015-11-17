@@ -70,13 +70,23 @@ public interface RetrofitAPI {
     }
 
     interface Group {
+        /*全有*/
         @POST("group/createF")
         Call<com.tizi.quanzi.gson.Group> addGroup(
+                @Query("userid") String userID,
                 @Query("groupname") String groupName,
                 @Query(value = "grouptags", encoded = true) String groupTags,
                 @Query("icon") String icon,
                 @Query(value = "notice", encoded = true) String notice,
-                @Query("userid") String userID,// TODO: 15/9/16 delete
+                @Query("convid") String convID);
+
+        /*没有TAG*/
+        @POST("group/createF")
+        Call<com.tizi.quanzi.gson.Group> addGroup(
+                @Query("userid") String userID,
+                @Query("groupname") String groupName,
+                @Query("icon") String icon,
+                @Query(value = "notice", encoded = true) String notice,
                 @Query("convid") String convID);
 
         @POST("group/findGroupAllInfoF")

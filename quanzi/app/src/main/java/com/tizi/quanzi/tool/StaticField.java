@@ -168,8 +168,8 @@ public class StaticField {
 
     /*APP Name*/
     public static class AppName {
-        public final static String AppEngName = "JiMi";
-        public final static String AppZHName = "JiMi";
+        public final static String AppEngName = "GiMi";
+        public final static String AppZHName = "GiMi";
     }
 
     /*Intent 名称*/

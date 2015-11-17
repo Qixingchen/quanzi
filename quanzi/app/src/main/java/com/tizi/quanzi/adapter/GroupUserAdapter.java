@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,21 +52,85 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
 
     private static final String TAG = GroupUserAdapter.class.getSimpleName();
     private Context mContext;
-    private List<GroupAllInfo.MemberEntity> memlist;
+    private SortedList<GroupAllInfo.MemberEntity> memlist = new SortedList<>(GroupAllInfo.MemberEntity.class,
+            new SortedList.Callback<GroupAllInfo.MemberEntity>() {
+                @Override
+                public int compare(GroupAllInfo.MemberEntity o1, GroupAllInfo.MemberEntity o2) {
+                    if (o1.id.equals(createrID)) {
+                        return -1;
+                    }
+                    if (o2.id.equals(createrID)) {
+                        return 1;
+                    }
+                    return 0;
+                }
+
+                @Override
+                public void onInserted(int position, int count) {
+                    notifyItemRangeInserted(position, count);
+                }
+
+                @Override
+                public void onRemoved(int position, int count) {
+                    notifyItemRangeRemoved(position, count);
+                }
+
+                @Override
+                public void onMoved(int fromPosition, int toPosition) {
+                    notifyItemMoved(fromPosition, toPosition);
+                }
+
+                @Override
+                public void onChanged(int position, int count) {
+                    notifyItemRangeChanged(position, count);
+                }
+
+                @Override
+                public boolean areContentsTheSame(GroupAllInfo.MemberEntity oldItem, GroupAllInfo.MemberEntity newItem) {
+                    return oldItem.name.equals(newItem.name);
+                }
+
+                @Override
+                public boolean areItemsTheSame(GroupAllInfo.MemberEntity item1, GroupAllInfo.MemberEntity item2) {
+                    return item1.id.equals(item2.id);
+                }
+            });
     private boolean isCreater, isMember;
-    private String groupID;
+    private String groupID, createrID;
 
     public GroupUserAdapter(Context mContext, @Nullable List<GroupAllInfo.MemberEntity> memlist,
-                            boolean isCreater, String groupID) {
+                            boolean isCreater, String createrID, String groupID) {
         this.mContext = mContext;
-        this.memlist = memlist;
+        if (memlist != null) {
+            this.memlist.beginBatchedUpdates();
+            this.memlist.addAll(memlist);
+            this.memlist.endBatchedUpdates();
+        }
+        this.createrID = createrID;
         this.isCreater = isCreater;
         this.groupID = groupID;
-        BusProvider.getInstance().register(this);
+        try {
+            BusProvider.getInstance().register(this);
+        } catch (Exception ignore) {
+        }
+
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        try {
+            BusProvider.getInstance().unregister(this);
+        } catch (Exception ignore) {
+        }
     }
 
     public void setGroupID(String groupID) {
         this.groupID = groupID;
+    }
+
+    public void setCreaterID(String createrID) {
+        this.createrID = createrID;
     }
 
     /**
@@ -154,8 +219,10 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      * 设置memlist
      */
     public void setMemlist(List<GroupAllInfo.MemberEntity> memlist) {
-        this.memlist = memlist;
-        notifyDataSetChanged();
+        this.memlist.beginBatchedUpdates();
+        this.memlist.clear();
+        this.memlist.addAll(memlist);
+        this.memlist.endBatchedUpdates();
     }
 
     /**
@@ -179,10 +246,10 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      *
      * @param groupid 当前组ID
      */
-    private void addUser(final String groupid, boolean dontHavePermissionButIgnore) {
+    private void addUser(final String groupid, boolean notHavePermissionButIgnore) {
 
         final Activity activity = AppStaticValue.getActivity(QuanziZoneActivity.class.getSimpleName());
-        if (!dontHavePermissionButIgnore && ActivityCompat.checkSelfPermission(
+        if (!notHavePermissionButIgnore && ActivityCompat.checkSelfPermission(
                 activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 
             int code = StaticField.PermissionRequestCode.addContactUsersInQuanziZone;
@@ -224,8 +291,8 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
 
 
         List<String> nowUsers = new ArrayList<>();
-        for (GroupAllInfo.MemberEntity member : memlist) {
-            nowUsers.add(member.id);
+        for (int i = 0; i < memlist.size(); i++) {
+            nowUsers.add(memlist.get(i).id);
         }
 
         final InviteListAdapter inviteListAdapter = new InviteListAdapter(null, nowUsers, activity, onAddUser);
@@ -236,7 +303,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         alertDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-        if (dontHavePermissionButIgnore) {
+        if (notHavePermissionButIgnore) {
             return;
         }
 
@@ -277,7 +344,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                                 .subscribe(new Action1<Object>() {
                                     @Override
                                     public void call(Object o) {
-                                        memlist.remove(postion);
+                                        memlist.removeItemAt(postion);
                                         notifyItemRemoved(postion);
                                     }
                                 }, new Action1<Throwable>() {

@@ -83,7 +83,7 @@ public abstract class RetrofitNetworkAbs {
         logRecord.put("App_version", BuildConfig.VERSION_NAME);
         logRecord.put("App_version_Code", BuildConfig.VERSION_CODE);
         logRecord.put("StackTrace", sw.toString());
-        logRecord.put("Cause", ex.getCause().getMessage());
+        logRecord.put("Cause", ex.getCause() == null ? "" : ex.getCause().getMessage());
         logRecord.put("DEVICE", Build.DEVICE);
         logRecord.put("MANUFACTURER", Build.MANUFACTURER);
         logRecord.put("MODEL", Build.MODEL);

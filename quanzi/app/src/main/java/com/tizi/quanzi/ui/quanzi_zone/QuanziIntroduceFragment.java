@@ -101,6 +101,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupUserAdapter = new GroupUserAdapter(mActivity,
                 groupAllInfo == null ? null : groupAllInfo.memlist,
                 groupAllInfo != null && groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0,
+                groupAllInfo == null ? "" : groupAllInfo.group.createUser,
                 groupAllInfo == null ? null : groupAllInfo.group.id);
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
@@ -163,6 +164,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
         boolean isCreate = groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0;
         if (groupUserAdapter != null) {
+            groupUserAdapter.setCreaterID(groupAllInfo.group.createUser);
             groupUserAdapter.setMemlist(groupAllInfo.memlist);
             groupUserAdapter.setIsCreater(isCreate);
             groupUserAdapter.setGroupID(groupAllInfo.group.id);

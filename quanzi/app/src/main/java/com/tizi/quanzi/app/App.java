@@ -22,7 +22,6 @@ import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.LoginAndUserAccount;
-import com.tizi.quanzi.tool.Statue;
 import com.tizi.quanzi.ui.login.LoginActivity;
 
 
@@ -83,9 +82,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
 
         //LC调试日志
-        if (Statue.IsDebug.now == Statue.IsDebug.debug) {
-            AVOSCloud.setDebugLogEnabled(true);
-        }
+        //        if (Statue.IsDebug.now == Statue.IsDebug.debug) {
+        //            AVOSCloud.setDebugLogEnabled(true);
+        //        }
 
         //facebook Stetho
         Stetho.initialize(

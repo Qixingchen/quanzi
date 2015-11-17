@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
@@ -23,6 +22,7 @@ import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.LoginAndUserAccount;
+import com.tizi.quanzi.tool.Statue;
 import com.tizi.quanzi.ui.login.LoginActivity;
 
 
@@ -82,6 +82,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
         AVIMMessageManager.setConversationEventHandler(new MyAVIMConversationEventHandler());
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
 
+        //LC调试日志
+        if (Statue.IsDebug.now == Statue.IsDebug.debug) {
+            AVOSCloud.setDebugLogEnabled(true);
+        }
+
         //facebook Stetho
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
@@ -123,7 +128,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @Override
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);
-        MultiDex.install(this);
+        //        MultiDex.install(this);
     }
 
     @Override

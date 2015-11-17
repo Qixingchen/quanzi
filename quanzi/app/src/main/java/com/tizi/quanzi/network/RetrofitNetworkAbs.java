@@ -1,7 +1,14 @@
 package com.tizi.quanzi.network;
 
+import android.os.Build;
+
+import com.avos.avoscloud.AVObject;
+import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.log.Log;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Created by qixingchen on 15/9/16.
@@ -43,8 +50,8 @@ public abstract class RetrofitNetworkAbs {
                 }
                 return false;
             }
-        } catch (Exception ignore) {
-            ignore.printStackTrace();
+        } catch (Exception ex) {
+            saveTExceptionToLenCloud(ex);
         }
         return false;
     }
@@ -63,8 +70,26 @@ public abstract class RetrofitNetworkAbs {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            saveTExceptionToLenCloud(ex);
         }
+    }
+
+    private void saveTExceptionToLenCloud(Exception ex) {
+        ex.printStackTrace();
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        ex.printStackTrace(pw);
+        AVObject logRecord = new AVObject("Android_Log");
+        logRecord.put("App_version", BuildConfig.VERSION_NAME);
+        logRecord.put("App_version_Code", BuildConfig.VERSION_CODE);
+        logRecord.put("StackTrace", sw.toString());
+        logRecord.put("Cause", ex.getCause().getMessage());
+        logRecord.put("DEVICE", Build.DEVICE);
+        logRecord.put("MANUFACTURER", Build.MANUFACTURER);
+        logRecord.put("MODEL", Build.MODEL);
+        logRecord.put("SDK", Build.VERSION.SDK_INT);
+        logRecord.put("HARDWARE", Build.HARDWARE);
+        logRecord.saveInBackground();
     }
 
 

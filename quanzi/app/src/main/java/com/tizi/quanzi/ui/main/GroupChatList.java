@@ -10,11 +10,8 @@ import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupListAdapter;
-import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.tool.FlushMess;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
@@ -95,15 +92,15 @@ public class GroupChatList extends BaseFragment {
     protected void initViewsAndSetEvent() {
         List<GroupClass> groupClasses = GroupList.getInstance().getGroupList();
         /*检查是否第一次运行，是的话刷新纪录*/
-        if (AppStaticValue.getStringPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID()).compareTo("NO") != 0) {
-            Log.i(TAG, "是第一次运行，开始刷新纪录");
-            Log.i(TAG, String.format("共有%d个群", groupClasses.size()));
-            for (GroupClass groupClass : groupClasses) {
-
-                FlushMess.getInstance().Flush(groupClass.convId);
-            }
-        }
-        AppStaticValue.setStringPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID(), "NO");
+        //        if (AppStaticValue.getStringPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID()).compareTo("NO") != 0) {
+        //            Log.i(TAG, "是第一次运行，开始刷新纪录");
+        //            Log.i(TAG, String.format("共有%d个群", groupClasses.size()));
+        //            for (GroupClass groupClass : groupClasses) {
+        //
+        //                FlushMess.getInstance().Flush(groupClass.convId);
+        //            }
+        //        }
+        //        AppStaticValue.setStringPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID(), "NO");
     }
 
     @Override

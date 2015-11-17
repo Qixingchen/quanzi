@@ -56,22 +56,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_toEndOf="@id/gruop_face"
+                    android:maxLines="3"
                     android:textColor="@color/md_white"
                     android:textSize="@dimen/sub_title_text_size"
-                    tools:text="签名：1234"/>
+                    tools:text="签名：1234\n3\n3"/>
 
                 <TextView
                     android:id="@+id/group_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/zoneSign"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="60dp"
                     android:layout_toEndOf="@id/gruop_face"
+                    android:maxLines="2"
                     android:textColor="@color/md_white"
                     android:textSize="@dimen/sub_title_text_size"
-                    tools:text="12333"/>
+                    tools:text="12333\n\n\n1222"/>
 
 
             </RelativeLayout>

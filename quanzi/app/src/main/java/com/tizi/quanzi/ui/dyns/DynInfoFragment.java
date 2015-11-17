@@ -1,9 +1,7 @@
 package com.tizi.quanzi.ui.dyns;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,12 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.DynCommentAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
@@ -28,34 +23,21 @@ import com.tizi.quanzi.gson.AddZan;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.IsZan;
-import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.network.DynamicAct;
-import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.FriendTime;
-import com.tizi.quanzi.tool.GetThumbnailsUri;
-import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
-import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
-import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
+import com.tizi.quanzi.widget.DynItem;
 import com.tizi.quanzi.widget.SimpleDividerItemDecoration;
-
-import java.util.ArrayList;
 
 /**
  * 动态详情界面
  */
 public class DynInfoFragment extends BaseFragment {
 
-    private ImageView weibo_avatar_ImageView;
-    private TextView userNameTextView, contentTextView, dateTextView,
-            attitudesTextView, commentsTextView;
-    private ImageView[] weibo_pics_ImageView = new ImageView[3];
-    private LinearLayout weibo_pics_linearLayout;
-
     private ImageView plusOne, addCommentImageView;
-
+    private TextView attitudesTextView, commentsTextView;
     private DynCommentAdapter dynCommentAdapter;
     private RecyclerView commentRecyclerView;
 
@@ -84,22 +66,9 @@ public class DynInfoFragment extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        weibo_avatar_ImageView = (ImageView) view.findViewById(R.id.weibo_avatar);
-        userNameTextView = (TextView) view.findViewById(R.id.weibo_name);
-        contentTextView = (TextView) view.findViewById(R.id.weibo_content);
-        dateTextView = (TextView) view.findViewById(R.id.weibo_date);
+        new DynItem(dyn, view, showUser, mContext);
         attitudesTextView = (TextView) view.findViewById(R.id.weibo_attitudes);
         commentsTextView = (TextView) view.findViewById(R.id.weibo_comments);
-        weibo_pics_ImageView[0] = (ImageView) view.findViewById(R.id.weibo_pic0);
-        weibo_pics_ImageView[1] = (ImageView) view.findViewById(R.id.weibo_pic1);
-        weibo_pics_ImageView[2] = (ImageView) view.findViewById(R.id.weibo_pic2);
-        //        weibo_pics_NetworkImageView[3] = (NetworkImageView) view.findViewById(R.id.weibo_pic3);
-        //        weibo_pics_NetworkImageView[4] = (NetworkImageView) view.findViewById(R.id.weibo_pic4);
-        //        weibo_pics_NetworkImageView[5] = (NetworkImageView) view.findViewById(R.id.weibo_pic5);
-        //        weibo_pics_NetworkImageView[6] = (NetworkImageView) view.findViewById(R.id.weibo_pic6);
-        //        weibo_pics_NetworkImageView[7] = (NetworkImageView) view.findViewById(R.id.weibo_pic7);
-        //        weibo_pics_NetworkImageView[8] = (NetworkImageView) view.findViewById(R.id.weibo_pic8);
-        weibo_pics_linearLayout = (LinearLayout) view.findViewById(R.id.weibo_pics);
         commentRecyclerView = (RecyclerView) view.findViewById(R.id.dyn_comment_item_recycler_view);
         plusOne = (ImageView) view.findViewById(R.id.plus_one);
         addCommentImageView = (ImageView) view.findViewById(R.id.comment);
@@ -108,48 +77,6 @@ public class DynInfoFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
 
-        if (showUser) {
-            Picasso.with(mContext).load(dyn.icon)
-                    .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
-                    .into(weibo_avatar_ImageView);
-            userNameTextView.setText(dyn.nickName);
-            weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
-                        @Override
-                        public void onOK(Object ts) {
-                            OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
-                            Intent otherUser = new Intent(mContext, UserZoneActivity.class);
-                            otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
-                            mContext.startActivity(otherUser);
-                        }
-
-                        @Override
-                        public void onError(String Message) {
-                            Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
-                        }
-                    }).findUserByID(dyn.createUser);
-                }
-            });
-        } else {
-            Picasso.with(mContext).load(dyn.groupIcon)
-                    .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
-                    .into(weibo_avatar_ImageView);
-            userNameTextView.setText(dyn.groupName);
-            weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, QuanziZoneActivity.class);
-                    intent.putExtra("groupID", dyn.senderId);
-                    mContext.startActivity(intent);
-                }
-            });
-        }
-        contentTextView.setText(dyn.content);
-        dateTextView.setText(FriendTime.FriendlyDate(FriendTime.getTimeFromServerString(dyn.createTime)));
-        attitudesTextView.setText(String.valueOf(dyn.zan));
-        commentsTextView.setText(String.valueOf(dyn.commentNum));
         DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
@@ -168,27 +95,7 @@ public class DynInfoFragment extends BaseFragment {
                 Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
             }
         }).isZan(dyn.dynid);
-        int picsNum = dyn.pics.size();
-        if (picsNum > 3) {
-            picsNum = 3;
-        }
-        for (int i = 0; i < picsNum; i++) {
-            String thumUri = dyn.pics.get(i).url;
-            thumUri = GetThumbnailsUri.maxHeiAndWei(thumUri,
-                    mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_hei),
-                    mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_hei));
-            Picasso.with(mContext).load(thumUri)
-                    .resizeDimen(R.dimen.weibo_pic_hei, R.dimen.weibo_pic_wei)
-                    .into(weibo_pics_ImageView[i]);
-            final int finalI = i;
-            weibo_pics_ImageView[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    StartGalleryActivity.startByStringList(getPicsInfo(), finalI, mContext);
-                }
-            });
-        }
-        setPicVisbility(picsNum);
+
         getComment();
         plusOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,47 +143,11 @@ public class DynInfoFragment extends BaseFragment {
         });
     }
 
-    /**
-     * 获取图片uri List
-     *
-     * @return pic uri List
-     */
-    private ArrayList<String> getPicsInfo() {
-        ArrayList<String> pics = new ArrayList<>();
-        for (Dyns.DynsEntity.PicsEntity picsEntity : dyn.pics) {
-            pics.add(picsEntity.url);
-        }
-        return pics;
-    }
-
-    /**
-     * 将需要的图片设置为可见
-     * 将多余的图片设置成不可见
-     * 如果没有图片，则将 weibo_pics_linearLayout 也设置为不可见
-     *
-     * @param picsNum 图片数量
-     */
-
-    private void setPicVisbility(int picsNum) {
-        if (picsNum == 0) {
-            weibo_pics_linearLayout.setVisibility(View.GONE);
-            return;
-        }
-        for (int i = 0; i < picsNum; i++) {
-            weibo_pics_ImageView[i].setVisibility(View.VISIBLE);
-        }
-        for (int i = picsNum; i < 3; i++) {
-            weibo_pics_ImageView[i].setVisibility(View.GONE);
-            weibo_pics_ImageView[i].setOnClickListener(null);
-        }
-    }
-
     private void getComment() {
         dynCommentAdapter = new DynCommentAdapter(mActivity);
         commentRecyclerView.setAdapter(dynCommentAdapter);
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         commentRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mContext));
-        //commentRecyclerView.addOnScrollListener(new HideExtraOnScroll(mActivity.findViewById(R.id.need_scroll_out)));
 
         dynCommentAdapter.setOnCommentClick(new DynCommentAdapter.onCommentClick() {
             @Override

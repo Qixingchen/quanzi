@@ -44,6 +44,8 @@ import com.tizi.quanzi.ui.BaseFragment;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -199,11 +201,16 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                         new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                userAgeTextView.setText(String.valueOf(year) + "-"
-                                        + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(dayOfMonth));
+
+                                if (new GregorianCalendar(year, monthOfYear + 1, dayOfMonth).getTime().getTime()
+                                        > new Date().getTime()) {
+                                    Snackbar.make(view, "您不能选择未来的时间", Snackbar.LENGTH_LONG).show();
+                                }
+
+                                userAgeTextView.setText(String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth));
                                 UserInfoSetting.getNewInstance().chagngeBirthday(year, monthOfYear + 1, dayOfMonth);
                                 MyUserInfo.getInstance().getUserInfo()
-                                        .setBirthday(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                        .setBirthday(String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth));
                             }
                         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                                 calendar.get(Calendar.DAY_OF_MONTH));

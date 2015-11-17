@@ -49,7 +49,8 @@ public class GetLocationFromBaidu {
                     public void onResponse(Response<BaiduLocation> response, Retrofit retrofit) {
                         if (response.isSuccess() && response.body().status == 0) {
                             BaiduLocation.ContentEntity content = response.body().content;
-                            onResult.ok(content.address, content.point.y, content.point.x);
+                            onResult.ok(content.addressDetail.province + content.addressDetail.city,
+                                    content.point.y, content.point.x);
                         } else {
                             onResult.error(response.message());
                         }

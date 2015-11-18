@@ -6,9 +6,6 @@ import android.os.Parcelable;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +21,7 @@ import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.FriendTime;
+import com.tizi.quanzi.tool.MakeSpannableString;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
@@ -71,7 +69,6 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
             return item1.id.equals(item2.id);
         }
     });
-    ;
     private Activity activity;
     private onCommentClick onCommentClick;
 
@@ -114,7 +111,7 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
         holder.comment.setText("");
         holder.userFace.setImageUrl(comment.userIcon, GetVolley.getmInstance().getImageLoader());
         if (comment.atUserId != null) {
-            SpannableString atUser = makeLinkSpan("@" + comment.atUserName, new View.OnClickListener() {
+            SpannableString atUser = MakeSpannableString.makeLinkSpan("@" + comment.atUserName, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -136,7 +133,7 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
             });
             holder.comment.append(atUser);
             holder.comment.append(comment.content);
-            makeLinksFocusable(holder.comment);
+            MakeSpannableString.makeLinksFocusable(holder.comment);
         } else {
             holder.comment.setText(comment.content);
         }
@@ -156,22 +153,6 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
         });
     }
 
-    private SpannableString makeLinkSpan(CharSequence text, View.OnClickListener listener) {
-        SpannableString link = new SpannableString(text);
-        link.setSpan(new ClickableString(listener), 0, text.length(),
-                SpannableString.SPAN_INCLUSIVE_EXCLUSIVE);
-        return link;
-    }
-
-    private void makeLinksFocusable(TextView tv) {
-        MovementMethod m = tv.getMovementMethod();
-        if ((m == null) || !(m instanceof LinkMovementMethod)) {
-            if (tv.getLinksClickable()) {
-                tv.setMovementMethod(LinkMovementMethod.getInstance());
-            }
-        }
-    }
-
     @Override
     public int getItemCount() {
         return commentses == null ? 0 : commentses.size();
@@ -179,20 +160,6 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
 
     public interface onCommentClick {
         void Onclick(Comments.CommentsEntity comment, int position);
-    }
-
-    /* ClickableString class*/
-    private static class ClickableString extends ClickableSpan {
-        private View.OnClickListener mListener;
-
-        public ClickableString(View.OnClickListener listener) {
-            mListener = listener;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onClick(v);
-        }
     }
 
     protected static class CommentViewHolder extends RecyclerView.ViewHolder {

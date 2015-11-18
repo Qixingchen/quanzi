@@ -112,5 +112,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     //图片多选
     compile 'com.github.darsh2:MultipleImageSelect:v0.0.3'
-
+    //纵向viewpager
+    compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
 }

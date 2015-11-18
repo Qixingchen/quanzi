@@ -27,7 +27,10 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/9/11.
+ * use {@link ThemesPagerAdapter}
+ * todo delete
  */
+@Deprecated
 public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = ThemeAdapter.class.getSimpleName();
@@ -235,10 +238,10 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         protected void findViews() {
             detailButton = (Button) view.findViewById(R.id.detail_button);
-            themeIcon = (NetworkImageView) view.findViewById(R.id.theme_icon);
+            //themeIcon = (NetworkImageView) view.findViewById(R.id.theme_icon);
             participateButton = (Button) view.findViewById(R.id.participate_button);
             participantsNum = (TextView) view.findViewById(R.id.num_of_participants);
-            dynsViewPager = (ViewPager) view.findViewById(R.id.dynsViewPager);
+            //dynsViewPager = (ViewPager) view.findViewById(R.id.dynsViewPager);
             unreadNum = (TextView) view.findViewById(R.id.unread_count);
         }
 

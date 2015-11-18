@@ -106,7 +106,7 @@ public class BoomGroupFragment extends BaseFragment {
 
                 BoomGroupList.getInstance().setGroupList(booms);
 
-                boomGroupListAdapter = new BoomGroupListAdapter(mContext);
+                boomGroupListAdapter = new BoomGroupListAdapter(mContext, themeID);
                 boomGroupListAdapter.setOnClick(new BoomGroupListAdapter.OnClick() {
                     @Override
                     public void clickBoomGroup(BoomGroupClass boomGroup) {

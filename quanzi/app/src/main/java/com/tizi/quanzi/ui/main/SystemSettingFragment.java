@@ -19,7 +19,7 @@ import com.tizi.quanzi.ui.BaseFragment;
  */
 public class SystemSettingFragment extends BaseFragment {
 
-    private TextView version, openSourceLicenses;
+    private TextView version, openSourceLicenses, userLicense;
 
     public SystemSettingFragment() {
     }
@@ -35,8 +35,13 @@ public class SystemSettingFragment extends BaseFragment {
     protected void findViews(View view) {
         version = (TextView) view.findViewById(R.id.version);
         version.setPaintFlags(version.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        userLicense = (TextView) view.findViewById(R.id.user_license);
+        userLicense.setPaintFlags(userLicense.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
         openSourceLicenses = (TextView) view.findViewById(R.id.open_source_licenses);
-        openSourceLicenses.setPaintFlags(version.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        openSourceLicenses.setPaintFlags(openSourceLicenses.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
         SettingItemsFragment settingItemsFragment = new SettingItemsFragment();
         getFragmentManager().beginTransaction().add(R.id.setting_fragment, settingItemsFragment).commit();
 
@@ -51,8 +56,17 @@ public class SystemSettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent releaseNotice = new Intent(Intent.ACTION_VIEW);
-                releaseNotice.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95"));
+                releaseNotice.setData(Uri.parse(getString(R.string.update_notices)));
                 startActivity(releaseNotice);
+            }
+        });
+
+        userLicense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent license = new Intent(Intent.ACTION_VIEW);
+                license.setData(Uri.parse(getString(R.string.user_license)));
+                startActivity(license);
             }
         });
 
@@ -60,7 +74,7 @@ public class SystemSettingFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent license = new Intent(Intent.ACTION_VIEW);
-                license.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/License"));
+                license.setData(Uri.parse(getString(R.string.open_source_license)));
                 startActivity(license);
             }
         });

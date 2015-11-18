@@ -29,7 +29,14 @@ public class Timer extends AsyncTask<Integer, Integer, Integer> {
                 publishProgress(times - i - 1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                return 0;
             }
+        }
+        try {
+            Thread.sleep(params[0] % 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return 0;
         }
         return 0;
 

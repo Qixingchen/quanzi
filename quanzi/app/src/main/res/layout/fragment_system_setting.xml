@@ -36,6 +36,7 @@
                     android:textSize="@dimen/sub_title_text_size"/>
 
                 <TextView
+                    android:id="@+id/user_license"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"

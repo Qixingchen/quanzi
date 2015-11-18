@@ -3,14 +3,12 @@ package com.tizi.quanzi.ui.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.adapter.ThemeAdapter;
+import com.tizi.quanzi.adapter.ThemesPagerAdapter;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
@@ -20,15 +18,17 @@ import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
 
+import fr.castorflex.android.verticalviewpager.VerticalViewPager;
+
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class LockLock extends BaseFragment {
 
     private static LockLock mInstance;
-    private RecyclerView mThemeItemsRecyclerView;
-    private ThemeAdapter themeAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+
+    private VerticalViewPager viewPager;
 
 
     public LockLock() {
@@ -49,9 +49,18 @@ public class LockLock extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        mThemeItemsRecyclerView = (RecyclerView) view.findViewById(R.id.item_recycler_view);
-        mThemeItemsRecyclerView.setHasFixedSize(true);
-        themeAdapter = new ThemeAdapter(null, mActivity).setOnClick(new ThemeAdapter.OnClick() {
+        viewPager = (VerticalViewPager) view.findViewById(R.id.VerticalViewPager);
+        //        mThemeItemsRecyclerView = (RecyclerView) view.findViewById(R.id.item_recycler_view);
+        //        mThemeItemsRecyclerView.setHasFixedSize(true);
+        //        mLayoutManager = new LinearLayoutManager(mActivity);
+        //        mThemeItemsRecyclerView.setLayoutManager(mLayoutManager);
+        //        mThemeItemsRecyclerView.setAdapter(themeAdapter);
+    }
+
+    @Override
+    protected void initViewsAndSetEvent() {
+
+        final ThemesPagerAdapter.OnClick onClick = new ThemesPagerAdapter.OnClick() {
             @Override
             public void SignUP(Theme.ActsEntity act) {
                 if (Tool.isGuest()) {
@@ -77,23 +86,17 @@ public class LockLock extends BaseFragment {
                 }
 
             }
-        });
-        mLayoutManager = new LinearLayoutManager(mActivity);
-        mThemeItemsRecyclerView.setLayoutManager(mLayoutManager);
-        mThemeItemsRecyclerView.setAdapter(themeAdapter);
-    }
+        };
 
-    @Override
-    protected void initViewsAndSetEvent() {
         ThemeActs.getNewInstance().setNetworkListener(
                 new RetrofitNetworkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {
                         Theme theme = (Theme) ts;
                         if (theme.success) {
-                            for (Theme.ActsEntity act : theme.acts) {
-                                themeAdapter.addItem(act);
-                            }
+                            ThemesPagerAdapter adapter = new ThemesPagerAdapter(theme, mActivity, onClick);
+                            viewPager.setAdapter(adapter);
+
                         } else {
                             Log.w(TAG, theme.msg);
                         }

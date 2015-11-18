@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/protocol"
+            android:id="@+id/agree_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="120dp"

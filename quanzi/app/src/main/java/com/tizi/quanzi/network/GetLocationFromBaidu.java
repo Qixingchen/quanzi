@@ -50,7 +50,7 @@ public class GetLocationFromBaidu {
                         if (response.isSuccess() && response.body().status == 0) {
                             BaiduLocation.ContentEntity content = response.body().content;
                             onResult.ok(content.addressDetail.province + content.addressDetail.city,
-                                    content.point.y, content.point.x);
+                                    content.point.x, content.point.y);
                         } else {
                             onResult.error(response.message());
                         }

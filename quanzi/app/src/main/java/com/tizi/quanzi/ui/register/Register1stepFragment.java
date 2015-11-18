@@ -1,21 +1,26 @@
 package com.tizi.quanzi.ui.register;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.tool.MakeSpannableString;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Statue;
 import com.tizi.quanzi.tool.Timer;
@@ -33,6 +38,7 @@ public class Register1stepFragment extends BaseFragment {
     private Activity mActivity;
     private NextStep nextStep;
     private Boolean agree = false;
+    private TextView userLicense;
 
     public Register1stepFragment() {
     }
@@ -63,11 +69,25 @@ public class Register1stepFragment extends BaseFragment {
         getVoiceSignButton = (Button) view.findViewById(R.id.get_voice_sign_button);
         phoneNumberInputLayout = (TextInputLayout) view.findViewById(R.id.phoneNumberInputLayout);
         signInputLayout = (TextInputLayout) view.findViewById(R.id.signInputLayout);
-
+        userLicense = (TextView) view.findViewById(R.id.agree_text_view);
     }
 
     @Override
     protected void initViewsAndSetEvent() {
+
+        SpannableString license = MakeSpannableString.makeLinkSpan("《机密协议》", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent license = new Intent(Intent.ACTION_VIEW);
+                license.setData(Uri.parse(getString(R.string.user_license)));
+                startActivity(license);
+            }
+        });
+
+        userLicense.setText("我已阅读并同意");
+        userLicense.append(license);
+        MakeSpannableString.makeLinksFocusable(userLicense);
+
         phoneNumberInputLayout.setError(mActivity.getString(R.string.phone_number_error));
 
         ((CheckBox) view.findViewById(R.id.agree)).setOnCheckedChangeListener(

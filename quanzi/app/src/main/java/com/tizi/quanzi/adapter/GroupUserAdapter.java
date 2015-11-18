@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -39,6 +38,7 @@ import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
+import com.tizi.quanzi.widget.AskForContact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,32 +253,13 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         if (!notHavePermissionButIgnore && ActivityCompat.checkSelfPermission(
                 activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
 
-            new AlertDialog.Builder(mContext).setTitle(StaticField.AppName.AppZHName + "请求您的通讯录权限")
-                    .setMessage("您的通讯录将帮助您找到您的好友，通讯录即传即用，我们不会储存您的通讯录")
-                    .setPositiveButton("好的", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            int code = StaticField.PermissionRequestCode.addContactUsersInQuanziZone;
-                            ActivityCompat.requestPermissions(activity,
-                                    new String[]{Manifest.permission.READ_CONTACTS}, code);
-                        }
-                    }).setNegativeButton("不好", new DialogInterface.OnClickListener() {
+            AskForContact.getNewInstance(new AskForContact.OnResult() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void deny() {
                     addUser(groupid, true);
                 }
-            })
-                    .setNeutralButton("查看权限说明", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent releaseNotice = new Intent(Intent.ACTION_VIEW);
-                            releaseNotice.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/uses-permission"));
-                            activity.startActivity(releaseNotice);
-                        }
-                    }).show();
-
+            }).AskForContact(activity, StaticField.PermissionRequestCode.addContactUsersInQuanziZone);
             return;
-
         }
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

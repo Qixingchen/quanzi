@@ -88,6 +88,9 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                 Picasso.with(context).load(R.drawable.add_group)
                         .resizeDimen(R.dimen.group_face, R.dimen.group_face)
                         .into(myViewHolder.groupFaceImageView);
+                myViewHolder.lastTimeTextview.setText("");
+                myViewHolder.groupNameTextview.setText("");
+                myViewHolder.lastMessTextview.setText("");
 
             } else {
                 if (groupClasses.get(position).UnreadCount != 0) {

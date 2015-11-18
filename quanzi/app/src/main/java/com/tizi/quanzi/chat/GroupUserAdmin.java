@@ -296,6 +296,9 @@ public class GroupUserAdmin {
         UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
+                if (onResult != null) {
+                    onResult.OK();
+                }
             }
 
             @Override
@@ -315,9 +318,6 @@ public class GroupUserAdmin {
                     @Override
                     public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
                         Log.i(TAG, "LC 发送成功");
-                        if (onResult != null) {
-                            onResult.OK();
-                        }
                     }
 
                     @Override

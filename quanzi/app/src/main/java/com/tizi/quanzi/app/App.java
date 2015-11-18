@@ -101,7 +101,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             startActivity(log_in);
         }
 
-        //test build
+        //todo test build
 
         Log.i("BOARD", Build.BOARD);
         Log.i("SDK", Build.VERSION.SDK);

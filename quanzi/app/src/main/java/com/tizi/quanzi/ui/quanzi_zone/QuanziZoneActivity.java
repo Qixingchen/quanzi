@@ -2,10 +2,12 @@ package com.tizi.quanzi.ui.quanzi_zone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.GroupAllInfo;
@@ -25,6 +27,9 @@ public class QuanziZoneActivity extends BaseActivity {
     private QuanziSetFragment quanziSetFragment;
     private GroupAllInfo mGroupAllInfo;
     private GroupTagFragment groupTagFragment;
+
+    private String groupID;
+    private boolean forJoin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +52,14 @@ public class QuanziZoneActivity extends BaseActivity {
 
         Intent intent = getIntent();
         final String convID = intent.getStringExtra("conversation");
+        forJoin = intent.getBooleanExtra("forJoin", false);
         final String GroupID;
         if (convID == null || convID.equals("")) {
             GroupID = intent.getStringExtra("groupID");
+            groupID = GroupID;
         } else {
             GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
+            groupID = GroupID;
         }
         GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
@@ -81,6 +89,10 @@ public class QuanziZoneActivity extends BaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_quanzi_zone, menu);
         menu.findItem(R.id.action_settings).setVisible(false);
+        if (forJoin) {
+            menu.findItem(R.id.action_settings).setVisible(false);
+            menu.findItem(R.id.action_join_group).setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -98,6 +110,31 @@ public class QuanziZoneActivity extends BaseActivity {
                     .replace(R.id.fragment, quanziSetFragment)
                     .addToBackStack("quanziSetFragment").commit();
             return true;
+        }
+
+        if (id == R.id.action_join_group) {
+            GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                @Override
+                public void onOK(Object ts) {
+                    GroupAllInfo info = (GroupAllInfo) ts;
+                    GroupUserAdmin.getInstance(mContext).setOnResult(new GroupUserAdmin.OnResult() {
+                        @Override
+                        public void OK() {
+                            Snackbar.make(view, "加群成功!", Snackbar.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void error(String errorMessage) {
+                            Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                        }
+                    }).acceptToJoinGroup(true, info.group.convId, groupID);
+                }
+
+                @Override
+                public void onError(String Message) {
+                    Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
+                }
+            }).queryGroup(groupID);
         }
 
         return super.onOptionsItemSelected(item);

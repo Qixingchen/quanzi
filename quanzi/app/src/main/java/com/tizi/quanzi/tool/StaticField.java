@@ -128,6 +128,7 @@ public class StaticField {
         public final static int addContactUsersInQuanziZone = 103;
         public final static int addContactUsersInNewGroup = 104;
         public final static int saveImageToExternalStorage = 105;
+        public final static int QrCodeScan = 106;
 
         public static boolean isPermissionRequest(int code) {
             return code >= 0 && code <= 255;

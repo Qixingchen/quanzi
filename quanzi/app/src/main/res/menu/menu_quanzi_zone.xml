@@ -8,4 +8,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_join_group"
+        android:orderInCategory="100"
+        android:title="加入"
+        android:visible="false"/>
 </menu>

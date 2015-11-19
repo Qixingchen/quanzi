@@ -1,6 +1,11 @@
 package com.tizi.quanzi.ui.main;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,11 +13,17 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
+import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.dataStatic.SystemMessageList;
+import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
+import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.FragmentResume;
+import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseActivity;
+import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 
 
 public class MainActivity extends BaseActivity {
@@ -99,6 +110,15 @@ public class MainActivity extends BaseActivity {
                     .replace(R.id.fragment, notifiMessageFragment)
                     .addToBackStack("notifiMessageFragment").commit();
         }
+        if (id == R.id.action_scan_qr_code) {
+            Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+            intent.setPackage("com.google.zxing.client.android");
+            if (Tool.isIntentSafe(mActivity, intent)) {
+                mActivity.startActivityForResult(intent, StaticField.PermissionRequestCode.QrCodeScan);
+            } else {
+                CallInstallZxingTeam();
+            }
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -138,5 +158,49 @@ public class MainActivity extends BaseActivity {
         userInfoSetFragment = new UserInfoSetFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, userInfoSetFragment).addToBackStack("userInfoSetFragment").commit();
+    }
+
+    private void CallInstallZxingTeam() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        builder.setMessage("您的设备未安装二维码扫描软件,是否安装?").setTitle("没有可以用于扫描的软件");
+
+        builder.setPositiveButton("从市场安装", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent installApk = new Intent(Intent.ACTION_VIEW);
+                installApk.setData(Uri.parse("market://details?id=com.google.zxing.client.android"));
+                startActivity(installApk);
+            }
+        });
+        builder.setNeutralButton("取消", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Subscribe
+    public void onActivityResult(ActivityResultAns ans) {
+        if (ans.requestCode == StaticField.PermissionRequestCode.QrCodeScan) {
+            if (ans.resultCode != Activity.RESULT_OK) {
+                return;
+            }
+            String contents = ans.data.getStringExtra("SCAN_RESULT");
+            int last = contents.lastIndexOf("/");
+            contents = contents.substring(last + 1);
+            if (contents.contains("joinGroup")) {
+                last = contents.lastIndexOf("=");
+                String groupID = contents.substring(last + 1);
+                boolean forjoin = true;
+                for (Object group : GroupList.getInstance().getGroupList()) {
+                    if (((GroupClass) group).ID.equals(groupID)) {
+                        forjoin = false;
+                        break;
+                    }
+                }
+                Intent groupZone = new Intent(mContext, QuanziZoneActivity.class);
+                groupZone.putExtra("groupID", groupID);
+                groupZone.putExtra("forJoin", forjoin);
+                startActivity(groupZone);
+            }
+        }
     }
 }

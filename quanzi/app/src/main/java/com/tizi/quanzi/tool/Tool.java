@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +28,7 @@ import com.tizi.quanzi.ui.login.LoginActivity;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by qixingchen on 15/7/20.
@@ -34,6 +37,13 @@ import java.util.Calendar;
 public class Tool {
 
     private static final String TAG = Tool.class.getSimpleName();
+
+    //判断 intent 是否安全
+    public static boolean isIntentSafe(Activity activity, Intent intent) {
+        PackageManager packageManager = activity.getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+        return activities.size() > 0;
+    }
 
     /**
      * 检查是否存在SDCard

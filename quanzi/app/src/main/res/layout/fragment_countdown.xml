@@ -1,4 +1,5 @@
 <FrameLayout
+    android:id="@+id/fragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,30 +16,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="60dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/share_app"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="80dp"
-            android:background="@drawable/white_cloud"
-            android:gravity="center"
-            android:text="分享应用"
-            android:textColor="#445456"
-            android:textSize="15sp"/>
 
-        <Button
-            android:id="@+id/hot_dyns"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/red_cloud"
-            android:text="最热"
-            android:textColor="#FFF"
-            android:textSize="15sp"/>
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/share_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="80dp"
+                android:background="@drawable/white_cloud"
+                android:gravity="center"
+                android:text="分享应用"
+                android:textColor="#445456"
+                android:textSize="15sp"/>
+
+            <Button
+                android:id="@+id/hot_dyns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/red_cloud"
+                android:text="最热"
+                android:textColor="#FFF"
+                android:textSize="15sp"/>
+
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/no_boom_group"
+            layout="@layout/item_not_sign_up"/>
 
     </LinearLayout>
-
 
 </FrameLayout>

@@ -69,7 +69,7 @@ public class ThemeSignUpFragment extends BaseFragment {
         groupSelectAdapter = new GroupSelectAdapter(GroupList.getInstance().getGroupList(),
                 mActivity, actID, GroupSelectAdapter.Theme_Sign_UP_Group);
         mGroupListRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(mActivity, Tool.getSrceenWidthDP() / 120);
+        mLayoutManager = new GridLayoutManager(mActivity, Tool.getSrceenWidthDP() / 80);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
         mGroupListRecyclerView.setAdapter(groupSelectAdapter);
 

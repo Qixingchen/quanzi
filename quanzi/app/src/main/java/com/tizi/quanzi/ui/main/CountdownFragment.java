@@ -10,9 +10,15 @@ import android.widget.Button;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
+import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.gson.GroupIDs;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.GetShareIntent;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.dyns.DynsActivity;
+import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
 
 /**
  * 倒计时界面
@@ -24,6 +30,8 @@ public class CountdownFragment extends BaseFragment {
     private String themeID;
     private Button shareapp;
     private Button hotdyns;
+    private View countDown;
+    private Button signUpButton;
 
 
     public CountdownFragment() {
@@ -60,6 +68,9 @@ public class CountdownFragment extends BaseFragment {
     protected void findViews(View view) {
         this.hotdyns = (Button) view.findViewById(R.id.hot_dyns);
         this.shareapp = (Button) view.findViewById(R.id.share_app);
+        countDown = view.findViewById(R.id.no_boom_group);
+        signUpButton = (Button) view.findViewById(R.id.sign_up_button);
+        countDown.setVisibility(View.GONE);
     }
 
     @Override
@@ -79,6 +90,32 @@ public class CountdownFragment extends BaseFragment {
                 GetShareIntent.startShare(getContext());
             }
         });
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(AppStaticValue.getActivity(MainActivity.class.getSimpleName()));
+                    return;
+                }
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, ThemeSignUpFragment.newInstance(themeID))
+                        .addToBackStack("ThemeSignUpFragment").commit();
+            }
+        });
+        ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                GroupIDs ids = (GroupIDs) ts;
+                if (ids.grpids.size() == 0) {
+                    countDown.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onError(String Message) {
+
+            }
+        }).getMySignedGroups(themeID);
     }
 
 

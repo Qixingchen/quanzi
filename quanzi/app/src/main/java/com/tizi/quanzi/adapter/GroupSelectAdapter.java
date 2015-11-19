@@ -16,12 +16,11 @@ import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.Timer;
+import com.tizi.quanzi.widget.ForegroundImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by qixingchen on 15/9/14.
@@ -99,9 +98,8 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
         if (SignUPGroupViewHolder.class.isInstance(viewHolder)) {
             final SignUPGroupViewHolder signUpGroupVH = (SignUPGroupViewHolder) viewHolder;
 
-
             Picasso.with(mContext).load(groups.get(position).Face)
-                    .resizeDimen(R.dimen.group_face, R.dimen.group_face)
+                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
                     .into(signUpGroupVH.groupFace);
             signUpGroupVH.groupFace.setOnClickListener(
                     new View.OnClickListener() {
@@ -160,7 +158,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
         if (DynSelectGroup.class.isInstance(viewHolder)) {
             final DynSelectGroup dynSelectGroup = (DynSelectGroup) viewHolder;
             Picasso.with(mContext).load(groups.get(position).Face.toString())
-                    .resizeDimen(R.dimen.group_face, R.dimen.group_face)
+                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
                     .into(dynSelectGroup.groupFaceImageView);
             dynSelectGroup.groupNameTextview.setText(groups.get(position).Name);
             dynSelectGroup.itemView.setOnClickListener(new View.OnClickListener() {
@@ -219,22 +217,22 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
 
     static class SignUPGroupViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView groupFace;
+        private ForegroundImageView groupFace;
         private ProgressBar progressBar;
         private TextView groupName;
 
         public SignUPGroupViewHolder(View itemView) {
             super(itemView);
-            groupFace = (CircleImageView) itemView.findViewById(R.id.group_face_image_view);
+            groupFace = (ForegroundImageView) itemView.findViewById(R.id.group_face_image_view);
             progressBar = (ProgressBar) itemView.findViewById(R.id.sign_up_process_bar);
             groupName = (TextView) itemView.findViewById(R.id.group_name_text_view);
         }
 
         public void setBorder(Context mContext, boolean isSelect) {
             if (isSelect) {
-                groupFace.setBorderColor(mContext.getResources().getColor(R.color.md_yellow_400));
+                groupFace.setForeground(mContext.getResources().getDrawable(R.drawable.group_signed_up));
             } else {
-                groupFace.setBorderColor(mContext.getResources().getColor(R.color.md_grey_800));
+                groupFace.setForeground(null);
             }
         }
     }

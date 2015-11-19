@@ -92,7 +92,8 @@ public class BoomGroupFragment extends BaseFragment {
             @Override
             public void onOK(Object ts) {
                 BoomGroup boomGroup = (BoomGroup) ts;
-                groupNums.setText(String.valueOf(boomGroup.groupmatch.size()));
+                groupNums.setText(String.format("共有%d个圈子配对成功,点击和小伙伴们开始热聊吧!",
+                        boomGroup.groupmatch.size()));
 
                 List<BoomGroupClass> booms = BoomGroupClass.getBoomGroupListFromBoomGroupGson(boomGroup.groupmatch);
 
@@ -144,7 +145,7 @@ public class BoomGroupFragment extends BaseFragment {
 
             @Override
             public void countdown(int s) {
-                countdownTime.setText(String.format("%d:%d:%d", s / 3600, (s % 3600) / 60,
+                countdownTime.setText(String.format("还剩%d:%d:%d结束", s / 3600, (s % 3600) / 60,
                         s % 60));
             }
         }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, countDown * 1000);

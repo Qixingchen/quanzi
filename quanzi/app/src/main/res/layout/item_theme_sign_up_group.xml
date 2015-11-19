@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,23 +14,20 @@
         android:orientation="vertical">
 
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.tizi.quanzi.widget.ForegroundImageView
             android:id="@+id/group_face_image_view"
-            android:layout_width="@dimen/group_face"
-            android:layout_height="@dimen/group_face"
+            android:layout_width="@dimen/group_face_small"
+            android:layout_height="@dimen/group_face_small"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
-            app:civ_border_color="@color/md_yellow_400"
-            app:civ_border_width="6dp"
-            tools:background="@drawable/face"/>
+            tools:src="@drawable/face"/>
 
         <ProgressBar
             android:id="@+id/sign_up_process_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_centerInParent="true"
             android:visibility="gone"/>
 
     </RelativeLayout>

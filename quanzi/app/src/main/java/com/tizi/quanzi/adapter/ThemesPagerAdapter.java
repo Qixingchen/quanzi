@@ -24,6 +24,7 @@ import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.dyns.DynsActivity;
+import com.tizi.quanzi.widget.custom_tab.SimpleCustomChromeTabsHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,6 +177,19 @@ public class ThemesPagerAdapter extends PagerAdapter {
                     return;
                 }
                 onClick.EnterTheme(act);
+            }
+        });
+
+        /*详情界面*/
+        final SimpleCustomChromeTabsHelper mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
+        mCustomTabHelper.prepareUrl(act.detailUrl);
+        SimpleCustomChromeTabsHelper.CustomTabsUiBuilder uiBuilder = mCustomTabHelper.new CustomTabsUiBuilder();
+        uiBuilder.setToolbarColor(mActivity.getResources().getColor(R.color.colorPrimary));
+
+        detailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomTabHelper.openUrl(act.detailUrl);
             }
         });
 

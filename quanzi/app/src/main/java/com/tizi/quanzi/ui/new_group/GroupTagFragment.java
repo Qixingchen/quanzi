@@ -34,16 +34,18 @@ public class GroupTagFragment extends BaseFragment {
     private static final String SELECT_TAGS = "selectTags";
     private static final String NEED_OK_BTN = "needOkBtn";
 
+    private static final int MAX_TAG_NUM = 5;
+
     private boolean needOkbtn;
 
 
-    private TextView[] tagTextViews = new TextView[5];
+    private TextView[] tagTextViews = new TextView[MAX_TAG_NUM];
     private android.widget.TextView changetags;
     private RecyclerView tagrecyclerview;
     private TextView parentTagView;
     private Button okBtn;
 
-    private ArrayList<AllTags.TagsEntity> selectTags = new ArrayList<>();
+    private AllTags.TagsEntity[] showTags = new AllTags.TagsEntity[MAX_TAG_NUM];
     private Map<String, List<AllTags.TagsEntity>> tagsMap = new TreeMap<>();
     private int parentLastPosition = 0;
 
@@ -64,7 +66,12 @@ public class GroupTagFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            selectTags = getArguments().getParcelableArrayList(SELECT_TAGS);
+            ArrayList<AllTags.TagsEntity> selectTags = getArguments().getParcelableArrayList(SELECT_TAGS);
+            if (selectTags != null) {
+                for (int i = 0; i < selectTags.size(); i++) {
+                    showTags[i] = selectTags.get(i);
+                }
+            }
             needOkbtn = getArguments().getBoolean(NEED_OK_BTN);
         }
     }
@@ -121,12 +128,12 @@ public class GroupTagFragment extends BaseFragment {
             }
         }).findAllTags();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < MAX_TAG_NUM; i++) {
             final int finalI = i;
             tagTextViews[i].setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    selectTags.remove(finalI);
+                    deleteTagFromShoeTags(finalI);
                     setSelectTagsTextView();
                     return true;
                 }
@@ -139,7 +146,7 @@ public class GroupTagFragment extends BaseFragment {
             okBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((QuanziZoneActivity) mActivity).OnTagsSelectOk(selectTags);
+                    ((QuanziZoneActivity) mActivity).OnTagsSelectOk(getTagsList());
                 }
             });
         }
@@ -157,17 +164,16 @@ public class GroupTagFragment extends BaseFragment {
                 tagsMap.get(nowParent), new TagSelectAdapter.OnSelect() {
             @Override
             public void select(AllTags.TagsEntity tag) {
-                if (selectTags.size() < 5) {
-                    for (AllTags.TagsEntity tempTag : selectTags) {
+                if (getTagsList().size() < MAX_TAG_NUM) {
+                    for (AllTags.TagsEntity tempTag : getTagsList()) {
                         if (tempTag.tagName.compareTo(tag.tagName) == 0) {
                             Snackbar.make(view, "此标签已被选择", Snackbar.LENGTH_LONG).show();
                             return;
                         }
                     }
-                    selectTags.add(tag);
-                    setSelectTagsTextView();
+                    addTagToShowTags(tag);
                 } else {
-                    Snackbar.make(view, "只能选择5个标签", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, String.format("只能选择%d个标签", MAX_TAG_NUM), Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -176,21 +182,53 @@ public class GroupTagFragment extends BaseFragment {
     }
 
     private void setSelectTagsTextView() {
-        int size = selectTags.size();
-        for (int i = 0; i < size; i++) {
-            tagTextViews[i].setText(selectTags.get(i).tagName);
-            tagTextViews[i].setVisibility(View.VISIBLE);
-            tagTextViews[i].setEnabled(true);
+
+        for (int i = 0; i < MAX_TAG_NUM; i++) {
+            if (showTags[i] == null) {
+                tagTextViews[i].setVisibility(View.INVISIBLE);
+                tagTextViews[i].setEnabled(false);
+            } else {
+                tagTextViews[i].setText(showTags[i].tagName);
+                tagTextViews[i].setVisibility(View.VISIBLE);
+                tagTextViews[i].setEnabled(true);
+            }
         }
 
-        for (int i = size; i < 5; i++) {
-            tagTextViews[i].setVisibility(View.INVISIBLE);
-            tagTextViews[i].setEnabled(false);
-        }
     }
 
     public ArrayList<AllTags.TagsEntity> OnOK() {
-        return selectTags;
+        return getTagsList();
+    }
+
+    /**
+     * 将tag加入 showTags ,用于保持一个tag显示位置的固定
+     */
+    private void addTagToShowTags(AllTags.TagsEntity tag) {
+        for (int i = 0; i < MAX_TAG_NUM; i++) {
+            if (showTags[i] == null) {
+                showTags[i] = tag;
+                break;
+            }
+        }
+        setSelectTagsTextView();
+    }
+
+    /**
+     * 在 showTags 中删除指定的tag
+     */
+    private void deleteTagFromShoeTags(int postion) {
+        showTags[postion] = null;
+        setSelectTagsTextView();
+    }
+
+    private ArrayList<AllTags.TagsEntity> getTagsList() {
+        ArrayList<AllTags.TagsEntity> ans = new ArrayList<>();
+        for (AllTags.TagsEntity tag : showTags) {
+            if (tag != null) {
+                ans.add(tag);
+            }
+        }
+        return ans;
     }
 
     public interface OnOK {

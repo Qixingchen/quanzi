@@ -105,7 +105,7 @@ public class QrCodeFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent i = new Intent(android.content.Intent.ACTION_SEND);
                 i.setType("text/plain");
-                i.putExtra(android.content.Intent.EXTRA_TEXT, MyUri);
+                i.putExtra(android.content.Intent.EXTRA_TEXT, "我邀请您加入我的圈子~:  " + MyUri);
                 if (Tool.isIntentSafe(mActivity, i)) {
                     startActivity(i);
                 }

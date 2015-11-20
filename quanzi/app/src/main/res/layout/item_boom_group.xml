@@ -79,6 +79,7 @@
                 android:id="@+id/second_group_face"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
                 tools:src="@drawable/face"/>
 
             <TextView

@@ -4,6 +4,7 @@ package com.tizi.quanzi.ui.quanzi_zone;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
@@ -42,7 +44,7 @@ public class QuanziSetFragment extends BaseFragment {
     private TextView quanziName, quanziTag, quanziSign, deleteMess;
     private Switch ignoreNotifiSwitch;
     private Button exitQuanzi;
-    private View nameView, tagView, signView;
+    private View nameView, tagView, signView, qrcodeView;
     private GroupAllInfo groupAllInfo;
 
     @Deprecated
@@ -84,6 +86,7 @@ public class QuanziSetFragment extends BaseFragment {
         nameView = view.findViewById(R.id.quanzi_name_view);
         tagView = view.findViewById(R.id.quanzi_tag_view);
         signView = view.findViewById(R.id.quanzi_sign_view);
+        qrcodeView = view.findViewById(R.id.quanzi_qr_code_view);
     }
 
     @Override
@@ -96,195 +99,209 @@ public class QuanziSetFragment extends BaseFragment {
 
         ignoreNotifiSwitch.setChecked(!group.getNeedNotifi());
 
-        if (groupAllInfo != null) {
-            quanziName.setText(group.Name);
-            nameView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    LayoutInflater inflater = mActivity.getLayoutInflater();
-                    final View layout = inflater.inflate(R.layout.dialog_one_line,
-                            (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
-                    final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
-                    final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
-
-                    title.setText("输入新的圈子名称");
-                    input.setHint("圈子名称");
-                    input.setText(group.Name);
-                    builder.setTitle("更改圈子名称").setView(layout)
-                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String name = input.getText().toString();
-                                    //后台
-
-                                    //LC发送广播
-                                    SendMessage.getInstance().sendTextMessage(
-                                            group.convId, name,
-                                            SendMessage.setSysMessAttr(
-                                                    SendMessage.setMessAttr(group.ID,
-                                                            StaticField.ConvType.GROUP),
-                                                    group.convId,
-                                                    StaticField.SystemMessAttrName.systemFlag.group_change_name,
-                                                    ""));
-
-                                    //GroupList更新
-                                    group.Name = name;
-                                    GroupList.getInstance().updateGroup(group);
-                                    quanziName.setText(name);
-
-                                    //后台更新
-                                    GroupSetting.getNewInstance().ChangeName(group.ID, group.Name);
-
-                                }
-                            }).setNegativeButton("取消", null).show();
-                }
-            });
-            quanziSign.setText(groupAllInfo.group.notice);
-            signView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    LayoutInflater inflater = mActivity.getLayoutInflater();
-                    final View layout = inflater.inflate(R.layout.dialog_one_line,
-                            (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
-                    final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
-                    final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
-
-                    title.setText("输入新的圈子签名");
-                    input.setHint("圈子签名");
-                    input.setText(group.Notice);
-                    builder.setTitle("更改圈子签名").setView(layout)
-                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String sign = input.getText().toString();
-
-                                    //GroupList更新
-                                    group.Notice = sign;
-                                    GroupList.getInstance().updateGroup(group);
-                                    quanziSign.setText(sign);
-
-                                    //后台更新
-                                    GroupSetting.getNewInstance().ChangeSign(group.ID, group.Notice);
-
-                                }
-                            }).setNegativeButton("取消", null).show();
-                }
-            });
-
-            quanziTag.setText(AllTags.getTagString(groupAllInfo.tagList));
-            tagView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((QuanziZoneActivity) mActivity).callForTagFragment(
-                            new ArrayList<>(groupAllInfo.tagList));
-                }
-            });
-
-            if (group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
-                exitQuanzi.setText("解散圈子");
-            } else {
-                exitQuanzi.setText("退出圈子");
-            }
-            deleteMess.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                    builder.setTitle("确认删除聊天记录么？").setMessage("删除后无法恢复");
-                    builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            DBAct.getInstance().deleteAllMessage(groupAllInfo.group.convId);
-                        }
-                    });
-                    builder.setNegativeButton("取消", null);
-                    builder.create().show();
-                }
-            });
-            ignoreNotifiSwitch.setOnCheckedChangeListener(
-                    new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                            GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(group.ID);
-                            if (groupClass != null) {
-                                if (isChecked) {
-                                    groupClass.setNeedNotifi(false, true);
-                                } else {
-                                    groupClass.setNeedNotifi(true, true);
-
-                                }
-                            }
-                        }
-
-                    }
-
-            );
-            exitQuanzi.setOnClickListener(
-                    new View.OnClickListener()
-
-                    {
-                        @Override
-                        public void onClick(View v) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                            final GroupClass groupClass = (GroupClass) GroupList.getInstance()
-                                    .getGroup(groupAllInfo.group.groupNo);
-                            if (groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
-                                builder.setTitle("确认解散这个圈子么？");
-                                builder.setPositiveButton("解散", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        GroupUserAdmin.getInstance(mActivity).setOnResult(
-                                                new GroupUserAdmin.OnResult() {
-                                                    @Override
-                                                    public void OK() {
-                                                        GroupList.getInstance().deleteGroup(groupClass.ID);
-                                                        returnToMainActivity();
-                                                    }
-
-                                                    @Override
-                                                    public void error(String errorMessage) {
-
-                                                    }
-                                                }
-                                        ).deleteGroup(groupClass.convId, groupClass.ID);
-                                    }
-                                });
-                                builder.setNegativeButton("取消", null);
-                                builder.create().show();
-                            } else {
-                                builder.setTitle("确认退出这个圈子么？");
-                                builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        GroupUserAdmin.getInstance(mActivity).setOnResult(
-                                                new GroupUserAdmin.OnResult() {
-                                                    @Override
-                                                    public void OK() {
-                                                        GroupList.getInstance().deleteGroup(groupClass.ID);
-                                                        returnToMainActivity();
-                                                    }
-
-                                                    @Override
-                                                    public void error(String errorMessage) {
-
-                                                    }
-                                                }
-                                        ).deleteMember(groupClass.convId, groupClass.ID, AppStaticValue.getUserID());
-
-                                    }
-                                });
-                                builder.setNegativeButton("取消", null);
-                                builder.create().show();
-                            }
-                        }
-                    }
-
-            );
+        if (groupAllInfo == null || groupAllInfo.group == null) {
+            Snackbar.make(view, "圈子不存在", Snackbar.LENGTH_LONG).show();
+            return;
         }
+        quanziName.setText(group.Name);
+        nameView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                LayoutInflater inflater = mActivity.getLayoutInflater();
+                final View layout = inflater.inflate(R.layout.dialog_one_line,
+                        (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
+                final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
+                final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
+
+                title.setText("输入新的圈子名称");
+                input.setHint("圈子名称");
+                input.setText(group.Name);
+                builder.setTitle("更改圈子名称").setView(layout)
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String name = input.getText().toString();
+                                //后台
+
+                                //LC发送广播
+                                SendMessage.getInstance().sendTextMessage(
+                                        group.convId, name,
+                                        SendMessage.setSysMessAttr(
+                                                SendMessage.setMessAttr(group.ID,
+                                                        StaticField.ConvType.GROUP),
+                                                group.convId,
+                                                StaticField.SystemMessAttrName.systemFlag.group_change_name,
+                                                ""));
+
+                                //GroupList更新
+                                group.Name = name;
+                                GroupList.getInstance().updateGroup(group);
+                                quanziName.setText(name);
+
+                                //后台更新
+                                GroupSetting.getNewInstance().ChangeName(group.ID, group.Name);
+
+                            }
+                        }).setNegativeButton("取消", null).show();
+            }
+        });
+        quanziSign.setText(groupAllInfo.group.notice);
+        signView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                LayoutInflater inflater = mActivity.getLayoutInflater();
+                final View layout = inflater.inflate(R.layout.dialog_one_line,
+                        (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
+                final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
+                final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
+
+                title.setText("输入新的圈子签名");
+                input.setHint("圈子签名");
+                input.setText(group.Notice);
+                builder.setTitle("更改圈子签名").setView(layout)
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String sign = input.getText().toString();
+
+                                //GroupList更新
+                                group.Notice = sign;
+                                GroupList.getInstance().updateGroup(group);
+                                quanziSign.setText(sign);
+
+                                //后台更新
+                                GroupSetting.getNewInstance().ChangeSign(group.ID, group.Notice);
+
+                            }
+                        }).setNegativeButton("取消", null).show();
+            }
+        });
+
+        quanziTag.setText(AllTags.getTagString(groupAllInfo.tagList));
+        tagView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((QuanziZoneActivity) mActivity).callForTagFragment(
+                        new ArrayList<>(groupAllInfo.tagList));
+            }
+        });
+
+        if (group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
+            exitQuanzi.setText("解散圈子");
+        } else {
+            exitQuanzi.setText("退出圈子");
+        }
+        deleteMess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setTitle("确认删除聊天记录么？").setMessage("删除后无法恢复");
+                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DBAct.getInstance().deleteAllMessage(groupAllInfo.group.convId);
+                    }
+                });
+                builder.setNegativeButton("取消", null);
+                builder.create().show();
+            }
+        });
+        ignoreNotifiSwitch.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                        GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(group.ID);
+                        if (groupClass != null) {
+                            if (isChecked) {
+                                groupClass.setNeedNotifi(false, true);
+                            } else {
+                                groupClass.setNeedNotifi(true, true);
+
+                            }
+                        }
+                    }
+
+                }
+
+        );
+        exitQuanzi.setOnClickListener(
+                new View.OnClickListener()
+
+                {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                        final GroupClass groupClass = (GroupClass) GroupList.getInstance()
+                                .getGroup(groupAllInfo.group.groupNo);
+                        if (groupClass.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
+                            builder.setTitle("确认解散这个圈子么？");
+                            builder.setPositiveButton("解散", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    GroupUserAdmin.getInstance(mActivity).setOnResult(
+                                            new GroupUserAdmin.OnResult() {
+                                                @Override
+                                                public void OK() {
+                                                    GroupList.getInstance().deleteGroup(groupClass.ID);
+                                                    returnToMainActivity();
+                                                }
+
+                                                @Override
+                                                public void error(String errorMessage) {
+
+                                                }
+                                            }
+                                    ).deleteGroup(groupClass.convId, groupClass.ID);
+                                }
+                            });
+                            builder.setNegativeButton("取消", null);
+                            builder.create().show();
+                        } else {
+                            builder.setTitle("确认退出这个圈子么？");
+                            builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    GroupUserAdmin.getInstance(mActivity).setOnResult(
+                                            new GroupUserAdmin.OnResult() {
+                                                @Override
+                                                public void OK() {
+                                                    GroupList.getInstance().deleteGroup(groupClass.ID);
+                                                    returnToMainActivity();
+                                                }
+
+                                                @Override
+                                                public void error(String errorMessage) {
+
+                                                }
+                                            }
+                                    ).deleteMember(groupClass.convId, groupClass.ID, AppStaticValue.getUserID());
+
+                                }
+                            });
+                            builder.setNegativeButton("取消", null);
+                            builder.create().show();
+                        }
+                    }
+                }
+
+        );
+
+        qrcodeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> image = new ArrayList<>();
+                String baseUri = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&ecc=Q&data=";
+                baseUri += "http://www.tizi-tech.com/sys:joinGroup=" + groupAllInfo.group.id;
+                Log.i(TAG + "QrCode", baseUri);
+                image.add(baseUri);
+                StartGalleryActivity.startByStringList(image, 0, mContext);
+            }
+        });
     }
 
     private void returnToMainActivity() {

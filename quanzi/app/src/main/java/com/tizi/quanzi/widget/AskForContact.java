@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 
 /**
  * Created by qixingchen on 15/11/18.
@@ -45,9 +46,11 @@ public class AskForContact {
                     .setNeutralButton("查看权限说明", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent releaseNotice = new Intent(Intent.ACTION_VIEW);
-                            releaseNotice.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/uses-permission"));
-                            activity.startActivity(releaseNotice);
+                            Intent permissionNotice = new Intent(Intent.ACTION_VIEW);
+                            permissionNotice.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/uses-permission"));
+                            if (Tool.isIntentSafe(activity, permissionNotice)) {
+                                activity.startActivity(permissionNotice);
+                            }
                         }
                     }).show();
         }

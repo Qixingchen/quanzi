@@ -2,6 +2,8 @@ package com.tizi.quanzi.tool;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -56,7 +58,46 @@ public class ShareImage {
     }
 
     public void shareImage(Activity activity, Bitmap bitmap, String fileName) {
+        shareImage(activity, bitmap, fileName, false);
+    }
+
+    public void shareImage(final Activity activity, final Bitmap bitmap, final String fileName, boolean ignorePermission) {
         String RootPath;
+        if (!ignorePermission && ActivityCompat.checkSelfPermission(App.getApplication(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            lastBitMap = bitmap;
+            lastFileName = fileName;
+            lastActivity = activity;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(String.format("%s申请储存权限", StaticField.AppName.AppZHName))
+                    .setMessage(StaticField.AppName.AppZHName + "需要文件储存权限来储存临时的分享文件的缓存，文件将存放在系统指定的缓存文件夹，不会污染您的设备储存区。" + "您也可以不授予此项权限，但这可能导致接收分享的应用工作不正常，详情请参看权限说明。")
+                    .setPositiveButton("好的", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(activity,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    StaticField.PermissionRequestCode.shareImage);
+                        }
+                    }).setNegativeButton("不好", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    shareImage(activity, bitmap, fileName, true);
+                }
+            }).setNeutralButton("查看权限说明", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent permissionNotice = new Intent(Intent.ACTION_VIEW);
+                    permissionNotice.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/uses-permission"));
+                    if (Tool.isIntentSafe(activity, permissionNotice)) {
+                        activity.startActivity(permissionNotice);
+                    }
+                }
+            }).show();
+
+
+            return;
+        }
         if (useProvider()) {
             RootPath = App.getApplication().getCacheDir().toString();
         } else {
@@ -122,12 +163,19 @@ public class ShareImage {
 
     @Subscribe
     public void onPermission(PermissionAnser permissionAnser) {
-        if (permissionAnser.allGreen) {
-            saveImage(lastActivity, lastBitMap, lastFileName);
+        switch (permissionAnser.requestCode) {
+            case StaticField.PermissionRequestCode.saveImageToExternalStorage:
+                if (permissionAnser.allGreen) {
+                    saveImage(lastActivity, lastBitMap, lastFileName);
+                }
+                lastActivity = null;
+                lastFileName = null;
+                lastBitMap = null;
+                break;
+            case StaticField.PermissionRequestCode.shareImage:
+                shareImage(lastActivity, lastBitMap, lastFileName, true);
         }
-        lastActivity = null;
-        lastFileName = null;
-        lastBitMap = null;
+
     }
 
 }

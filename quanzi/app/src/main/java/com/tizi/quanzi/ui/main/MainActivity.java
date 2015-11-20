@@ -42,6 +42,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         // TODO: 15/10/13 play政策不允许做这个
         //GetAppVersion.doit(this);
+        Intent joinGroup = getIntent();
+        if (Intent.ACTION_VIEW.equals(joinGroup.getAction())) {
+            Uri uri = joinGroup.getData();
+            toJoinGroup(uri);
+        }
     }
 
     @Override
@@ -184,22 +189,38 @@ public class MainActivity extends BaseActivity {
                 return;
             }
             String contents = ans.data.getStringExtra("SCAN_RESULT");
-            int last = contents.lastIndexOf("/");
-            contents = contents.substring(last + 1);
-            if (contents.contains("joinGroup")) {
-                last = contents.lastIndexOf("=");
-                String groupID = contents.substring(last + 1);
-                boolean forjoin = true;
-                for (Object group : GroupList.getInstance().getGroupList()) {
-                    if (((GroupClass) group).ID.equals(groupID)) {
-                        forjoin = false;
-                        break;
+            toJoinGroup(Uri.parse(contents));
+        }
+    }
+
+    /**
+     * 获取uri，tizi-tech.com下，开始加入圈子
+     */
+    private void toJoinGroup(Uri uri) {
+        if (uri.getScheme().equals("http") || uri.getScheme().equals("https")) {
+            if (uri.getHost().contains("tizi-tech.com")) {
+                String contents = uri.toString();
+                if (contents.contains("joinGroup")) {
+                    int last = contents.lastIndexOf("=");
+                    String groupID = contents.substring(last + 1);
+                    boolean forjoin = true;
+                    for (Object group : GroupList.getInstance().getGroupList()) {
+                        if (((GroupClass) group).ID.equals(groupID)) {
+                            forjoin = false;
+                            break;
+                        }
                     }
+                    Intent groupZone = new Intent(mContext, QuanziZoneActivity.class);
+                    groupZone.putExtra("groupID", groupID);
+                    groupZone.putExtra("forJoin", forjoin);
+                    startActivity(groupZone);
                 }
-                Intent groupZone = new Intent(mContext, QuanziZoneActivity.class);
-                groupZone.putExtra("groupID", groupID);
-                groupZone.putExtra("forJoin", forjoin);
-                startActivity(groupZone);
+            } else {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(uri);
+                if (Tool.isIntentSafe(mActivity, intent)) {
+                    startActivity(intent);
+                }
             }
         }
     }

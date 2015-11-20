@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 
 /**
@@ -57,7 +58,9 @@ public class SystemSettingFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent releaseNotice = new Intent(Intent.ACTION_VIEW);
                 releaseNotice.setData(Uri.parse(getString(R.string.update_notices)));
-                startActivity(releaseNotice);
+                if (Tool.isIntentSafe(mActivity, releaseNotice)) {
+                    startActivity(releaseNotice);
+                }
             }
         });
 
@@ -66,7 +69,9 @@ public class SystemSettingFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent license = new Intent(Intent.ACTION_VIEW);
                 license.setData(Uri.parse(getString(R.string.user_license)));
-                startActivity(license);
+                if (Tool.isIntentSafe(mActivity, license)) {
+                    startActivity(license);
+                }
             }
         });
 
@@ -75,7 +80,9 @@ public class SystemSettingFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent license = new Intent(Intent.ACTION_VIEW);
                 license.setData(Uri.parse(getString(R.string.open_source_license)));
-                startActivity(license);
+                if (Tool.isIntentSafe(mActivity, license)) {
+                    startActivity(license);
+                }
             }
         });
     }

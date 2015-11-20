@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
@@ -294,12 +293,10 @@ public class QuanziSetFragment extends BaseFragment {
         qrcodeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> image = new ArrayList<>();
-                String baseUri = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&ecc=Q&data=";
-                baseUri += "http://www.tizi-tech.com/sys:joinGroup=" + groupAllInfo.group.id;
-                Log.i(TAG + "QrCode", baseUri);
-                image.add(baseUri);
-                StartGalleryActivity.startByStringList(image, 0, mContext);
+                QrCodeFragment qrCodeFragment = QrCodeFragment.newInstance(group.ID, group.Name, group.Face);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, qrCodeFragment)
+                        .addToBackStack("qrCodeFragment").commit();
             }
         });
     }

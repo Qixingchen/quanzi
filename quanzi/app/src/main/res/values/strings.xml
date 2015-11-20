@@ -6,7 +6,7 @@
     <string name="phoneNumber">手机号</string>
     <string name="password">密码</string>
     <string name="login">登入</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">GiMi</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_register">注册</string>

@@ -1,0 +1,54 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.tizi.quanzi.ui.quanzi_zone.QrCodeFragment">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/md_grey_300">
+
+        <ImageView
+            android:id="@+id/group_face_image_view"
+            android:layout_width="@dimen/group_face_small"
+            android:layout_height="@dimen/group_face_small"
+            android:layout_marginStart="16dp"
+            tools:src="@drawable/face"/>
+
+        <TextView
+            android:id="@+id/group_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@id/group_face_image_view"
+            android:textSize="@dimen/small_title_text_size"
+            tools:text="123"/>
+
+        <ImageView
+            android:id="@+id/qr_code_image_view"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_alignStart="@id/group_face_image_view"
+            android:layout_below="@id/group_face_image_view"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            tools:src="@drawable/face"/>
+
+        <TextView
+            android:id="@+id/share_text"
+            android:layout_width="wrap_content"
+            android:layout_height="48sp"
+            android:layout_alignStart="@id/group_face_image_view"
+            android:layout_below="@id/qr_code_image_view"
+            android:gravity="center"
+            android:text="扫码加群,点击分享"
+            android:textSize="@dimen/sub_title_text_size"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

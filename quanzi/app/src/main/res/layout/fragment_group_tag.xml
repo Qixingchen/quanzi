@@ -100,9 +100,18 @@
                 android:id="@+id/change_tags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_toStartOf="@+id/add_tag"
                 android:text="换一批"
+                android:textSize="@dimen/small_title_text_size"/>
+
+            <TextView
+                android:id="@id/add_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="24dp"
+                android:text="自定义"
                 android:textSize="@dimen/small_title_text_size"/>
 
         </RelativeLayout>

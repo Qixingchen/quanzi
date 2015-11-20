@@ -2,14 +2,17 @@ package com.tizi.quanzi.ui.new_group;
 
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
@@ -41,6 +44,7 @@ public class GroupTagFragment extends BaseFragment {
 
     private TextView[] tagTextViews = new TextView[MAX_TAG_NUM];
     private android.widget.TextView changetags;
+    private android.widget.TextView addTag;
     private RecyclerView tagrecyclerview;
     private TextView parentTagView;
     private Button okBtn;
@@ -95,6 +99,7 @@ public class GroupTagFragment extends BaseFragment {
         this.tagTextViews[0] = (TextView) view.findViewById(R.id.tag_1);
         parentTagView = (TextView) view.findViewById(R.id.parent_tag_text_view);
         okBtn = (Button) view.findViewById(R.id.ok_btn);
+        addTag = (TextView) view.findViewById(R.id.add_tag);
     }
 
     @Override
@@ -150,6 +155,50 @@ public class GroupTagFragment extends BaseFragment {
                 }
             });
         }
+
+        addTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getTagsList().size() >= MAX_TAG_NUM) {
+                    Snackbar.make(view, String.format("只能选择%d个标签", MAX_TAG_NUM), Snackbar.LENGTH_LONG).show();
+                } else {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    final LayoutInflater inflater = mActivity.getLayoutInflater();
+                    final View layout = inflater.inflate(R.layout.dialog_one_line,
+                            (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
+                    final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
+                    builder.setView(layout).setTitle("输入新的标签")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                    final AlertDialog dialog = builder.create();
+                    dialog.show();
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (input.getText().toString().equals("")) {
+                                Snackbar.make(view, "标签不能为空", Snackbar.LENGTH_LONG).show();
+                                return;
+                            }
+                            if (input.getText().toString().length() > 7) {
+                                Snackbar.make(view, "标签最长7个字符", Snackbar.LENGTH_LONG).show();
+                                return;
+                            }
+                            if (getTagsList().size() >= MAX_TAG_NUM) {
+                                Snackbar.make(view, String.format("只能选择%d个标签", MAX_TAG_NUM),
+                                        Snackbar.LENGTH_LONG).show();
+                                return;
+                            }
+                            addTagToShowTags(AllTags.TagsEntity.getNewTag(input.getText().toString()));
+                            dialog.dismiss();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void setTags() {

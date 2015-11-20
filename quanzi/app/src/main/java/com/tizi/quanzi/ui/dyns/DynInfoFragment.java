@@ -190,9 +190,6 @@ public class DynInfoFragment extends BaseFragment {
         final View layout = inflater.inflate(R.layout.dialog_one_line,
                 (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
         final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
-        final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
-
-        title.setVisibility(View.GONE);
         input.setHint(hit);
         builder.setTitle("回复消息").setView(layout).setPositiveButton("发送", new DialogInterface.OnClickListener() {
             @Override

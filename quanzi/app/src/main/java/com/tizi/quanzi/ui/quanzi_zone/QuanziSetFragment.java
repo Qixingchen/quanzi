@@ -112,9 +112,7 @@ public class QuanziSetFragment extends BaseFragment {
                 final View layout = inflater.inflate(R.layout.dialog_one_line,
                         (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
                 final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
-                final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
 
-                title.setText("输入新的圈子名称");
                 input.setHint("圈子名称");
                 input.setText(group.Name);
                 builder.setTitle("更改圈子名称").setView(layout)
@@ -155,9 +153,7 @@ public class QuanziSetFragment extends BaseFragment {
                 final View layout = inflater.inflate(R.layout.dialog_one_line,
                         (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
                 final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
-                final TextView title = (TextView) layout.findViewById(R.id.dialog_title);
 
-                title.setText("输入新的圈子签名");
                 input.setHint("圈子签名");
                 input.setText(group.Notice);
                 builder.setTitle("更改圈子签名").setView(layout)

@@ -56,6 +56,12 @@ public class AllTags extends OnlySuccess {
             this.parentTagName = in.readString();
         }
 
+        public static TagsEntity getNewTag(String tagName) {
+            TagsEntity tag = new TagsEntity();
+            tag.tagName = tagName;
+            return tag;
+        }
+
         @Override
         public int describeContents() {
             return 0;

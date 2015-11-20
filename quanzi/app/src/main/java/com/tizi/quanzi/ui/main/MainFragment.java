@@ -31,6 +31,7 @@ public class MainFragment extends BaseFragment {
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mainFragmentPagerAdapter = new MainFragmentPagerAdapter(this.getChildFragmentManager(), mActivity);
         mViewPager.setAdapter(mainFragmentPagerAdapter);
+        mViewPager.setCurrentItem(1);
         tabLayout.setupWithViewPager(mViewPager);
 
         TextView tab = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.custom_tab, null);

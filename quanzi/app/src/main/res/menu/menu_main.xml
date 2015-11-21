@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/action_scan_qr_code"
-        android:icon="@drawable/ic_scan"
+        android:icon="@drawable/ic_scan_barcodes_24dp"
         android:title="扫码加群"
         app:showAsAction="ifRoom"/>
 </menu>

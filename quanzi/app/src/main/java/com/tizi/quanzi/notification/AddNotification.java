@@ -103,12 +103,12 @@ public class AddNotification {
     private NotificationCompat.Builder setBuildEvent(NotificationCompat.Builder mBuilder) {
 
         /*intent*/
-        /*delete*/
-        Intent deleteIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
-        deleteIntent.putExtra(StaticField.NotifiName.NotifiDelete, true);
-
-        mBuilder.setDeleteIntent(PendingIntent.getBroadcast(
-                mContext, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+//        /*delete*/
+//        Intent deleteIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
+//        deleteIntent.putExtra(StaticField.NotifiName.NotifiDelete, true);
+//
+//        mBuilder.setDeleteIntent(PendingIntent.getBroadcast(
+//                mContext, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         /*click*/
         Intent clickIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
@@ -140,7 +140,7 @@ public class AddNotification {
                 .setVisibility(Notification.VISIBILITY_PRIVATE)
                 .setNumber(notifiContacts.size())
                 .setLights(Color.WHITE, 1000, 500)
-                .setAutoCancel(false)
+                .setAutoCancel(true)
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary));
 
         if (needSound && notifiContacts.size() == 1) {

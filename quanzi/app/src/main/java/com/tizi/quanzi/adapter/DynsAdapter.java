@@ -27,8 +27,9 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
             new SortedList.Callback<Dyns.DynsEntity>() {
                 @Override
                 public int compare(Dyns.DynsEntity o1, Dyns.DynsEntity o2) {
-                    return (int) -(FriendTime.getTimeFromServerString(o1.createTime) -
-                            FriendTime.getTimeFromServerString(o2.createTime));
+                    long o1t = FriendTime.getTimeFromServerString(o1.createTime);
+                    long o2t = FriendTime.getTimeFromServerString(o2.createTime);
+                    return (int) ((o2t - o1t) / 1000);
                 }
 
                 @Override

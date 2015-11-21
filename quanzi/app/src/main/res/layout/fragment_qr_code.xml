@@ -17,6 +17,7 @@
             android:layout_width="@dimen/group_face_small"
             android:layout_height="@dimen/group_face_small"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             tools:src="@drawable/face"/>
 
         <TextView

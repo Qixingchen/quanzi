@@ -170,6 +170,7 @@ public class DynItem {
             return;
         }
         for (int i = 0; i < picsNum; i++) {
+            weibo_pics_linearLayout.setVisibility(View.VISIBLE);
             weibo_pics_ImageView[i].setVisibility(View.VISIBLE);
         }
         for (int i = picsNum; i < 3; i++) {

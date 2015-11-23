@@ -142,7 +142,8 @@ public class DynsActivity extends BaseActivity {
             return;
         }
         sendDynFragment = SendDynFragment.newInstance(themeString, groupID, themeID);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, sendDynFragment)
+        getSupportFragmentManager().beginTransaction().hide(dynsActivityFragment)
+                .add(R.id.fragment, sendDynFragment)
                 .addToBackStack("SendDynFragment").commit();
     }
 

@@ -75,24 +75,26 @@ public class NewGroupActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_next_step) {
-            if (convID.compareTo("0") == 0) {
-                Snackbar.make(view, "LC ConvID 为空,请稍等,正在重试", Snackbar.LENGTH_LONG).show();
-                NewAVIMConversation.getInstance().setConversationCallBack(
-                        new NewAVIMConversation.ConversationCallBack() {
-                            @Override
-                            public void setConversationID(String conversationID) {
-                                convID = conversationID;
-                            }
-                        }
-                ).newAChatGroup();
-                return true;
-            }
 
             NewGroupStep1Fragment.NewGroupStep1Ans temp = newGroupStep1Fragment.getNewGroupAns();
             /*下一步*/
             if (temp.complete) {
+
+                /*ConvID*/
+                if (convID.compareTo("0") == 0) {
+                    Snackbar.make(view, "LC ConvID 为空,请稍等,正在重试", Snackbar.LENGTH_LONG).show();
+                    NewAVIMConversation.getInstance().setConversationCallBack(
+                            new NewAVIMConversation.ConversationCallBack() {
+                                @Override
+                                public void setConversationID(String conversationID) {
+                                    convID = conversationID;
+                                }
+                            }
+                    ).newAChatGroup();
+                    return true;
+                }
+
                 ans = temp;
                 mMenu.findItem(R.id.action_next_step).setVisible(false);
                 mMenu.findItem(R.id.action_complete).setVisible(true);

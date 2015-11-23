@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
@@ -41,7 +41,7 @@ public class QuanziSetFragment extends BaseFragment {
 
     private static final String GROUP_ALL_INFO = "GroupAllInfo";
     private TextView quanziName, quanziTag, quanziSign, deleteMess;
-    private Switch ignoreNotifiSwitch;
+    private SwitchCompat ignoreNotifiSwitch;
     private Button exitQuanzi;
     private View nameView, tagView, signView, qrcodeView;
     private GroupAllInfo groupAllInfo;
@@ -80,7 +80,7 @@ public class QuanziSetFragment extends BaseFragment {
         quanziTag = (TextView) view.findViewById(R.id.quanzi_tag);
         quanziSign = (TextView) view.findViewById(R.id.quanzi_sign);
         deleteMess = (TextView) view.findViewById(R.id.delete_mess);
-        ignoreNotifiSwitch = (Switch) view.findViewById(R.id.ignore_notifi_switch);
+        ignoreNotifiSwitch = (SwitchCompat) view.findViewById(R.id.ignore_notifi_switch);
         exitQuanzi = (Button) view.findViewById(R.id.exit_quanzi);
         nameView = view.findViewById(R.id.quanzi_name_view);
         tagView = view.findViewById(R.id.quanzi_tag_view);

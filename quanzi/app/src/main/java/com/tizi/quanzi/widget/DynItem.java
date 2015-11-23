@@ -32,7 +32,7 @@ public class DynItem {
 
     private ImageView weibo_avatar_ImageView;
     private TextView userNameTextView, contentTextView, dateTextView,
-            attitudesTextView, commentsTextView;
+            attitudesTextView, commentsTextView, weiboPicsSumTextView;
     private ImageView[] weibo_pics_ImageView = new ImageView[3];
     private LinearLayout weibo_pics_linearLayout;
 
@@ -73,6 +73,7 @@ public class DynItem {
         //        weibo_pics_NetworkImageView[7] = (NetworkImageView) rootView.findViewById(R.id.weibo_pic7);
         //        weibo_pics_NetworkImageView[8] = (NetworkImageView) rootView.findViewById(R.id.weibo_pic8);
         weibo_pics_linearLayout = (LinearLayout) rootView.findViewById(R.id.weibo_pics);
+        weiboPicsSumTextView = (TextView) rootView.findViewById(R.id.weibo_pic_sum_text_view);
     }
 
     private void initViews() {
@@ -93,8 +94,12 @@ public class DynItem {
         attitudesTextView.setText(String.valueOf(dyn.zan));
         commentsTextView.setText(String.valueOf(dyn.commentNum));
         int picsNum = dyn.pics.size();
-        if (picsNum > 3) {
+        if (picsNum >= 3) {
+            weiboPicsSumTextView.setText(String.format("共%d张", picsNum));
+            weiboPicsSumTextView.setVisibility(View.VISIBLE);
             picsNum = 3;
+        } else {
+            weiboPicsSumTextView.setVisibility(View.GONE);
         }
         for (int i = 0; i < picsNum; i++) {
             String thumUri = dyn.pics.get(i).url;

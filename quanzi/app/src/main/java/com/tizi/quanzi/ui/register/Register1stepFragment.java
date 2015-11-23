@@ -40,6 +40,9 @@ public class Register1stepFragment extends BaseFragment {
     private Boolean agree = false;
     private TextView userLicense;
 
+    private CheckBox agreeBox;
+    private View agreeView;
+
     public Register1stepFragment() {
     }
 
@@ -70,12 +73,14 @@ public class Register1stepFragment extends BaseFragment {
         phoneNumberInputLayout = (TextInputLayout) view.findViewById(R.id.phoneNumberInputLayout);
         signInputLayout = (TextInputLayout) view.findViewById(R.id.signInputLayout);
         userLicense = (TextView) view.findViewById(R.id.agree_text_view);
+        agreeBox = (CheckBox) view.findViewById(R.id.agree);
+        agreeView = view.findViewById(R.id.agree_view);
     }
 
     @Override
     protected void initViewsAndSetEvent() {
 
-        SpannableString license = MakeSpannableString.makeLinkSpan("《机密协议》", new View.OnClickListener() {
+        SpannableString license = MakeSpannableString.makeLinkSpan(String.format("《%s协议》", StaticField.AppName.AppEngName), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent license = new Intent(Intent.ACTION_VIEW);
@@ -90,13 +95,29 @@ public class Register1stepFragment extends BaseFragment {
 
         phoneNumberInputLayout.setError(mActivity.getString(R.string.phone_number_error));
 
-        ((CheckBox) view.findViewById(R.id.agree)).setOnCheckedChangeListener(
+        agreeBox.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         agree = isChecked;
                     }
                 });
+
+        agreeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                agree = !agree;
+                agreeBox.setChecked(agree);
+            }
+        });
+
+        userLicense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                agree = !agree;
+                agreeBox.setChecked(agree);
+            }
+        });
 
         getSignButton.setOnClickListener(new View.OnClickListener() {
             @Override

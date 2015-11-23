@@ -115,7 +115,7 @@ public class DynsActivityFragment extends BaseFragment {
                 if (nowPageCount == 0) {
                     recyclerView.scrollToPosition(0);
                 }
-                if (nowPageCount < page - 2 && dynsAdapter.getItemCount() - oldCount < StaticField.QueryLimit.DynamicLimit) {
+                if (nowPageCount < page - 2 && dynsAdapter.getItemCount() - oldCount == StaticField.QueryLimit.DynamicLimit) {
                     quaryMore(thmemID, groupID, nowPageCount + 1);
                 }
                 swipeRefreshLayout.setRefreshing(false);
@@ -145,4 +145,11 @@ public class DynsActivityFragment extends BaseFragment {
         page++;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            quaryMore(themeID, GroupID, 0);
+        }
+    }
 }

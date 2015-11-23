@@ -130,6 +130,9 @@ public class NewGroupStep1Fragment extends BaseFragment {
         for (AllTags.TagsEntity tag : tags) {
             tagsString += tag.tagName + ",";
         }
+        if (tagsString.equals("")) {
+            tagsString = "圈子标签";
+        }
         tagView.setText(tagsString);
     }
 

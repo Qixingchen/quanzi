@@ -34,6 +34,7 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final int USER_VIEW = 1, SHARE_VIEW = 2, MANU_ADD = 3;
     List<String> nowUsers = new ArrayList<>();
+    List<String> addingUsers = new ArrayList<>();
     private List<ContantUsers.MobilesEntity> users;
     private List<ContantUsers.MobilesEntity> backUpUsers = new ArrayList<>();
     private Context context;
@@ -137,14 +138,21 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
 
+            for (String id : addingUsers) {
+                if (mobile.userId.equals(id)) {
+                    vh.setAdding();
+                    break;
+                }
+            }
+
             vh.inviteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onAddUser != null) {
                         onAddUser.add(mobile.userId);
                     }
-                    nowUsers.add(mobile.userId);
-                    vh.setAdded();
+                    addingUsers.add(mobile.userId);
+                    vh.setAdding();
                 }
             });
         }
@@ -276,6 +284,11 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private void setAdded() {
             inviteButton.setEnabled(false);
             inviteButton.setText("已添加");
+        }
+
+        private void setAdding() {
+            inviteButton.setEnabled(false);
+            inviteButton.setText("已邀请");
         }
 
         private void setNotAdded() {

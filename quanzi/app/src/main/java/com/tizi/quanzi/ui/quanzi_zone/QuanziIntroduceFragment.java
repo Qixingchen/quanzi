@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
@@ -34,7 +33,6 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.DynamicAct;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
@@ -53,8 +51,7 @@ import java.io.IOException;
 public class QuanziIntroduceFragment extends BaseFragment {
 
     private Toolbar toolbar;
-    private ImageView groupFaceImageView;
-    private NetworkImageView zoneBackgroundImageView, userface[];
+    private ImageView groupFaceImageView, zoneBackgroundImageView;
     private TextView zoneSignTextview, zoneTagTextview;
     private CollapsingToolbarLayout collapsingtoolbar;
     private RecyclerView groupUsersRecyclerView, groupDynsRecyclerView;
@@ -78,7 +75,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        zoneBackgroundImageView = (NetworkImageView) view.findViewById(R.id.zoneBackground);
+        zoneBackgroundImageView = (ImageView) view.findViewById(R.id.zoneBackground);
         groupFaceImageView = (ImageView) view.findViewById(R.id.gruop_face);
         zoneSignTextview = (TextView) view.findViewById(R.id.zoneSign);
 
@@ -228,8 +225,12 @@ public class QuanziIntroduceFragment extends BaseFragment {
                     .resize(GetThumbnailsUri.getPXs(mActivity, 120),
                             GetThumbnailsUri.getPXs(mActivity, 120))
                     .into(groupFaceImageView);
-            zoneBackgroundImageView.setImageUrl(groupAllInfo.group.bg,
-                    GetVolley.getmInstance().getImageLoader());
+
+            Picasso.with(mActivity).load(groupAllInfo.group.icon)
+                    .resize(GetThumbnailsUri.getPXs(mActivity, 360),
+                            GetThumbnailsUri.getPXs(mActivity, 280))
+                    .into(zoneBackgroundImageView);
+
             if (groupAllInfo.group.notice != null) {
                 zoneSignTextview.setText(String.format("签名：%s", groupAllInfo.group.notice));
             }
@@ -237,7 +238,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
             for (AllTags.TagsEntity tag : groupAllInfo.tagList) {
                 tagsString += tag.tagName + ",";
             }
-            zoneTagTextview.setText(tagsString);
+            zoneTagTextview.setText("标签:" + tagsString);
             quaryMore(groupAllInfo.group.id, lastIndex);
             lastIndex += StaticField.QueryLimit.DynamicLimit;
         }

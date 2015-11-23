@@ -155,7 +155,7 @@
                             android:text="消息免打扰"
                             android:textSize="@dimen/normal_text_size"/>
 
-                        <Switch
+                        <android.support.v7.widget.SwitchCompat
                             android:id="@+id/ignore_notifi_switch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

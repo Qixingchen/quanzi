@@ -456,7 +456,7 @@ public class ChatActivity extends BaseActivity {
 
                         }
                     })
-                    .sendImageMesage(CONVERSATION_ID, requreForImage.ZipedFilePathFromIntent(data),
+                    .sendImageMesage(CONVERSATION_ID, requreForImage.getFilePathFromIntent(data),
                             setAttrs());
 
         }

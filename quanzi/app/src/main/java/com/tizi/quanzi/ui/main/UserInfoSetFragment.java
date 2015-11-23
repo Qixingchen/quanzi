@@ -136,7 +136,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         userFaceImageView.setImageUrl(MyUserInfo.getInstance().getUserInfo().getIcon(),
                 GetVolley.getmInstance().getImageLoader());
         userNameTextView.setText(MyUserInfo.getInstance().getUserInfo().getUserName());
-        userSexTextView.setText(String.valueOf(MyUserInfo.getInstance().getUserInfo().getSex()));
+        userSexTextView.setText(getSex(MyUserInfo.getInstance().getUserInfo().getSex()));
         userAgeTextView.setText(MyUserInfo.getInstance().getUserInfo().getBirthday());
         userLocationTextView.setText(MyUserInfo.getInstance().getUserInfo().getArea());
         userSignTextView.setText(MyUserInfo.getInstance().getUserInfo().getSignature());
@@ -191,7 +191,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UserInfoSetting.getNewInstance().changeSex(String.valueOf(position[0]));
-                        userSexTextView.setText(String.valueOf(position[0]));
+                        userSexTextView.setText(getSex(position[0]));
                         MyUserInfo.getInstance().getUserInfo().setSex(position[0]);
                     }
                 }).show();
@@ -274,7 +274,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         Log.i(TAG, "头像获取");
         if (activityResultAns.resultCode == Activity.RESULT_OK
                 && activityResultAns.requestCode == StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo) {
-            String ans = requreForImage.ZipedFilePathFromIntent(activityResultAns.data);
+            String ans = requreForImage.getFilePathFromIntent(activityResultAns.data);
             SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                 @Override
                 public void onResult(String uri, boolean success, String errorMessage) {
@@ -341,6 +341,14 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 }
             }
         }).getLocation();
+    }
+
+    private String getSex(int sex) {
+        if (sex == 0) {
+            return "男";
+        } else {
+            return "女";
+        }
     }
 }
 

@@ -38,7 +38,7 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
     @SerializedName("birthday")
     public String birthday;
     @SerializedName("sex")
-    public String sex;
+    public int sex;
     @SerializedName("area")
     public String area;
     @SerializedName("signatrue")
@@ -55,7 +55,7 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
         this.id = in.readString();
         this.icon = in.readString();
         this.birthday = in.readString();
-        this.sex = in.readString();
+        this.sex = in.readInt();
         this.area = in.readString();
         this.signatrue = in.readString();
         this.bg = in.readString();
@@ -72,7 +72,7 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.icon);
         dest.writeString(this.birthday);
-        dest.writeString(this.sex);
+        dest.writeInt(this.sex);
         dest.writeString(this.area);
         dest.writeString(this.signatrue);
         dest.writeString(this.bg);

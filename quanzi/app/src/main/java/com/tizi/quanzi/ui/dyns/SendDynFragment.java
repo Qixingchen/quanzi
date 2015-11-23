@@ -259,7 +259,7 @@ public class SendDynFragment extends BaseFragment {
                 }
             });
         } else {
-            String filepath = new RequreForImage(mActivity).ZipedFilePathFromIntent(activityResultAns.data);
+            String filepath = new RequreForImage(mActivity).getFilePathFromIntent(activityResultAns.data);
             photoCount++;
             savePhoto(filepath);
         }

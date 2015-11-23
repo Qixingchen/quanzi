@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
+import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.StartPrivateChat;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
@@ -31,6 +32,7 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,7 +45,7 @@ public class UserZoneActivityFragment extends BaseFragment {
     private CoordinatorLayout mainContent;
     private CollapsingToolbarLayout collapsingToolbar;
     private NetworkImageView zoneBackground;
-    private TextView zoneSign, userAge, userXingzuo, userLocation;
+    private TextView zoneSign, userAge, userXingzuo, userLocation, userSex;
     private CircleImageView userFace;
     private Button sendMessage;
     private OtherUserInfo otherUserInfo;
@@ -68,6 +70,7 @@ public class UserZoneActivityFragment extends BaseFragment {
         userAge = (TextView) view.findViewById(R.id.user_age);
         userXingzuo = (TextView) view.findViewById(R.id.user_xingzuo);
         userLocation = (TextView) view.findViewById(R.id.user_location);
+        userSex = (TextView) view.findViewById(R.id.user_sex);
     }
 
     @Override
@@ -85,10 +88,24 @@ public class UserZoneActivityFragment extends BaseFragment {
             userAge.setText("不知道哦");
             userXingzuo.setText("不知道哦");
         }
+        if (otherUserInfo.sex == 1) {
+            userSex.setText("女");
+        } else {
+            userSex.setText("男");
+        }
         userLocation.setText(otherUserInfo.area);
         int px = GetThumbnailsUri.getPXs(mContext, 60);
         Picasso.with(mContext).load(otherUserInfo.icon).resize(px, px)
                 .into(userFace);
+
+        userFace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> pic = new ArrayList<>();
+                pic.add(otherUserInfo.icon);
+                StartGalleryActivity.startByStringList(pic, 0, mContext);
+            }
+        });
 
         boolean isFriend = false;
         //在自己圈内查找

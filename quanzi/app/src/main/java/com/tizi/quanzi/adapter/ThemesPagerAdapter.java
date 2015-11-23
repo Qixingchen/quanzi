@@ -39,7 +39,7 @@ public class ThemesPagerAdapter extends PagerAdapter {
     private Theme theme;
     private Activity mActivity;
     private OnClick onClick;
-    private Timer timer = new Timer();
+    private Timer timer;
 
     public ThemesPagerAdapter(Theme theme, Activity mActivity, OnClick onClick) {
         this.theme = theme;
@@ -50,7 +50,9 @@ public class ThemesPagerAdapter extends PagerAdapter {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        timer.cancel(false);
+        if (timer != null) {
+            timer.cancel(false);
+        }
     }
 
     /**
@@ -196,7 +198,10 @@ public class ThemesPagerAdapter extends PagerAdapter {
         /*倒计时*/
         final TextView countDownTextView = (TextView) rootView.findViewById(R.id.countdown_time);
         int countDown = FriendTime.getThemeCountDown(act.beginTime, act.endTime);
-
+        if (timer != null) {
+            timer.cancel(false);
+        }
+        timer = new Timer();
         timer.setOnResult(new Timer.OnResult() {
             @Override
             public void OK() {

@@ -145,11 +145,4 @@ public class DynsActivityFragment extends BaseFragment {
         page++;
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            quaryMore(themeID, GroupID, 0);
-        }
-    }
 }

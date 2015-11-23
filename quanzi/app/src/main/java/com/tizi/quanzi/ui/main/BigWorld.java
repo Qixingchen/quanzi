@@ -1,8 +1,11 @@
 package com.tizi.quanzi.ui.main;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +17,18 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.network.UserInfoSetting;
+import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.GetShareIntent;
+import com.tizi.quanzi.tool.RequreForImage;
+import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
@@ -40,6 +48,7 @@ public class BigWorld extends BaseFragment {
     private ImageView userSex, userBackground;
     private View Share, Setting, userInfoLayout;
     private Button logout;
+    private RequreForImage requreForImage;
 
 
     public BigWorld() {
@@ -98,6 +107,11 @@ public class BigWorld extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
+
+        if (Tool.isGuest()) {
+            logout.setText("登录");
+        }
+
         Login.UserEntity userInfo = MyUserInfo.getInstance().getUserInfo();
         if (userInfo == null || userInfo.getIcon() == null) {
             return;
@@ -153,21 +167,69 @@ public class BigWorld extends BaseFragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppStaticValue.setStringPrefer(StaticField.Preferences.PASSWORD, "");
-                AppStaticValue.getImClient().close(new AVIMClientCallback() {
+
+                if (Tool.isGuest()) {
+                    signOut();
+                    return;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("确认登出").setPositiveButton("登出", new DialogInterface.OnClickListener() {
                     @Override
-                    public void done(AVIMClient avimClient, AVIMException e) {
-                        if (e != null) {
-                            Snackbar.make(view, "退出失败:" + e.getMessage(), Snackbar.LENGTH_LONG).show();
-                        }
+                    public void onClick(DialogInterface dialog, int which) {
+                        signOut();
                     }
-                });
-                Intent log_in = new Intent(mActivity, LoginActivity.class);
-                log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(log_in);
+                }).setNegativeButton("取消", null).show();
             }
         });
 
+        userBackground.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                requreForImage = new RequreForImage(mActivity);
+                requreForImage.showDialogAndCallIntent("选择背景", StaticField.PermissionRequestCode.user_back_ground);
+
+                return false;
+            }
+        });
+
+    }
+
+    private void signOut() {
+        AppStaticValue.setStringPrefer(StaticField.Preferences.PASSWORD, "");
+        AppStaticValue.getImClient().close(new AVIMClientCallback() {
+            @Override
+            public void done(AVIMClient avimClient, AVIMException e) {
+                if (e != null) {
+                    Snackbar.make(view, "退出失败:" + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+        Intent log_in = new Intent(mActivity, LoginActivity.class);
+        log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(log_in);
+    }
+
+    @Subscribe
+    public void onResult(ActivityResultAns ans) {
+        if (ans.requestCode == StaticField.PermissionRequestCode.user_back_ground
+                && ans.resultCode == Activity.RESULT_OK) {
+            final String filepath = requreForImage.getFilePathFromIntent(ans.data, false);
+
+            SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+                @Override
+                public void onResult(String uri, boolean success, String errorMessage) {
+                    if (success) {
+                        Picasso.with(mContext).load(uri).into(userBackground);
+                        MyUserInfo.getInstance().getUserInfo().bg = uri;
+                        UserInfoSetting.getNewInstance().changeBackground(uri);
+                    } else {
+                        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }).savePhoto(filepath);
+        }
     }
 
     @Override

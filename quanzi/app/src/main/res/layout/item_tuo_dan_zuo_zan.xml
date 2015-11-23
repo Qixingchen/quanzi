@@ -69,13 +69,15 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_plus_one_48dp"/>
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_like_grey"/>
 
             <TextView
                 android:id="@+id/weibo_attitudes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="12dp"
                 android:textColor="#A7a7a7"
                 android:textSize="12sp"
                 tools:text="20"/>
@@ -83,13 +85,15 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
                 android:src="@drawable/ic_chat_24dp"/>
 
             <TextView
                 android:id="@+id/weibo_comments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
                 android:textColor="#A7a7a7"
                 android:textSize="12sp"
                 tools:text="30"/>

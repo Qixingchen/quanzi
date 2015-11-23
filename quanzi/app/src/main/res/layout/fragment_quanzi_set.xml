@@ -1,13 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.tizi.quanzi.ui.quanzi_zone.QuanziSetFragment">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tizi.quanzi.ui.quanzi_zone.QuanziSetFragment">
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -134,7 +137,7 @@
 
             <android.support.v7.widget.CardView
                 android:layout_width="fill_parent"
-                android:layout_height="64dp"
+                android:layout_height="78dp"
                 android:layout_marginTop="18dp"
                 app:cardBackgroundColor="@color/color_fragment_background">
 
@@ -167,7 +170,9 @@
                     <TextView
                         android:id="@+id/delete_mess"
                         android:layout_width="fill_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
                         android:text="清空聊天记录"
                         android:textSize="@dimen/normal_edit_text_size"/>
                 </LinearLayout>

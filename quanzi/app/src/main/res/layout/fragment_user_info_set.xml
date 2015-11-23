@@ -38,7 +38,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:background="@color/md_red_500"/>
+            android:background="@color/colorAccent"/>
 
         <RelativeLayout
             android:id="@+id/userName"
@@ -70,7 +70,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:background="@color/md_red_500"/>
+            android:background="@color/colorAccent"/>
 
         <RelativeLayout
             android:id="@+id/userSex"
@@ -102,7 +102,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:background="@color/md_red_500"/>
+            android:background="@color/colorAccent"/>
 
         <RelativeLayout
             android:id="@+id/userAge"
@@ -134,7 +134,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:background="@color/md_red_500"/>
+            android:background="@color/colorAccent"/>
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -183,7 +183,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:background="@color/md_red_500"/>
+            android:background="@color/colorAccent"/>
 
         <RelativeLayout
             android:id="@+id/userSign"

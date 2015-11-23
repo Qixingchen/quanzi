@@ -74,7 +74,7 @@ public class LockLock extends BaseFragment {
 
             @Override
             public void EnterTheme(Theme.ActsEntity act) {
-                if (//Statue.IsDev.now == Statue.IsDev.dev ||
+                if (//BuildConfig.BUILD_TYPE.equals("debug") ||
                         FriendTime.isInThemeTime(act.beginTime, act.endTime)) {
                     getParentFragment().getFragmentManager().beginTransaction()
                             .replace(R.id.fragment, BoomGroupFragment.newInstance(act.id, act.beginTime, act.endTime))

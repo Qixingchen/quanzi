@@ -15,12 +15,12 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.RequestMobileCodeCallback;
+import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.network.LoginAndUserAccount;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.tool.Statue;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
@@ -138,7 +138,7 @@ public class ForgetPasswordFragment extends BaseFragment {
                 }
 
                 if (sign.compareTo("") == 0) {
-                    if (Statue.IsDev.isDev) {
+                    if (BuildConfig.BUILD_TYPE.equals("debug")) {
                         verifyCodeOK(phoneNumber, password);
                     } else {
                         Snackbar.make(view, "验证码为空", Snackbar.LENGTH_LONG).show();

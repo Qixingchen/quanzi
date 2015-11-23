@@ -121,6 +121,7 @@ public class StaticField {
         public final static int QuanziIntroduceFragment_group_face = 4;
         public final static int register_user_face = 5;
         public final static int send_dyn = 6;
+        public final static int user_back_ground = 7;
 
 
         public final static int CHAT_RECORD_AUDIO = 101;

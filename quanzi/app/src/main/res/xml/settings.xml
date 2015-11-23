@@ -9,7 +9,9 @@
             android:key="notifications"
             android:summary="开启:在收到新消息时发出系统通知"
             android:title="新消息通知"/>
-
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="通知方式">
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:dependency="notifications"
@@ -25,7 +27,10 @@
             android:key="notifications_vibrate"
             android:summary="开启:收到通知时有震动"
             android:title="震动"/>
+    </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="通知内容">
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:dependency="notifications"
@@ -58,4 +63,5 @@
             android:summary="开启:收系统消息时发出通知"
             android:title="系统消息"/>
     </PreferenceCategory>
+
 </PreferenceScreen>

@@ -201,6 +201,10 @@ public class MainActivity extends BaseActivity {
             if (uri.getHost().contains("tizi-tech.com")) {
                 String contents = uri.toString();
                 if (contents.contains("joinGroup")) {
+                    if (Tool.isGuest()) {
+                        Tool.GuestAction(mContext);
+                        return;
+                    }
                     int last = contents.lastIndexOf("=");
                     String groupID = contents.substring(last + 1);
                     boolean forjoin = true;

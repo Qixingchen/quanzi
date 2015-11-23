@@ -273,7 +273,11 @@ public class RequreForImage {
      *
      * @param data 图片信息
      */
-    public String ZipedFilePathFromIntent(Intent data) {
+    public String getFilePathFromIntent(Intent data) {
+        return getFilePathFromIntent(data, true);
+    }
+
+    public String getFilePathFromIntent(Intent data, boolean needZip) {
 
         String FilePath;
         if (data == null || data.getData() == null) {
@@ -287,10 +291,11 @@ public class RequreForImage {
         }
 
         boolean compass = true;
-        if (compass) {
+        if (compass && needZip) {
             FilePath = ZipPic.saveMyBitmap(mActivity, ZipPic.compressBySize(FilePath, 960), 50);
         }
         return FilePath;
+
     }
 
     private void takePhoto(int eventCode, boolean ignorePermission) {

@@ -81,7 +81,7 @@ public class NewGroupStep1Fragment extends BaseFragment {
     public void onIntentResult(ActivityResultAns activityResultAns) {
         if (activityResultAns.requestCode == StaticField.PermissionRequestCode.new_group_face_photo) {
             if (activityResultAns.resultCode == Activity.RESULT_OK && activityResultAns.data != null) {
-                String filePath = requreForImage.ZipedFilePathFromIntent(activityResultAns.data);
+                String filePath = requreForImage.getFilePathFromIntent(activityResultAns.data);
                 if (filePath != null) {
 
                     SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {

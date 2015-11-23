@@ -73,6 +73,13 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
     }
 
     /**
+     * 更改用户背景
+     */
+    public void changeBackground(String background) {
+        changeFiled("bg", background);
+    }
+
+    /**
      * 更改用户地区
      */
     public void changeArea(String area) {

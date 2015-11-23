@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
+import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.log.Log;
 
@@ -41,7 +42,7 @@ public class ReadContact {
             }
             phones.close();
         }
-        if (Statue.IsDev.isDev) {
+        if (BuildConfig.BUILD_TYPE.equals("debug")) {
             Log.i("通讯录", String.valueOf(mobilesList.size()));
         }
         return mobilesList;

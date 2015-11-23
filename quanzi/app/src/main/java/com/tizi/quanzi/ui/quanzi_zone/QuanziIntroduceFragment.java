@@ -287,7 +287,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face:
-                    String filepath = requreForImage.ZipedFilePathFromIntent(data);
+                    String filepath = requreForImage.getFilePathFromIntent(data);
                     savePhotoToLC(filepath);
                     break;
             }

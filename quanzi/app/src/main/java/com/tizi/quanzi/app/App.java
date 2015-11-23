@@ -82,7 +82,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, MutiTypeMsgHandler.getInstance());
 
         //LC调试日志
-        //        if (Statue.IsDebug.now == Statue.IsDebug.debug) {
+        //        if (BuildConfig.BUILD_TYPE.equals("debug")) {
         //            AVOSCloud.setDebugLogEnabled(true);
         //        }
 

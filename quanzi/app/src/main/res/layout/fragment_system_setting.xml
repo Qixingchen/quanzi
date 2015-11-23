@@ -17,7 +17,7 @@
             <FrameLayout
                 android:id="@+id/setting_fragment"
                 android:layout_width="fill_parent"
-                android:layout_height="520dp"
+                android:layout_height="580dp"
                 tools:layout_height="300dp"/>
 
             <LinearLayout
@@ -52,6 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="200dp"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/md_blue_300"
                 android:textSize="@dimen/sub_title_text_size"

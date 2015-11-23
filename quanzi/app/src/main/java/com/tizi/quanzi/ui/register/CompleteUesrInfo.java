@@ -107,7 +107,7 @@ public class CompleteUesrInfo extends BaseFragment {
     public void onResult(ActivityResultAns activityResultAns) {
         if (activityResultAns.requestCode == StaticField.PermissionRequestCode.register_user_face
                 && activityResultAns.resultCode == Activity.RESULT_OK) {
-            String filePath = requreForImage.ZipedFilePathFromIntent(activityResultAns.data);
+            String filePath = requreForImage.getFilePathFromIntent(activityResultAns.data);
             if (filePath != null) {
                 SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                     @Override

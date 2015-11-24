@@ -55,6 +55,9 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
     public void getGroupsFromDataBase() {
         List<PrivateMessPair> temp = DBAct.getInstance().quaryAllPrivateMessPair();
         for (PrivateMessPair pair : temp) {
+            if (pair.ID == null || pair.ID.equals("")) {
+                return;
+            }
             ChatMessage message = DBAct.getInstance().queryNewestMessage(pair.convId);
             if (message != null) {
                 pair.lastMess = ChatMessage.getContentText(message);

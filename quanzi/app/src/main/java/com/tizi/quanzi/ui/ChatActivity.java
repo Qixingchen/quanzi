@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -87,7 +86,6 @@ public class ChatActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         toolbarTitle = "聊天";
 
         context = this;
@@ -415,6 +413,8 @@ public class ChatActivity extends BaseActivity {
             chatmessagerecyclerView.scrollToPosition(chatMessageAdapter.lastReadPosition());
         }
         toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
+
+        ((LinearLayoutManager) mLayoutManager).setStackFromEnd(true);
 
     }
 

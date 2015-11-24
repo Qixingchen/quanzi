@@ -43,20 +43,22 @@ public abstract class RetrofitNetworkAbs {
                 }
                 return true;
             } else {
+                String mess;
                 if (BuildConfig.BUILD_TYPE.equals("debug")) {
-                    String mess = response.isSuccess() ? response.body().msg : response.message();
-                    Log.w(TAG, mess);
-                    if (networkListener != null) {
-                        networkListener.onError(mess);
-                    }
+                    mess = response.isSuccess() ? response.body().msg : response.message();
                 } else {
-                    networkListener.onError("网络错误");
+                    mess = response.isSuccess() ? response.body().msg : "网络错误";
+                }
+                Log.w(TAG, mess);
+                if (networkListener != null) {
+                    networkListener.onError(mess);
                 }
                 return false;
             }
         } catch (Exception ex) {
             saveTExceptionToLenCloud(ex);
         }
+
         return false;
     }
 

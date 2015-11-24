@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -42,6 +43,7 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.BaseFragment;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -154,7 +156,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         switch (view.getId()) {
             case R.id.userface:
-                requreForImage = new RequreForImage(getActivity());
+                requreForImage = RequreForImage.getInstance(mActivity);
                 requreForImage.showDialogAndCallIntent("选择头像",
                         StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo);
                 break;
@@ -272,22 +274,34 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     @Subscribe
     public void onActivityResult(ActivityResultAns activityResultAns) {
         Log.i(TAG, "头像获取");
-        if (activityResultAns.resultCode == Activity.RESULT_OK
-                && activityResultAns.requestCode == StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo) {
-            String ans = requreForImage.getFilePathFromIntent(activityResultAns.data);
-            SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
-                @Override
-                public void onResult(String uri, boolean success, String errorMessage) {
-                    if (success) {
-                        MyUserInfo.getInstance().getUserInfo().setIcon(uri);
-                        userFaceImageView.setImageUrl(MyUserInfo.getInstance().getUserInfo().getIcon(),
-                                GetVolley.getmInstance().getImageLoader());
-                        UserInfoSetting.getNewInstance().changeFace(uri);
-                    } else {
-                        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+        if (activityResultAns.resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        switch (activityResultAns.requestCode) {
+            case StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo:
+                String ans = requreForImage.getFilePathFromIntent(activityResultAns.data);
+                requreForImage.startPhotoCrop(Uri.fromFile(new File(ans)), 1, 1,
+                        StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo_crop);
+                break;
+
+            case StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo_crop:
+
+                SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+                    @Override
+                    public void onResult(String uri, boolean success, String errorMessage) {
+                        if (success) {
+                            MyUserInfo.getInstance().getUserInfo().setIcon(uri);
+                            userFaceImageView.setImageUrl(MyUserInfo.getInstance().getUserInfo().getIcon(),
+                                    GetVolley.getmInstance().getImageLoader());
+                            UserInfoSetting.getNewInstance().changeFace(uri);
+                        } else {
+                            Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                        }
                     }
-                }
-            }).savePhoto(ans, MyUserInfo.getInstance().getUserInfo().getId() + "face.jpg", 200, 200);
+                }).savePhoto(requreForImage.getCropImage().getPath(),
+                        MyUserInfo.getInstance().getUserInfo().getId() + "face.jpg");
+                break;
         }
     }
 

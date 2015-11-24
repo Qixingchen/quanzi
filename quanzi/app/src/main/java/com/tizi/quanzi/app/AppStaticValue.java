@@ -9,6 +9,7 @@ import android.support.v7.preference.PreferenceManager;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMClientStatusCallback;
 import com.tizi.quanzi.database.DataBaseHelper;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
@@ -39,7 +40,6 @@ public class AppStaticValue {
     //数据库
     private static DataBaseHelper db;
     private static SQLiteDatabase db1;
-    private static boolean isImclientOpen = false;
 
     public AppStaticValue() {
         application = App.getApplication();
@@ -155,11 +155,9 @@ public class AppStaticValue {
             public void done(AVIMClient avimClient, AVIMException e) {
                 if (null != e) {
                     Log.e(TAG, "AVIMClient链接失败");
-                    isImclientOpen = false;
                     e.printStackTrace();
                 } else {
                     Log.i(TAG, "AVIMClient链接成功");
-                    isImclientOpen = true;
                 }
             }
         });
@@ -170,23 +168,24 @@ public class AppStaticValue {
         if (imClient == null) {
             imClient = getNewImClient(UserID);
         }
-        if (!isImclientOpen) {
-            imClient.open(new AVIMClientCallback() {
-                @Override
-                public void done(AVIMClient avimClient, AVIMException e) {
-                    if (null != e) {
-                        Log.e(TAG, "AVIMClient链接失败");
-                        isImclientOpen = false;
-                        e.printStackTrace();
-                    } else {
-                        Log.i(TAG, "AVIMClient链接成功");
-                        isImclientOpen = true;
-                    }
+        imClient.getClientStatus(new AVIMClientStatusCallback() {
+            @Override
+            public void done(AVIMClient.AVIMClientStatus avimClientStatus) {
+                if (avimClientStatus != AVIMClient.AVIMClientStatus.AVIMClientStatusOpened) {
+                    imClient.open(new AVIMClientCallback() {
+                        @Override
+                        public void done(AVIMClient avimClient, AVIMException e) {
+                            if (null != e) {
+                                Log.e(TAG, "AVIMClient链接失败");
+                                e.printStackTrace();
+                            } else {
+                                Log.i(TAG, "AVIMClient链接成功");
+                            }
+                        }
+                    });
                 }
-            });
-        }
-
-
+            }
+        });
         return imClient;
     }
 

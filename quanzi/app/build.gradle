@@ -115,4 +115,6 @@ dependencies {
     compile 'com.github.darsh2:MultipleImageSelect:v0.0.3'
     //纵向viewpager
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
+    //图片裁剪
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
 }

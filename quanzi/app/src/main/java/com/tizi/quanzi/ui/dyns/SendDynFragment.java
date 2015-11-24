@@ -192,7 +192,7 @@ public class SendDynFragment extends BaseFragment {
                     Snackbar.make(view, "您已经选择9张照片了~", Snackbar.LENGTH_LONG).show();
                     return;
                 }
-                new RequreForImage(mActivity).showDialogAndCallIntent("选择照片",
+                RequreForImage.getInstance(mActivity).showDialogAndCallIntent("选择照片",
                         StaticField.PermissionRequestCode.send_dyn, true, 9 - photoCount);
             }
         });
@@ -259,7 +259,7 @@ public class SendDynFragment extends BaseFragment {
                 }
             });
         } else {
-            String filepath = new RequreForImage(mActivity).getFilePathFromIntent(activityResultAns.data);
+            String filepath = RequreForImage.getInstance(mActivity).getFilePathFromIntent(activityResultAns.data);
             photoCount++;
             savePhoto(filepath);
         }

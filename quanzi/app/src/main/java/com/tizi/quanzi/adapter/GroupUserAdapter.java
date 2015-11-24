@@ -213,6 +213,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
     @Override
     public int getItemCount() {
         int addtion = isMember ? 1 : 0;
+        addtion = memlist != null && memlist.size() < 10 ? addtion : 0;
         return memlist == null ? addtion : memlist.size() + addtion;
     }
 

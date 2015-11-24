@@ -17,9 +17,11 @@ import android.widget.Toast;
 
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
+import com.soundcloud.android.crop.Crop;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
 
@@ -36,18 +38,30 @@ import java.util.Date;
  */
 public class RequreForImage {
 
-    private static final String IMAGE_FILE_NAME = "faceImage";
+    private static RequreForImage mInstance;
     private String[] items = new String[]{"选择图片", "拍照"};
     private String photoTakenUri;
     private Activity mActivity;
     private int lastEventCode;
+    private Uri cropImage;
 
-    public RequreForImage(Activity mActivity) {
-        this.mActivity = mActivity;
+    private RequreForImage() {
         try {
             BusProvider.getInstance().register(this);
         } catch (IllegalArgumentException ignore) {
         }
+    }
+
+    public static RequreForImage getInstance(Activity activity) {
+        if (mInstance == null) {
+            synchronized (RequreForImage.class) {
+                if (mInstance == null) {
+                    mInstance = new RequreForImage();
+                }
+            }
+        }
+        mInstance.mActivity = activity;
+        return mInstance;
     }
 
     /*get Image Path*/
@@ -85,7 +99,11 @@ public class RequreForImage {
     }
 
     private static String getImageFileName(Uri uri) {
-        return Tool.getFileName(uri.toString());
+        String fileName = Tool.getFileName(uri.toString());
+        if (!fileName.contains(".")) {
+            fileName += ".jpg";
+        }
+        return fileName;
     }
 
     @Override
@@ -204,31 +222,47 @@ public class RequreForImage {
     }
 
     /**
-     * todo 裁剪图片方法实现
+     * 裁剪图片
      *
-     * @param uri 图片地址
+     * @param file           图片地址
+     * @param saveFile       储存图片地址
+     * @param hei            图片高度(与宽度的比例)
+     * @param wei            图片宽度
+     * @param permissionCode 授权回调码
      */
-    public void startPhotoZoom(Uri uri) {
+    public void startPhotoCrop(Uri file, Uri saveFile, int hei, int wei, int permissionCode) {
+        cropImage = saveFile;
+        Crop.of(file, saveFile).withAspect(wei, hei).start(mActivity, permissionCode);
+    }
 
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        String path = getImageUrlWithAuthority(mActivity, uri);
-        intent.setDataAndType(Uri.parse(path), "image/*");
-        // 设置裁剪
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 500);
-        intent.putExtra("outputY", 500);
-        intent.putExtra("scale", true);
-        intent.putExtra("return-data", false);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection", true); // no face detection
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mActivity
-                .getExternalCacheDir(), IMAGE_FILE_NAME + "123333")));
-        mActivity.startActivityForResult(intent, StaticField.ImageRequreCode.CUT_REQUEST_CODE);
+    public void startPhotoCrop(Uri file, int hei, int wei, int permissionCode) {
+        startPhotoCrop(file, getZoomedPicPath(file), hei, wei, permissionCode);
+    }
 
+    /**
+     * 获取裁剪后的图片
+     */
+    public Uri getCropImage() {
+        return cropImage;
+    }
+
+    /**
+     * 获取需裁剪图片的储存位置
+     */
+    private Uri getZoomedPicPath(Uri file) {
+
+        String RootPath = mActivity.getCacheDir().getAbsolutePath();
+        String FilePath = RootPath + "/image/" + "crop_" + getImageFileName(file);
+        File saved = new File(FilePath);
+        if (!saved.getParentFile().exists()) {
+            saved.getParentFile().mkdirs();
+        }
+        try {
+            saved.createNewFile();
+        } catch (IOException e) {
+            Log.e("在保存图片时出错：", e.toString());
+        }
+        return Uri.fromFile(saved);
     }
 
     /**
@@ -332,8 +366,7 @@ public class RequreForImage {
             // Continue only if the File was successfully created
             if (uri != null) {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                mActivity.startActivityForResult(takePictureIntent,
-                        StaticField.ImageRequreCode.CAMERA_REQUEST_CODE);
+                mActivity.startActivityForResult(takePictureIntent, eventCode);
             }
         } else {
             Toast.makeText(mActivity, "诶!没有发现相机呢!", Toast.LENGTH_LONG).show();
@@ -346,7 +379,6 @@ public class RequreForImage {
      *
      * @param permission 需要授权的权限
      */
-
     private void requestPermission(String permission, int eventCode) {
         ActivityCompat.requestPermissions(mActivity, new String[]{permission}, eventCode);
     }
@@ -354,7 +386,7 @@ public class RequreForImage {
     /*授权回调*/
     @Subscribe
     public void onRequestPermissionsResult(PermissionAnser permissionAnser) {
-        if (StaticField.PermissionRequestCode.isImagePermissionEvent(permissionAnser.requestCode)) {
+        if (lastEventCode == permissionAnser.requestCode) {
             takePhoto(lastEventCode, true);
         }
     }

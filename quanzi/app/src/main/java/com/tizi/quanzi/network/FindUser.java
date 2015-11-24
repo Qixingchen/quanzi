@@ -66,7 +66,7 @@ public class FindUser extends RetrofitNetworkAbs {
         List<ReadContact.Mobiles> mobilesList = ReadContact.readContact(App.getApplication());
 
         //每次只传 ContactLimit 个
-        int contactLimit = StaticField.QueryLimit.ContactLimit;
+        int contactLimit = StaticField.Limit.ContactLimit;
         final int times = (mobilesList.size() - 1) / contactLimit + 1;
         String[] mobileString = new String[times];
         final int[] ansTimes = {0};

@@ -56,7 +56,7 @@ import java.util.Map;
  */
 public class ChatActivity extends BaseActivity {
 
-    private static final int QueryLimit = StaticField.QueryLimit.MessageLimit;
+    private static final int QueryLimit = StaticField.Limit.MessageLimit;
     private static final String TAG = ChatActivity.class.getSimpleName();
     private Context context;
     private RecyclerView chatmessagerecyclerView;
@@ -322,10 +322,10 @@ public class ChatActivity extends BaseActivity {
         chatmessagerecyclerView.setLayoutManager(mLayoutManager);
 
         //insertImage
-        requreForImage = new RequreForImage(this);
         insertImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                requreForImage = RequreForImage.getInstance(mActivity);
                 requreForImage.showDialogAndCallIntent("选择图片", StaticField.PermissionRequestCode.chat_insert_photo);
             }
         });
@@ -460,7 +460,6 @@ public class ChatActivity extends BaseActivity {
                             setAttrs());
 
         }
-
     }
 
 

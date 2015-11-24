@@ -114,14 +114,19 @@ public class StaticField {
     /*0~255 在这被使用*/
     public static class PermissionRequestCode {
 
-        /*图像相关:1~100*/
+        /*图像相关:1~100 十位为奇数的是裁剪*/
         public final static int chat_insert_photo = 1;
         public final static int userInfoSetFragment_user_face_photo = 2;
+        public final static int userInfoSetFragment_user_face_photo_crop = 12;
         public final static int new_group_face_photo = 3;
+        public final static int new_group_face_photo_crop = 13;
         public final static int QuanziIntroduceFragment_group_face = 4;
+        public final static int QuanziIntroduceFragment_group_face_crop = 14;
         public final static int register_user_face = 5;
+        public final static int register_user_face_crop = 15;
         public final static int send_dyn = 6;
         public final static int user_back_ground = 7;
+        public final static int user_back_ground_crop = 17;
 
 
         public final static int CHAT_RECORD_AUDIO = 101;
@@ -142,13 +147,14 @@ public class StaticField {
     }
 
     /*数量限制*/
-    public static class QueryLimit {
+    public static class Limit {
         public static final int MessageLimit = 1000;
         public static final int FlushMaxTimes = 10;
         public static final int DynamicLimit = 50;
         public static final int ContactLimit = 100;
         public static final int MAX_QUANZI = 10;
         public static final int SIGN_CODE_COUNTDOWN = 10;
+        public static final int MAX_MEMBER_IN_GROUP = 10;
     }
 
     /*系统消息还是私聊*/

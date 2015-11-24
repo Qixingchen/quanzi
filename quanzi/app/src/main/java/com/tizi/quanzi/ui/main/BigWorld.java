@@ -3,6 +3,7 @@ package com.tizi.quanzi.ui.main;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -33,6 +34,8 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.login.LoginActivity;
+
+import java.io.File;
 
 /**
  */
@@ -187,7 +190,7 @@ public class BigWorld extends BaseFragment {
             @Override
             public boolean onLongClick(View v) {
 
-                requreForImage = new RequreForImage(mActivity);
+                requreForImage = RequreForImage.getInstance(mActivity);
                 requreForImage.showDialogAndCallIntent("选择背景", StaticField.PermissionRequestCode.user_back_ground);
 
                 return false;
@@ -213,22 +216,40 @@ public class BigWorld extends BaseFragment {
 
     @Subscribe
     public void onResult(ActivityResultAns ans) {
-        if (ans.requestCode == StaticField.PermissionRequestCode.user_back_ground
-                && ans.resultCode == Activity.RESULT_OK) {
-            final String filepath = requreForImage.getFilePathFromIntent(ans.data, false);
 
-            SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
-                @Override
-                public void onResult(String uri, boolean success, String errorMessage) {
-                    if (success) {
-                        Picasso.with(mContext).load(uri).into(userBackground);
-                        MyUserInfo.getInstance().getUserInfo().bg = uri;
-                        UserInfoSetting.getNewInstance().changeBackground(uri);
-                    } else {
-                        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+        if (ans.resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        switch (ans.requestCode) {
+            case StaticField.PermissionRequestCode.user_back_ground:
+
+                String filepath = requreForImage.getFilePathFromIntent(ans.data, false);
+                File file = new File(filepath);
+                requreForImage.startPhotoCrop(Uri.fromFile(file), 9, 16,
+                        StaticField.PermissionRequestCode.user_back_ground_crop);
+                break;
+
+            case StaticField.PermissionRequestCode.user_back_ground_crop:
+
+                filepath = requreForImage.getCropImage().getPath();
+
+                SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+                    @Override
+                    public void onResult(String uri, boolean success, String errorMessage) {
+                        if (success) {
+                            Picasso.with(mContext).load(uri).into(userBackground);
+                            MyUserInfo.getInstance().getUserInfo().bg = uri;
+                            UserInfoSetting.getNewInstance().changeBackground(uri);
+                        } else {
+                            Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                        }
                     }
-                }
-            }).savePhoto(filepath);
+                }).savePhoto(filepath);
+
+                break;
+            default:
+
         }
     }
 

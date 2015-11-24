@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class FlushMess {
     private static final String TAG = FlushMess.class.getSimpleName();
-    private final int QueryLimit = StaticField.QueryLimit.MessageLimit;
+    private final int QueryLimit = StaticField.Limit.MessageLimit;
     private AVIMMessagesQueryCallback avimMessagesQueryCallback;
     private AVIMConversation conversation;
 
@@ -66,8 +66,8 @@ public class FlushMess {
                     }
 
                 }
-                if (flushTimes[0] < StaticField.QueryLimit.FlushMaxTimes &&
-                        lastFlushNum[0] == StaticField.QueryLimit.MessageLimit) {
+                if (flushTimes[0] < StaticField.Limit.FlushMaxTimes &&
+                        lastFlushNum[0] == StaticField.Limit.MessageLimit) {
                     flushTimes[0]++;
                     doFlush(convID);
                 }

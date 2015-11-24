@@ -2,6 +2,7 @@ package com.tizi.quanzi.ui.quanzi_zone;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.dyns.DynInfoFragment;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -106,7 +108,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupFaceImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requreForImage = new RequreForImage(mActivity);
+                requreForImage = RequreForImage.getInstance(mActivity);
                 requreForImage.showDialogAndCallIntent("选择圈子照片",
                         StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face);
 
@@ -121,7 +123,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
             public void needMore() {
                 if (hasMoreToGet) {
                     quaryMore(groupAllInfo.group.id, lastIndex);
-                    lastIndex += StaticField.QueryLimit.DynamicLimit;
+                    lastIndex += StaticField.Limit.DynamicLimit;
                 }
             }
         });
@@ -240,7 +242,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
             }
             zoneTagTextview.setText("标签:" + tagsString);
             quaryMore(groupAllInfo.group.id, lastIndex);
-            lastIndex += StaticField.QueryLimit.DynamicLimit;
+            lastIndex += StaticField.Limit.DynamicLimit;
         }
         if (groupAllInfo != null && groupUsersRecyclerView.getVisibility() == View.VISIBLE) {
             groupUsersRecyclerView.getLayoutParams().height = (int) (70 * GetThumbnailsUri.getDpi(mActivity)
@@ -269,7 +271,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
                 dynsAdapter.addItems(dyns.dyns);
-                if (dyns.dyns.size() != StaticField.QueryLimit.DynamicLimit) {
+                if (dyns.dyns.size() != StaticField.Limit.DynamicLimit) {
                     hasMoreToGet = false;
                 }
             }
@@ -284,14 +286,27 @@ public class QuanziIntroduceFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face:
-                    String filepath = requreForImage.getFilePathFromIntent(data);
-                    savePhotoToLC(filepath);
-                    break;
-            }
+
+        switch (requestCode) {
+            case StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face:
+                if (resultCode != Activity.RESULT_OK) {
+                    requreForImage = null;
+                    return;
+                }
+                String filepath = requreForImage.getFilePathFromIntent(data);
+                requreForImage.startPhotoCrop(Uri.fromFile(new File(filepath)), 1, 1,
+                        StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face_crop);
+                break;
+            case StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face_crop:
+                if (resultCode != Activity.RESULT_OK) {
+                    requreForImage = null;
+                    return;
+                }
+                savePhotoToLCAndSetGroupImage(requreForImage.getCropImage().getPath());
+                requreForImage = null;
+                break;
         }
+
     }
 
     /**
@@ -299,7 +314,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
      *
      * @param filepath 图片地址
      */
-    private void savePhotoToLC(String filepath) {
+    private void savePhotoToLCAndSetGroupImage(String filepath) {
         AVFile file = null;
         try {
             file = AVFile.withAbsoluteLocalPath(AppStaticValue.getUserID() + "face.jpg",
@@ -316,6 +331,11 @@ public class QuanziIntroduceFragment extends BaseFragment {
                         Picasso.with(mContext).load(photoUri)
                                 .resizeDimen(R.dimen.group_introduce_face_size, R.dimen.group_introduce_face_size)
                                 .into(groupFaceImageView);
+
+                        Picasso.with(mContext).load(photoUri)
+                                .resize(GetThumbnailsUri.getPXs(mActivity, 360),
+                                        GetThumbnailsUri.getPXs(mActivity, 280))
+                                .into(zoneBackgroundImageView);
                         //通知后台更改
                         GroupSetting.getNewInstance().changeIcon(groupAllInfo.group.id, photoUri);
                         //本地群列表更改

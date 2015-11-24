@@ -2,6 +2,7 @@ package com.tizi.quanzi.ui.register;
 
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -20,6 +21,8 @@ import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
+
+import java.io.File;
 
 /**
  * 用户填写个人信息界面
@@ -67,7 +70,6 @@ public class CompleteUesrInfo extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
         UserPhotoImageView.setImageResource(R.drawable.face);
-        requreForImage = new RequreForImage(mActivity);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +99,7 @@ public class CompleteUesrInfo extends BaseFragment {
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                requreForImage = RequreForImage.getInstance(mActivity);
                 requreForImage.showDialogAndCallIntent("设置头像",
                         StaticField.PermissionRequestCode.register_user_face);
             }
@@ -105,10 +108,21 @@ public class CompleteUesrInfo extends BaseFragment {
 
     @Subscribe
     public void onResult(ActivityResultAns activityResultAns) {
-        if (activityResultAns.requestCode == StaticField.PermissionRequestCode.register_user_face
-                && activityResultAns.resultCode == Activity.RESULT_OK) {
-            String filePath = requreForImage.getFilePathFromIntent(activityResultAns.data);
-            if (filePath != null) {
+        if (activityResultAns.resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        switch (activityResultAns.requestCode) {
+            case StaticField.PermissionRequestCode.register_user_face:
+                String filePath = requreForImage.getFilePathFromIntent(activityResultAns.data);
+                if (filePath == null) {
+                    return;
+                }
+                requreForImage.startPhotoCrop(Uri.fromFile(new File(filePath)), 1, 1,
+                        StaticField.PermissionRequestCode.register_user_face_crop);
+                break;
+            case StaticField.PermissionRequestCode.register_user_face_crop:
+
+
                 SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                     @Override
                     public void onResult(String uri, boolean success, String errorMessage) {
@@ -121,8 +135,9 @@ public class CompleteUesrInfo extends BaseFragment {
                                 GetVolley.getmInstance().getImageLoader());
                         photoOnlineUri = uri;
                     }
-                }).savePhoto(filePath, 200, 200);
-            }
+                }).savePhoto(requreForImage.getCropImage().getPath());
+
+                break;
         }
     }
 

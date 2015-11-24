@@ -34,7 +34,7 @@ public class DynamicAct extends RetrofitNetworkAbs {
      */
     public void getGroupDynamic(String themeID, String groupID, int start) {
 
-        dynsSer.findDyns(themeID, groupID, start, StaticField.QueryLimit.DynamicLimit)
+        dynsSer.findDyns(themeID, groupID, start, StaticField.Limit.DynamicLimit)
                 .enqueue(new Callback<com.tizi.quanzi.gson.Dyns>() {
                     @Override
                     public void onResponse(retrofit.Response<com.tizi.quanzi.gson.Dyns> response, Retrofit retrofit) {
@@ -60,9 +60,9 @@ public class DynamicAct extends RetrofitNetworkAbs {
         Call<com.tizi.quanzi.gson.Dyns> dynsCall;
 
         if (isGroup) {
-            dynsCall = dynsSer.findGroupDyns(id, start, StaticField.QueryLimit.DynamicLimit);
+            dynsCall = dynsSer.findGroupDyns(id, start, StaticField.Limit.DynamicLimit);
         } else {
-            dynsCall = dynsSer.findThemeDyns(id, start, StaticField.QueryLimit.DynamicLimit);
+            dynsCall = dynsSer.findThemeDyns(id, start, StaticField.Limit.DynamicLimit);
         }
 
         dynsCall.enqueue(new Callback<com.tizi.quanzi.gson.Dyns>() {

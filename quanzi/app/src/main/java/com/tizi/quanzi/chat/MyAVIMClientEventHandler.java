@@ -2,6 +2,7 @@ package com.tizi.quanzi.chat;
 
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMClientEventHandler;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.otto.BusProvider;
@@ -48,6 +49,7 @@ public class MyAVIMClientEventHandler extends AVIMClientEventHandler {
         Log.w(TAG, "链接恢复");
         BusProvider.getInstance().post(AVIMNetworkEvents.networkEvents(true));
         isNetworkAvailable = true;
+        AppStaticValue.getImClient();
     }
 
     @Override

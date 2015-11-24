@@ -1,6 +1,7 @@
 package com.tizi.quanzi.ui.new_group;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -21,6 +22,7 @@ import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -48,7 +50,7 @@ public class NewGroupStep1Fragment extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        requreForImage = new RequreForImage(mActivity);
+
         quanziNameInputLayout = (TextInputLayout) mActivity.findViewById(R.id.quanziNameInputLayout);
         quanziSignInputLayout = (TextInputLayout) mActivity.findViewById(R.id.quanziSignInputLayout);
         UserPhotoImageView = (ImageView) mActivity.findViewById(R.id.UserPhotoImageView);
@@ -61,6 +63,7 @@ public class NewGroupStep1Fragment extends BaseFragment {
         UserPhotoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                requreForImage = RequreForImage.getInstance(mActivity);
                 requreForImage.showDialogAndCallIntent("圈子头像",
                         StaticField.PermissionRequestCode.new_group_face_photo);
             }
@@ -79,29 +82,37 @@ public class NewGroupStep1Fragment extends BaseFragment {
      */
     @Subscribe
     public void onIntentResult(ActivityResultAns activityResultAns) {
-        if (activityResultAns.requestCode == StaticField.PermissionRequestCode.new_group_face_photo) {
-            if (activityResultAns.resultCode == Activity.RESULT_OK && activityResultAns.data != null) {
+
+        if (activityResultAns.resultCode != Activity.RESULT_OK || activityResultAns.data == null) {
+            return;
+        }
+        switch (activityResultAns.requestCode) {
+            case StaticField.PermissionRequestCode.new_group_face_photo:
                 String filePath = requreForImage.getFilePathFromIntent(activityResultAns.data);
-                if (filePath != null) {
 
-                    SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
-                        @Override
-                        public void onResult(String uri, boolean success, String errorMessage) {
-                            if (!success) {
-                                Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
-                                return;
-                            }
-                            String photoUri = uri;
-                            //finalFile.getThumbnailUrl(false, 200, 200);
-                            Picasso.with(mActivity).load(photoUri)
-                                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
-                                    .into(UserPhotoImageView);
-                            groupFaceUri = photoUri;
+                requreForImage.startPhotoCrop(Uri.fromFile(new File(filePath)), 1, 1,
+                        StaticField.PermissionRequestCode.new_group_face_photo_crop);
+                break;
+
+            case StaticField.PermissionRequestCode.new_group_face_photo_crop:
+
+                SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+                    @Override
+                    public void onResult(String uri, boolean success, String errorMessage) {
+                        if (!success) {
+                            Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                            return;
                         }
-                    }).savePhoto(filePath, AppStaticValue.getUserID() + "group.jpg", 200, 200, 50);
+                        String photoUri = uri;
+                        //finalFile.getThumbnailUrl(false, 200, 200);
+                        Picasso.with(mActivity).load(photoUri)
+                                .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                                .into(UserPhotoImageView);
+                        groupFaceUri = photoUri;
+                    }
+                }).savePhoto(requreForImage.getCropImage().getPath(), AppStaticValue.getUserID() + "group.jpg");
 
-                }
-            }
+                break;
         }
     }
 

@@ -94,7 +94,7 @@ public class DBAct {
                 null,//groupBy
                 null,//having
                 DataBaseHelper.chatHistorySQLName.send_time + " DESC",//orderBy
-                String.format("%d,%d", start, StaticField.QueryLimit.MessageLimit)
+                String.format("%d,%d", start, StaticField.Limit.MessageLimit)
         );
 
         List<ChatMessage> chatMessages = new ArrayList<>();

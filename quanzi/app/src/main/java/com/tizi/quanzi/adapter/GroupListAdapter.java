@@ -120,7 +120,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemCount() {
-        return groupClasses == null ? 1 : Math.min(groupClasses.size() + 1, StaticField.QueryLimit.MAX_QUANZI);
+        return groupClasses == null ? 1 : Math.min(groupClasses.size() + 1, StaticField.Limit.MAX_QUANZI);
 
     }
 

@@ -215,6 +215,6 @@ public class ForgetPasswordFragment extends BaseFragment {
                 getVoiceSignButton.setText(countDown);
                 getSignButton.setText(countDown);
             }
-        }).execute(1000 * StaticField.QueryLimit.SIGN_CODE_COUNTDOWN);
+        }).execute(1000 * StaticField.Limit.SIGN_CODE_COUNTDOWN);
     }
 }

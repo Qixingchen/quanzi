@@ -1,6 +1,7 @@
 package com.tizi.quanzi.ui.dyns;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.otto.FragmentResume;
+import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseActivity;
 
@@ -129,6 +131,18 @@ public class DynsActivity extends BaseActivity {
         if (id == R.id.action_send) {
             if (sendDynFragment.SendDyn()) {
                 getSupportFragmentManager().popBackStack();
+                new Timer().setOnResult(new Timer.OnResult() {
+                    @Override
+                    public void OK() {
+                        dynsActivityFragment.quaryMore(themeID, groupID, 0);
+                    }
+
+                    @Override
+                    public void countdown(int s) {
+
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 2000);
+
             }
             return true;
         }

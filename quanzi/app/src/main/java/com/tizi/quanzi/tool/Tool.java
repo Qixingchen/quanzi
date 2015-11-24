@@ -20,6 +20,7 @@ import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.ApiInfoGson;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.ApiInfo;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
@@ -99,7 +100,8 @@ public class Tool {
      * 判断当前用户是不是游客
      */
     public static boolean isGuest() {
-        return MyUserInfo.getInstance().getUserInfo().getAccount().compareTo(StaticField.GuestUser.Account) == 0;
+        Login.UserEntity user = MyUserInfo.getInstance().getUserInfo();
+        return user == null || user.getAccount().compareTo(StaticField.GuestUser.Account) == 0;
     }
 
     public static void GuestAction(final Context context) {

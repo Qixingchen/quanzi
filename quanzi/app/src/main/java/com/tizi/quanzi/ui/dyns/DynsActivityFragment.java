@@ -94,7 +94,7 @@ public class DynsActivityFragment extends BaseFragment {
         });
     }
 
-    private void quaryMore(final String thmemID, final String groupID, final int nowPageCount) {
+    public void quaryMore(final String thmemID, final String groupID, final int nowPageCount) {
         swipeRefreshLayout.setRefreshing(true);
         Log.i(TAG, "查询群动态 PageIndex=" + nowPageCount);
 
@@ -103,19 +103,19 @@ public class DynsActivityFragment extends BaseFragment {
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
                 int oldCount = dynsAdapter.getItemCount();
-                if (dyns.dyns.size() < StaticField.QueryLimit.DynamicLimit) {
+                if (dyns.dyns.size() < StaticField.Limit.DynamicLimit) {
                     isAllLoaded = true;
                 } else {
                     isAllLoaded = false;
                 }
                 dynsAdapter.addItems(dyns.dyns);
-                if (!isAllLoaded && nowPageCount != 0 && dynsAdapter.getItemCount() - oldCount < StaticField.QueryLimit.DynamicLimit) {
+                if (!isAllLoaded && nowPageCount != 0 && dynsAdapter.getItemCount() - oldCount < StaticField.Limit.DynamicLimit) {
                     quaryMore(thmemID, groupID);
                 }
                 if (nowPageCount == 0) {
                     recyclerView.scrollToPosition(0);
                 }
-                if (nowPageCount < page - 2 && dynsAdapter.getItemCount() - oldCount == StaticField.QueryLimit.DynamicLimit) {
+                if (nowPageCount < page - 2 && dynsAdapter.getItemCount() - oldCount == StaticField.Limit.DynamicLimit) {
                     quaryMore(thmemID, groupID, nowPageCount + 1);
                 }
                 swipeRefreshLayout.setRefreshing(false);
@@ -127,7 +127,7 @@ public class DynsActivityFragment extends BaseFragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         };
-        int count = nowPageCount * StaticField.QueryLimit.DynamicLimit;
+        int count = nowPageCount * StaticField.Limit.DynamicLimit;
         if (groupID == null) {
             DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, count);
         } else {

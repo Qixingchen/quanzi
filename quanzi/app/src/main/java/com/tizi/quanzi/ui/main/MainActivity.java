@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -197,7 +198,7 @@ public class MainActivity extends BaseActivity {
      * 获取uri，tizi-tech.com下，开始加入圈子
      */
     private void toJoinGroup(Uri uri) {
-        if (uri.getScheme().equals("http") || uri.getScheme().equals("https")) {
+        if (uri.getScheme() != null && (uri.getScheme().equals("http") || uri.getScheme().equals("https"))) {
             if (uri.getHost().contains("tizi-tech.com")) {
                 String contents = uri.toString();
                 if (contents.contains("joinGroup")) {
@@ -226,6 +227,8 @@ public class MainActivity extends BaseActivity {
                     startActivity(intent);
                 }
             }
+        } else {
+            Snackbar.make(view, "不支持的值", Snackbar.LENGTH_LONG).show();
         }
     }
 }

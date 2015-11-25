@@ -209,7 +209,10 @@ public class QuanziIntroduceFragment extends BaseFragment {
                     DynInfoFragment dynInfoFragment = new DynInfoFragment();
                     dynInfoFragment.setDyn(dyn);
                     dynInfoFragment.setShowUser(finalShowUsers);
-                    getFragmentManager().beginTransaction().replace(R.id.fragment, dynInfoFragment)
+                    getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                                    R.anim.no_change, R.anim.slide_out_to_bottom)
+                            .replace(R.id.fragment, dynInfoFragment)
                             .addToBackStack("DynInfoFragment").commit();
                 }
             });

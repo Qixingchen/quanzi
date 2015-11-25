@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.volley.toolbox.NetworkImageView
+    android:id="@+id/pic"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/group_face_small"
+    android:layout_height="@dimen/group_face_small"
+    android:layout_marginBottom="5dp"
+    android:layout_marginEnd="5dp"
+    android:scaleType="centerCrop"
+    tools:background="@color/md_grey_800"/>

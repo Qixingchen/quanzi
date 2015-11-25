@@ -68,6 +68,8 @@ public class LockLock extends BaseFragment {
                     return;
                 }
                 getParentFragment().getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                                R.anim.no_change, R.anim.slide_out_to_bottom)
                         .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id))
                         .addToBackStack("ThemeSignUpFragment").commit();
             }
@@ -77,10 +79,14 @@ public class LockLock extends BaseFragment {
                 if (//BuildConfig.BUILD_TYPE.equals("debug") ||
                         FriendTime.isInThemeTime(act.beginTime, act.endTime)) {
                     getParentFragment().getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                                    R.anim.no_change, R.anim.slide_out_to_bottom)
                             .replace(R.id.fragment, BoomGroupFragment.newInstance(act.id, act.beginTime, act.endTime))
                             .addToBackStack("BoomGroupFragment").commit();
                 } else {
                     getParentFragment().getFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                                    R.anim.no_change, R.anim.slide_out_to_bottom)
                             .replace(R.id.fragment, CountdownFragment.newInstance(act.beginTime, act.id))
                             .addToBackStack("CountdownFragment").commit();
                 }

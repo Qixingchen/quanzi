@@ -73,7 +73,10 @@ public class DynsActivityFragment extends BaseFragment {
                 DynInfoFragment dynInfoFragment = new DynInfoFragment();
                 dynInfoFragment.setDyn(dyn);
                 dynInfoFragment.setShowUser(false);
-                getFragmentManager().beginTransaction().hide(mFragment).add(R.id.fragment, dynInfoFragment)
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                                R.anim.no_change, R.anim.slide_out_to_bottom)
+                        .hide(mFragment).add(R.id.fragment, dynInfoFragment)
                         .addToBackStack("DynInfoFragment").commit();
             }
         });

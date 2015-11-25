@@ -113,6 +113,8 @@ public class MainActivity extends BaseActivity {
         if (id == R.id.action_notifi_message) {
             notifiMessageFragment = new NotifiMessageFragment();
             getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_from_action_button, R.anim.disapear,
+                            R.anim.no_change, R.anim.slide_back_to_action_button)
                     .replace(R.id.fragment, notifiMessageFragment)
                     .addToBackStack("notifiMessageFragment").commit();
         }
@@ -163,6 +165,8 @@ public class MainActivity extends BaseActivity {
     public void StartUserInfoSet() {
         userInfoSetFragment = new UserInfoSetFragment();
         getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                        R.anim.no_change, R.anim.slide_out_to_bottom)
                 .replace(R.id.fragment, userInfoSetFragment).addToBackStack("userInfoSetFragment").commit();
     }
 

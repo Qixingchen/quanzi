@@ -1,6 +1,7 @@
 package com.tizi.quanzi.ui.quanzi_zone;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.new_group.GroupTagFragment;
 
@@ -107,8 +109,12 @@ public class QuanziZoneActivity extends BaseActivity {
         if (id == R.id.action_settings) {
             quanziSetFragment = QuanziSetFragment.newInstance(mGroupAllInfo);
             getSupportFragmentManager().beginTransaction()
+                    // TODO: 15/11/25 why crash on sdk 23?
+                    //  .setCustomAnimations(R.anim.slide_in_from_action_button, R.anim.disapear,
+                    //  R.anim.no_change, R.anim.slide_back_to_action_button)
                     .replace(R.id.fragment, quanziSetFragment)
                     .addToBackStack("quanziSetFragment").commit();
+
             return true;
         }
 
@@ -147,7 +153,19 @@ public class QuanziZoneActivity extends BaseActivity {
     }
 
     public void showSetting() {
-        mMenu.findItem(R.id.action_settings).setVisible(true);
+        new Timer().setOnResult(new Timer.OnResult() {
+            @Override
+            public void OK() {
+                if (mMenu != null) {
+                    mMenu.findItem(R.id.action_settings).setVisible(true);
+                }
+            }
+
+            @Override
+            public void countdown(int s) {
+
+            }
+        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 200);
     }
 
     public void callForTagFragment(ArrayList<AllTags.TagsEntity> tags) {

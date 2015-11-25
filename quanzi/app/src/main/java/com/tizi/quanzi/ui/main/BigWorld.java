@@ -154,6 +154,8 @@ public class BigWorld extends BaseFragment {
                     public void onClick(View v) {
                         SystemSettingFragment fragment = new SystemSettingFragment();
                         getParentFragment().getFragmentManager().beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                                        R.anim.no_change, R.anim.slide_out_to_bottom)
                                 .replace(R.id.fragment, fragment).addToBackStack("SystemSettingFragment")
                                 .commit();
                     }

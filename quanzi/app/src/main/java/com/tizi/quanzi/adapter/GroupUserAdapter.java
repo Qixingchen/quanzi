@@ -143,7 +143,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
     @Override
     public GroupUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.weibo_pic, parent, false);
+                .inflate(R.layout.group_users_face, parent, false);
         GroupUserViewHolder vh = new GroupUserViewHolder(v);
         return vh;
     }

@@ -1,8 +1,6 @@
 package com.tizi.quanzi.ui.register;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -26,6 +24,8 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.ui.main.WebViewFragment;
+import com.tizi.quanzi.widget.custom_tab.SimpleCustomChromeTabsHelper;
 
 
 /**
@@ -80,12 +80,23 @@ public class Register1stepFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
 
+        final SimpleCustomChromeTabsHelper mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
+        if (SimpleCustomChromeTabsHelper.canUseCustomChromeTabs(mContext)) {
+
+            mCustomTabHelper.prepareUrl(getString(R.string.user_license));
+        }
+
+
         SpannableString license = MakeSpannableString.makeLinkSpan(String.format("《%s协议》", StaticField.AppName.AppEngName), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent license = new Intent(Intent.ACTION_VIEW);
-                license.setData(Uri.parse(getString(R.string.user_license)));
-                startActivity(license);
+                if (SimpleCustomChromeTabsHelper.canUseCustomChromeTabs(mContext)) {
+                    mCustomTabHelper.openUrl(getString(R.string.user_license));
+                } else {
+                    getFragmentManager().beginTransaction().hide(mFragment).add(R.id.fragment,
+                            WebViewFragment.newInstance(WebViewFragment.License, getString(R.string.user_license)))
+                            .addToBackStack("WebViewFragment").commit();
+                }
             }
         });
 

@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="脱单大作战"
-        android:textSize="@dimen/small_title_text_size"/>
+        android:textSize="@dimen/small_title_text_size"
+        tools:text="脱单大作战"/>
 
     <!--热门动态-->
     <android.support.v4.view.ViewPager

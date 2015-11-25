@@ -221,7 +221,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     int year = Integer.valueOf(date[0]);
                     int month = Integer.valueOf(date[1]);
                     int day = Integer.valueOf(date[2]);
-                    datePickerDialog.updateDate(year, month, day);
+                    datePickerDialog.updateDate(year, month - 1, day);
                 }
 
                 datePickerDialog.show();

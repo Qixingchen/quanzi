@@ -63,7 +63,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
         Register1stepFragment register1StepFragment = new Register1stepFragment();
         register1StepFragment.setNextStep(this);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.register_fragment, register1StepFragment).commit();
+                .add(R.id.fragment, register1StepFragment).commit();
     }
 
     /**
@@ -106,7 +106,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
         completeUesrInfo = new CompleteUesrInfo();
         completeUesrInfo.setAllDone(this);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.register_fragment, completeUesrInfo).commit();
+                .replace(R.id.fragment, completeUesrInfo).commit();
     }
 
     /**

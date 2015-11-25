@@ -26,6 +26,7 @@ import android.util.TypedValue;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.tool.Tool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,19 +48,6 @@ public class SimpleCustomChromeTabsHelper {
     private Activity mContext;
     private CustomTabsClient mCustomTabClient;
     private CustomTabsSession mCustomTabSession;
-    private CustomTabsServiceConnection mCustomTabConnection = new CustomTabsServiceConnection() {
-        @Override
-        public void onCustomTabsServiceConnected(ComponentName componentName, CustomTabsClient customTabsClient) {
-            mCustomTabClient = customTabsClient;
-            mCustomTabSession = mCustomTabClient.newSession(mCallback);
-            mCustomTabClient.warmup(WARM_UP_ASYNC);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mCustomTabClient = null;
-        }
-    };
     private SparseArrayCompat<CustomTabsCallback> mCallbacks = new SparseArrayCompat<>();
     private CustomTabsCallback mCallback = new CustomTabsCallback() {
         @Override
@@ -79,6 +67,19 @@ public class SimpleCustomChromeTabsHelper {
             }
         }
     };
+    private CustomTabsServiceConnection mCustomTabConnection = new CustomTabsServiceConnection() {
+        @Override
+        public void onCustomTabsServiceConnected(ComponentName componentName, CustomTabsClient customTabsClient) {
+            mCustomTabClient = customTabsClient;
+            mCustomTabSession = mCustomTabClient.newSession(mCallback);
+            mCustomTabClient.warmup(WARM_UP_ASYNC);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mCustomTabClient = null;
+        }
+    };
     private CustomTabsIntent.Builder mBuilder;
     private CustomTabFallback mFallback;
 
@@ -87,10 +88,16 @@ public class SimpleCustomChromeTabsHelper {
         sPackageNameToUse = getPackageNameToUse(mContext);
     }
 
-
     public SimpleCustomChromeTabsHelper(Activity context, @XmlRes int attrs) {
         this(context);
        /* not ready yet */
+    }
+
+    /**
+     * 能否使用CustomTabs
+     */
+    public static boolean canUseCustomChromeTabs(Context context) {
+        return getPackageNameToUse(context) != null;
     }
 
     public static int getThemePrimaryColor(final Context context) {
@@ -181,11 +188,15 @@ public class SimpleCustomChromeTabsHelper {
     }
 
     public void openUrl(String url) {
+        if (!hasBrowser()) {
+            signalFallback();
+            return;
+        }
         buildCustomTabIntent(mCustomTabSession).launchUrl(mContext, Uri.parse(url));
     }
 
     public void openUrl(String url, CustomTabsUiBuilder builder) {
-        if (sPackageNameToUse == null && getPackageNameToUse(mContext) == null) {
+        if (!hasBrowser()) {
             signalFallback();
             return;
         }
@@ -217,6 +228,11 @@ public class SimpleCustomChromeTabsHelper {
             mCustomTabSession.mayLaunchUrl(Uri.parse(url), null, null);
         }
 
+    }
+
+    private boolean hasBrowser() {
+        Intent activityIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com"));
+        return Tool.isIntentSafe(mContext, activityIntent);
     }
 
     private void signalFallback() {

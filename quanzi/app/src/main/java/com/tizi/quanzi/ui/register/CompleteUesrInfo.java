@@ -76,19 +76,19 @@ public class CompleteUesrInfo extends BaseFragment {
 
                 String username = nickNameInputLayout.getEditText().getText().toString();
                 if (username.compareTo("") == 0) {
-                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                    Snackbar.make(view,
                             "用户名为空", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 int buttonID = sexGroup.getCheckedRadioButtonId();
                 if (buttonID == -1) {
-                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                    Snackbar.make(view,
                             "性别为空", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 int sexID = sexGroup.indexOfChild(sexGroup.findViewById(buttonID));
                 if (photoOnlineUri == null || photoOnlineUri.compareTo("") == 0) {
-                    Snackbar.make(mActivity.findViewById(R.id.register_fragment),
+                    Snackbar.make(view,
                             "头像为空", Snackbar.LENGTH_LONG).show();
                     return;
                 }

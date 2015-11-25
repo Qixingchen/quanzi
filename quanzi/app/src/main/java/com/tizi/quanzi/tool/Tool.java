@@ -40,8 +40,8 @@ public class Tool {
     private static final String TAG = Tool.class.getSimpleName();
 
     //判断 intent 是否安全
-    public static boolean isIntentSafe(Activity activity, Intent intent) {
-        PackageManager packageManager = activity.getPackageManager();
+    public static boolean isIntentSafe(Context context, Intent intent) {
+        PackageManager packageManager = context.getPackageManager();
         List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
         return activities.size() > 0;
     }

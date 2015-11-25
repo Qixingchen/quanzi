@@ -10,6 +10,7 @@ import com.tizi.quanzi.R;
 
 /**
  * Created by qixingchen on 15/10/27.
+ * 绘制描边
  */
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;

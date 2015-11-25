@@ -94,8 +94,9 @@ public class ThemesPagerAdapter extends PagerAdapter {
         /*动态*/
         final ImageView weibo_avatar_ImageView;
         final TextView userNameTextView, contentTextView, dateTextView,
-                attitudesTextView, commentsTextView;
+                attitudesTextView, commentsTextView, themeTitleTextView;
 
+        themeTitleTextView = (TextView) rootView.findViewById(R.id.theme_title);
         weibo_avatar_ImageView = (ImageView) rootView.findViewById(R.id.weibo_avatar);
         userNameTextView = (TextView) rootView.findViewById(R.id.weibo_name);
         contentTextView = (TextView) rootView.findViewById(R.id.weibo_content);
@@ -152,6 +153,8 @@ public class ThemesPagerAdapter extends PagerAdapter {
         })
                 .getHotDyns(act.id);
 
+        themeTitleTextView.setText(act.title);
+
          /*报名等事件*/
         final Button participateButton, detailButton, boomButton;
         final TextView participantsNum;
@@ -191,7 +194,17 @@ public class ThemesPagerAdapter extends PagerAdapter {
         detailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCustomTabHelper.openUrl(act.detailUrl);
+                if (SimpleCustomChromeTabsHelper.canUseCustomChromeTabs(mActivity)) {
+                    mCustomTabHelper.openUrl(act.detailUrl);
+                } else {
+                    mCustomTabHelper.openUrl(act.detailUrl);
+                    // TODO: 15/11/25 webview 不能加载
+                    //                    if (onClick == null) {
+                    //                        Log.w(TAG, "没有回调监听:");
+                    //                        return;
+                    //                    }
+                    //                    onClick.watchIntro(act);
+                }
             }
         });
 
@@ -228,5 +241,8 @@ public class ThemesPagerAdapter extends PagerAdapter {
 
         /*进入活动*/
         void EnterTheme(Theme.ActsEntity act);
+
+        /*查看详情*/
+        void watchIntro(Theme.ActsEntity act);
     }
 }

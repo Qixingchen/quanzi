@@ -92,6 +92,14 @@ public class LockLock extends BaseFragment {
                 }
 
             }
+
+            @Override
+            public void watchIntro(Theme.ActsEntity act) {
+                getParentFragment().getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, WebViewFragment.newInstance(
+                                WebViewFragment.Theme_Intro, act.detailUrl))
+                        .addToBackStack("WebViewFragment").commit();
+            }
         };
 
         ThemeActs.getNewInstance().setNetworkListener(

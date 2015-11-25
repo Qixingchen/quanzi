@@ -1,9 +1,7 @@
 package com.tizi.quanzi.ui.main;
 
 
-import android.content.Intent;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +10,8 @@ import android.widget.TextView;
 
 import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.widget.custom_tab.SimpleCustomChromeTabsHelper;
 
 /**
  * 系统设置
@@ -51,38 +49,31 @@ public class SystemSettingFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
 
+        final SimpleCustomChromeTabsHelper mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
+        mCustomTabHelper.prepareUrl(getString(R.string.update_notices));
+        mCustomTabHelper.prepareUrl(getString(R.string.user_license));
+        mCustomTabHelper.prepareUrl(getString(R.string.open_source_license));
+
         version.setText(String.format("%s  版本%s (version code : %s )", getString(R.string.app_name),
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         version.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent releaseNotice = new Intent(Intent.ACTION_VIEW);
-                releaseNotice.setData(Uri.parse(getString(R.string.update_notices)));
-                if (Tool.isIntentSafe(mActivity, releaseNotice)) {
-                    startActivity(releaseNotice);
-                }
+                mCustomTabHelper.openUrl(getString(R.string.update_notices));
             }
         });
 
         userLicense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent license = new Intent(Intent.ACTION_VIEW);
-                license.setData(Uri.parse(getString(R.string.user_license)));
-                if (Tool.isIntentSafe(mActivity, license)) {
-                    startActivity(license);
-                }
+                mCustomTabHelper.openUrl(getString(R.string.user_license));
             }
         });
 
         openSourceLicenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent license = new Intent(Intent.ACTION_VIEW);
-                license.setData(Uri.parse(getString(R.string.open_source_license)));
-                if (Tool.isIntentSafe(mActivity, license)) {
-                    startActivity(license);
-                }
+                mCustomTabHelper.openUrl(getString(R.string.open_source_license));
             }
         });
     }

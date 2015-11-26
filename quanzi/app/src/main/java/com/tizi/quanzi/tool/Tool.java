@@ -106,7 +106,6 @@ public class Tool {
 
     public static void GuestAction(final Context context) {
         new AlertDialog.Builder(context).setTitle("此功能需要登录")
-                .setMessage("AAAAA")
                 .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -120,7 +119,6 @@ public class Tool {
                         dialog.dismiss();
                     }
                 }).show();
-
     }
 
     /**

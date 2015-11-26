@@ -34,5 +34,12 @@ public class ContantUsers extends OnlySuccess {
         public String userName;
         @SerializedName("mobile")
         public String mobile;
+
+        public MobilesEntity(String icon, String userId, String userName, String mobile) {
+            this.icon = icon;
+            this.userId = userId;
+            this.userName = userName;
+            this.mobile = mobile;
+        }
     }
 }

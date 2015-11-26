@@ -131,7 +131,7 @@ public class NewGroupStep2Fragment extends BaseFragment {
                     Toast.makeText(mContext, "没有好友", Toast.LENGTH_LONG).show();
                     return;
                 }
-                inviteListAdapter.addUser(users.mobiles);
+                inviteListAdapter.addListUsers(users.mobiles);
             }
 
             @Override

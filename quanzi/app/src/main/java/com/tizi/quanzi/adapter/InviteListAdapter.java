@@ -73,13 +73,27 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void addUser(List<ContantUsers.MobilesEntity> users) {
+    public void addListUsers(List<ContantUsers.MobilesEntity> users) {
         if (this.users == null) {
             this.users = users;
         } else {
             this.users.addAll(users);
         }
         backUpUsers.addAll(users);
+        notifyDataSetChanged();
+    }
+
+    public void addListUser(ContantUsers.MobilesEntity user) {
+        for (ContantUsers.MobilesEntity mob : backUpUsers) {
+            if (mob.mobile.equals(user.mobile)) {
+                return;
+            }
+        }
+        if (this.users == null) {
+            this.users = new ArrayList<>();
+        }
+        this.users.add(user);
+        backUpUsers.add(user);
         notifyDataSetChanged();
     }
 
@@ -203,9 +217,9 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 Toast.makeText(context, "没有这个人哦~", Toast.LENGTH_LONG).show();
                                 return;
                             }
-                            if (onAddUser != null) {
-                                onAddUser.add(otherUserInfo.id);
-                            }
+                            ContantUsers.MobilesEntity mobile = new ContantUsers.MobilesEntity(otherUserInfo.icon,
+                                    otherUserInfo.id, otherUserInfo.userName, vh.phone.getText().toString());
+                            addListUser(mobile);
                         }
 
                         @Override

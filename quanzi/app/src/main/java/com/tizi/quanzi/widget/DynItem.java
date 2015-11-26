@@ -30,8 +30,9 @@ import java.util.ArrayList;
  */
 public class DynItem {
 
+    public TextView contentTextView;
     private ImageView weibo_avatar_ImageView;
-    private TextView userNameTextView, contentTextView, dateTextView,
+    private TextView userNameTextView, dateTextView,
             attitudesTextView, commentsTextView, weiboPicsSumTextView;
     private ImageView[] weibo_pics_ImageView = new ImageView[3];
     private LinearLayout weibo_pics_linearLayout;

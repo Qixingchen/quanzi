@@ -50,7 +50,7 @@
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:dependency="notifications"
-            android:icon="@drawable/ic_plus_one_48dp"
+            android:icon="@drawable/ic_plus_one_24dp"
             android:key="notifications_zan"
             android:summary="开启:收评论或赞时发出通知"
             android:title="评论/赞"/>

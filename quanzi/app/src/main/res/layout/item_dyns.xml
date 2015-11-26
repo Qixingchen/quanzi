@@ -43,7 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/weibo_name"
             android:layout_below="@+id/weibo_name"
-            android:maxLines="2"
             android:textColor="#232323"
             android:textIsSelectable="true"
             android:textSize="15sp"

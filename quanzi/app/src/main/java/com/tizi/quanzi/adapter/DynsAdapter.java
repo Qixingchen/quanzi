@@ -115,9 +115,33 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     public void onBindViewHolder(DynsViewHolder holder, final int position) {
         final Dyns.DynsEntity dyns = dynsList.get(position);
 
-        new DynItem(dyns, holder.view, showUser, mContext);
+        DynItem dynItem = new DynItem(dyns, holder.view, showUser, mContext);
 
         //点击回调
+        dynItem.contentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onclick != null) {
+                    onclick.click(dyns);
+                } else {
+                    Log.w(TAG, "Onclick 回调为空");
+                }
+            }
+        });
+
+        dynItem.contentTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    if (onclick != null) {
+                        onclick.click(dyns);
+                    } else {
+                        Log.w(TAG, "Onclick 回调为空");
+                    }
+                }
+            }
+        });
+
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

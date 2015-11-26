@@ -101,7 +101,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                 myViewHolder.lastMessTextview.setText(groupClasses.get(position).lastMess);
                 myViewHolder.lastTimeTextview.setText(FriendTime.FriendlyDate(groupClasses.get(position).lastMessTime));
                 Picasso.with(context)
-                        .load(groupClasses.get(position).Face.toString())
+                        .load(groupClasses.get(position).Face)
                         .resizeDimen(R.dimen.group_face, R.dimen.group_face)
                         .into(myViewHolder.groupFaceImageView);
             }

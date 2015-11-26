@@ -151,6 +151,12 @@ public class ChatMessFormatFromAVIM {
     private static ChatMessage textChatMessageFromAVMessage(AVIMMessage message) {
         ChatMessage chatMessage = mainMessageInfoFromAvimMessage(message);
         chatMessage.type = StaticField.ChatContantType.TEXT;
+        if (((AVIMTextMessage) message).getAttrs().containsKey(StaticField.SystemMessAttrName.SYS_MSG_FLAG)) {
+            int flag = (int) ((AVIMTextMessage) message).getAttrs().get(StaticField.SystemMessAttrName.SYS_MSG_FLAG);
+            if (flag == StaticField.SystemMessAttrName.systemFlag.notice) {
+                chatMessage.type = StaticField.ChatContantType.Notifi;
+            }
+        }
         chatMessage.text = ((AVIMTextMessage) message).getText();
         chatMessage = setAttrsInfo(chatMessage, message);
         return chatMessage;

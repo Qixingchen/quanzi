@@ -11,6 +11,7 @@ public class StaticField {
         public final static int ME = 0;
         public final static int GROUP = 1;
         public final static int OTHER = 2;
+        public final static int NOTIFI = 3;
     }
 
     /*消息携带内容类型*/
@@ -20,6 +21,7 @@ public class StaticField {
         public final static int VOICE = -3;
         public final static int VEDIO = -4;
         public final static int Location = -5;
+        public final static int Notifi = -9;
     }
 
     /*本地储存信息字段*/

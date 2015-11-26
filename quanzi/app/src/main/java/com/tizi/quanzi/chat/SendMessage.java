@@ -51,21 +51,31 @@ public class SendMessage {
      * @return 聊天时需要附加的参数
      */
     private static Map<String, Object> setMessAttr(String userID, String userName, String userIcon, String groupID,
-                                                   int ChatBothUserType) {
+                                                   int ChatBothUserType, boolean isNotifi) {
         Map<String, Object> attr = new TreeMap<>();
         attr.put(StaticField.ChatMessAttrName.userName, userName);
         attr.put(StaticField.ChatMessAttrName.userIcon, userIcon);
         attr.put(StaticField.ChatMessAttrName.userID, userID);
         attr.put(StaticField.ChatMessAttrName.groupID, groupID);
         attr.put(StaticField.ChatMessAttrName.type, ChatBothUserType);
+        if (isNotifi) {
+            attr.put(StaticField.SystemMessAttrName.SYS_MSG_FLAG, StaticField.SystemMessAttrName.systemFlag.notice);
+        }
         attr.put(StaticField.ChatMessAttrName.IS_SYS_MESS,
                 StaticField.SystemMessAttrName.MessTypeCode.normal_mess);
         return attr;
     }
 
     public static Map<String, Object> setMessAttr(String groupID, int ChatBothUserType) {
+        return setMessAttr(groupID, ChatBothUserType, false);
+    }
+
+    public static Map<String, Object> setMessAttr(String groupID, int ChatBothUserType, boolean isNotifi) {
         Login.UserEntity my = MyUserInfo.getInstance().getUserInfo();
-        return setMessAttr(my.getId(), my.getUserName(), my.getIcon(), groupID, ChatBothUserType);
+        if (my == null) {
+            return null;
+        }
+        return setMessAttr(my.getId(), my.getUserName(), my.getIcon(), groupID, ChatBothUserType, isNotifi);
     }
 
     /**

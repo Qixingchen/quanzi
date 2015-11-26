@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tizi.quanzi.Intent.StartGalleryActivity;
@@ -37,7 +38,7 @@ import java.util.List;
  * 聊天记录Adapter
  */
 
-public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHolder> {
+public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
 
     public SortedList<ChatMessage> chatMessageList;
     private Context mContext;
@@ -103,6 +104,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
      */
     @Override
     public int getItemViewType(int position) {
+        if (chatMessageList.get(position).type == StaticField.ChatContantType.Notifi) {
+            return StaticField.ChatFrom.NOTIFI;
+        }
         return chatMessageList.get(position).From;
     }
 
@@ -116,10 +120,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
      * @see ChatMessAbsViewHolder
      */
     @Override
-    public ChatMessAbsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v;
-        ChatMessAbsViewHolder vh;
+        RecyclerView.ViewHolder vh;
         switch (viewType) {
             case StaticField.ChatFrom.OTHER:
                 v = LayoutInflater.from(parent.getContext())
@@ -135,6 +139,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_my_chat, parent, false);
                 vh = new MyMessViewHolder(v);
+                break;
+            case StaticField.ChatFrom.NOTIFI:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_chat_notifi, parent, false);
+                vh = new NotifiViewHolder(v);
                 break;
             default:
                 v = LayoutInflater.from(parent.getContext())
@@ -152,7 +161,28 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
      * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(final ChatMessAbsViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (ChatMessAbsViewHolder.class.isInstance(holder)) {
+            onBindChatMessViewHolder((ChatMessAbsViewHolder) holder, position);
+        }
+        if (NotifiViewHolder.class.isInstance(holder)) {
+            onBindNotifiViewHolder((NotifiViewHolder) holder, position);
+        }
+    }
+
+    private void onBindNotifiViewHolder(NotifiViewHolder holder, int position) {
+        holder.notifiTextView.setText(chatMessageList.get(position).text);
+        String time = FriendTime.FriendlyDate(chatMessageList.get(position).create_time);
+        holder.chatTime.setText(time);
+    }
+
+    /**
+     * 发生绑定时，为viewHolder的元素赋值
+     *
+     * @param holder   被绑定的ViewHolder
+     * @param position 列表位置
+     */
+    private void onBindChatMessViewHolder(final ChatMessAbsViewHolder holder, final int position) {
         final ChatMessage chatMessage = chatMessageList.get(position);
 
         holder.setAllAdditionVisibilityGone();
@@ -375,6 +405,20 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
         public MyMessViewHolder(View v) {
             super(v);
             findViewByID(v, StaticField.ChatFrom.ME);
+        }
+    }
+
+    /**
+     * 消息通知
+     */
+    public static class NotifiViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView notifiTextView, chatTime;
+
+        public NotifiViewHolder(View itemView) {
+            super(itemView);
+            notifiTextView = (TextView) itemView.findViewById(R.id.notifi_text_view);
+            chatTime = (TextView) itemView.findViewById(R.id.chat_message_time);
         }
     }
 }

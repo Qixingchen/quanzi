@@ -12,9 +12,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.chat.SendMessage;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.Login;
+import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
+import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.widget.ForegroundImageView;
 
@@ -34,7 +39,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
     private List<GroupClass> groups;
     private List<Boolean> isSignedIn;
     private Context mContext;
-    private String actID;
+    private Theme.ActsEntity act;
     private int style;
 
     private Onclick onclick;
@@ -42,17 +47,32 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
     /**
      * @param groups   群列表
      * @param mContext 上下文
-     * @param actID    活动ID,如果是发状态选择,可以为null
+     * @param actID    活动,如果是发状态选择,可以为null
      * @param style    是发状态还是报名
      */
-    public GroupSelectAdapter(List<GroupClass> groups, Context mContext, String actID, int style) {
+    public GroupSelectAdapter(List<GroupClass> groups, Context mContext, final String actID, int style) {
         this.groups = groups;
         isSignedIn = new ArrayList<>();
         for (int i = 0; i < groups.size(); i++) {
             isSignedIn.add(false);
         }
         this.mContext = mContext;
-        this.actID = actID;
+        ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                Theme themes = (Theme) ts;
+                for (Theme.ActsEntity temp : themes.acts) {
+                    if (temp.id.equals(actID)) {
+                        act = temp;
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String Message) {
+
+            }
+        }).getThemes();
         this.style = style;
     }
 
@@ -95,10 +115,11 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int position) {
+        final GroupClass group = groups.get(position);
         if (SignUPGroupViewHolder.class.isInstance(viewHolder)) {
             final SignUPGroupViewHolder signUpGroupVH = (SignUPGroupViewHolder) viewHolder;
 
-            Picasso.with(mContext).load(groups.get(position).Face)
+            Picasso.with(mContext).load(group.Face)
                     .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
                     .into(signUpGroupVH.groupFace);
             signUpGroupVH.groupFace.setOnClickListener(
@@ -111,6 +132,20 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                             ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                                 @Override
                                 public void onOK(Object ts) {
+
+                                    Login.UserEntity my = MyUserInfo.getInstance().getUserInfo();
+                                    String username = my == null ? "" : my.userName;
+
+                                    boolean selectAfter = !isSignedIn.get(position);
+                                    String text;
+                                    if (selectAfter) {
+                                        text = String.format("%s报名了活动[%s]", username, act.title);
+                                    } else {
+                                        text = String.format("%s取消了报名[%s]", username, act.title);
+                                    }
+                                    SendMessage.getInstance().sendTextMessage(group.convId, text,
+                                            SendMessage.setMessAttr(group.ID, StaticField.ConvType.GROUP, true));
+
                                     Timer timer = new Timer();
                                     timer.setOnResult(new Timer.OnResult() {
                                         @Override
@@ -146,21 +181,21 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                         }
                                     }).execute(2000);
                                 }
-                            }).signUP(actID, groups.get(position).ID, isSignedIn.get(position) ? 0 : 1);
+                            }).signUP(act.id, group.ID, isSignedIn.get(position) ? 0 : 1);
 
                         }
                     }
             );
             signUpGroupVH.setBorder(mContext, isSignedIn.get(position));
-            signUpGroupVH.groupName.setText(groups.get(position).Name);
+            signUpGroupVH.groupName.setText(group.Name);
         }
 
         if (DynSelectGroup.class.isInstance(viewHolder)) {
             final DynSelectGroup dynSelectGroup = (DynSelectGroup) viewHolder;
-            Picasso.with(mContext).load(groups.get(position).Face.toString())
+            Picasso.with(mContext).load(group.Face.toString())
                     .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
                     .into(dynSelectGroup.groupFaceImageView);
-            dynSelectGroup.groupNameTextview.setText(groups.get(position).Name);
+            dynSelectGroup.groupNameTextview.setText(group.Name);
             dynSelectGroup.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -169,7 +204,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                 mContext.getResources().getColor(R.color.md_grey_800)
                         );
                     }
-                    onclick.itemClick(groups.get(position).ID);
+                    onclick.itemClick(group.ID);
                     dynSelectGroup.itemView.setBackgroundColor(mContext.getResources()
                             .getColor(R.color.md_yellow_400));
                     DynSelectGroup.lastPositon = dynSelectGroup;

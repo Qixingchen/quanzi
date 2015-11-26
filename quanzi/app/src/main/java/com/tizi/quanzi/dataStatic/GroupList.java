@@ -28,9 +28,18 @@ public class GroupList extends ConvGroupAbsList<GroupClass> {
         return mInstance;
     }
 
+    /**
+     * 设置未读消息
+     *
+     * @param convID  需查询的组的ID
+     * @param GroupID 需要查询的groupID
+     */
     @Override
-    public int getUnreadCount(String convID, String groupID) {
-        return DBAct.getInstance().quaryUnreadCount(convID);
+    public void setUnreadMessage(String convID, String GroupID) {
+        GroupClass group = getGroup(GroupID);
+        if (group != null) {
+            group.addUnreadMessageID(DBAct.getInstance().quaryUnreadList(convID));
+        }
     }
 
     /**

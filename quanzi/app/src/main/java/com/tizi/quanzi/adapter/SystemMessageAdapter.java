@@ -116,7 +116,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         final SystemMessage systemMessage = systemMessagePair.systemMessage;
         if (!systemMessage.isread) {
             systemMessage.isread = true;
-            systemMessagePair.UnreadCount--;
+            systemMessagePair.removeUnreadMessad(systemMessage.id);
             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
         }
 
@@ -188,7 +188,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                     }
                 }
             });
-            if (systemMessagePair.UnreadCount != 0) {
+            if (systemMessagePair.getUnreadCount() != 0) {
                 systemHolder.MessTextview.setTypeface(Typeface.DEFAULT_BOLD);
                 systemHolder.MessTextview.setTextColor(mContext.getResources().getColor(R.color.md_black));
                 systemHolder.titleTextview.setTypeface(Typeface.DEFAULT_BOLD);
@@ -224,7 +224,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                     .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
                     .into(dynNotifyViewHolder.oldWeiboUser);
 
-            if (systemMessagePair.UnreadCount != 0) {
+            if (systemMessagePair.getUnreadCount() != 0) {
                 dynNotifyViewHolder.weiboName.setTypeface(Typeface.DEFAULT_BOLD);
                 dynNotifyViewHolder.weiboName.setTextColor(mContext.getResources().getColor(R.color.md_black));
                 dynNotifyViewHolder.weibo_content.setTypeface(Typeface.DEFAULT_BOLD);

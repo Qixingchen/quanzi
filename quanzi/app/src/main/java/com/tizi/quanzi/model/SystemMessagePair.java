@@ -41,7 +41,6 @@ public class SystemMessagePair extends ConvGroupAbs implements Serializable {
         if (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.complete) {
             systemMessage.setIsread(true);
         }
-        systemMessagePair.UnreadCount = (systemMessage.isread) ? 0 : 1;
         return systemMessagePair;
     }
 

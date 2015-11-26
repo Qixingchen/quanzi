@@ -17,7 +17,6 @@ import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.model.ChatMessage;
@@ -216,7 +215,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
                 holder.contantImageView.getLayoutParams().height = imagePix[0];
                 holder.contantImageView.getLayoutParams().width = imagePix[1];
                 holder.contantImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
-                                chatMessage.url, imagePix[0], imagePix[1]),
+                        chatMessage.url, imagePix[0], imagePix[1]),
                         GetVolley.getmInstance().getImageLoader());
                 holder.contantImageView.setVisibility(View.VISIBLE);
                 holder.contantImageView.setOnClickListener(new View.OnClickListener() {
@@ -248,19 +247,15 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessAbsViewHold
         if (!chatMessage.isread) {
             chatMessage.isread = true;
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-            if (chatMessage.ChatBothUserType == StaticField.ConvType.twoPerson) {
-                PrivateMessPairList.getInstance().callUpdate();
-            }
+            GroupList.getInstance().removeUnreadMessFromAbs(chatMessage);
         }
         if (position == chatMessageList.size() - 1) {
             DBAct.getInstance().setAllAsRead(chatMessage.ConversationId);
-            if (chatMessage.ChatBothUserType == StaticField.ConvType.twoPerson) {
-                PrivateMessPairList.getInstance().callUpdate();
-            }
+            GroupList.getInstance().removeAllUnreadFromAbs(chatMessage.ConversationId);
         }
         /*设置头像*/
         holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
-                        chatMessage.chatImage, 48 * 3, 48 * 3),
+                chatMessage.chatImage, 48 * 3, 48 * 3),
                 GetVolley.getmInstance().getImageLoader());
 
         String time = FriendTime.FriendlyDate(chatMessage.create_time);

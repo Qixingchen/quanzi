@@ -93,9 +93,9 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                 myViewHolder.lastMessTextview.setText("");
 
             } else {
-                if (groupClasses.get(position).UnreadCount != 0) {
+                if (groupClasses.get(position).getUnreadCount() != 0) {
                     myViewHolder.unreadCountTextview.setVisibility(View.VISIBLE);
-                    myViewHolder.unreadCountTextview.setText(String.valueOf(groupClasses.get(position).UnreadCount));
+                    myViewHolder.unreadCountTextview.setText(String.valueOf(groupClasses.get(position).getUnreadCount()));
                 }
                 myViewHolder.groupNameTextview.setText(groupClasses.get(position).Name);
                 myViewHolder.lastMessTextview.setText(groupClasses.get(position).lastMess);

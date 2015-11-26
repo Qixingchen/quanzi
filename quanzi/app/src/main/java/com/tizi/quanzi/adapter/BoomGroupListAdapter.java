@@ -142,7 +142,8 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
             }
 
             /*unread*/
-            Integer unreadCount = BoomGroupList.getInstance().getUnreadCount(boomGroup.convId, boomGroup.ID);
+
+            Integer unreadCount = boomGroup.getUnreadCount();
             vh.unreadCount.setText(String.valueOf(unreadCount));
             if (unreadCount == 0) {
                 vh.unreadCount.setVisibility(View.INVISIBLE);

@@ -19,7 +19,7 @@ public class PrivateMessPair extends ConvGroupAbs {
         privateMessPair.ID = chatMessage.sender;
         privateMessPair.Type = StaticField.PrivateMessOrSysMess.PrivateMess;
         privateMessPair.convId = chatMessage.ConversationId;
-        privateMessPair.UnreadCount = 1;
+        privateMessPair.addUnreadMessageID(chatMessage.messID);
         privateMessPair.lastMess = ChatMessage.getContentText(chatMessage);
         privateMessPair.lastMessTime = chatMessage.create_time;
 
@@ -41,7 +41,6 @@ public class PrivateMessPair extends ConvGroupAbs {
         privateMessPair.ID = otherUserInfo.id;
         privateMessPair.Type = StaticField.PrivateMessOrSysMess.PrivateMess;
         privateMessPair.convId = convID;
-        privateMessPair.UnreadCount = 0;
         privateMessPair.lastMess = "";
         privateMessPair.lastMessTime = 0;
 

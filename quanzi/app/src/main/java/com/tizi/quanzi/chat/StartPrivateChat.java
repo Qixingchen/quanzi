@@ -26,14 +26,18 @@ public class StartPrivateChat {
 
     public void getPrivateChatConvID(final String userID) {
 
+        boolean isSelf = userID.equals(AppStaticValue.getUserID());
+
         List<String> members = new ArrayList<>();
-        members.add(AppStaticValue.getUserID());
+        if (!isSelf) {
+            members.add(AppStaticValue.getUserID());
+        }
         members.add(userID);
 
         AVIMConversationQuery query = AppStaticValue.getImClient().getQuery();
         query.whereEqualTo("attr.type", StaticField.ConvType.twoPerson);
         query.withMembers(members);
-        query.whereSizeEqual("m", 2);
+        query.whereSizeEqual("m", isSelf ? 1 : 2);
         query.findInBackground(new AVIMConversationQueryCallback() {
             @Override
             public void done(List<AVIMConversation> list, AVIMException e) {

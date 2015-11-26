@@ -65,10 +65,8 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         if (groupOld != null) {
             groupClass.lastMess = groupOld.lastMess;
             groupClass.lastMessTime = groupOld.lastMessTime;
-            groupClass.UnreadCount = groupOld.UnreadCount;
         } else {
             groupClass.lastMessTime = 0;
-            groupClass.UnreadCount = 0;
         }
         groupClass.needNotifi = AppStaticValue.getNotifiPreferences().getBoolean(groupClass.ID, true);
 
@@ -93,7 +91,6 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         groupClass.convId = groupans.convId;
         groupClass.validation = true;
         groupClass.createUser = groupans.createUser;
-        groupClass.UnreadCount = 0;
         groupClass.lastMessTime = 0;
         groupClass.lastMess = "";
         groupClass.background = groupans.bg;

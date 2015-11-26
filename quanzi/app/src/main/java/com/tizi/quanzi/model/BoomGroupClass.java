@@ -40,7 +40,6 @@ public class BoomGroupClass extends ConvGroupAbs {
         temp.convId = boomGroup.convId;
         temp.Type = StaticField.ConvType.BoomGroup;
         temp.ID = boomGroup.id;
-        temp.UnreadCount = 0;
         temp.lastMess = "";
         temp.lastMessTime = 0;
         temp.groupId1 = boomGroup.groupId1;

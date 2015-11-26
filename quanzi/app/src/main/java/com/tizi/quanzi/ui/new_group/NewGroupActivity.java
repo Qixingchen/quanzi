@@ -123,7 +123,6 @@ public class NewGroupActivity extends BaseActivity {
                                 groupClass.convId = convID;
                                 groupClass.setNeedNotifi(true, true);
                                 groupClass.createUser = AppStaticValue.getUserID();
-                                groupClass.UnreadCount = 0;
                                 groupClass.memlist = new ArrayList<>();
                                 GroupList.getInstance().addGroup(groupClass);
                             }

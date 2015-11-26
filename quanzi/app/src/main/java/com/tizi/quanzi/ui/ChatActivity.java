@@ -82,6 +82,9 @@ public class ChatActivity extends BaseActivity {
     private float startedDraggingX = -1;
     private float distCanMove = 200;
     private Timer timer;
+    //下方数量
+    private View scrollToEndView;
+    private TextView underMessSumTextView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +131,9 @@ public class ChatActivity extends BaseActivity {
         recordPanel = findViewById(R.id.record_panel);
         recordTimeText = (TextView) findViewById(R.id.recording_time_text);
         slideText = findViewById(R.id.slideText);
+
+        scrollToEndView = findViewById(R.id.scroll_to_end_view);
+        underMessSumTextView = (TextView) findViewById(R.id.under_mess_sum);
     }
 
     @Override
@@ -359,6 +365,15 @@ public class ChatActivity extends BaseActivity {
                     }
                 }
         );
+
+        //滑到底
+        scrollToEndView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chatmessagerecyclerView.smoothScrollToPosition(chatMessageAdapter.getItemCount());
+                scrollToEndView.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -408,14 +423,46 @@ public class ChatActivity extends BaseActivity {
         chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);
         chatmessagerecyclerView.setAdapter(chatMessageAdapter);
         if (LastPosition != -1) {
-            chatmessagerecyclerView.scrollToPosition(LastPosition);
+            mLayoutManager.scrollToPosition(LastPosition);
         } else {
-            chatmessagerecyclerView.scrollToPosition(chatMessageAdapter.lastReadPosition());
+            mLayoutManager.scrollToPosition(chatMessageAdapter.lastReadPosition() + 1);
         }
         toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
 
         ((LinearLayoutManager) mLayoutManager).setStackFromEnd(true);
 
+        /*设置滑到底,需要延时*/
+        new Timer().setOnResult(new Timer.OnResult() {
+            @Override
+            public void OK() {
+                setScrollToEnd();
+            }
+
+            @Override
+            public void countdown(int s) {
+
+            }
+        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 500);
+
+
+        chatmessagerecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                setScrollToEnd();
+            }
+        });
+
+    }
+
+    private void setScrollToEnd() {
+        int below = chatMessageAdapter.getItemCount() - ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition() - 1;
+        if (below != 0) {
+            scrollToEndView.setVisibility(View.VISIBLE);
+            underMessSumTextView.setText(String.valueOf(below));
+        } else {
+            scrollToEndView.setVisibility(View.GONE);
+        }
     }
 
     @Override

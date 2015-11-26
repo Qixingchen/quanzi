@@ -35,19 +35,17 @@ public class SystemMessageList extends ConvGroupAbsList<SystemMessagePair> {
     }
 
     /**
-     * 获取未读数量
+     * 设置未读消息
      *
-     * @param convID 需查询的组的ID
-     *
-     * @return 未读数量
+     * @param convID  需查询的组的ID
+     * @param GroupID 需要查询的groupID
      */
     @Override
-    public int getUnreadCount(String convID, String groupID) {
-        SystemMessagePair pair = getGroup(groupID);
-        if (pair == null) {
-            return 0;
+    public void setUnreadMessage(String convID, String GroupID) {
+        SystemMessagePair group = getGroup(GroupID);
+        if (group != null) {
+            group.addUnreadMessageID(DBAct.getInstance().quaryAllUnreadSysMess());
         }
-        return pair.systemMessage.isread ? 0 : 1;
     }
 
     /**

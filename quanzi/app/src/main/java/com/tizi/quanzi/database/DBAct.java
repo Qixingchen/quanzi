@@ -251,7 +251,7 @@ public class DBAct {
      *
      * @return 未读数量
      */
-    public int quaryUnreadCount(String ConversationId) {
+    public ArrayList<String> quaryUnreadList(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 null,//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.isread + "=? and "
@@ -263,9 +263,13 @@ public class DBAct {
                 null //limit
         );
         chatMessageCursor.moveToFirst();
-        int count = chatMessageCursor.getCount();
+        ArrayList<String> ans = new ArrayList<>();
+        while (!chatMessageCursor.isAfterLast()) {
+            ans.add(chatMessageCursor.getString(chatMessageCursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.messID)));
+            chatMessageCursor.moveToNext();
+        }
         chatMessageCursor.close();
-        return count;
+        return ans;
     }
 
     /*SystemMessage*/
@@ -318,6 +322,28 @@ public class DBAct {
         }
         sysMessCursor.close();
         return systemMessageArrayList;
+    }
+
+    /**
+     * 获取未读的系统消息
+     */
+    public List<String> quaryAllUnreadSysMess() {
+        Cursor sysMessCursor = db.query(DataBaseHelper.SystemMessSQLName.TableName,//table name
+                null,//返回的列,null表示全选
+                DataBaseHelper.SystemMessSQLName.isread + "=?",//条件
+                new String[]{"0"},//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        ArrayList<String> ans = new ArrayList<>();
+        sysMessCursor.moveToFirst();
+        while (!sysMessCursor.isAfterLast()) {
+            ans.add(sysMessCursor.getString(sysMessCursor.getColumnIndex(DataBaseHelper.SystemMessSQLName.id)));
+            sysMessCursor.moveToNext();
+        }
+        sysMessCursor.close();
+        return ans;
     }
 
     /**

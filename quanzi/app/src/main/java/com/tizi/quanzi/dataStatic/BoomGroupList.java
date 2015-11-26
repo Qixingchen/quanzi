@@ -23,17 +23,6 @@ public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
         return mInstance;
     }
 
-    /**
-     * 获取未读数量
-     *
-     * @param convID 需查询的组的ID
-     *
-     * @return 未读数量
-     */
-    @Override
-    public int getUnreadCount(String convID, String groupID) {
-        return DBAct.getInstance().quaryUnreadCount(convID);
-    }
 
     /**
      * 获取所有未读数量
@@ -41,9 +30,23 @@ public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
     public int getAllUnreadCount() {
         int ans = 0;
         for (BoomGroupClass boom : groupList) {
-            ans += boom.UnreadCount;
+            ans += boom.getUnreadCount();
         }
         return ans;
+    }
+
+    /**
+     * 设置未读消息
+     *
+     * @param convID  需查询的组的ID
+     * @param GroupID 需要查询的groupID
+     */
+    @Override
+    public void setUnreadMessage(String convID, String GroupID) {
+        BoomGroupClass boom = getGroup(GroupID);
+        if (boom != null) {
+            boom.addUnreadMessageID(DBAct.getInstance().quaryUnreadList(convID));
+        }
     }
 
     /**

@@ -104,6 +104,13 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             }
         }
 
+        /*对方拒绝加入*/
+        if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.reject) {
+            String groupID = systemMessage.getGroup_id();
+            GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupID);
+            // TODO: 15/11/26 正则替换
+        }
+
         SystemMessageList.getInstance().addGroup(
                 SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
         DBAct.getInstance().addOrReplaceSysMess(systemMessage);
@@ -127,10 +134,11 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         Log.w(TAG, "收到消息");
         try {
             ChatMessage chatMessage = ChatMessFormatFromAVIM.ChatMessageFromAVMessage(message);
-            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
             /*刷新最后一条消息等信息*/
             switch (chatMessage.ChatBothUserType) {
                 case StaticField.ConvType.GROUP:
+                    GroupList.getInstance().addUnreadMess(chatMessage);
+
                     GroupList.getInstance().updateGroupLastMess(
                             chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
                             chatMessage.create_time);
@@ -154,12 +162,14 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     } else {
                         chatMessage.groupID = PrivateMessPairList.getInstance().getGroupIDByConvID(chatMessage.ConversationId);
                     }
+                    PrivateMessPairList.getInstance().addUnreadMess(chatMessage);
 
                     break;
                 case StaticField.ConvType.BoomGroup:
 
                     BoomGroupList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
                             ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+                    BoomGroupList.getInstance().addUnreadMess(chatMessage);
 
                     break;
 

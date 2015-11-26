@@ -96,7 +96,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             privateVH.mUserNameText.setText(privateMessPair.Name);
             privateVH.mMessTextView.setText(privateMessPair.lastMess);
             privateVH.lastMessTimeTextView.setText(FriendTime.FriendlyDate(privateMessPair.lastMessTime));
-            if (privateMessPair.UnreadCount != 0) {
+            if (privateMessPair.getUnreadCount() != 0) {
                 privateVH.mMessTextView.setTypeface(Typeface.DEFAULT_BOLD);
                 privateVH.mMessTextView.setTextColor(mContext.getResources().getColor(R.color.md_red_500));
                 privateVH.mUserNameText.setTypeface(Typeface.DEFAULT_BOLD);

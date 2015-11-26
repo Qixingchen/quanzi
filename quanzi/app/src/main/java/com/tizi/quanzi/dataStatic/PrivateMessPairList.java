@@ -26,19 +26,24 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
         return mInstance;
     }
 
+    /**
+     * 设置未读消息
+     *
+     * @param convID  需查询的组的ID
+     * @param GroupID 需要查询的groupID
+     */
+    @Override
+    public void setUnreadMessage(String convID, String GroupID) {
+        PrivateMessPair pair = getGroup(GroupID);
+        if (pair != null) {
+            pair.addUnreadMessageID(DBAct.getInstance().quaryUnreadList(convID));
+        }
+    }
+
     @Override
     public void addGroup(PrivateMessPair group) {
         super.addGroup(group);
         DBAct.getInstance().addOrReplacePriMessPair(group);
-    }
-
-    @Override
-    public int getUnreadCount(String convID, String groupID) {
-        if (convID == null || convID.compareTo("") == 0) {
-            return 0;
-        } else {
-            return DBAct.getInstance().quaryUnreadCount(convID);
-        }
     }
 
     /**
@@ -74,7 +79,7 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
         int ans = 0;
         synchronized (groupList) {
             for (PrivateMessPair pair : groupList) {
-                ans += pair.UnreadCount == 0 ? 0 : 1;
+                ans += pair.getUnreadCount() == 0 ? 0 : 1;
             }
         }
         return ans;

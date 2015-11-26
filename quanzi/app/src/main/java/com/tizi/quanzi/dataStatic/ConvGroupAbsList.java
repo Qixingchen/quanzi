@@ -2,6 +2,8 @@ package com.tizi.quanzi.dataStatic;
 
 import android.support.annotation.Nullable;
 
+import com.tizi.quanzi.model.ChatMessage;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,20 +18,18 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     protected final ArrayList<T> groupList = new ArrayList<>();
 
     /**
-     * 获取未读数量
+     * 设置未读消息
      *
-     * @param convID 需查询的组的ID
-     *
-     * @return 未读数量
+     * @param convID  需查询的组的ID
+     * @param GroupID 需要查询的groupID
      */
-    public abstract int getUnreadCount(String convID, String GroupID);
+    public abstract void setUnreadMessage(String convID, String GroupID);
 
 
     /**
      * 获取组列表
      */
     public ArrayList<T> getGroupList() {
-        updateUnreadCount();
         return groupList;
     }
 
@@ -37,10 +37,12 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      * 重设整个组
      */
     public void setGroupList(List<T> newGroupList) {
+        for (T t : newGroupList) {
+            setUnreadMessage(t.convId, t.ID);
+        }
         synchronized (groupList) {
             groupList.clear();
             groupList.addAll(newGroupList);
-            updateUnreadCount();
         }
 
         sort();
@@ -51,7 +53,6 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      * 向所有回调发布更新通知
      */
     public void callUpdate() {
-        updateUnreadCount();
         noticeAllCallBack();
     }
 
@@ -70,8 +71,6 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         synchronized (groupList) {
             for (T group : groupList) {
                 if (group.ID.compareTo(id) == 0) {
-                    // TODO: 15/10/22 在系统消息上循环,如果有用,请另外提供
-                    //group.UnreadCount = getUnreadCount(group.convId, group.ID);
                     return group;
                 }
             }
@@ -80,8 +79,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     }
 
     /**
-     * 获取组的ConvID
+     * 从组的ConvID获得groupID
      */
+    @Deprecated
     public String getGroupIDByConvID(String convID) {
         synchronized (groupList) {
             for (T group : groupList) {
@@ -94,15 +94,31 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     }
 
     /**
+     * 从组的ConvID获得group
+     */
+    @Nullable
+    public T getGroupByConvID(String convID) {
+        synchronized (groupList) {
+            for (T group : groupList) {
+                if (group.convId.compareTo(convID) == 0) {
+                    return group;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * 添加一个组,如果同 ID 已存在，则忽略
      */
     public void addGroup(T group) {
         if (getGroup(group.ID) != null) {
             return;
         }
+        setUnreadMessage(group.convId, group.ID);
         synchronized (groupList) {
             groupList.add(group);
-            group.UnreadCount = getUnreadCount(group.convId, group.ID);
+            setUnreadMessage(group.convId, group.ID);
         }
         sort();
         noticeAllCallBack();
@@ -170,18 +186,14 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     public boolean updateGroupLastMess(String convID, String lastMess, long lastTime) {
         boolean isUpdated = false;
         synchronized (groupList) {
-            for (T group : groupList) {
-                if (group.convId.compareTo(convID) == 0) {
-                    group.lastMess = lastMess;
-                    group.lastMessTime = lastTime;
-                    group.UnreadCount = getUnreadCount(group.convId, group.ID);
-                    isUpdated = true;
-                    break;
-                }
+            T group = getGroupByConvID(convID);
+            if (group != null) {
+                group.lastMess = lastMess;
+                group.lastMessTime = lastTime;
+                isUpdated = true;
             }
         }
         if (isUpdated) {
-            updateUnreadCount();
             sort();
             noticeAllCallBack();
         }
@@ -189,12 +201,154 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     }
 
     /**
-     * 更新未读数量
+     * 添加未读消息
+     *
+     * @param convID convID
+     * @param messID 未读的messID
+     *
+     * @return 是否被添加了
      */
-    protected void updateUnreadCount() {
-        for (T group : groupList) {
-            group.UnreadCount = getUnreadCount(group.convId, group.ID);
+    public boolean addUnreadMessIDByConvID(String convID, String messID) {
+        T group = getGroupByConvID(convID);
+        if (group != null && group.addUnreadMessageID(messID)) {
+            noticeAllCallBack();
+            return true;
         }
+        return false;
+    }
+
+    public boolean addUnreadMess(ChatMessage message) {
+        return addUnreadMessIDByConvID(message.ConversationId, message.messID);
+    }
+
+    /**
+     * 移除未读消息
+     *
+     * @param convID convID
+     * @param messID 需要被移除的messID
+     *
+     * @return 是否被移除了
+     */
+    public boolean removeUnreadMessIDByConvID(String convID, String messID) {
+        T group = getGroupByConvID(convID);
+        if (group != null && group.removeUnreadMessad(messID)) {
+            noticeAllCallBack();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeUnreadMess(ChatMessage message) {
+        return removeUnreadMessIDByConvID(message.ConversationId, message.messID);
+    }
+
+    /**
+     * 移除所有未读
+     *
+     * @param convID
+     *
+     * @return 是否有对应的群
+     */
+    public boolean removeAllUnread(String convID) {
+        T group = getGroupByConvID(convID);
+        if (group != null) {
+            group.removeAllUnread();
+            noticeAllCallBack();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 在抽象类移除未读消息
+     *
+     * @return {@code false} 如果所有的返回都是false
+     *
+     * @see #removeUnreadMessIDByConvID(String, String)
+     */
+    public boolean removeUnreadMessIDByConvIDFromAbs(String convID, String messID) {
+        if (GroupList.getInstance().removeUnreadMessIDByConvID(convID, messID)) {
+            return true;
+        }
+        if (BoomGroupList.getInstance().removeUnreadMessIDByConvID(convID, messID)) {
+            return true;
+        }
+        if (PrivateMessPairList.getInstance().removeUnreadMessIDByConvID(convID, messID)) {
+            return true;
+        }
+        if (SystemMessageList.getInstance().removeUnreadMessIDByConvID(convID, messID)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 在抽象类移除未读消息
+     *
+     * @return {@code false} 如果所有的返回都是false
+     *
+     * @see #removeUnreadMess(ChatMessage)
+     */
+    public boolean removeUnreadMessFromAbs(ChatMessage message) {
+        if (GroupList.getInstance().removeUnreadMess(message)) {
+            return true;
+        }
+        if (BoomGroupList.getInstance().removeUnreadMess(message)) {
+            return true;
+        }
+        if (PrivateMessPairList.getInstance().removeUnreadMess(message)) {
+            return true;
+        }
+        if (SystemMessageList.getInstance().removeUnreadMess(message)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 在抽象类移除所有未读消息
+     *
+     * @return {@code false} 如果所有的返回都是false
+     *
+     * @see #removeAllUnread(String)
+     */
+    public boolean removeAllUnreadFromAbs(String ConvID) {
+        if (GroupList.getInstance().removeAllUnread(ConvID)) {
+            return true;
+        }
+        if (BoomGroupList.getInstance().removeAllUnread(ConvID)) {
+            return true;
+        }
+        if (PrivateMessPairList.getInstance().removeAllUnread(ConvID)) {
+            return true;
+        }
+        if (SystemMessageList.getInstance().removeAllUnread(ConvID)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 在抽象类添加未读消息
+     *
+     * @return {@code false} 如果所有的返回都是false
+     *
+     * @see #addUnreadMess(ChatMessage)
+     */
+    public boolean addUnreadMessFromAbs(ChatMessage message) {
+        if (GroupList.getInstance().addUnreadMess(message)) {
+            return true;
+        }
+        if (BoomGroupList.getInstance().addUnreadMess(message)) {
+            return true;
+        }
+        if (PrivateMessPairList.getInstance().addUnreadMess(message)) {
+            return true;
+        }
+        if (SystemMessageList.getInstance().addUnreadMess(message)) {
+            return true;
+        }
+        return false;
     }
 
     /**

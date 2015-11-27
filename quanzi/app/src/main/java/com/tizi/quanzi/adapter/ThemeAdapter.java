@@ -95,7 +95,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             case 0:
             case 1:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_tuo_dan_zuo_zan, parent, false);
+                        .inflate(R.layout.item_theme, parent, false);
                 viewHolder = new TuoDanZuoZanViewHolder(v, mContext);
                 break;
             default:

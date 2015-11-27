@@ -4,8 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="normal_edit_text_size">16sp</dimen>
     <dimen name="statue_bar_top_padding">0dp</dimen>
-    <dimen name="group_circle">135dp</dimen>
-    <dimen name="group_face">127dp</dimen>
+    <dimen name="group_circle">115dp</dimen>
+    <dimen name="group_face">107dp</dimen>
     <dimen name="max_chat_width">300dp</dimen>
     <dimen name="quanzi_padding_top">5dp</dimen>
     <dimen name="small_title_text_size">24sp</dimen>

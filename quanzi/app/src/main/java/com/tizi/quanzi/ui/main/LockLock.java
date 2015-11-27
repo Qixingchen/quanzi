@@ -3,9 +3,12 @@ package com.tizi.quanzi.ui.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ThemesPagerAdapter;
@@ -17,8 +20,7 @@ import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
-
-import fr.castorflex.android.verticalviewpager.VerticalViewPager;
+import com.tizi.quanzi.widget.custom_tab.SimpleCustomChromeTabsHelper;
 
 
 /**
@@ -28,7 +30,12 @@ public class LockLock extends BaseFragment {
 
     private static LockLock mInstance;
 
-    private VerticalViewPager viewPager;
+    private ViewPager viewPager;
+    private Button participateButton, detailButton, boomButton;
+    private TextView participantsNum;
+
+    private int nowPosition;
+    private Theme themes;
 
 
     public LockLock() {
@@ -49,33 +56,42 @@ public class LockLock extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        viewPager = (VerticalViewPager) view.findViewById(R.id.VerticalViewPager);
-        //        mThemeItemsRecyclerView = (RecyclerView) view.findViewById(R.id.item_recycler_view);
-        //        mThemeItemsRecyclerView.setHasFixedSize(true);
-        //        mLayoutManager = new LinearLayoutManager(mActivity);
-        //        mThemeItemsRecyclerView.setLayoutManager(mLayoutManager);
-        //        mThemeItemsRecyclerView.setAdapter(themeAdapter);
+        viewPager = (ViewPager) view.findViewById(R.id.VerticalViewPager);
+        participateButton = (Button) view.findViewById(R.id.participate_button);
+        detailButton = (Button) view.findViewById(R.id.detail_button);
+        participantsNum = (TextView) view.findViewById(R.id.num_of_participants);
+        boomButton = (Button) view.findViewById(R.id.boom_button);
+
     }
 
     @Override
     protected void initViewsAndSetEvent() {
-
-        final ThemesPagerAdapter.OnClick onClick = new ThemesPagerAdapter.OnClick() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void SignUP(Theme.ActsEntity act) {
-                if (Tool.isGuest()) {
-                    Tool.GuestAction(mActivity);
-                    return;
-                }
-                getParentFragment().getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
-                                R.anim.no_change, R.anim.slide_out_to_bottom)
-                        .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id))
-                        .addToBackStack("ThemeSignUpFragment").commit();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override
-            public void EnterTheme(Theme.ActsEntity act) {
+            public void onPageSelected(int position) {
+                if (themes == null) {
+                    return;
+                }
+                Theme.ActsEntity act = themes.acts.get(position);
+                participantsNum.setText(String.valueOf(act.signNum));
+                nowPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+        boomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Theme.ActsEntity act = themes.acts.get(nowPosition);
                 if (//BuildConfig.BUILD_TYPE.equals("debug") ||
                         FriendTime.isInThemeTime(act.beginTime, act.endTime)) {
                     getParentFragment().getFragmentManager().beginTransaction()
@@ -90,29 +106,55 @@ public class LockLock extends BaseFragment {
                             .replace(R.id.fragment, CountdownFragment.newInstance(act.beginTime, act.id))
                             .addToBackStack("CountdownFragment").commit();
                 }
-
             }
+        });
 
+        participateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void watchIntro(Theme.ActsEntity act) {
+            public void onClick(View v) {
+                Theme.ActsEntity act = themes.acts.get(nowPosition);
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(mActivity);
+                    return;
+                }
                 getParentFragment().getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, WebViewFragment.newInstance(
-                                WebViewFragment.Theme_Intro, act.detailUrl))
-                        .addToBackStack("WebViewFragment").commit();
+                        .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                                R.anim.no_change, R.anim.slide_out_to_bottom)
+                        .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id))
+                        .addToBackStack("ThemeSignUpFragment").commit();
             }
-        };
+        });
+
+        final SimpleCustomChromeTabsHelper mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
+        SimpleCustomChromeTabsHelper.CustomTabsUiBuilder uiBuilder = mCustomTabHelper.new CustomTabsUiBuilder();
+        uiBuilder.setToolbarColor(mActivity.getResources().getColor(R.color.colorPrimary));
+
+        detailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Theme.ActsEntity act = themes.acts.get(nowPosition);
+                if (SimpleCustomChromeTabsHelper.canUseCustomChromeTabs(mActivity)) {
+                    mCustomTabHelper.openUrl(act.detailUrl);
+                } else {
+                    mCustomTabHelper.openUrl(act.detailUrl);
+                }
+            }
+        });
 
         ThemeActs.getNewInstance().setNetworkListener(
                 new RetrofitNetworkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {
-                        Theme theme = (Theme) ts;
-                        if (theme.success) {
-                            ThemesPagerAdapter adapter = new ThemesPagerAdapter(theme, mActivity, onClick);
+                        themes = (Theme) ts;
+                        if (themes.success) {
+                            ThemesPagerAdapter adapter = new ThemesPagerAdapter(themes, mActivity);
                             viewPager.setAdapter(adapter);
+                            for (Theme.ActsEntity act : themes.acts) {
+                                mCustomTabHelper.prepareUrl(act.detailUrl);
+                            }
 
                         } else {
-                            Log.w(TAG, theme.msg);
+                            Log.w(TAG, themes.msg);
                         }
                     }
 

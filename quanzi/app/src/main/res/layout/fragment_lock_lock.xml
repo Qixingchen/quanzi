@@ -5,13 +5,74 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.main.LockLock">
 
-    <fr.castorflex.android.verticalviewpager.VerticalViewPager
-        android:id="@+id/VerticalViewPager"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp">
+        android:orientation="vertical">
 
-    </fr.castorflex.android.verticalviewpager.VerticalViewPager>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/VerticalViewPager"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="4"
+            tools:background="@color/md_green_500">
+
+        </android.support.v4.view.ViewPager>
+
+
+        <!--详情报名等-->
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/detail_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="详情"/>
+
+            <Button
+                android:id="@+id/boom_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Boom"/>
+
+            <TextView
+                android:id="@+id/countdown_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/boom_button"
+                android:layout_centerHorizontal="true"
+                tools:text="12:22"/>
+
+            <Button
+                android:id="@+id/participate_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:text="报名"/>
+
+
+            <TextView
+                android:id="@+id/num_of_participants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/participate_button"
+                android:layout_marginEnd="16dp"
+                tools:text="1100"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
 
 </FrameLayout>

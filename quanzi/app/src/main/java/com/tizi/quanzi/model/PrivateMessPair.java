@@ -19,7 +19,6 @@ public class PrivateMessPair extends ConvGroupAbs {
         privateMessPair.ID = chatMessage.sender;
         privateMessPair.Type = StaticField.PrivateMessOrSysMess.PrivateMess;
         privateMessPair.convId = chatMessage.ConversationId;
-        privateMessPair.addUnreadMessageID(chatMessage.messID);
         privateMessPair.lastMess = ChatMessage.getContentText(chatMessage);
         privateMessPair.lastMessTime = chatMessage.create_time;
 

@@ -468,7 +468,7 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        LastPosition = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
+        LastPosition = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
 
     }
 

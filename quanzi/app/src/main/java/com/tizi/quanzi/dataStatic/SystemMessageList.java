@@ -5,6 +5,7 @@ import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.model.SystemMessagePair;
 import com.tizi.quanzi.otto.BusProvider;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ import java.util.List;
 public class SystemMessageList extends ConvGroupAbsList<SystemMessagePair> {
 
     private static SystemMessageList mInstance;
+    private HashSet<String> unreadMessageIDSet = new HashSet<>();
 
     public static SystemMessageList getInstance() {
         if (mInstance == null) {
@@ -42,10 +44,7 @@ public class SystemMessageList extends ConvGroupAbsList<SystemMessagePair> {
      */
     @Override
     public void setUnreadMessage(String convID, String GroupID) {
-        SystemMessagePair group = getGroup(GroupID);
-        if (group != null) {
-            group.addUnreadMessageID(DBAct.getInstance().quaryAllUnreadSysMess());
-        }
+        unreadMessageIDSet.addAll(DBAct.getInstance().quaryAllUnreadSysMess());
     }
 
     /**
@@ -53,21 +52,32 @@ public class SystemMessageList extends ConvGroupAbsList<SystemMessagePair> {
      */
     @Override
     protected void noticeAllCallBack() {
-        BusProvider.getInstance().post(this);
+        try {
+            BusProvider.getInstance().post(this);
+        } catch (Exception ignore) {
+        }
     }
 
     /**
      * 获取未读总数量
      */
     public int getAllUnreadCount() {
-        int ans = 0;
-        synchronized (groupList) {
-            for (SystemMessagePair pair : groupList) {
-                if (!pair.systemMessage.isread) {
-                    ans += 1;
-                }
-            }
+        return unreadMessageIDSet.size();
+    }
+
+    public boolean removeUnreadMess(String messID) {
+        if (unreadMessageIDSet.remove(messID)) {
+            noticeAllCallBack();
+            return true;
         }
-        return ans;
+        return false;
+    }
+
+    public boolean addUnreadMess(String messID) {
+        if (unreadMessageIDSet.add(messID)) {
+            noticeAllCallBack();
+            return true;
+        }
+        return false;
     }
 }

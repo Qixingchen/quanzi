@@ -113,6 +113,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
 
         SystemMessageList.getInstance().addGroup(
                 SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
+        SystemMessageList.getInstance().addUnreadMess(systemMessage.id);
         DBAct.getInstance().addOrReplaceSysMess(systemMessage);
         AddNotification.getInstance().addMessage(systemMessage);
     }

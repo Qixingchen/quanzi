@@ -160,6 +160,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
+        onChanged();
     }
 
     public void StartUserInfoSet() {

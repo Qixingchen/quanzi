@@ -116,7 +116,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         final SystemMessage systemMessage = systemMessagePair.systemMessage;
         if (!systemMessage.isread) {
             systemMessage.isread = true;
-            systemMessagePair.removeUnreadMessad(systemMessage.id);
+            SystemMessageList.getInstance().removeUnreadMess(systemMessage.id);
             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
         }
 

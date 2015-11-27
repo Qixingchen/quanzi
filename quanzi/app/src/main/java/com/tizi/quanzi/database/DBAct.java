@@ -408,6 +408,7 @@ public class DBAct {
         if (object != null) {
             privateMessPair = (PrivateMessPair) object;
         }
+        privateMessPair.removeAllUnread();
         return privateMessPair;
     }
 

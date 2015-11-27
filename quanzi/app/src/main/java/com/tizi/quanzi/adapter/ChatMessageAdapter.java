@@ -168,6 +168,18 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
         if (NotifiViewHolder.class.isInstance(holder)) {
             onBindNotifiViewHolder((NotifiViewHolder) holder, position);
         }
+
+        /*设置已读*/
+        ChatMessage chatMessage = chatMessageList.get(position);
+        if (!chatMessage.isread) {
+            chatMessage.isread = true;
+            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+            GroupList.getInstance().removeUnreadMessFromAbs(chatMessage);
+        }
+        if (position == chatMessageList.size() - 1) {
+            DBAct.getInstance().setAllAsRead(chatMessage.ConversationId);
+            GroupList.getInstance().removeAllUnreadFromAbs(chatMessage.ConversationId);
+        }
     }
 
     private void onBindNotifiViewHolder(NotifiViewHolder holder, int position) {
@@ -273,16 +285,6 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 break;
         }
 
-        /*设置已读*/
-        if (!chatMessage.isread) {
-            chatMessage.isread = true;
-            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-            GroupList.getInstance().removeUnreadMessFromAbs(chatMessage);
-        }
-        if (position == chatMessageList.size() - 1) {
-            DBAct.getInstance().setAllAsRead(chatMessage.ConversationId);
-            GroupList.getInstance().removeAllUnreadFromAbs(chatMessage.ConversationId);
-        }
         /*设置头像*/
         holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
                 chatMessage.chatImage, 48 * 3, 48 * 3),

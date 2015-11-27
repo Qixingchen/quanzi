@@ -37,12 +37,12 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      * 重设整个组
      */
     public void setGroupList(List<T> newGroupList) {
-        for (T t : newGroupList) {
-            setUnreadMessage(t.convId, t.ID);
-        }
         synchronized (groupList) {
             groupList.clear();
             groupList.addAll(newGroupList);
+        }
+        for (T t : groupList) {
+            setUnreadMessage(t.convId, t.ID);
         }
 
         sort();
@@ -100,7 +100,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     public T getGroupByConvID(String convID) {
         synchronized (groupList) {
             for (T group : groupList) {
-                if (group.convId.compareTo(convID) == 0) {
+                if (group.convId != null && group.convId.equals(convID)) {
                     return group;
                 }
             }
@@ -276,9 +276,6 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         if (PrivateMessPairList.getInstance().removeUnreadMessIDByConvID(convID, messID)) {
             return true;
         }
-        if (SystemMessageList.getInstance().removeUnreadMessIDByConvID(convID, messID)) {
-            return true;
-        }
         return false;
     }
 
@@ -297,9 +294,6 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
             return true;
         }
         if (PrivateMessPairList.getInstance().removeUnreadMess(message)) {
-            return true;
-        }
-        if (SystemMessageList.getInstance().removeUnreadMess(message)) {
             return true;
         }
         return false;
@@ -322,9 +316,6 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         if (PrivateMessPairList.getInstance().removeAllUnread(ConvID)) {
             return true;
         }
-        if (SystemMessageList.getInstance().removeAllUnread(ConvID)) {
-            return true;
-        }
         return false;
     }
 
@@ -343,9 +334,6 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
             return true;
         }
         if (PrivateMessPairList.getInstance().addUnreadMess(message)) {
-            return true;
-        }
-        if (SystemMessageList.getInstance().addUnreadMess(message)) {
             return true;
         }
         return false;

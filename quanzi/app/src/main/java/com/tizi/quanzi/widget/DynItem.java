@@ -3,6 +3,7 @@ package com.tizi.quanzi.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +37,8 @@ public class DynItem {
             attitudesTextView, commentsTextView, weiboPicsSumTextView;
     private ImageView[] weibo_pics_ImageView = new ImageView[3];
     private LinearLayout weibo_pics_linearLayout;
+
+    private RecyclerView weiboAttitudesUsersFace;
 
     private Dyns.DynsEntity dyn;
 
@@ -75,6 +78,7 @@ public class DynItem {
         //        weibo_pics_NetworkImageView[8] = (NetworkImageView) rootView.findViewById(R.id.weibo_pic8);
         weibo_pics_linearLayout = (LinearLayout) rootView.findViewById(R.id.weibo_pics);
         weiboPicsSumTextView = (TextView) rootView.findViewById(R.id.weibo_pic_sum_text_view);
+        weiboAttitudesUsersFace = (RecyclerView) rootView.findViewById(R.id.weibo_attitudes_users_face_recycler_view);
     }
 
     private void initViews() {

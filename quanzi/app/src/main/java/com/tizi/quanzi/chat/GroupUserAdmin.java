@@ -383,14 +383,14 @@ public class GroupUserAdmin {
             @Override
             public void onOK(Object ts) {
                 Theme theme = (Theme) ts;
-                for (Theme.ActsEntity actsEntity : theme.acts) {
+                for (final Theme.ActsEntity actsEntity : theme.acts) {
                     ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                         @Override
                         public void onOK(Object ts) {
                             BoomGroup boomGroup = (BoomGroup) ts;
                             for (BoomGroup.GroupmatchEntity groupmatch : boomGroup.groupmatch) {
                                 BoomGroupList.getInstance().addGroup(
-                                        BoomGroupClass.getBoomGroupFromBoomGroupGson(groupmatch)
+                                        BoomGroupClass.getBoomGroupFromBoomGroupGson(groupmatch, actsEntity.id)
                                 );
                             }
                         }

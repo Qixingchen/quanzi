@@ -47,7 +47,7 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
     private Boolean signed;
 
     public BoomGroupListAdapter(Context context, String themeID) {
-        this.boomGroups = BoomGroupList.getInstance().getGroupList();
+        this.boomGroups = BoomGroupList.getInstance().getThemeBoomGroup(themeID);
         this.themeID = themeID;
         this.context = context;
         BusProvider.getInstance().register(this);
@@ -68,6 +68,7 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
 
     @Subscribe
     public void onChanged(BoomGroupList ignore) {
+        this.boomGroups = BoomGroupList.getInstance().getThemeBoomGroup(themeID);
         notifyDataSetChanged();
     }
 

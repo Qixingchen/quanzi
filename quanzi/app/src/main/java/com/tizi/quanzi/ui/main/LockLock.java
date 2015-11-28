@@ -97,7 +97,7 @@ public class LockLock extends BaseFragment {
                     getParentFragment().getFragmentManager().beginTransaction()
                             .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
                                     R.anim.no_change, R.anim.slide_out_to_bottom)
-                            .replace(R.id.fragment, BoomGroupFragment.newInstance(act.id, act.beginTime, act.endTime))
+                            .replace(R.id.fragment, BoomGroupFragment.newInstance(themes))
                             .addToBackStack("BoomGroupFragment").commit();
                 } else {
                     getParentFragment().getFragmentManager().beginTransaction()

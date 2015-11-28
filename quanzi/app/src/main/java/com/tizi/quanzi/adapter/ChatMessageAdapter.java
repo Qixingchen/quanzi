@@ -137,8 +137,8 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 break;
             case StaticField.ChatFrom.GROUP:
                 v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_my_chat, parent, false);
-                vh = new MyMessViewHolder(v);
+                        .inflate(R.layout.item_group_friend_chat, parent, false);
+                vh = new OtherMessViewHolder(v);
                 break;
             case StaticField.ChatFrom.NOTIFI:
                 v = LayoutInflater.from(parent.getContext())
@@ -257,7 +257,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 holder.contantImageView.getLayoutParams().height = imagePix[0];
                 holder.contantImageView.getLayoutParams().width = imagePix[1];
                 holder.contantImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
-                        chatMessage.url, imagePix[0], imagePix[1]),
+                                chatMessage.url, imagePix[0], imagePix[1]),
                         GetVolley.getmInstance().getImageLoader());
                 holder.contantImageView.setVisibility(View.VISIBLE);
                 holder.contantImageView.setOnClickListener(new View.OnClickListener() {
@@ -287,7 +287,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
 
         /*设置头像*/
         holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
-                chatMessage.chatImage, 48 * 3, 48 * 3),
+                        chatMessage.chatImage, 48 * 3, 48 * 3),
                 GetVolley.getmInstance().getImageLoader());
 
         String time = FriendTime.FriendlyDate(chatMessage.create_time);

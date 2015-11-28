@@ -5,34 +5,9 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.main.BoomGroupFragment">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/countdown_time"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="@dimen/small_title_text_size"
-            tools:text="还有24min"/>
-
-        <TextView
-            android:id="@+id/group_nums"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="共有X个群"
-            android:textSize="@dimen/normal_text_size"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/boom_group_item_recycler_view"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            tools:layout_height="100dp"/>
-
-
-    </LinearLayout>
-
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/themes_boom_group_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

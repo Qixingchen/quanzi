@@ -25,17 +25,18 @@ public class BoomGroupClass extends ConvGroupAbs {
     public List<BoomGroup.GroupmatchEntity.GrpmemEntity> groupMenber2;
     public boolean isGroup1MyGroup;
     // TODO: 15/10/10 add theme ID
+    public String themeID;
 
     public static ArrayList<BoomGroupClass> getBoomGroupListFromBoomGroupGson(
-            List<BoomGroup.GroupmatchEntity> boomGroups) {
+            List<BoomGroup.GroupmatchEntity> boomGroups, String themeID) {
         ArrayList<BoomGroupClass> ans = new ArrayList<>();
         for (BoomGroup.GroupmatchEntity boomGroup : boomGroups) {
-            ans.add(getBoomGroupFromBoomGroupGson(boomGroup));
+            ans.add(getBoomGroupFromBoomGroupGson(boomGroup, themeID));
         }
         return ans;
     }
 
-    public static BoomGroupClass getBoomGroupFromBoomGroupGson(BoomGroup.GroupmatchEntity boomGroup) {
+    public static BoomGroupClass getBoomGroupFromBoomGroupGson(BoomGroup.GroupmatchEntity boomGroup, String themeID) {
         BoomGroupClass temp = new BoomGroupClass();
         temp.convId = boomGroup.convId;
         temp.Type = StaticField.ConvType.BoomGroup;
@@ -51,6 +52,7 @@ public class BoomGroupClass extends ConvGroupAbs {
         temp.groupMenber1 = boomGroup.groupMenber1;
         temp.groupMenber2 = boomGroup.groupMenber2;
         temp.isGroup1MyGroup = isMyGroup(temp.groupId1);
+        temp.themeID = themeID;
         return temp;
     }
 

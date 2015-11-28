@@ -4,6 +4,9 @@ import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.otto.BusProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by qixingchen on 15/10/10.
  * 全局变量组，碰撞群列表
@@ -23,6 +26,18 @@ public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
         return mInstance;
     }
 
+    /**
+     * 获取某一个活动的groups
+     */
+    public List<BoomGroupClass> getThemeBoomGroup(String themeID) {
+        List<BoomGroupClass> ans = new ArrayList<>();
+        for (BoomGroupClass boom : getGroupList()) {
+            if (boom.themeID.equals(themeID)) {
+                ans.add(boom);
+            }
+        }
+        return ans;
+    }
 
     /**
      * 获取所有未读数量

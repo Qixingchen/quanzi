@@ -1,16 +1,29 @@
 package com.tizi.quanzi.gson;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by qixingchen on 15/9/11.
  * 主题活动
  */
-public class Theme extends OnlySuccess {
+public class Theme extends OnlySuccess implements Parcelable {
 
 
+    public static final Parcelable.Creator<Theme> CREATOR = new Parcelable.Creator<Theme>() {
+        public Theme createFromParcel(Parcel source) {
+            return new Theme(source);
+        }
+
+        public Theme[] newArray(int size) {
+            return new Theme[size];
+        }
+    };
     /**
      * id : HTDM004832d9e7d1827b48d89845204dc5139421
      * title : 脱单大作战
@@ -29,7 +42,34 @@ public class Theme extends OnlySuccess {
     @SerializedName("acts")
     public List<ActsEntity> acts;
 
-    public static class ActsEntity {
+    public Theme() {
+    }
+
+    protected Theme(Parcel in) {
+        this.acts = new ArrayList<ActsEntity>();
+        in.readList(this.acts, List.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this.acts);
+    }
+
+    public static class ActsEntity implements Parcelable {
+        public static final Creator<ActsEntity> CREATOR = new Creator<ActsEntity>() {
+            public ActsEntity createFromParcel(Parcel source) {
+                return new ActsEntity(source);
+            }
+
+            public ActsEntity[] newArray(int size) {
+                return new ActsEntity[size];
+            }
+        };
         @SerializedName("id")
         public String id;
         @SerializedName("title")
@@ -45,14 +85,53 @@ public class Theme extends OnlySuccess {
         @SerializedName("signNum")
         public int signNum;
         @SerializedName("beginDate")
-        public Object beginDate;
+        public String beginDate;
         @SerializedName("endDate")
-        public Object endDate;
+        public String endDate;
         @SerializedName("adUrl")
-        public Object adUrl;
+        public String adUrl;
         @SerializedName("beginTime")
         public String beginTime;
         @SerializedName("endTime")
         public String endTime;
+
+        public ActsEntity() {
+        }
+
+        protected ActsEntity(Parcel in) {
+            this.id = in.readString();
+            this.title = in.readString();
+            this.content = in.readString();
+            this.icon = in.readString();
+            this.detailUrl = in.readString();
+            this.template = in.readInt();
+            this.signNum = in.readInt();
+            this.beginDate = in.readString();
+            this.endDate = in.readString();
+            this.adUrl = in.readString();
+            this.beginTime = in.readString();
+            this.endTime = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.id);
+            dest.writeString(this.title);
+            dest.writeString(this.content);
+            dest.writeString(this.icon);
+            dest.writeString(this.detailUrl);
+            dest.writeInt(this.template);
+            dest.writeInt(this.signNum);
+            dest.writeString(this.beginDate);
+            dest.writeString(this.endDate);
+            dest.writeString(this.adUrl);
+            dest.writeString(this.beginTime);
+            dest.writeString(this.endTime);
+        }
     }
 }

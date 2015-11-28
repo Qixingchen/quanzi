@@ -2,6 +2,7 @@ package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.GroupIDs;
+import com.tizi.quanzi.gson.GroupSignUPThemeAns;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.gson.Theme;
@@ -105,11 +106,11 @@ public class ThemeActs extends RetrofitNetworkAbs {
      */
     public void signUP(String actID, String groupID, int flag) {
 
-        final Call<OnlySuccess> themeCall = themeService.signUp(actID, groupID, flag);
+        final Call<GroupSignUPThemeAns> themeCall = themeService.signUp(actID, groupID, flag);
 
-        themeCall.enqueue(new Callback<OnlySuccess>() {
+        themeCall.enqueue(new Callback<GroupSignUPThemeAns>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(retrofit.Response<GroupSignUPThemeAns> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 

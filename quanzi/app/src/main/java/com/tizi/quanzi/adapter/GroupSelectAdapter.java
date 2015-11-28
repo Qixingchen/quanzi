@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.GroupSignUPThemeAns;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.model.GroupClass;
@@ -132,6 +133,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                             ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                                 @Override
                                 public void onOK(Object ts) {
+                                    GroupSignUPThemeAns ans = (GroupSignUPThemeAns) ts;
 
                                     Login.UserEntity my = MyUserInfo.getInstance().getUserInfo();
                                     String username = my == null ? "" : my.userName;
@@ -140,12 +142,13 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                     String text;
                                     if (selectAfter) {
                                         text = String.format("%s报名了活动[%s]", username, act.title);
+                                        if (ans.oldActName != null) {
+                                            text = String.format("%s,原活动[%s]取消", text, ans.oldActName);
+                                        }
+
                                     } else {
                                         text = String.format("%s取消了报名[%s]", username, act.title);
                                     }
-                                    SendMessage.getInstance().sendTextMessage(group.convId, text,
-                                            SendMessage.setMessAttr(group.ID, StaticField.ConvType.GROUP, true));
-
                                     Timer timer = new Timer();
                                     timer.setOnResult(new Timer.OnResult() {
                                         @Override
@@ -163,6 +166,8 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
 
                                         }
                                     }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1200);
+                                    SendMessage.getInstance().sendTextMessage(group.convId, text,
+                                            SendMessage.setMessAttr(group.ID, StaticField.ConvType.GROUP, true));
                                 }
 
                                 @Override

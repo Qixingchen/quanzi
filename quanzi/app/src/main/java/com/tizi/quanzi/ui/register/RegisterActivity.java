@@ -131,7 +131,7 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
             @Override
             public void onResponse(Response<Login> response, Retrofit retrofit) {
                 isRegistering = false;
-                if (response.isSuccess() && response.body().isSuccess()) {
+                if (response.isSuccess() && response.body().success) {
                     Login login = response.body();
                     LoginAndUserAccount.setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(),
                             login.getUser().getToken());

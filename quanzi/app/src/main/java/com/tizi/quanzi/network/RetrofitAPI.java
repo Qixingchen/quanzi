@@ -10,6 +10,7 @@ import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.gson.GroupInviteAns;
+import com.tizi.quanzi.gson.GroupSignUPThemeAns;
 import com.tizi.quanzi.gson.HotDyns;
 import com.tizi.quanzi.gson.IsZan;
 import com.tizi.quanzi.gson.Login;
@@ -35,7 +36,7 @@ public interface RetrofitAPI {
         Call<Theme> getThemes();
 
         @POST("act/sign")
-        Call<OnlySuccess> signUp(
+        Call<GroupSignUPThemeAns> signUp(
                 @Query("actid") String actID,
                 @Query("grpid") String groupID,
                 @Query("flag") int flag);

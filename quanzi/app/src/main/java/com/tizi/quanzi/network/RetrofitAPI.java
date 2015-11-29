@@ -222,6 +222,52 @@ public interface RetrofitAPI {
 
     }
 
+    interface UserDyns {
+        @POST("userdyn/addF")
+        Call<OnlySuccess> addDyn(
+                @Query(value = "content", encoded = true) String content,
+                @Query(value = "pics", encoded = true) String pics);
+
+        @POST("userdyn/addF")
+        Call<OnlySuccess> addDyn(
+                @Query(value = "pics", encoded = true) String pics);
+
+        @POST("userdyn/delF")
+        Call<OnlySuccess> deleteDyn(
+                @Query("dynid") String dynID
+        );
+
+        @POST("userdyn/findF")
+        Call<com.tizi.quanzi.gson.Dyns> findDyns(
+        );
+
+        @POST("userdyn/zanF")
+        Call<OnlySuccess> zan(
+                @Query("dynid") String dynID,
+                @Query("zan") int isZan);
+
+        @POST("userdyn/addComment")
+        Call<AddComment> addComent(
+                @Query("dynid") String dynID,
+                @Query(value = "comment", encoded = true) String comment);
+
+        @POST("userdyn/delComment")
+        Call<OnlySuccess> deleteComment(
+                @Query("cid") String commitID);
+
+        @POST("userdyn/findComment")
+        Call<Comments> findComment(
+                @Query("dynid") String dynid,
+                @Query("start") int start,
+                @Query("limit") int limit);
+
+        @POST("userdyn/isZan")
+        Call<IsZan> isZan(
+                @Query("dynid") String dynid
+        );
+
+    }
+
     interface FindUser {
         @POST("user/findUserF")
         Call<OtherUserInfo> getUserByAccount(
@@ -281,7 +327,6 @@ public interface RetrofitAPI {
                 @Query("coor") String coor
         );
     }
-
 }
 
 

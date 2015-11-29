@@ -98,7 +98,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     @Override
     public DynsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_dyns, parent, false);
+                .inflate(R.layout.item_dyn, parent, false);
         // set the view's size, margins, paddings and layout parameters
         DynsViewHolder vh = new DynsViewHolder(v);
         return vh;

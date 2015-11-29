@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/item_dyns"/>
+        layout="@layout/item_dyn"/>
 
     <LinearLayout
         android:id="@+id/point_group"

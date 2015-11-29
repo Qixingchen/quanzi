@@ -18,13 +18,12 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="100dp"
         android:background="@drawable/msg_in"
         android:foreground="?attr/selectableItemBackground"
         android:orientation="vertical"
         android:paddingBottom="10dp"
         android:paddingEnd="10dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="10dp"
         android:paddingStart="40dp"
         android:paddingTop="10dp">
 

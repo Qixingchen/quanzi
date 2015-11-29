@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,8 +37,11 @@ import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.network.FindUser;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.otto.ExitChatActivity;
@@ -46,6 +50,7 @@ import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
+import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 import com.tizi.quanzi.widget.swipe_to_cancel.ViewProxy;
 
 import java.util.List;
@@ -396,6 +401,20 @@ public class ChatActivity extends BaseActivity {
                     startActivity(intent);
                     return true;
                 case StaticField.ConvType.twoPerson:
+                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            Intent otherUser = new Intent(mContext, UserZoneActivity.class);
+                            otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
+                            mContext.startActivity(otherUser);
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+                            Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
+                        }
+                    }).findUserByID(PrivateMessPairList.getInstance().getGroupIDByConvID(CONVERSATION_ID));
                     return true;
                 case StaticField.ConvType.BoomGroup:
                     // TODO: 15/10/13 boom group zone
@@ -480,6 +499,12 @@ public class ChatActivity extends BaseActivity {
         if (recodeAudio != null) {
             recodeAudio.release();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     /**

@@ -122,6 +122,7 @@
         <activity
             android:name=".ui.ChatActivity"
             android:label="@string/title_activity_chat"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.quanzi_zone.QuanziZoneActivity"

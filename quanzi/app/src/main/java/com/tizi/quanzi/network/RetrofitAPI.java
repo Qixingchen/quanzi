@@ -223,6 +223,7 @@ public interface RetrofitAPI {
     }
 
     interface UserDyns {
+
         @POST("userdyn/addF")
         Call<OnlySuccess> addDyn(
                 @Query(value = "content", encoded = true) String content,
@@ -230,19 +231,23 @@ public interface RetrofitAPI {
 
         @POST("userdyn/addF")
         Call<OnlySuccess> addDyn(
-                @Query(value = "pics", encoded = true) String pics);
+                @Query(value = "content", encoded = true) String content);
 
         @POST("userdyn/delF")
-        Call<OnlySuccess> deleteDyn(
-                @Query("dynid") String dynID
-        );
+        Call<OnlySuccess> delDyn(
+                @Query("dynid") String dynID);
 
         @POST("userdyn/findF")
         Call<com.tizi.quanzi.gson.Dyns> findDyns(
-        );
+                @Query("start") int start,
+                @Query("limit") int limit);
+
+        @POST("userdyn/findF")
+        Call<com.tizi.quanzi.gson.Dyns> findDynByID(
+                @Query("dynid") String dynID);
 
         @POST("userdyn/zanF")
-        Call<OnlySuccess> zan(
+        Call<AddZan> zan(
                 @Query("dynid") String dynID,
                 @Query("zan") int isZan);
 
@@ -250,6 +255,13 @@ public interface RetrofitAPI {
         Call<AddComment> addComent(
                 @Query("dynid") String dynID,
                 @Query(value = "comment", encoded = true) String comment);
+
+        @POST("userdyn/addComment")
+        Call<AddComment> addComent(
+                @Query("dynid") String dynID,
+                @Query(value = "comment", encoded = true) String comment,
+                @Query("replyid") String replyID,
+                @Query("atuserid") String AtUserID);
 
         @POST("userdyn/delComment")
         Call<OnlySuccess> deleteComment(

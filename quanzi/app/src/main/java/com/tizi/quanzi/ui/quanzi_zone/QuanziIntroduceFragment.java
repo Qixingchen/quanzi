@@ -116,7 +116,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         });
         groupFaceImageView.setEnabled(false);
         /*动态*/
-        dynsAdapter = new DynsAdapter(null, mActivity);
+        dynsAdapter = new DynsAdapter(null, mActivity, false);
         lastIndex = 0;
         dynsAdapter.setNeedMore(new DynsAdapter.NeedMore() {
             @Override

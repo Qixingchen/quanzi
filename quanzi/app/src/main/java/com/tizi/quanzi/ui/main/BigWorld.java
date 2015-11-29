@@ -33,6 +33,7 @@ import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.ui.dyns.DynsActivity;
 import com.tizi.quanzi.ui.login.LoginActivity;
 
 import java.io.File;
@@ -49,7 +50,7 @@ public class BigWorld extends BaseFragment {
     private TextView userName, userSign;
     private NetworkImageView userFace;
     private ImageView userSex, userBackground;
-    private View Share, Setting, userInfoLayout;
+    private View Share, Setting, userInfoLayout, friendZone;
     private Button logout;
     private RequreForImage requreForImage;
 
@@ -106,6 +107,7 @@ public class BigWorld extends BaseFragment {
         userInfoLayout = view.findViewById(R.id.userInfoLayout);
         logout = (Button) view.findViewById(R.id.log_out);
         userBackground = (ImageView) view.findViewById(R.id.user_background);
+        friendZone = view.findViewById(R.id.friend_zone);
     }
 
     @Override
@@ -145,6 +147,18 @@ public class BigWorld extends BaseFragment {
                     ((MainActivity) AppStaticValue.getActivity(MainActivity.class.getSimpleName()))
                             .StartUserInfoSet();
                 }
+            }
+        });
+
+        friendZone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(mContext);
+                }
+                Intent dyn = new Intent(mContext, DynsActivity.class);
+                dyn.putExtra("isUser", true);
+                startActivity(dyn);
             }
         });
 

@@ -44,6 +44,7 @@ public class DynInfoFragment extends BaseFragment {
     private Dyns.DynsEntity dyn;
     private boolean iszan;
     private boolean showUser;
+    private boolean isUser = false;
 
     public DynInfoFragment() {
         // Required empty public constructor
@@ -51,6 +52,10 @@ public class DynInfoFragment extends BaseFragment {
 
     public void setDyn(Dyns.DynsEntity dyn) {
         this.dyn = dyn;
+    }
+
+    public void setIsUser(boolean isUser) {
+        this.isUser = isUser;
     }
 
     public void setShowUser(boolean showUser) {
@@ -66,7 +71,7 @@ public class DynInfoFragment extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        new DynItem(dyn, view, showUser, mContext);
+        new DynItem(dyn, view, showUser, isUser, mContext);
         attitudesTextView = (TextView) view.findViewById(R.id.weibo_attitudes);
         commentsTextView = (TextView) view.findViewById(R.id.weibo_comments);
         commentRecyclerView = (RecyclerView) view.findViewById(R.id.dyn_comment_item_recycler_view);

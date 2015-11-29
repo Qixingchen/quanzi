@@ -3,9 +3,6 @@ package com.tizi.quanzi.gson;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,25 +10,20 @@ import java.util.List;
  * 动态
  */
 public class Dyns extends OnlySuccess {
-
-
     /**
-     * icon : http://ac-hy5srahi.clouddn.com/lQ4xXWF1UO6oiXxSw9Rt4HOtv6qE9WRdL6Ok2cRS.jpg?imageView/1/w/200/h/200/q/100/format/png
-     * createTime : 20151107174409
+     * commentNum : 1
+     * content : 巨人
+     * createTime : 20151126202635
+     * icon : https://dn-hy5srahi.qbox.me/o77Vt6BYzGhvpGhowjY0RQB.jpeg
+     * zans : [{"icon":"https://dn-hy5srahi.qbox.me/o77Vt6BYzGhvpGhowjY0RQB.jpeg","userId":"HTDM004895dfca0c4c404097a8d3150df70b0d19"},{"icon":"http://ac-hy5srahi.clouddn.com/nTOn7NOihXiYVMVLHpwON3A.jpeg","userId":"HTDM00489e0c3c950a79424f960a3a7bcbd32f6a"}]
+     * pics : [{"url":"https://dn-hy5srahi.qbox.me/kLhjrtPtaH9EOT66jKcLNpD.jpeg"},{"url":"https://dn-hy5srahi.qbox.me/dfeejUJYmW2HOTKxCjSBBeB.jpeg"},{"url":"https://dn-hy5srahi.qbox.me/GDtDiQHlpEzpvFYto7ZKCAE.jpeg"},{"url":"https://dn-hy5srahi.qbox.me/VbXadrR36Z8f6RLnn2hqPrD.jpeg"},{"url":"https://dn-hy5srahi.qbox.me/Xc4LBHSBl2mgiNe9Wo18P1B.jpeg"}]
      * sex : 1
-     * groupName : 随变
-     * senderId : HTDM00484ef4c47c7f044c11b8956f3fe5374ceb
-     * content : 英语英语
-     * commentNum : 0
-     * createUser : HTDM0048eb9fbba903444b53b372de62b0f0c21f
-     * pics : [{"url":"http://ac-hy5srahi.clouddn.com/JT1dG4uWNK4GZTZGzS70lwkow2EzpEBLniapVmYM.gif"}]
-     * groupIcon : http://ac-hy5srahi.clouddn.com/C9suz7o2cCsQRzgUYi0SHaQg236MwgGM4aAbqmE5.jpg
-     * nickName : 不见
-     * zan : 1
-     * dynid : HTDM0048e8ec4429348441d5896a9f2d5252adde
+     * createUser : HTDM004895dfca0c4c404097a8d3150df70b0d19
+     * zan : 3
+     * nickName : 11-11
+     * dynid : HTDM0048381e497f38a64240a5aaffbeb91ab80a
      */
 
-    @SerializedName("dyns")
     public List<DynsEntity> dyns;
 
     public static class DynsEntity implements Parcelable {
@@ -44,56 +36,46 @@ public class Dyns extends OnlySuccess {
                 return new DynsEntity[size];
             }
         };
-        @SerializedName("icon")
-        public String icon;
-        @SerializedName("createTime")
-        public String createTime;
-        @SerializedName("sex")
-        public String sex;
-        @SerializedName("groupName")
-        public String groupName;
-        @SerializedName("senderId")
-        public String senderId;
-        @SerializedName("content")
-        public String content;
-        @SerializedName("commentNum")
         public int commentNum;
-        @SerializedName("createUser")
+        public String content;
+        public String createTime;
+        public String sex;
+        public String icon;
         public String createUser;
-        @SerializedName("groupIcon")
-        public String groupIcon;
-        @SerializedName("nickName")
-        public String nickName;
-        @SerializedName("zan")
         public int zan;
-        @SerializedName("dynid")
+        public String nickName;
         public String dynid;
+        public String groupName;
+        public String senderId;
+        public String activityId;
+        public String groupIcon;
+        public List<ZansEntity> zans;
         /**
-         * url : http://ac-hy5srahi.clouddn.com/JT1dG4uWNK4GZTZGzS70lwkow2EzpEBLniapVmYM.gif
+         * icon : https://dn-hy5srahi.qbox.me/o77Vt6BYzGhvpGhowjY0RQB.jpeg
+         * userId : HTDM004895dfca0c4c404097a8d3150df70b0d19
          */
-
-        @SerializedName("pics")
         public List<PicsEntity> pics;
-
 
         public DynsEntity() {
         }
 
+
         protected DynsEntity(Parcel in) {
-            this.icon = in.readString();
+            this.commentNum = in.readInt();
+            this.content = in.readString();
             this.createTime = in.readString();
             this.sex = in.readString();
+            this.icon = in.readString();
+            this.createUser = in.readString();
+            this.zan = in.readInt();
+            this.nickName = in.readString();
+            this.dynid = in.readString();
             this.groupName = in.readString();
             this.senderId = in.readString();
-            this.content = in.readString();
-            this.commentNum = in.readInt();
-            this.createUser = in.readString();
+            this.activityId = in.readString();
             this.groupIcon = in.readString();
-            this.nickName = in.readString();
-            this.zan = in.readInt();
-            this.dynid = in.readString();
-            this.pics = new ArrayList<PicsEntity>();
-            in.readList(this.pics, List.class.getClassLoader());
+            this.zans = in.createTypedArrayList(ZansEntity.CREATOR);
+            this.pics = in.createTypedArrayList(PicsEntity.CREATOR);
         }
 
         @Override
@@ -103,24 +85,89 @@ public class Dyns extends OnlySuccess {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(this.icon);
+            dest.writeInt(this.commentNum);
+            dest.writeString(this.content);
             dest.writeString(this.createTime);
             dest.writeString(this.sex);
+            dest.writeString(this.icon);
+            dest.writeString(this.createUser);
+            dest.writeInt(this.zan);
+            dest.writeString(this.nickName);
+            dest.writeString(this.dynid);
             dest.writeString(this.groupName);
             dest.writeString(this.senderId);
-            dest.writeString(this.content);
-            dest.writeInt(this.commentNum);
-            dest.writeString(this.createUser);
+            dest.writeString(this.activityId);
             dest.writeString(this.groupIcon);
-            dest.writeString(this.nickName);
-            dest.writeInt(this.zan);
-            dest.writeString(this.dynid);
-            dest.writeList(this.pics);
+            dest.writeTypedList(zans);
+            dest.writeTypedList(pics);
         }
 
-        public static class PicsEntity {
-            @SerializedName("url")
+        public static class ZansEntity implements Parcelable {
+            public static final Parcelable.Creator<ZansEntity> CREATOR = new Parcelable.Creator<ZansEntity>() {
+                public ZansEntity createFromParcel(Parcel source) {
+                    return new ZansEntity(source);
+                }
+
+                public ZansEntity[] newArray(int size) {
+                    return new ZansEntity[size];
+                }
+            };
+            public String icon;
+            public String userId;
+
+            public ZansEntity(String icon, String userId) {
+                this.icon = icon;
+                this.userId = userId;
+            }
+
+            public ZansEntity() {
+            }
+
+            protected ZansEntity(Parcel in) {
+                this.icon = in.readString();
+                this.userId = in.readString();
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.icon);
+                dest.writeString(this.userId);
+            }
+        }
+
+        public static class PicsEntity implements Parcelable {
+            public static final Parcelable.Creator<PicsEntity> CREATOR = new Parcelable.Creator<PicsEntity>() {
+                public PicsEntity createFromParcel(Parcel source) {
+                    return new PicsEntity(source);
+                }
+
+                public PicsEntity[] newArray(int size) {
+                    return new PicsEntity[size];
+                }
+            };
             public String url;
+
+            public PicsEntity() {
+            }
+
+            protected PicsEntity(Parcel in) {
+                this.url = in.readString();
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.url);
+            }
         }
     }
 }

@@ -26,6 +26,7 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.GetVolley;
+import com.tizi.quanzi.network.UserDynamicAct;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
@@ -52,10 +53,12 @@ public class SendDynFragment extends BaseFragment {
     private static final String THEME_STRING = "themeString";
     private static final String THEME_ID = "themeID";
     private static final String GROUP_ID = "groupID";
+    private static final String IS_USER = "isUser";
 
     private String themeString;
     private String themeID;
     private String groupID;
+    private boolean isUser;
 
 
     private android.widget.EditText dynComment;
@@ -80,12 +83,13 @@ public class SendDynFragment extends BaseFragment {
      *
      * @return A new instance of fragment SendDynFragment.
      */
-    public static SendDynFragment newInstance(String themeString, String groupID, String ThemeID) {
+    public static SendDynFragment newInstance(String themeString, String groupID, String ThemeID, boolean isUser) {
         SendDynFragment fragment = new SendDynFragment();
         Bundle args = new Bundle();
         args.putString(THEME_STRING, themeString);
         args.putString(THEME_ID, groupID);
         args.putString(GROUP_ID, ThemeID);
+        args.putBoolean(IS_USER, isUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -101,19 +105,31 @@ public class SendDynFragment extends BaseFragment {
             Snackbar.make(view, "正在上传照片中!", Snackbar.LENGTH_LONG).show();
             return false;
         }
-        if (comment.compareTo("") == 0 || selectGroupID == null) {
-            Snackbar.make(view, "状态为空或没有选择群", Snackbar.LENGTH_LONG).show();
+        if (comment.compareTo("") == 0) {
+            Snackbar.make(view, "状态为空", Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        if (!isUser && selectGroupID == null) {
+            Snackbar.make(view, "没有选择群", Snackbar.LENGTH_LONG).show();
             return false;
         }
         if (photoUrls.size() == 0) {
-            DynamicAct.getNewInstance().addDYn(themeID, selectGroupID, comment);
+            if (isUser) {
+                UserDynamicAct.getNewInstance().addDYn(comment);
+            } else {
+                DynamicAct.getNewInstance().addDYn(themeID, selectGroupID, comment);
+            }
         } else {
             ArrayList<Pics> pics = new ArrayList<>();
             for (String photoUrl : photoUrls) {
                 pics.add(new Pics(photoUrl));
             }
-            DynamicAct.getNewInstance().addDYn(themeID, selectGroupID, comment,
-                    new Gson().toJson(pics));
+            if (isUser) {
+                UserDynamicAct.getNewInstance().addDYn(comment, new Gson().toJson(pics));
+            } else {
+                DynamicAct.getNewInstance().addDYn(themeID, selectGroupID, comment,
+                        new Gson().toJson(pics));
+            }
         }
         return true;
     }
@@ -125,6 +141,7 @@ public class SendDynFragment extends BaseFragment {
             themeString = getArguments().getString(THEME_STRING);
             groupID = getArguments().getString(THEME_ID);
             themeID = getArguments().getString(GROUP_ID);
+            isUser = getArguments().getBoolean(IS_USER, false);
         }
     }
 
@@ -156,7 +173,7 @@ public class SendDynFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-        if (groupID == null) {
+        if (groupID == null && !isUser) {
             groupSelectAdapter = new GroupSelectAdapter(GroupList.getInstance().getGroupList(), mActivity, null,
                     GroupSelectAdapter.Dyn_Select_Group);
             groupSelectAdapter.setOnclick(new GroupSelectAdapter.Onclick() {
@@ -170,6 +187,7 @@ public class SendDynFragment extends BaseFragment {
         } else {
             selectGroupID = groupID;
             groupItemRecyclerview.setVisibility(View.GONE);
+            view.findViewById(R.id.select_group).setVisibility(View.GONE);
         }
 
         for (int i = 0; i < 9; i++) {
@@ -221,7 +239,6 @@ public class SendDynFragment extends BaseFragment {
      * 使用系统带的方法获取图片
      */
     private void photoFromSystem(ActivityResultAns activityResultAns) {
-        // TODO: 15/11/13 in work thread
         final ClipData clipData = activityResultAns.data.getClipData();
         if (clipData != null) {
             int size = activityResultAns.data.getClipData().getItemCount();

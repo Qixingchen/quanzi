@@ -15,6 +15,7 @@ import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.network.UserDynamicAct;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
@@ -32,6 +33,7 @@ public class DynsActivityFragment extends BaseFragment {
     private String themeID, GroupID;
     private boolean isAllLoaded = false;
     private int page = 0;
+    private boolean isUser;
 
 
     public DynsActivityFragment() {
@@ -64,14 +66,16 @@ public class DynsActivityFragment extends BaseFragment {
         }
         themeID = getActivity().getIntent().getStringExtra("themeID");
         GroupID = getActivity().getIntent().getStringExtra("groupID");
+        isUser = getActivity().getIntent().getBooleanExtra("isUser", false);
 
-        dynsAdapter = new DynsAdapter(dynsList, getContext());
+        dynsAdapter = new DynsAdapter(dynsList, getContext(), isUser);
         dynsAdapter.setShowUser(false);
         dynsAdapter.setOnclick(new DynsAdapter.Onclick() {
             @Override
             public void click(Dyns.DynsEntity dyn) {
                 DynInfoFragment dynInfoFragment = new DynInfoFragment();
                 dynInfoFragment.setDyn(dyn);
+                dynInfoFragment.setIsUser(isUser);
                 dynInfoFragment.setShowUser(false);
                 getFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
@@ -106,11 +110,7 @@ public class DynsActivityFragment extends BaseFragment {
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
                 int oldCount = dynsAdapter.getItemCount();
-                if (dyns.dyns.size() < StaticField.Limit.DynamicLimit) {
-                    isAllLoaded = true;
-                } else {
-                    isAllLoaded = false;
-                }
+                isAllLoaded = dyns.dyns.size() < StaticField.Limit.DynamicLimit;
                 dynsAdapter.addItems(dyns.dyns);
                 if (!isAllLoaded && nowPageCount != 0 && dynsAdapter.getItemCount() - oldCount < StaticField.Limit.DynamicLimit) {
                     quaryMore(thmemID, groupID);
@@ -131,7 +131,9 @@ public class DynsActivityFragment extends BaseFragment {
             }
         };
         int count = nowPageCount * StaticField.Limit.DynamicLimit;
-        if (groupID == null) {
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamic(count);
+        } else if (groupID == null) {
             DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, count);
         } else {
             DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, count);
@@ -147,5 +149,4 @@ public class DynsActivityFragment extends BaseFragment {
         quaryMore(thmemID, groupID, page);
         page++;
     }
-
 }

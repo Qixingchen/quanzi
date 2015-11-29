@@ -3,6 +3,8 @@ package com.tizi.quanzi.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,13 +15,19 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.adapter.AttitudesUsersFaceAdapter;
+import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.AddZan;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.network.UserDynamicAct;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.dyns.DynActSendNotify;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
@@ -32,7 +40,7 @@ import java.util.ArrayList;
 public class DynItem {
 
     public TextView contentTextView;
-    private ImageView weibo_avatar_ImageView;
+    private ImageView weibo_avatar_ImageView, weiboAttitudesImageView;
     private TextView userNameTextView, dateTextView,
             attitudesTextView, commentsTextView, weiboPicsSumTextView;
     private ImageView[] weibo_pics_ImageView = new ImageView[3];
@@ -44,12 +52,16 @@ public class DynItem {
 
     private View rootView;
     private boolean showUser;
+    private boolean isUser;
     private Context mContext;
 
-    public DynItem(Dyns.DynsEntity dyn, View rootView, boolean showUser, Context mContext) {
+    private boolean iszan = false;
+
+    public DynItem(Dyns.DynsEntity dyn, View rootView, boolean showUser, boolean isUser, Context mContext) {
         this.dyn = dyn;
         this.rootView = rootView;
-        this.showUser = showUser;
+        this.showUser = showUser | isUser;
+        this.isUser = isUser;
         this.mContext = mContext;
         init();
     }
@@ -79,6 +91,7 @@ public class DynItem {
         weibo_pics_linearLayout = (LinearLayout) rootView.findViewById(R.id.weibo_pics);
         weiboPicsSumTextView = (TextView) rootView.findViewById(R.id.weibo_pic_sum_text_view);
         weiboAttitudesUsersFace = (RecyclerView) rootView.findViewById(R.id.weibo_attitudes_users_face_recycler_view);
+        weiboAttitudesImageView = (ImageView) rootView.findViewById(R.id.weibo_attitude_image_view);
     }
 
     private void initViews() {
@@ -165,6 +178,61 @@ public class DynItem {
                 }
             });
         }
+        if (isUser) {
+            setUserDyn();
+        }
+    }
+
+    private void setUserDyn() {
+        weiboAttitudesUsersFace.setVisibility(View.VISIBLE);
+        attitudesTextView.setText(String.valueOf(dyn.zans.size()));
+        final AttitudesUsersFaceAdapter attitudesUsersFaceAdapter = new AttitudesUsersFaceAdapter(dyn.zans);
+        weiboAttitudesUsersFace.setAdapter(attitudesUsersFaceAdapter);
+        weiboAttitudesUsersFace.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+        for (Dyns.DynsEntity.ZansEntity zans : dyn.zans) {
+            if (zans.userId.equals(AppStaticValue.getUserID())) {
+                iszan = true;
+                break;
+            }
+        }
+        if (iszan) {
+            Picasso.with(mContext).load(R.drawable.ic_like_red).into(weiboAttitudesImageView);
+        } else {
+            Picasso.with(mContext).load(R.drawable.ic_like_grey).into(weiboAttitudesImageView);
+        }
+        weiboAttitudesImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                weiboAttitudesImageView.setEnabled(false);
+                UserDynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                    @Override
+                    public void onOK(Object ts) {
+                        AddZan addZan = (AddZan) ts;
+                        iszan = !iszan;
+                        weiboAttitudesImageView.setEnabled(true);
+                        if (iszan) {
+                            weiboAttitudesImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_like_red));
+                            attitudesUsersFaceAdapter.addZan(MyUserInfo.getInstance().getUserInfo().icon, MyUserInfo.getInstance().getUserInfo().id);
+                        } else {
+                            weiboAttitudesImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_like_grey));
+                            attitudesUsersFaceAdapter.removeZan(MyUserInfo.getInstance().getUserInfo().id);
+                        }
+                        attitudesTextView.setText(String.valueOf(addZan.zan));
+                        dyn.zan = addZan.zan;
+                    }
+
+                    @Override
+                    public void onError(String Message) {
+                        Snackbar.make(rootView, Message, Snackbar.LENGTH_LONG).show();
+                        weiboAttitudesImageView.setEnabled(true);
+                    }
+                }).addZan(dyn.dynid, !iszan);
+                if (!iszan) {
+                    DynActSendNotify.getNewInstance().plusOne(dyn);
+                }
+            }
+        });
     }
 
     /**

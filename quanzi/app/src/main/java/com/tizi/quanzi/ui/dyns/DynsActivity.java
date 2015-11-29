@@ -15,6 +15,7 @@ import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
+import com.tizi.quanzi.network.UserDynamicAct;
 import com.tizi.quanzi.otto.FragmentResume;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.tool.Tool;
@@ -30,23 +31,27 @@ public class DynsActivity extends BaseActivity {
     private String themeID;
     private String themeString;
 
+    private boolean isUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dyns);
         String dynID = getIntent().getStringExtra("dynID");
+        isUser = getIntent().getBooleanExtra("isUser", false);
         if (dynID == null) {
             dynsActivityFragment = new DynsActivityFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynsActivityFragment)
                     .commit();
         } else {
-            DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            RetrofitNetworkAbs.NetworkListener listener = new RetrofitNetworkAbs.NetworkListener() {
                 @Override
                 public void onOK(Object ts) {
                     Dyns dyns = (Dyns) ts;
                     if (dyns.dyns.size() == 1) {
                         DynInfoFragment dynInfoFragment = new DynInfoFragment();
                         dynInfoFragment.setDyn(dyns.dyns.get(0));
+                        dynInfoFragment.setIsUser(isUser);
                         getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynInfoFragment)
                                 .commit();
                     } else {
@@ -58,7 +63,13 @@ public class DynsActivity extends BaseActivity {
                 public void onError(String Message) {
                     Snackbar.make(view, "找不到对应动态 " + Message, Snackbar.LENGTH_LONG).show();
                 }
-            }).getDynamicByID(dynID);
+            };
+
+            if (isUser) {
+                UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamicByID(dynID);
+            } else {
+                DynamicAct.getNewInstance().setNetworkListener(listener).getDynamicByID(dynID);
+            }
 
         }
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -155,7 +166,7 @@ public class DynsActivity extends BaseActivity {
             Tool.GuestAction(this);
             return;
         }
-        sendDynFragment = SendDynFragment.newInstance(themeString, groupID, themeID);
+        sendDynFragment = SendDynFragment.newInstance(themeString, groupID, themeID, isUser);
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
                         R.anim.no_change, R.anim.slide_out_to_bottom)

@@ -36,7 +36,7 @@ public class DynActSendNotify {
             public void onConvID(String convID) {
                 Map<String, Object> attrs = setDynNotifiAttrs(null, dyn);
                 SendMessage.getInstance().sendTextMessage(convID, MyUserInfo.getInstance().getUserInfo().getUserName()
-                        + "向您+1了", attrs);
+                        + "对你点赞了", attrs);
             }
 
             @Override

@@ -16,28 +16,25 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 /**
- * Created by qixingchen on 15/8/18.
- * 动态查询
- *
- * @see RetrofitAPI.Dyns
+ * Created by Yulan on 2015/11/29.
  */
-public class DynamicAct extends RetrofitNetworkAbs {
+public class UserDynamicAct extends RetrofitNetworkAbs {
 
-    private RetrofitAPI.Dyns dynsSer = RetrofitNetwork.retrofit.create(RetrofitAPI.Dyns.class);
+    private RetrofitAPI.UserDyns dynsSer = RetrofitNetwork.retrofit.create(RetrofitAPI.UserDyns.class);
 
-    public static DynamicAct getNewInstance() {
-        return new DynamicAct();
+    public static UserDynamicAct getNewInstance() {
+        return new UserDynamicAct();
     }
 
     /**
      * 查询圈子内对于某事件的动态
      */
-    public void getGroupDynamic(String themeID, String groupID, int start) {
+    public void getDynamic(int start) {
 
-        dynsSer.findDyns(themeID, groupID, start, StaticField.Limit.DynamicLimit)
+        dynsSer.findDyns(start, StaticField.Limit.DynamicLimit)
                 .enqueue(new Callback<Dyns>() {
                     @Override
-                    public void onResponse(retrofit.Response<Dyns> response, Retrofit retrofit) {
+                    public void onResponse(retrofit.Response<com.tizi.quanzi.gson.Dyns> response, Retrofit retrofit) {
                         myOnResponse(response);
                     }
 
@@ -51,23 +48,14 @@ public class DynamicAct extends RetrofitNetworkAbs {
     /**
      * 获取动态
      *
-     * @param isGroup 查群还是查主题
-     * @param id      群或主题的ID
-     * @param start   开始的序号
+     * @param start 开始的序号
      */
-    public void getGroupDynamic(boolean isGroup, String id, int start) {
+    public void getGroupDynamic(int start) {
 
-        Call<Dyns> dynsCall;
 
-        if (isGroup) {
-            dynsCall = dynsSer.findGroupDyns(id, start, StaticField.Limit.DynamicLimit);
-        } else {
-            dynsCall = dynsSer.findThemeDyns(id, start, StaticField.Limit.DynamicLimit);
-        }
-
-        dynsCall.enqueue(new Callback<Dyns>() {
+        dynsSer.findDyns(start, StaticField.Limit.DynamicLimit).enqueue(new Callback<com.tizi.quanzi.gson.Dyns>() {
             @Override
-            public void onResponse(retrofit.Response<Dyns> response, Retrofit retrofit) {
+            public void onResponse(retrofit.Response<com.tizi.quanzi.gson.Dyns> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -174,15 +162,15 @@ public class DynamicAct extends RetrofitNetworkAbs {
     }
 
     /*发表动态*/
-    public void addDYn(String ThemeID, String GroupID, String comment, String pic) {
+    public void addDYn(String comment, String pic) {
 
         Call<OnlySuccess> addDynCall;
         comment = Tool.getUTF_8String(comment);
         if (pic == null) {
-            addDynCall = dynsSer.addDyn(ThemeID, GroupID, comment);
+            addDynCall = dynsSer.addDyn(comment);
         } else {
             Log.i(TAG, pic);
-            addDynCall = dynsSer.addDyn(ThemeID, GroupID, comment, Tool.getUTF_8String(pic));
+            addDynCall = dynsSer.addDyn(comment, Tool.getUTF_8String(pic));
         }
 
         addDynCall.enqueue(new Callback<OnlySuccess>() {
@@ -198,13 +186,13 @@ public class DynamicAct extends RetrofitNetworkAbs {
         });
     }
 
-    public void addDYn(String ThemeID, String GroupID, String comment) {
-        addDYn(ThemeID, GroupID, comment, null);
+    public void addDYn(String comment) {
+        addDYn(comment, null);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public DynamicAct setNetworkListener(NetworkListener networkListener) {
+    public UserDynamicAct setNetworkListener(NetworkListener networkListener) {
         return setNetworkListener(networkListener, this);
     }
 

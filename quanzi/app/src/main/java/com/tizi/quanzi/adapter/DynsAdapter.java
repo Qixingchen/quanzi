@@ -66,6 +66,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     private NeedMore needMore;
     private Onclick onclick;
     private boolean showUser = false;
+    private boolean isUser = false;
 
     /**
      * @param dynsList 动态List
@@ -73,13 +74,14 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
      *
      * @see com.tizi.quanzi.gson.Dyns.DynsEntity
      */
-    public DynsAdapter(List<Dyns.DynsEntity> dynsList, Context context) {
+    public DynsAdapter(List<Dyns.DynsEntity> dynsList, Context context, boolean isUser) {
         if (dynsList != null) {
             this.dynsList.beginBatchedUpdates();
             this.dynsList.addAll(dynsList);
             this.dynsList.endBatchedUpdates();
         }
         this.mContext = context;
+        this.isUser = isUser;
     }
 
     public void setShowUser(boolean showUser) {
@@ -114,8 +116,7 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     @Override
     public void onBindViewHolder(DynsViewHolder holder, final int position) {
         final Dyns.DynsEntity dyns = dynsList.get(position);
-
-        DynItem dynItem = new DynItem(dyns, holder.view, showUser, mContext);
+        DynItem dynItem = new DynItem(dyns, holder.view, showUser, isUser, mContext);
 
         //点击回调
         dynItem.contentTextView.setOnClickListener(new View.OnClickListener() {

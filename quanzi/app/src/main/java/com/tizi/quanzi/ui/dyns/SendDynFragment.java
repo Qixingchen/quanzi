@@ -26,7 +26,6 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.GetVolley;
-import com.tizi.quanzi.network.UserDynamicAct;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
@@ -114,22 +113,14 @@ public class SendDynFragment extends BaseFragment {
             return false;
         }
         if (photoUrls.size() == 0) {
-            if (isUser) {
-                UserDynamicAct.getNewInstance().addDYn(comment);
-            } else {
-                DynamicAct.getNewInstance().addDYn(themeID, selectGroupID, comment);
-            }
+            DynamicAct.getNewInstance(isUser).addDYn(themeID, selectGroupID, comment);
         } else {
             ArrayList<Pics> pics = new ArrayList<>();
             for (String photoUrl : photoUrls) {
                 pics.add(new Pics(photoUrl));
             }
-            if (isUser) {
-                UserDynamicAct.getNewInstance().addDYn(comment, new Gson().toJson(pics));
-            } else {
-                DynamicAct.getNewInstance().addDYn(themeID, selectGroupID, comment,
-                        new Gson().toJson(pics));
-            }
+            DynamicAct.getNewInstance(isUser).addDYn(themeID, selectGroupID, comment,
+                    new Gson().toJson(pics));
         }
         return true;
     }

@@ -82,7 +82,7 @@ public class DynInfoFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
 
-        DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+        DynamicAct.getNewInstance(isUser).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 IsZan isZan = (IsZan) ts;
@@ -110,7 +110,7 @@ public class DynInfoFragment extends BaseFragment {
                     return;
                 }
                 plusOne.setEnabled(false);
-                DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                DynamicAct.getNewInstance(isUser).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                     @Override
                     public void onOK(Object ts) {
                         AddZan addZan = (AddZan) ts;
@@ -165,7 +165,7 @@ public class DynInfoFragment extends BaseFragment {
             }
         });
 
-        DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+        RetrofitNetworkAbs.NetworkListener listener = new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 Comments comments = (Comments) ts;
@@ -176,7 +176,10 @@ public class DynInfoFragment extends BaseFragment {
             public void onError(String Message) {
                 Toast.makeText(mActivity, Message, Toast.LENGTH_LONG).show();
             }
-        }).getComment(dyn.dynid, 0, 100);
+        };
+
+        DynamicAct.getNewInstance(isUser).setNetworkListener(listener).getComment(dyn.dynid, 0, 100);
+
     }
 
     /**
@@ -235,10 +238,10 @@ public class DynInfoFragment extends BaseFragment {
                     Toast.makeText(mActivity, "内容为空", Toast.LENGTH_LONG).show();
                 } else {
                     if (comment == null) {
-                        DynamicAct.getNewInstance().setNetworkListener(addCommentListener)
+                        DynamicAct.getNewInstance(isUser).setNetworkListener(addCommentListener)
                                 .addComment(dyn.dynid, commentString);
                     } else {
-                        DynamicAct.getNewInstance().setNetworkListener(addCommentListener)
+                        DynamicAct.getNewInstance(isUser).setNetworkListener(addCommentListener)
                                 .addComment(dyn.dynid, commentString, comment.id, comment.createUser);
                         DynActSendNotify.getNewInstance().atUser(commentString, comment.createUser, comment, dyn);
                     }

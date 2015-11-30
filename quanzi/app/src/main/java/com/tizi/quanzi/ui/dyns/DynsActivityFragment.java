@@ -15,7 +15,6 @@ import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
-import com.tizi.quanzi.network.UserDynamicAct;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 
@@ -131,12 +130,10 @@ public class DynsActivityFragment extends BaseFragment {
             }
         };
         int count = nowPageCount * StaticField.Limit.DynamicLimit;
-        if (isUser) {
-            UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamic(count);
-        } else if (groupID == null) {
-            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(false, thmemID, count);
+        if (groupID == null) {
+            DynamicAct.getNewInstance(isUser).setNetworkListener(listener).getDynamic(false, thmemID, count);
         } else {
-            DynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(true, groupID, count);
+            DynamicAct.getNewInstance(isUser).setNetworkListener(listener).getDynamic(true, groupID, count);
         }
 
     }

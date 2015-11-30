@@ -269,7 +269,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
     private void quaryMore(String groupID, int lastIndex) {
         Log.i(TAG, "查询群动态 lastIndex=" + lastIndex);
-        DynamicAct.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+        DynamicAct.getNewInstance(false).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
                 Dyns dyns = (Dyns) ts;
@@ -283,7 +283,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
             public void onError(String Message) {
 
             }
-        }).getGroupDynamic(true, groupID, lastIndex);
+        }).getDynamic(true, groupID, lastIndex);
     }
 
     @Override

@@ -15,7 +15,6 @@ import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
-import com.tizi.quanzi.network.UserDynamicAct;
 import com.tizi.quanzi.otto.FragmentResume;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.tool.Tool;
@@ -65,11 +64,7 @@ public class DynsActivity extends BaseActivity {
                 }
             };
 
-            if (isUser) {
-                UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamicByID(dynID);
-            } else {
-                DynamicAct.getNewInstance().setNetworkListener(listener).getDynamicByID(dynID);
-            }
+            DynamicAct.getNewInstance(isUser).setNetworkListener(listener).getDynamicByID(dynID);
 
         }
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));

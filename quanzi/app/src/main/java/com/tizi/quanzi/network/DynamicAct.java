@@ -1,51 +1,34 @@
 package com.tizi.quanzi.network;
 
-import com.tizi.quanzi.gson.AddComment;
-import com.tizi.quanzi.gson.AddZan;
-import com.tizi.quanzi.gson.Comments;
-import com.tizi.quanzi.gson.Dyns;
-import com.tizi.quanzi.gson.IsZan;
-import com.tizi.quanzi.gson.OnlySuccess;
-import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.tool.Tool;
-
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
-
 /**
  * Created by qixingchen on 15/8/18.
  * 动态查询
+ * 分流 {@link GroupDynamicAct} {@link UserDynamicAct}
  *
  * @see RetrofitAPI.Dyns
  */
-public class DynamicAct extends RetrofitNetworkAbs {
+public class DynamicAct {
 
-    private RetrofitAPI.Dyns dynsSer = RetrofitNetwork.retrofit.create(RetrofitAPI.Dyns.class);
+    private boolean isUser;
+    private RetrofitNetworkAbs.NetworkListener listener;
 
-    public static DynamicAct getNewInstance() {
-        return new DynamicAct();
+    public DynamicAct(boolean isUser) {
+        this.isUser = isUser;
+    }
+
+    public static DynamicAct getNewInstance(boolean isUser) {
+        return new DynamicAct(isUser);
     }
 
     /**
      * 查询圈子内对于某事件的动态
      */
-    public void getGroupDynamic(String themeID, String groupID, int start) {
-
-        dynsSer.findDyns(themeID, groupID, start, StaticField.Limit.DynamicLimit)
-                .enqueue(new Callback<Dyns>() {
-                    @Override
-                    public void onResponse(retrofit.Response<Dyns> response, Retrofit retrofit) {
-                        myOnResponse(response);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        myOnFailure(t);
-                    }
-                });
+    public void getDynamic(String themeID, String groupID, int start) {
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamic(start);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(themeID, groupID, start);
+        }
     }
 
     /**
@@ -55,27 +38,13 @@ public class DynamicAct extends RetrofitNetworkAbs {
      * @param id      群或主题的ID
      * @param start   开始的序号
      */
-    public void getGroupDynamic(boolean isGroup, String id, int start) {
-
-        Call<Dyns> dynsCall;
-
-        if (isGroup) {
-            dynsCall = dynsSer.findGroupDyns(id, start, StaticField.Limit.DynamicLimit);
+    public void getDynamic(boolean isGroup, String id, int start) {
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamic(start);
         } else {
-            dynsCall = dynsSer.findThemeDyns(id, start, StaticField.Limit.DynamicLimit);
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(isGroup, id, start);
         }
 
-        dynsCall.enqueue(new Callback<Dyns>() {
-            @Override
-            public void onResponse(retrofit.Response<Dyns> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
     }
 
     /**
@@ -84,118 +53,67 @@ public class DynamicAct extends RetrofitNetworkAbs {
      * @param dynID 动态ID
      */
     public void getDynamicByID(String dynID) {
-        dynsSer.findDynByID(dynID).enqueue(new Callback<Dyns>() {
-            @Override
-            public void onResponse(Response<Dyns> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamicByID(dynID);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).getDynamicByID(dynID);
+        }
     }
 
     /*点赞*/
     public void addZan(String dynID, boolean isZan) {
-        dynsSer.zan(dynID, isZan ? 1 : -1).enqueue(new Callback<AddZan>() {
-            @Override
-            public void onResponse(Response<AddZan> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).addZan(dynID, isZan);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).addZan(dynID, isZan);
+        }
     }
 
     public void isZan(String dynID) {
-        dynsSer.isZan(dynID).enqueue(new Callback<IsZan>() {
-            @Override
-            public void onResponse(Response<IsZan> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).isZan(dynID);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).isZan(dynID);
+        }
     }
 
 
     /*获取评论*/
     public void getComment(String dynID, int start, int limit) {
-        dynsSer.findComment(dynID, start, limit).enqueue(new Callback<Comments>() {
-            @Override
-            public void onResponse(Response<Comments> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).getComment(dynID, start, limit);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).getComment(dynID, start, limit);
+        }
     }
 
     /*添加评论*/
     public void addComment(String dynID, String comment) {
-        dynsSer.addComent(dynID, Tool.getUTF_8String(comment)).enqueue(new Callback<AddComment>() {
-            @Override
-            public void onResponse(Response<AddComment> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).addComment(dynID, comment);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).addComment(dynID, comment);
+        }
     }
 
 
     /*添加评论*/
     public void addComment(String dynID, String comment, String replyID, String atUserID) {
-        dynsSer.addComent(dynID, Tool.getUTF_8String(comment), replyID, atUserID).enqueue(new Callback<AddComment>() {
-            @Override
-            public void onResponse(Response<AddComment> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).addComment(dynID, comment, replyID, atUserID);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).addComment(dynID, comment, replyID, atUserID);
+        }
     }
 
     /*发表动态*/
     public void addDYn(String ThemeID, String GroupID, String comment, String pic) {
 
-        Call<OnlySuccess> addDynCall;
-        comment = Tool.getUTF_8String(comment);
-        if (pic == null) {
-            addDynCall = dynsSer.addDyn(ThemeID, GroupID, comment);
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).addDYn(comment, pic);
         } else {
-            Log.i(TAG, pic);
-            addDynCall = dynsSer.addDyn(ThemeID, GroupID, comment, Tool.getUTF_8String(pic));
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).addDYn(ThemeID, GroupID, comment, pic);
         }
-
-        addDynCall.enqueue(new Callback<OnlySuccess>() {
-            @Override
-            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
-                myOnResponse(response);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                myOnFailure(t);
-            }
-        });
     }
 
     public void addDYn(String ThemeID, String GroupID, String comment) {
@@ -203,9 +121,9 @@ public class DynamicAct extends RetrofitNetworkAbs {
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public DynamicAct setNetworkListener(NetworkListener networkListener) {
-        return setNetworkListener(networkListener, this);
+    public DynamicAct setNetworkListener(RetrofitNetworkAbs.NetworkListener networkListener) {
+        this.listener = networkListener;
+        return this;
     }
 
 }

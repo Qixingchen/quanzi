@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,7 +19,6 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
@@ -40,8 +37,7 @@ import java.util.ArrayList;
 public class QuanziSetFragment extends BaseFragment {
 
     private static final String GROUP_ALL_INFO = "GroupAllInfo";
-    private TextView quanziName, quanziTag, quanziSign, deleteMess;
-    private SwitchCompat ignoreNotifiSwitch;
+    private TextView quanziName, quanziTag, quanziSign;
     private Button exitQuanzi;
     private View nameView, tagView, signView, qrcodeView;
     private GroupAllInfo groupAllInfo;
@@ -79,8 +75,6 @@ public class QuanziSetFragment extends BaseFragment {
         quanziName = (TextView) view.findViewById(R.id.quanzi_name);
         quanziTag = (TextView) view.findViewById(R.id.quanzi_tag);
         quanziSign = (TextView) view.findViewById(R.id.quanzi_sign);
-        deleteMess = (TextView) view.findViewById(R.id.delete_mess);
-        ignoreNotifiSwitch = (SwitchCompat) view.findViewById(R.id.ignore_notifi_switch);
         exitQuanzi = (Button) view.findViewById(R.id.exit_quanzi);
         nameView = view.findViewById(R.id.quanzi_name_view);
         tagView = view.findViewById(R.id.quanzi_tag_view);
@@ -95,8 +89,6 @@ public class QuanziSetFragment extends BaseFragment {
             Log.e(TAG, "group 获取失败");
             return;
         }
-
-        ignoreNotifiSwitch.setChecked(!group.getNeedNotifi());
 
         if (groupAllInfo == null || groupAllInfo.group == null) {
             Snackbar.make(view, "圈子不存在", Snackbar.LENGTH_LONG).show();
@@ -189,40 +181,7 @@ public class QuanziSetFragment extends BaseFragment {
         } else {
             exitQuanzi.setText("退出圈子");
         }
-        deleteMess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                builder.setTitle("确认删除聊天记录么？").setMessage("删除后无法恢复");
-                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        DBAct.getInstance().deleteAllMessage(groupAllInfo.group.convId);
-                    }
-                });
-                builder.setNegativeButton("取消", null);
-                builder.create().show();
-            }
-        });
-        ignoreNotifiSwitch.setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                        GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(group.ID);
-                        if (groupClass != null) {
-                            if (isChecked) {
-                                groupClass.setNeedNotifi(false, true);
-                            } else {
-                                groupClass.setNeedNotifi(true, true);
-
-                            }
-                        }
-                    }
-
-                }
-
-        );
         exitQuanzi.setOnClickListener(
                 new View.OnClickListener()
 

@@ -2,12 +2,14 @@ package com.tizi.quanzi.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -385,6 +387,12 @@ public class ChatActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_chat, menu);
+        //更换静音按钮的文字
+        if (!AppStaticValue.getNeedNotifi(CONVERSATION_ID)) {
+            menu.findItem(R.id.action_mute_notifications).setTitle("启用通知");
+        } else {
+            menu.findItem(R.id.action_mute_notifications).setTitle("静音");
+        }
         return true;
     }
 
@@ -424,6 +432,46 @@ public class ChatActivity extends BaseActivity {
             }
         }
 
+        if (id == R.id.action_clear_history) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+            builder.setTitle("确认删除聊天记录么？").setMessage("删除后无法恢复");
+            builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    DBAct.getInstance().deleteAllMessage(CONVERSATION_ID);
+                    chatMessageAdapter.chatMessageList.clear();
+                    switch (ChatType) {
+                        case StaticField.ConvType.GROUP:
+                            GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
+                            GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                            break;
+
+                        case StaticField.ConvType.BoomGroup:
+                            BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
+                            BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                            break;
+
+                        case StaticField.ConvType.twoPerson:
+                            PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
+                            PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                            break;
+                    }
+                }
+            });
+            builder.setNegativeButton("取消", null);
+            builder.create().show();
+        }
+
+        if (id == R.id.action_mute_notifications) {
+            boolean needNotifi = AppStaticValue.getNeedNotifi(CONVERSATION_ID);
+            AppStaticValue.setNeedNotifi(CONVERSATION_ID, !needNotifi);
+            if (needNotifi) {
+                item.setTitle("静音");
+            } else {
+                item.setTitle("启用通知");
+            }
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -434,6 +482,19 @@ public class ChatActivity extends BaseActivity {
         AppStaticValue.UI_CONVERSATION_ID = CONVERSATION_ID;
         conversation = AppStaticValue.getImClient().getConversation(CONVERSATION_ID);
         AddNotification.getInstance().chatActivityOpened(CONVERSATION_ID);
+
+        //更换静音按钮的文字
+        if (!AppStaticValue.getNeedNotifi(CONVERSATION_ID)) {
+            try {
+                mMenu.findItem(R.id.action_mute_notifications).setTitle("启用通知");
+            } catch (Exception ignore) {
+            }
+        } else {
+            try {
+                mMenu.findItem(R.id.action_mute_notifications).setTitle("静音");
+            } catch (Exception ignore) {
+            }
+        }
 
         ChatType = getIntent().getIntExtra("chatType", 9);
         //adapt

@@ -7,4 +7,12 @@
         android:orderInCategory="100"
         android:title="@string/menu_zone"
         app:showAsAction="withText|always"/>
+    <item
+        android:id="@+id/action_clear_history"
+        android:title="清空记录"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_mute_notifications"
+        android:title="静音"
+        app:showAsAction="never"/>
 </menu>

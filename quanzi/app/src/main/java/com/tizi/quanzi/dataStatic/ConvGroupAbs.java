@@ -41,5 +41,4 @@ public abstract class ConvGroupAbs implements Serializable {
         return unreadMessageIDSet.size();
     }
 
-
 }

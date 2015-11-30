@@ -67,7 +67,6 @@ public class GroupList extends ConvGroupAbsList<GroupClass> {
                 groupClass.lastMessTime = chatMessage.create_time;
                 groupClass.lastMess = ChatMessage.getContentText(chatMessage);
             }
-            groupClass.setNeedNotifiFromPrefer();
         }
 
         GroupList.getInstance().setGroupList(groupClassArrayList);

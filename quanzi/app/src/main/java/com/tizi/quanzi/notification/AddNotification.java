@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.preference.PreferenceManager;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
@@ -18,7 +19,6 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.model.ChatMessage;
-import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -37,7 +37,6 @@ public class AddNotification {
     private static AddNotification mInstance;
     private static List<NotifiContact> notifiContacts;
     private static NotificationManager mNotificationManager;
-    SharedPreferences systemSetting;
     //通知设置
     private boolean needVibrate, needSound, needInAppNotifi;
     private boolean needNotifi, needPriMessNotifi, needZanNotifi, needSysNotifi;
@@ -47,7 +46,6 @@ public class AddNotification {
         notifiContacts = new ArrayList<>();
         mNotificationManager = (NotificationManager) mContext.
                 getSystemService(Context.NOTIFICATION_SERVICE);
-        systemSetting = AppStaticValue.getNotifiPreferences();
     }
 
     public static AddNotification getInstance() {
@@ -103,12 +101,12 @@ public class AddNotification {
     private NotificationCompat.Builder setBuildEvent(NotificationCompat.Builder mBuilder) {
 
         /*intent*/
-//        /*delete*/
-//        Intent deleteIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
-//        deleteIntent.putExtra(StaticField.NotifiName.NotifiDelete, true);
-//
-//        mBuilder.setDeleteIntent(PendingIntent.getBroadcast(
-//                mContext, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        //        /*delete*/
+        //        Intent deleteIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
+        //        deleteIntent.putExtra(StaticField.NotifiName.NotifiDelete, true);
+        //
+        //        mBuilder.setDeleteIntent(PendingIntent.getBroadcast(
+        //                mContext, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
         /*click*/
         Intent clickIntent = new Intent(mContext.getString(R.string.NotificaitonEventIntent));
@@ -185,29 +183,8 @@ public class AddNotification {
         if (App.isAppForeground && !needInAppNotifi) {
             return;
         }
-        switch (chatMessage.ChatBothUserType) {
-            case StaticField.ConvType.GROUP:
-
-                GroupClass group = (GroupClass) GroupList.getInstance().getGroup(chatMessage.groupID);
-                if (group == null || !group.getNeedNotifi()) {
-                    return;
-                }
-                break;
-
-            case StaticField.ConvType.twoPerson:
-                if (!systemSetting.getBoolean(chatMessage.sender, true)) {
-                    return;
-                }
-                break;
-
-            case StaticField.ConvType.BoomGroup:
-                if (!systemSetting.getBoolean(chatMessage.groupID, true)) {
-                    return;
-                }
-                break;
-
-            default:
-                break;
+        if (!AppStaticValue.getNeedNotifi(chatMessage.ConversationId)) {
+            return;
         }
         addMessage(NotifiContact.fromMessage(chatMessage));
     }
@@ -244,6 +221,7 @@ public class AddNotification {
      * 从偏好文件加载设置
      */
     public void setSharedPreferences() {
+        SharedPreferences systemSetting = PreferenceManager.getDefaultSharedPreferences(App.getApplication());
         needVibrate = systemSetting.getBoolean(StaticField.SystemSettingString.needVibrate, true);
         needSound = systemSetting.getBoolean(StaticField.SystemSettingString.needSound, true);
         needInAppNotifi = systemSetting.getBoolean(StaticField.SystemSettingString.needInAppNotifi, true);

@@ -118,8 +118,12 @@ public class AppStaticValue {
         preferences.edit().putInt(name, vaule).apply();
     }
 
-    public static SharedPreferences getNotifiPreferences() {
-        return notifiPreferences;
+    public static boolean getNeedNotifi(String ConvID) {
+        return notifiPreferences.getBoolean(ConvID, true);
+    }
+
+    public static void setNeedNotifi(String ConvID, boolean needNotifi) {
+        notifiPreferences.edit().putBoolean(ConvID, needNotifi).apply();
     }
 
 

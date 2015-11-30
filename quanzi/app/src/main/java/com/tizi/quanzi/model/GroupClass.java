@@ -1,6 +1,5 @@
 package com.tizi.quanzi.model;
 
-import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupAllInfo;
@@ -22,7 +21,6 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
     public boolean validation;
     public String createUser;
     public List<GroupAllInfo.MemberEntity> memlist;
-    private boolean needNotifi;
 
     public GroupClass() {
     }
@@ -68,7 +66,6 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         } else {
             groupClass.lastMessTime = 0;
         }
-        groupClass.needNotifi = AppStaticValue.getNotifiPreferences().getBoolean(groupClass.ID, true);
 
         return groupClass;
     }
@@ -94,23 +91,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         groupClass.lastMessTime = 0;
         groupClass.lastMess = "";
         groupClass.background = groupans.bg;
-        groupClass.needNotifi = true;
         return groupClass;
-    }
-
-    public boolean getNeedNotifi() {
-        return needNotifi;
-    }
-
-    public void setNeedNotifiFromPrefer() {
-        this.needNotifi = AppStaticValue.getNotifiPreferences().getBoolean(ID, true);
-    }
-
-    public void setNeedNotifi(boolean needNotifi, boolean NeedWrite) {
-        if (NeedWrite) {
-            AppStaticValue.getNotifiPreferences().edit().putBoolean(ID, needNotifi).apply();
-        }
-        this.needNotifi = needNotifi;
     }
 
 

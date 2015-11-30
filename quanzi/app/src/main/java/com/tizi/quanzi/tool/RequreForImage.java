@@ -326,7 +326,7 @@ public class RequreForImage {
 
         boolean compass = true;
         if (compass && needZip) {
-            FilePath = ZipPic.saveMyBitmap(mActivity, ZipPic.compressBySize(FilePath, 960), 50);
+            FilePath = ZipPic.saveMyBitmap(mActivity, ZipPic.compressBySize(FilePath, 1080), 75);
         }
         return FilePath;
 

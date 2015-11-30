@@ -229,7 +229,7 @@ public class DynItem {
                     }
                 }).addZan(dyn.dynid, !iszan);
                 if (!iszan) {
-                    DynActSendNotify.getNewInstance().plusOne(dyn);
+                    DynActSendNotify.getNewInstance().plusOne(dyn, isUser);
                 }
             }
         });

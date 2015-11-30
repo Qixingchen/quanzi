@@ -240,6 +240,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                 public void onClick(View v) {
                     Intent dyn = new Intent(mContext, DynsActivity.class);
                     dyn.putExtra("dynID", systemMessage.dynid);
+                    dyn.putExtra("isUser", !systemMessage.dyn_create_userid.equals(""));
                     mContext.startActivity(dyn);
                 }
             });

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#372948"
     tools:context="com.tizi.quanzi.ui.main.LockLock">
 
     <LinearLayout
@@ -30,19 +31,19 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/detail_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="详情"/>
+                android:src="@drawable/ic_detail"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/boom_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="Boom"/>
+                android:src="@drawable/ic_boom"/>
 
             <TextView
                 android:id="@+id/countdown_time"
@@ -52,13 +53,13 @@
                 android:layout_centerHorizontal="true"
                 tools:text="12:22"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/participate_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="16dp"
-                android:text="报名"/>
+                android:src="@drawable/ic_group_sign_up"/>
 
 
             <TextView
@@ -68,6 +69,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_below="@id/participate_button"
                 android:layout_marginEnd="16dp"
+                android:textColor="@color/md_white"
                 tools:text="1100"/>
 
         </RelativeLayout>

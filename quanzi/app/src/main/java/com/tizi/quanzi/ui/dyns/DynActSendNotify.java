@@ -25,16 +25,17 @@ public class DynActSendNotify {
     /**
      * +1 的通知
      *
-     * @param dyn 被+1的动态
+     * @param dyn    被+1的动态
+     * @param isUser 是否是朋友圈动态
      */
-    public void plusOne(final Dyns.DynsEntity dyn) {
+    public void plusOne(final Dyns.DynsEntity dyn, final boolean isUser) {
         if (dyn.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
             return;
         }
         StartPrivateChat.getNewInstance(new StartPrivateChat.GetConvID() {
             @Override
             public void onConvID(String convID) {
-                Map<String, Object> attrs = setDynNotifiAttrs(null, dyn);
+                Map<String, Object> attrs = setDynNotifiAttrs(null, dyn, isUser);
                 SendMessage.getInstance().sendTextMessage(convID, MyUserInfo.getInstance().getUserInfo().getUserName()
                         + "对你点赞了", attrs);
             }
@@ -52,9 +53,10 @@ public class DynActSendNotify {
      *
      * @param comment 回复的内容
      * @param dyn     动态
+     * @param isUser  是否是朋友圈动态
      */
-    public void replayDyn(final String comment, final Dyns.DynsEntity dyn) {
-        replayComment(comment, null, dyn);
+    public void replayDyn(final String comment, final Dyns.DynsEntity dyn, final boolean isUser) {
+        replayComment(comment, null, dyn, isUser);
     }
 
     /**
@@ -63,16 +65,17 @@ public class DynActSendNotify {
      * @param comment        回复的内容
      * @param commentsEntity 被回复的评论
      * @param dyn            动态
+     * @param isUser         是否是朋友圈动态
      */
     public void replayComment(final String comment, final Comments.CommentsEntity commentsEntity,
-                              final Dyns.DynsEntity dyn) {
+                              final Dyns.DynsEntity dyn, final boolean isUser) {
         if (dyn.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
             return;
         }
         StartPrivateChat.getNewInstance(new StartPrivateChat.GetConvID() {
             @Override
             public void onConvID(String convID) {
-                Map<String, Object> attrs = setDynNotifiAttrs(commentsEntity, dyn);
+                Map<String, Object> attrs = setDynNotifiAttrs(commentsEntity, dyn, isUser);
                 SendMessage.getInstance().sendTextMessage(convID, comment, attrs);
             }
 
@@ -91,9 +94,10 @@ public class DynActSendNotify {
      * @param atUserid       被提及的用户ID
      * @param commentsEntity (如有)被回复的评论
      * @param dyn            动态
+     * @param isUser         是否是朋友圈动态
      */
-    public void atUser(final String comment, String atUserid,
-                       @Nullable final Comments.CommentsEntity commentsEntity, final Dyns.DynsEntity dyn) {
+    public void atUser(final String comment, String atUserid, @Nullable final Comments.CommentsEntity commentsEntity,
+                       final Dyns.DynsEntity dyn, final boolean isUser) {
         if (atUserid.compareTo(AppStaticValue.getUserID()) == 0) {
             return;
         }
@@ -106,7 +110,7 @@ public class DynActSendNotify {
         StartPrivateChat.getNewInstance(new StartPrivateChat.GetConvID() {
             @Override
             public void onConvID(String convID) {
-                Map<String, Object> attrs = setDynNotifiAttrs(commentsEntity, dyn);
+                Map<String, Object> attrs = setDynNotifiAttrs(commentsEntity, dyn, isUser);
                 SendMessage.getInstance().sendTextMessage(convID, comment, attrs);
             }
 
@@ -129,13 +133,14 @@ public class DynActSendNotify {
      * @param dyn_icon            动态的图片(如果动态不带图,则是发布者的头像,否则是第一张图)
      * @param dyn_create_userid   动态发布者的ID
      * @param dyn_create_username 动态发布者的名字
+     * @param isUser              是否是朋友圈动态
      *
      * @return attrs
      */
     private Map<String, Object> setDynNotifiAttrs
     (String reply_comment_id, String reply_comment,
      String reply_userid, String reply_username, String dynid, String dyn_content, String dyn_icon,
-     String dyn_create_userid, String dyn_create_username) {
+     String dyn_create_userid, String dyn_create_username, boolean isUser) {
         Map<String, Object> attrs = SendMessage.setMessAttr("", StaticField.ConvType.twoPerson);
         attrs = SendMessage.setSysMessAttr(attrs, null, StaticField.SystemMessAttrName.systemFlag.dyn_comment, "");
 
@@ -146,7 +151,11 @@ public class DynActSendNotify {
         attrs.put("dynid", dynid);
         attrs.put("dyn_content", dyn_content);
         attrs.put("dyn_icon", dyn_icon);
-        attrs.put("dyn_create_userid", dyn_create_userid);
+        if (isUser) {
+            attrs.put("dyn_create_userid", dyn_create_userid);
+        } else {
+            attrs.put("dyn_create_userid", "");
+        }
         attrs.put("dyn_create_username", dyn_create_username);
 
         return attrs;
@@ -160,17 +169,18 @@ public class DynActSendNotify {
      * @param reply_userid     如果回复的是评论,他的发布者的ID,不是则为空
      * @param reply_username   如果回复的是评论,他的发布者的名字,不是则为空
      * @param dyn              动态
+     * @param isUser           是否是朋友圈动态
      *
      * @return attrs
      */
     private Map<String, Object> setDynNotifiAttrs
     (String reply_comment_id, String reply_comment,
-     String reply_userid, String reply_username, Dyns.DynsEntity dyn) {
+     String reply_userid, String reply_username, Dyns.DynsEntity dyn, boolean isUser) {
 
         String icon = dyn.pics.size() == 0 ? dyn.icon : dyn.pics.get(0).url;
 
         return setDynNotifiAttrs(reply_comment_id, reply_comment, reply_userid, reply_username,
-                dyn.dynid, dyn.content, icon, dyn.createUser, dyn.nickName);
+                dyn.dynid, dyn.content, icon, dyn.createUser, dyn.nickName, isUser);
 
     }
 
@@ -179,19 +189,20 @@ public class DynActSendNotify {
      *
      * @param comment 被回复的评论,可以为null
      * @param dyn     动态
+     * @param isUser  是否是朋友圈动态
      *
      * @return attrs
      */
-    private Map<String, Object> setDynNotifiAttrs(@Nullable Comments.CommentsEntity comment, Dyns.DynsEntity dyn) {
+    private Map<String, Object> setDynNotifiAttrs(@Nullable Comments.CommentsEntity comment, Dyns.DynsEntity dyn, boolean isUser) {
 
         if (comment == null) {
             return setDynNotifiAttrs(null, null, MyUserInfo.getInstance().getUserInfo().getId(),
-                    MyUserInfo.getInstance().getUserInfo().getUserName(), dyn);
+                    MyUserInfo.getInstance().getUserInfo().getUserName(), dyn, isUser);
         }
 
 
         return setDynNotifiAttrs(comment.id, comment.content, MyUserInfo.getInstance().getUserInfo().getId(),
-                MyUserInfo.getInstance().getUserInfo().getUserName(), dyn);
+                MyUserInfo.getInstance().getUserInfo().getUserName(), dyn, isUser);
     }
 
 }

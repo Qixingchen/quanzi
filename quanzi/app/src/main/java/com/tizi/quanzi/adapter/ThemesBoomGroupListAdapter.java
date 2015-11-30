@@ -111,7 +111,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
             this.countdownTime = (TextView) view.findViewById(R.id.countdown_time);
         }
 
-        protected void setView(Theme.ActsEntity act) {
+        protected void setView(final Theme.ActsEntity act) {
             this.act = act;
             themeID = act.id;
             startTime = act.beginTime;
@@ -171,7 +171,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
 
                 @Override
                 public void countdown(int s) {
-                    countdownTime.setText(String.format("还剩%d:%d:%d结束", s / 3600, (s % 3600) / 60,
+                    countdownTime.setText(String.format("%s还剩%d:%d:%d结束", act.title, s / 3600, (s % 3600) / 60,
                             s % 60));
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, countDown * 1000);

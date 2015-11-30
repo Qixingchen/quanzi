@@ -7,7 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
@@ -31,7 +31,7 @@ public class LockLock extends BaseFragment {
     private static LockLock mInstance;
 
     private ViewPager viewPager;
-    private Button participateButton, detailButton, boomButton;
+    private ImageButton participateButton, detailButton, boomButton;
     private TextView participantsNum;
 
     private int nowPosition;
@@ -57,10 +57,10 @@ public class LockLock extends BaseFragment {
     @Override
     protected void findViews(View view) {
         viewPager = (ViewPager) view.findViewById(R.id.VerticalViewPager);
-        participateButton = (Button) view.findViewById(R.id.participate_button);
-        detailButton = (Button) view.findViewById(R.id.detail_button);
+        participateButton = (ImageButton) view.findViewById(R.id.participate_button);
+        detailButton = (ImageButton) view.findViewById(R.id.detail_button);
         participantsNum = (TextView) view.findViewById(R.id.num_of_participants);
-        boomButton = (Button) view.findViewById(R.id.boom_button);
+        boomButton = (ImageButton) view.findViewById(R.id.boom_button);
 
     }
 

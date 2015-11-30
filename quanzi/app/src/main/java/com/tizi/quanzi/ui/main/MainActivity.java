@@ -28,7 +28,7 @@ import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 
 
 public class MainActivity extends BaseActivity {
-    private static final String toolbarTitle = "圈子";
+    private String toolbarTitle = "主题";
     private MainFragment mainFragment;
     private NotifiMessageFragment notifiMessageFragment;
     private UserInfoSetFragment userInfoSetFragment;
@@ -158,7 +158,10 @@ public class MainActivity extends BaseActivity {
 
     /*更换Toolbar Title*/
     public void onTabChanged(String toolbarTitle) {
-        toolbar.setTitle(toolbarTitle);
+        this.toolbarTitle = toolbarTitle;
+        if (!toolbar.getTitle().toString().equals("等待网络")) {
+            toolbar.setTitle(toolbarTitle);
+        }
     }
 
     @Override

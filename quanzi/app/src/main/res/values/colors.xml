@@ -2,8 +2,8 @@
 <resources>
     <color name="window_background">#FFF5F5F5</color>
 
-    <color name="colorPrimary">#162230</color>
-    <color name="colorPrimaryDark">#463859</color>
+    <color name="colorPrimary">#544864</color>
+    <color name="colorPrimaryDark">@color/md_deep_purple_900</color>
     <color name="colorAccent">@color/md_green_500</color>
     <color name="textColorPrimary">#000000</color>
     <color name="color_fragment_background">@color/md_grey_200</color>

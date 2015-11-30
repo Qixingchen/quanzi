@@ -6,17 +6,10 @@
     android:background="@color/md_grey_300"
     tools:context="com.tizi.quanzi.ui.dyns.DynsActivityFragment">
 
-    <ImageView
-        android:id="@+id/dyn_intro"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/dyn_intro"/>
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/SwipeToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/dyn_intro">
+        android:layout_height="fill_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dyns_item_recycler_view"

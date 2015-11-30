@@ -48,6 +48,7 @@
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:maxLines="3"
+            android:textColor="@color/md_white"
             android:textSize="@dimen/sub_title_text_size"
             tools:text="123"
             />

@@ -132,7 +132,7 @@ public class DynInfoFragment extends BaseFragment {
                     }
                 }).addZan(dyn.dynid, !iszan);
                 if (!iszan) {
-                    DynActSendNotify.getNewInstance().plusOne(dyn);
+                    DynActSendNotify.getNewInstance().plusOne(dyn, isUser);
                 }
             }
         });
@@ -244,9 +244,9 @@ public class DynInfoFragment extends BaseFragment {
                     } else {
                         DynamicAct.getNewInstance(isUser).setNetworkListener(addCommentListener)
                                 .addComment(dyn.dynid, commentString, comment.id, comment.createUser);
-                        DynActSendNotify.getNewInstance().atUser(commentString, comment.createUser, comment, dyn);
+                        DynActSendNotify.getNewInstance().atUser(commentString, comment.createUser, comment, dyn, isUser);
                     }
-                    DynActSendNotify.getNewInstance().replayComment(commentString, comment, dyn);
+                    DynActSendNotify.getNewInstance().replayComment(commentString, comment, dyn, isUser);
                 }
             }
         }).setNegativeButton("取消", null).show();

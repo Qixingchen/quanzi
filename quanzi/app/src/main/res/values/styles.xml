@@ -63,7 +63,8 @@
         <!-- This would set the toolbar's background color,
               but setting this also changes the popup menu's background,
               even if we define popupTheme for our <Toolbar> -->
-          <!-- <item name="android:background">@color/color_primary</item> -->
+         
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
 </resources>

@@ -170,6 +170,7 @@ public class DynInfoFragment extends BaseFragment {
             public void onOK(Object ts) {
                 Comments comments = (Comments) ts;
                 dynCommentAdapter.setCommentses(comments.comments);
+                commentsTextView.setText(String.valueOf(comments.comments.size()));
             }
 
             @Override

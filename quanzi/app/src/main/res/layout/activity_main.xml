@@ -15,7 +15,7 @@
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
         android:paddingTop="@dimen/statue_bar_top_padding"
-        app:title="圈子"/>
+        app:title="主题"/>
 
     <FrameLayout
         android:id="@+id/fragment"

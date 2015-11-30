@@ -41,7 +41,10 @@ import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.ChatMessage;
+import com.tizi.quanzi.model.GroupClass;
+import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.notification.AddNotification;
@@ -444,16 +447,19 @@ public class ChatActivity extends BaseActivity {
                         case StaticField.ConvType.GROUP:
                             GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
                             GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                            GroupList.getInstance().removeAllUnread(CONVERSATION_ID);
                             break;
 
                         case StaticField.ConvType.BoomGroup:
                             BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
                             BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                            BoomGroupList.getInstance().removeAllUnread(CONVERSATION_ID);
                             break;
 
                         case StaticField.ConvType.twoPerson:
                             PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
                             PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                            PrivateMessPairList.getInstance().removeAllUnread(CONVERSATION_ID);
                             break;
                     }
                 }
@@ -507,6 +513,7 @@ public class ChatActivity extends BaseActivity {
         } else {
             mLayoutManager.scrollToPosition(chatMessageAdapter.lastReadPosition() + 1);
         }
+        setTitle();
         toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
 
         ((LinearLayoutManager) mLayoutManager).setStackFromEnd(true);
@@ -661,5 +668,30 @@ public class ChatActivity extends BaseActivity {
 
     private void onMessageSendError(String errorMess) {
         Toast.makeText(context, "发送失败" + errorMess, Toast.LENGTH_LONG).show();
+    }
+
+    private void setTitle() {
+        switch (ChatType) {
+            case StaticField.ConvType.GROUP:
+                GroupClass group = (GroupClass) GroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
+                if (group != null) {
+                    toolbarTitle = group.Name;
+                }
+                break;
+
+            case StaticField.ConvType.BoomGroup:
+                BoomGroupClass boom = BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
+                if (boom != null) {
+                    toolbarTitle = boom.Name;
+                }
+                break;
+
+            case StaticField.ConvType.twoPerson:
+                PrivateMessPair pair = PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID);
+                if (pair != null) {
+                    toolbarTitle = pair.Name;
+                }
+                break;
+        }
     }
 }

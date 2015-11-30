@@ -156,6 +156,11 @@ public class MainActivity extends BaseActivity {
         toolbar.setTitle(avimNetworkEvents.isNetWorkAvailable ? toolbarTitle : "等待网络");
     }
 
+    /*更换Toolbar Title*/
+    public void onTabChanged(String toolbarTitle) {
+        toolbar.setTitle(toolbarTitle);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

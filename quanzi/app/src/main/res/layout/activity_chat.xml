@@ -15,7 +15,8 @@
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
-        android:paddingTop="@dimen/statue_bar_top_padding"/>
+        android:paddingTop="@dimen/statue_bar_top_padding"
+        android:theme="@style/Theme.Toolbar.LightOverflow"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/ChatSwipeToRefresh"

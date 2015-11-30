@@ -35,23 +35,34 @@ public class MainFragment extends BaseFragment {
         tabLayout.setupWithViewPager(mViewPager);
 
         TextView tab = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.custom_tab, null);
-        tab.setText("圈子");
-        tab.setTextColor(getResources().getColor(R.color.tab_text_clolor));
         tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.group, 0, 0);
         tab.setSelected(true);
         tabLayout.getTabAt(0).setCustomView(tab);
 
         tab = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.custom_tab, null);
-        tab.setText("主题");
-        tab.setTextColor(getResources().getColor(R.color.tab_text_clolor));
         tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.theme_park, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tab);
 
         tab = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.custom_tab, null);
-        tab.setText("个人");
-        tab.setTextColor(getResources().getColor(R.color.tab_text_clolor));
         tab.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.my, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tab);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ((MainActivity) mActivity).onTabChanged(mainFragmentPagerAdapter.getPageTitle(position).toString());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override

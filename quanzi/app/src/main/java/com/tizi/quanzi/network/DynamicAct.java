@@ -35,12 +35,16 @@ public class DynamicAct {
      * 获取动态
      *
      * @param isGroup 查群还是查主题
-     * @param id      群或主题的ID
+     * @param id      群或主题或个人的ID
      * @param start   开始的序号
      */
     public void getDynamic(boolean isGroup, String id, int start) {
         if (isUser) {
-            UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamic(start);
+            if (id == null) {
+                UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamic(start);
+            } else {
+                UserDynamicAct.getNewInstance().setNetworkListener(listener).getDynamic(id, start);
+            }
         } else {
             GroupDynamicAct.getNewInstance().setNetworkListener(listener).getGroupDynamic(isGroup, id, start);
         }

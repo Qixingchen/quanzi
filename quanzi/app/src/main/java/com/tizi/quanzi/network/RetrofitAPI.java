@@ -239,6 +239,12 @@ public interface RetrofitAPI {
 
         @POST("userdyn/findF")
         Call<com.tizi.quanzi.gson.Dyns> findDyns(
+                @Query("userid") String userID,
+                @Query("start") int start,
+                @Query("limit") int limit);
+
+        @POST("userdyn/getAllDyn")
+        Call<com.tizi.quanzi.gson.Dyns> findDyns(
                 @Query("start") int start,
                 @Query("limit") int limit);
 

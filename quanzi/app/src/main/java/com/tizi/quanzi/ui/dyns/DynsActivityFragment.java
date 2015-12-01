@@ -29,7 +29,7 @@ public class DynsActivityFragment extends BaseFragment {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private String themeID, GroupID, themeAD;
+    private String themeID, GroupID, themeAD, userID;
     private boolean isAllLoaded = false;
     private int page = 0;
     private boolean isUser;
@@ -66,6 +66,7 @@ public class DynsActivityFragment extends BaseFragment {
         themeID = getActivity().getIntent().getStringExtra("themeID");
         GroupID = getActivity().getIntent().getStringExtra("groupID");
         themeAD = getActivity().getIntent().getStringExtra("themeAD");
+        userID = getActivity().getIntent().getStringExtra("userID");
         isUser = getActivity().getIntent().getBooleanExtra("isUser", false);
 
         dynsAdapter = new DynsAdapter(dynsList, themeAD, getContext(), isUser);
@@ -131,10 +132,14 @@ public class DynsActivityFragment extends BaseFragment {
             }
         };
         int count = nowPageCount * StaticField.Limit.DynamicLimit;
-        if (groupID == null) {
-            DynamicAct.getNewInstance(isUser).setNetworkListener(listener).getDynamic(false, thmemID, count);
+        if (isUser) {
+            DynamicAct.getNewInstance(true).setNetworkListener(listener).getDynamic(false, userID, count);
         } else {
-            DynamicAct.getNewInstance(isUser).setNetworkListener(listener).getDynamic(true, groupID, count);
+            if (groupID == null) {
+                DynamicAct.getNewInstance(false).setNetworkListener(listener).getDynamic(false, thmemID, count);
+            } else {
+                DynamicAct.getNewInstance(false).setNetworkListener(listener).getDynamic(true, groupID, count);
+            }
         }
 
     }

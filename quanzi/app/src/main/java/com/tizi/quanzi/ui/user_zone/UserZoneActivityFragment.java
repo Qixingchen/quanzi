@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -31,6 +32,7 @@ import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
+import com.tizi.quanzi.ui.dyns.DynsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,7 @@ public class UserZoneActivityFragment extends BaseFragment {
     private CircleImageView userFace;
     private Button sendMessage;
     private OtherUserInfo otherUserInfo;
+    private RelativeLayout userFriendZone;
 
     public UserZoneActivityFragment() {
     }
@@ -71,6 +74,7 @@ public class UserZoneActivityFragment extends BaseFragment {
         userXingzuo = (TextView) view.findViewById(R.id.user_xingzuo);
         userLocation = (TextView) view.findViewById(R.id.user_location);
         userSex = (TextView) view.findViewById(R.id.user_sex);
+        userFriendZone = (RelativeLayout) view.findViewById(R.id.user_friend_zone);
     }
 
     @Override
@@ -166,6 +170,16 @@ public class UserZoneActivityFragment extends BaseFragment {
                     }
                 }).getPrivateChatConvID(otherUserInfo.id);
 
+            }
+        });
+
+        userFriendZone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent friend = new Intent(mContext, DynsActivity.class);
+                friend.putExtra("isUser", true);
+                friend.putExtra("userID", otherUserInfo.id);
+                startActivity(friend);
             }
         });
     }

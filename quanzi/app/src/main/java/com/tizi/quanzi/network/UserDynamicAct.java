@@ -48,12 +48,12 @@ public class UserDynamicAct extends RetrofitNetworkAbs {
     /**
      * 获取动态
      *
-     * @param start 开始的序号
+     * @param userID 想要获取动态的用户的ID
+     * @param start  开始的序号
      */
-    public void getGroupDynamic(int start) {
+    public void getDynamic(String userID, int start) {
 
-
-        dynsSer.findDyns(start, StaticField.Limit.DynamicLimit).enqueue(new Callback<com.tizi.quanzi.gson.Dyns>() {
+        dynsSer.findDyns(userID, start, StaticField.Limit.DynamicLimit).enqueue(new Callback<com.tizi.quanzi.gson.Dyns>() {
             @Override
             public void onResponse(retrofit.Response<com.tizi.quanzi.gson.Dyns> response, Retrofit retrofit) {
                 myOnResponse(response);

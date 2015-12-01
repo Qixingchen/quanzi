@@ -29,7 +29,7 @@ public class DynsActivityFragment extends BaseFragment {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private String themeID, GroupID;
+    private String themeID, GroupID, themeAD;
     private boolean isAllLoaded = false;
     private int page = 0;
     private boolean isUser;
@@ -65,9 +65,10 @@ public class DynsActivityFragment extends BaseFragment {
         }
         themeID = getActivity().getIntent().getStringExtra("themeID");
         GroupID = getActivity().getIntent().getStringExtra("groupID");
+        themeAD = getActivity().getIntent().getStringExtra("themeAD");
         isUser = getActivity().getIntent().getBooleanExtra("isUser", false);
 
-        dynsAdapter = new DynsAdapter(dynsList, getContext(), isUser);
+        dynsAdapter = new DynsAdapter(dynsList, themeAD, getContext(), isUser);
         dynsAdapter.setShowUser(false);
         dynsAdapter.setOnclick(new DynsAdapter.Onclick() {
             @Override

@@ -89,6 +89,7 @@ public class ThemesPagerAdapter extends PagerAdapter {
             public void onClick(View v) {
                 Intent dynsIntent = new Intent(App.getApplication(), DynsActivity.class);
                 dynsIntent.putExtra("themeID", act.id);
+                dynsIntent.putExtra("themeAD", act.adUrl);
                 dynsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 App.getApplication().startActivity(dynsIntent);
             }

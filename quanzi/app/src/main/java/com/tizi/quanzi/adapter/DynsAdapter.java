@@ -6,7 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.log.Log;
@@ -20,9 +22,11 @@ import java.util.List;
  * Created by qixingchen on 15/8/19.
  * 动态
  */
-public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder> {
+public class DynsAdapter extends RecyclerViewAdapterAbs {
 
     private static final String TAG = DynsAdapter.class.getSimpleName();
+    private static final int AD = 1;
+    private static final int DYN_ITEM = 2;
     private SortedList<Dyns.DynsEntity> dynsList = new SortedList<>(Dyns.DynsEntity.class,
             new SortedList.Callback<Dyns.DynsEntity>() {
                 @Override
@@ -67,19 +71,23 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
     private Onclick onclick;
     private boolean showUser = false;
     private boolean isUser = false;
+    private String themeADImage;
 
     /**
-     * @param dynsList 动态List
-     * @param context  上下文
+     * @param dynsList     动态List
+     * @param themeAdImage 活动的广告图片,null表示没有广告
+     * @param context      上下文
+     * @param isUser       是否是用户动态
      *
      * @see com.tizi.quanzi.gson.Dyns.DynsEntity
      */
-    public DynsAdapter(List<Dyns.DynsEntity> dynsList, Context context, boolean isUser) {
+    public DynsAdapter(List<Dyns.DynsEntity> dynsList, String themeAdImage, Context context, boolean isUser) {
         if (dynsList != null) {
             this.dynsList.beginBatchedUpdates();
             this.dynsList.addAll(dynsList);
             this.dynsList.endBatchedUpdates();
         }
+        this.themeADImage = themeAdImage;
         this.mContext = context;
         this.isUser = isUser;
     }
@@ -98,68 +106,99 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
      * @see com.tizi.quanzi.adapter.DynsAdapter.DynsViewHolder
      */
     @Override
-    public DynsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_dyn, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        DynsViewHolder vh = new DynsViewHolder(v);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v;
+        RecyclerView.ViewHolder vh;
+        switch (viewType) {
+            case DYN_ITEM:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_dyn, parent, false);
+                vh = new DynsViewHolder(v);
+                break;
+            case AD:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_theme_ad, parent, false);
+                vh = new ADViewHolder(v);
+                break;
+            default:
+                vh = null;
+        }
         return vh;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0 && themeADImage != null) {
+            return AD;
+        }
+        return DYN_ITEM;
+    }
 
     /**
      * 发生绑定时，为viewHolder的元素赋值
      *
-     * @param holder   被绑定的ViewHolder
-     * @param position 列表位置
+     * @param viewHolder 被绑定的ViewHolder
+     * @param position   列表位置
      */
     @Override
-    public void onBindViewHolder(DynsViewHolder holder, final int position) {
-        final Dyns.DynsEntity dyns = dynsList.get(position);
-        DynItem dynItem = new DynItem(dyns, holder.view, showUser, isUser, mContext);
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        //点击回调
-        dynItem.contentTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onclick != null) {
-                    onclick.click(dyns);
-                } else {
-                    Log.w(TAG, "Onclick 回调为空");
-                }
-            }
-        });
+        if (ADViewHolder.class.isInstance(viewHolder)) {
+            ADViewHolder vh = (ADViewHolder) viewHolder;
+            Picasso.with(vh.adImageView.getContext()).load(themeADImage).into(vh.adImageView);
+            return;
+        }
 
-        dynItem.contentTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+
+        if (DynsViewHolder.class.isInstance(viewHolder)) {
+            DynsViewHolder holder = (DynsViewHolder) viewHolder;
+            int addtion = themeADImage == null ? 0 : 1;
+            final Dyns.DynsEntity dyns = dynsList.get(position - addtion);
+            DynItem dynItem = new DynItem(dyns, holder.view, showUser, isUser, mContext);
+
+            //点击回调
+            dynItem.contentTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     if (onclick != null) {
                         onclick.click(dyns);
                     } else {
                         Log.w(TAG, "Onclick 回调为空");
                     }
                 }
-            }
-        });
+            });
 
-        holder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onclick != null) {
-                    onclick.click(dyns);
-                } else {
-                    Log.w(TAG, "Onclick 回调为空");
+            dynItem.contentTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        if (onclick != null) {
+                            onclick.click(dyns);
+                        } else {
+                            Log.w(TAG, "Onclick 回调为空");
+                        }
+                    }
                 }
-            }
-        });
+            });
 
-        //加载更多
-        if (position == dynsList.size() - 1) {
-            if (needMore != null) {
-                needMore.needMore();
-            } else {
-                Log.w(TAG, "needMore 回调为空");
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onclick != null) {
+                        onclick.click(dyns);
+                    } else {
+                        Log.w(TAG, "Onclick 回调为空");
+                    }
+                }
+            });
+
+            //加载更多
+            if (position == dynsList.size() - 1) {
+                if (needMore != null) {
+                    needMore.needMore();
+                } else {
+                    Log.w(TAG, "needMore 回调为空");
+                }
             }
         }
     }
@@ -169,7 +208,8 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
      */
     @Override
     public int getItemCount() {
-        return dynsList == null ? 0 : dynsList.size();
+        int addtion = themeADImage == null ? 0 : 1;
+        return dynsList == null ? addtion : dynsList.size() + addtion;
     }
 
     /**
@@ -211,6 +251,15 @@ public class DynsAdapter extends RecyclerView.Adapter<DynsAdapter.DynsViewHolder
         public DynsViewHolder(View v) {
             super(v);
             view = v;
+        }
+    }
+
+    class ADViewHolder extends RecyclerView.ViewHolder {
+        private ImageView adImageView;
+
+        public ADViewHolder(View itemView) {
+            super(itemView);
+            adImageView = (ImageView) itemView.findViewById(R.id.theme_ad_image);
         }
     }
 

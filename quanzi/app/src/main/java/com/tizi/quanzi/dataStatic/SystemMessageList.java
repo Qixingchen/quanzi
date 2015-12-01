@@ -80,4 +80,10 @@ public class SystemMessageList extends ConvGroupAbsList<SystemMessagePair> {
         }
         return false;
     }
+
+    public void removeAllUnreadMess() {
+        unreadMessageIDSet.clear();
+        noticeAllCallBack();
+
+    }
 }

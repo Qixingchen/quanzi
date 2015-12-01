@@ -1,8 +1,10 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
 
+    public final static int DELETE_ALL = -1;
     private List<SystemMessagePair> systemMessagePairs;
     private Context mContext;
     private Onclick onclick;
@@ -67,7 +70,10 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemViewType(int position) {
-        return systemMessagePairs.get(position).systemMessage.sys_msg_flag;
+        if (position == 0) {
+            return DELETE_ALL;
+        }
+        return systemMessagePairs.get(position - 1).systemMessage.sys_msg_flag;
     }
 
     /**
@@ -83,6 +89,12 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         View v;
         RecyclerView.ViewHolder vh;
         switch (viewType) {
+            case DELETE_ALL:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_delete_all_message, parent, false);
+                vh = new DeleteAllViewHolder(v);
+                break;
+
             case StaticField.SystemMessAttrName.systemFlag.invitation:
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_system_mess, parent, false);
@@ -112,7 +124,28 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        SystemMessagePair systemMessagePair = systemMessagePairs.get(position);
+
+        if (DeleteAllViewHolder.class.isInstance(holder)) {
+            final DeleteAllViewHolder vh = (DeleteAllViewHolder) holder;
+            vh.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(vh.view.getContext()).setTitle("确认清空系统消息么")
+                            .setPositiveButton("清空", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DBAct.getInstance().deleteAllSystemMessage();
+                                    SystemMessageList.getInstance().removeAllUnreadMess();
+                                    systemMessagePairs.clear();
+                                    notifyDataSetChanged();
+                                }
+                            }).setNegativeButton("取消", null).show();
+                }
+            });
+            return;
+        }
+
+        SystemMessagePair systemMessagePair = systemMessagePairs.get(position - 1);
         final SystemMessage systemMessage = systemMessagePair.systemMessage;
         if (!systemMessage.isread) {
             systemMessage.isread = true;
@@ -252,7 +285,10 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemCount() {
-        return systemMessagePairs == null ? 0 : systemMessagePairs.size();
+        if (systemMessagePairs == null) {
+            return 0;
+        }
+        return systemMessagePairs.size() == 0 ? 0 : systemMessagePairs.size() + 1;
     }
 
 
@@ -350,5 +386,28 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
             reply_content = (TextView) v.findViewById(R.id.reply_content);
         }
 
+    }
+
+    static class DeleteAllViewHolder extends RecyclerView.ViewHolder {
+
+        private View view;
+
+        public DeleteAllViewHolder(final View itemView) {
+            super(itemView);
+            this.view = itemView;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(itemView.getContext()).setTitle("确认清空系统消息么")
+                            .setPositiveButton("清空", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DBAct.getInstance().deleteAllSystemMessage();
+                                    SystemMessageList.getInstance().removeAllUnreadMess();
+                                }
+                            }).setNegativeButton("取消", null).show();
+                }
+            });
+        }
     }
 }

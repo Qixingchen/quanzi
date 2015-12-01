@@ -542,4 +542,11 @@ public class DBAct {
         db.delete(DataBaseHelper.chatHistorySQLName.TableName, DataBaseHelper.chatHistorySQLName.messID + "=?",
                 new String[]{MessID});
     }
+
+    /**
+     * 删除所有的系统消息
+     */
+    public void deleteAllSystemMessage() {
+        db.delete(DataBaseHelper.SystemMessSQLName.TableName, null, null);
+    }
 }

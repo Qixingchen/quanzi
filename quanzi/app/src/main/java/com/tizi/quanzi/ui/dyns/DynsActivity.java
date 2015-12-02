@@ -1,7 +1,6 @@
 package com.tizi.quanzi.ui.dyns;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
@@ -144,10 +143,10 @@ public class DynsActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void countdown(int s) {
+                    public void countdown(long remainingS, long goneS) {
 
                     }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 2000);
+                }).setTimer(2000, 2000).start();
 
             }
             return true;

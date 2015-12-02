@@ -210,11 +210,11 @@ public class ForgetPasswordFragment extends BaseFragment {
             }
 
             @Override
-            public void countdown(int s) {
-                String countDown = s + "秒后重新获取";
+            public void countdown(long remainingS, long goneS) {
+                String countDown = remainingS + "秒后重新获取";
                 getVoiceSignButton.setText(countDown);
                 getSignButton.setText(countDown);
             }
-        }).execute(1000 * StaticField.Limit.SIGN_CODE_COUNTDOWN);
+        }).setTimer(1000 * StaticField.Limit.SIGN_CODE_COUNTDOWN).start();
     }
 }

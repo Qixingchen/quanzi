@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.Vibrator;
@@ -197,10 +196,10 @@ public class ChatActivity extends BaseActivity {
                             }
 
                             @Override
-                            public void countdown(int s) {
-                                recordTimeText.setText(String.format("%ds  /  -%ds", 60 - s, s));
+                            public void countdown(long remainingS, long goneS) {
+                                recordTimeText.setText(String.format("%ds  /  -%ds", goneS, remainingS));
                             }
-                        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 60 * 1000);
+                        }).setTimer(60 * 1000).start();
                     } else if (recodeAudio.AllPermissionGrant()) {
                         Toast.makeText(context, "录音初始化失败", Toast.LENGTH_SHORT).show();
                     }
@@ -214,7 +213,7 @@ public class ChatActivity extends BaseActivity {
                     InputMessage.setVisibility(View.VISIBLE);
                     String Filepath = recodeAudio.stopAndReturnFilePath();
                     if (timer != null) {
-                        timer.cancel(false);
+                        timer.cancel();
                     }
                     if (Filepath != null && Filepath.compareTo("less") != 0) {
                         Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
@@ -245,7 +244,7 @@ public class ChatActivity extends BaseActivity {
                             v.vibrate(100);
                         }
                         if (timer != null) {
-                            timer.cancel(false);
+                            timer.cancel();
                         }
                         recodeAudio.stopAndReturnFilePath();
                         recordPanel.setVisibility(View.GONE);
@@ -526,10 +525,10 @@ public class ChatActivity extends BaseActivity {
             }
 
             @Override
-            public void countdown(int s) {
+            public void countdown(long remainingS, long goneS) {
 
             }
-        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 500);
+        }).setTimer(500).start();
 
 
         chatmessagerecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -556,7 +555,9 @@ public class ChatActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         LastPosition = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
-
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     @Override

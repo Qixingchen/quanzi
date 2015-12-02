@@ -2,7 +2,6 @@ package com.tizi.quanzi.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +39,7 @@ public class ThemesPagerAdapter extends PagerAdapter {
         super.finalize();
         for (Timer t : timer) {
             if (t != null) {
-                t.cancel(true);
+                t.cancel();
             }
         }
     }
@@ -60,6 +59,7 @@ public class ThemesPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        timer[position].cancel();
         container.removeView((View) object);
     }
 
@@ -103,7 +103,7 @@ public class ThemesPagerAdapter extends PagerAdapter {
         int countDown = FriendTime.getThemeCountDown(act.beginTime, act.endTime);
         assert timer != null;
         if (timer[position] != null) {
-            timer[position].cancel(true);
+            timer[position].cancel();
         }
         timer[position] = new Timer();
         timer[position].setOnResult(new Timer.OnResult() {
@@ -113,11 +113,11 @@ public class ThemesPagerAdapter extends PagerAdapter {
             }
 
             @Override
-            public void countdown(int s) {
+            public void countdown(long s, long goneS) {
                 countDownTextView.setText(String.format("%d:%2d:%2d", s / 3600, (s % 3600) / 60,
                         s % 60));
             }
-        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, countDown * 1000);
+        }).setTimer(countDown * 1000).start();
 
         return rootView;
     }

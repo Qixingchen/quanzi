@@ -7,6 +7,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
@@ -128,8 +129,12 @@ public class SendMessage {
                     @Override
                     public void done(AVIMException e) {
                         if (null != e) {
-                            onMessageSendError(e.getMessage(), convID);
-                            e.printStackTrace();
+                            if (BuildConfig.DEBUG) {
+                                onMessageSendError(e.getMessage(), convID);
+                            } else {
+                                onMessageSendError("网络错误", convID);
+                                e.printStackTrace();
+                            }
                         } else {
                             onMessageSendOK(finalMessage, conversation.getConversationId());
                         }
@@ -154,8 +159,12 @@ public class SendMessage {
                 @Override
                 public void done(AVIMException e) {
                     if (e != null) {
-                        e.printStackTrace();
-                        onMessageSendError(e.getMessage(), convID);
+                        if (BuildConfig.DEBUG) {
+                            onMessageSendError(e.getMessage(), convID);
+                        } else {
+                            onMessageSendError("网络错误", convID);
+                            e.printStackTrace();
+                        }
                     } else {
                         onMessageSendOK(finalMessage, conversation.getConversationId());
                     }
@@ -181,8 +190,12 @@ public class SendMessage {
                     @Override
                     public void done(AVIMException e) {
                         if (null != e) {
-                            onMessageSendError(e.getMessage(), convID);
-                            e.printStackTrace();
+                            if (BuildConfig.DEBUG) {
+                                onMessageSendError(e.getMessage(), convID);
+                            } else {
+                                onMessageSendError("网络错误", convID);
+                                e.printStackTrace();
+                            }
                         } else {
                             onMessageSendOK(message, conversation.getConversationId());
                         }
@@ -208,8 +221,12 @@ public class SendMessage {
                             @Override
                             public void done(AVIMException e) {
                                 if (null != e) {
-                                    e.printStackTrace();
-                                    subscriber.onError(e);
+                                    if (BuildConfig.DEBUG) {
+                                        onMessageSendError(e.getMessage(), convID);
+                                    } else {
+                                        onMessageSendError("网络错误", convID);
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     subscriber.onNext(new RXSendOK(message, conversation.getConversationId()));
                                 }

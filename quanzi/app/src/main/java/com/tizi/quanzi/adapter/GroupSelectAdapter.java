@@ -1,7 +1,6 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,8 +148,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                     } else {
                                         text = String.format("%s取消了报名[%s]", username, act.title);
                                     }
-                                    Timer timer = new Timer();
-                                    timer.setOnResult(new Timer.OnResult() {
+                                    new Timer().setOnResult(new Timer.OnResult() {
                                         @Override
                                         public void OK() {
                                             boolean selectAfter = !isSignedIn.get(position);
@@ -162,18 +160,17 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                         }
 
                                         @Override
-                                        public void countdown(int s) {
+                                        public void countdown(long remainingS, long goneS) {
 
                                         }
-                                    }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 1200);
+                                    }).setTimer(1200, 1200).start();
                                     SendMessage.getInstance().sendTextMessage(group.convId, text,
                                             SendMessage.setMessAttr(group.ID, StaticField.ConvType.GROUP, true));
                                 }
 
                                 @Override
                                 public void onError(String Message) {
-                                    Timer timer = new Timer();
-                                    timer.setOnResult(new Timer.OnResult() {
+                                    new Timer().setOnResult(new Timer.OnResult() {
                                         @Override
                                         public void OK() {
                                             signUpGroupVH.progressBar.setVisibility(View.GONE);
@@ -181,10 +178,11 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                         }
 
                                         @Override
-                                        public void countdown(int s) {
+                                        public void countdown(long remainingS, long goneS) {
 
                                         }
-                                    }).execute(2000);
+
+                                    }).setTimer(1200, 1200).start();
                                 }
                             }).signUP(act.id, group.ID, isSignedIn.get(position) ? 0 : 1);
 

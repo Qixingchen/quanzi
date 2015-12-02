@@ -2,7 +2,6 @@ package com.tizi.quanzi.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,6 +58,18 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
         return vh;
     }
 
+
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (ThemesBoomViewHolder.class.isInstance(holder)) {
+            ThemesBoomViewHolder themeVH = (ThemesBoomViewHolder) holder;
+            if (themeVH.timer != null) {
+                themeVH.timer.cancel();
+            }
+        }
+    }
+
     /**
      * 发生绑定时，为viewHolder的元素赋值
      *
@@ -78,7 +89,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
         super.onViewRecycled(holder);
         if (ThemesBoomViewHolder.class.isInstance(holder)) {
             ThemesBoomViewHolder themeVH = (ThemesBoomViewHolder) holder;
-            themeVH.timer.cancel(true);
+            themeVH.timer.cancel();
         }
     }
 
@@ -161,7 +172,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
             int countDown = FriendTime.getThemeCountDown(startTime, endTime);
 
             if (timer != null) {
-                timer.cancel(true);
+                timer.cancel();
             }
             timer = new Timer();
             timer.setOnResult(new Timer.OnResult() {
@@ -170,11 +181,11 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                 }
 
                 @Override
-                public void countdown(int s) {
+                public void countdown(long s, long goneS) {
                     countdownTime.setText(String.format("%s还剩%d:%d:%d结束", act.title, s / 3600, (s % 3600) / 60,
                             s % 60));
                 }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, countDown * 1000);
+            }).setTimer(countDown * 1000).start();
         }
     }
 }

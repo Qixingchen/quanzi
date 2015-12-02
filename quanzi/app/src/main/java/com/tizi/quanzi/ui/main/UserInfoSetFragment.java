@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -250,10 +249,10 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     }
 
                     @Override
-                    public void countdown(int s) {
+                    public void countdown(long remainingS, long goneS) {
 
                     }
-                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 10 * 1000);
+                }).setTimer(10 * 1000).start();
                 break;
             case R.id.userSign:
                 input.setHint("输入签名");

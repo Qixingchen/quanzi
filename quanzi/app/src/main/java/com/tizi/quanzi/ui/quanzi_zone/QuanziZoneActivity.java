@@ -1,7 +1,6 @@
 package com.tizi.quanzi.ui.quanzi_zone;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.Menu;
@@ -162,10 +161,10 @@ public class QuanziZoneActivity extends BaseActivity {
             }
 
             @Override
-            public void countdown(int s) {
+            public void countdown(long remainingS, long goneS) {
 
             }
-        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 200);
+        }).setTimer(200).start();
     }
 
     public void callForTagFragment(ArrayList<AllTags.TagsEntity> tags) {

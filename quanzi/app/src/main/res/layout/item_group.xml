@@ -77,6 +77,7 @@
                     android:maxLines="1"
                     android:textColor="#38B6C2"
                     android:textSize="12sp"
+                    android:visibility="gone"
                     tools:text="lastCommit\n111"/>
 
             </LinearLayout>
@@ -88,8 +89,8 @@
 
     <TextView
         android:id="@+id/unread_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_gravity="end"
         android:layout_marginEnd="7dp"
         android:layout_marginTop="7dp"

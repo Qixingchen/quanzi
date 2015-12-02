@@ -208,6 +208,13 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorAccent"/>
+
     </LinearLayout>
 
 </FrameLayout>

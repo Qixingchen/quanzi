@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:background="@color/md_purple_700">
 
     <TextView
         android:id="@+id/theme_title"
@@ -16,18 +18,21 @@
         android:textSize="@dimen/small_title_text_size"
         tools:text="脱单大作战"/>
 
-    <RelativeLayout
+    <android.support.percent.PercentRelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_marginEnd="48dp"
         android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1">
 
         <ImageView
             android:id="@+id/theme_pic"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginBottom="40dp"
+            app:layout_aspectRatio="100%"
+            app:layout_widthPercent="100%"
             tools:background="@color/md_green_400"/>
 
         <TextView
@@ -45,15 +50,14 @@
         <TextView
             android:id="@+id/theme_content"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:maxLines="3"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/theme_pic"
+            android:maxLines="1"
             android:textColor="@color/md_white"
             android:textSize="@dimen/sub_title_text_size"
-            tools:text="123"
-            />
+            tools:text="123"/>
 
-    </RelativeLayout>
+    </android.support.percent.PercentRelativeLayout>
 
 
 </LinearLayout>

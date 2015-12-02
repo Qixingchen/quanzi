@@ -104,7 +104,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 groupAllInfo == null ? null : groupAllInfo.group.id);
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
-        groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, Tool.getSrceenWidthDP() / 60));
+        groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, (Tool.getSrceenWidthDP() - 16) / 72));
         groupFaceImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

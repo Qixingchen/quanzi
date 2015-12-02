@@ -9,10 +9,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
@@ -57,7 +55,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="忘记密码？"
-            android:textColor="@color/md_white"
+            android:textColor="#B6B6B6"
             android:textSize="15sp"/>
 
         <LinearLayout
@@ -71,8 +69,10 @@
                 android:id="@+id/new_account"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
-                android:background="?attr/selectableItemBackground"
-                android:text="注册新账号"
+                android:background="@color/md_white"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="注册"
+                android:textColor="#313131"
                 android:textSize="@dimen/normal_edit_text_size"/>
 
             <Button
@@ -81,8 +81,10 @@
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="60dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@color/md_white"
+                android:foreground="?attr/selectableItemBackground"
                 android:text="@string/login"
+                android:textColor="#313131"
                 android:textSize="@dimen/normal_edit_text_size"/>
 
         </LinearLayout>
@@ -101,8 +103,15 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="随意看看"
-                android:textColor="@color/md_white"
+                android:textColor="#6F6482"
                 android:textSize="@dimen/normal_edit_text_size"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Copyright (c) 2015 tizi All rights reserved"
+                android:textColor="#B6B6B6"/>
         </LinearLayout>
 
     </LinearLayout>

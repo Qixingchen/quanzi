@@ -70,6 +70,7 @@ public class LoginFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
         phoneNumberInputLayout.setError(getString(R.string.phone_number_error));
+        phoneNumberInputLayout.setErrorEnabled(false);
         /*游客登陆*/
         mActivity.findViewById(R.id.guest_user_button).setOnClickListener(new View.OnClickListener() {
             @Override

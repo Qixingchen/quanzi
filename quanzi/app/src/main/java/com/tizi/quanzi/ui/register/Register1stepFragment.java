@@ -104,8 +104,6 @@ public class Register1stepFragment extends BaseFragment {
         userLicense.append(license);
         MakeSpannableString.makeLinksFocusable(userLicense);
 
-        phoneNumberInputLayout.setError(mActivity.getString(R.string.phone_number_error));
-
         agreeBox.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override

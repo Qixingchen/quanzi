@@ -27,6 +27,8 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
             android:layout_weight="1"
             android:orientation="horizontal">
@@ -35,7 +37,9 @@
                 android:id="@+id/detail_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
+                android:background="?attr/selectableItemBackground"
                 android:src="@drawable/ic_detail"/>
 
             <ImageButton
@@ -43,6 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:background="?attr/selectableItemBackground"
                 android:src="@drawable/ic_boom"/>
 
             <TextView
@@ -58,7 +63,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackground"
                 android:src="@drawable/ic_group_sign_up"/>
 
 

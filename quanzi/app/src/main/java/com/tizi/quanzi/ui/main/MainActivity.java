@@ -21,10 +21,12 @@ import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.FragmentResume;
+import com.tizi.quanzi.tool.GetAppVersion;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
+import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
 
 
 public class MainActivity extends BaseActivity {
@@ -41,8 +43,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // TODO: 15/10/13 play政策不允许做这个
-        //GetAppVersion.doit(this);
+        // TODO: 15/10/13 play政策不允许做这个 do not forget delete
+        GetAppVersion.doit(this);
         Intent joinGroup = getIntent();
         if (Intent.ACTION_VIEW.equals(joinGroup.getAction())) {
             Uri uri = joinGroup.getData();
@@ -134,16 +136,24 @@ public class MainActivity extends BaseActivity {
     /*订阅通知界面的恢复和暂停*/
     @Subscribe
     public void onFragmentResume(FragmentResume fragmentResume) {
-        if (fragmentResume.FramgentName.compareTo(NotifiMessageFragment.class.getSimpleName()) != 0) {
-            return;
+        if (fragmentResume.FramgentName.equals(NotifiMessageFragment.class.getSimpleName())) {
+
+
+            if (menu == null) {
+                return;
+            }
+            if (fragmentResume.resumeOrPause) {
+                menu.findItem(R.id.action_notifi_message).setVisible(false);
+            } else {
+                menu.findItem(R.id.action_notifi_message).setVisible(true);
+            }
         }
-        if (menu == null) {
-            return;
-        }
-        if (fragmentResume.resumeOrPause) {
-            menu.findItem(R.id.action_notifi_message).setVisible(false);
-        } else {
-            menu.findItem(R.id.action_notifi_message).setVisible(true);
+        if (fragmentResume.FramgentName.equals(ThemeSignUpFragment.class.getSimpleName())) {
+            if (fragmentResume.resumeOrPause) {
+                toolbar.setTitle("报名");
+            } else {
+                toolbar.setTitle(toolbarTitle);
+            }
         }
     }
 

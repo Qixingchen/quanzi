@@ -75,8 +75,6 @@ public class ForgetPasswordFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
 
-        phoneNumberInputLayout.setError(mActivity.getString(R.string.phone_number_error));
-
         getSignButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

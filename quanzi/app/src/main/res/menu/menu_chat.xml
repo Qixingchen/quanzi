@@ -4,9 +4,10 @@
       tools:context="com.tizi.quanzi.ui.ChatActivity">
     <item
         android:id="@+id/action_zone"
+        android:icon="@drawable/ic_star_border_grey_36dp"
         android:orderInCategory="100"
         android:title="@string/menu_zone"
-        app:showAsAction="withText|always"/>
+        app:showAsAction="always"/>
     <item
         android:id="@+id/action_clear_history"
         android:title="清空记录"

@@ -33,7 +33,7 @@ public class GetAppVersion {
                     Log.i(TAG, "不允许更新");
                     return;
                 }
-                ApiInfoGson apiInfo = (ApiInfoGson) ts;
+                final ApiInfoGson apiInfo = (ApiInfoGson) ts;
                 String appVer = BuildConfig.VERSION_NAME;
                 if (isNewer(appVer, apiInfo.info.androidVersion)) {
                     Log.i(TAG, "发现更新");
@@ -43,7 +43,7 @@ public class GetAppVersion {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent installApk = new Intent(Intent.ACTION_VIEW);
-                                    installApk.setData(Uri.parse("market://details?id=com.tizi.quanzi"));
+                                    installApk.setData(Uri.parse(apiInfo.info.url));
                                     context.startActivity(installApk);
                                 }
                             })

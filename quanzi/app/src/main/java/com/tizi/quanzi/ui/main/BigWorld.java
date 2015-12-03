@@ -14,17 +14,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.gson.Login;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.UserInfoSetting;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.GetShareIntent;
@@ -48,8 +48,7 @@ public class BigWorld extends BaseFragment {
     private String mParam2;
 
     private TextView userName, userSign;
-    private NetworkImageView userFace;
-    private ImageView userSex, userBackground;
+    private ImageView userSex, userBackground, userFace;
     private View Share, Setting, userInfoLayout, friendZone;
     private Button logout;
     private RequreForImage requreForImage;
@@ -98,7 +97,7 @@ public class BigWorld extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        userFace = (NetworkImageView) view.findViewById(R.id.userFace);
+        userFace = (ImageView) view.findViewById(R.id.userFace);
         userName = (TextView) view.findViewById(R.id.userName);
         userSex = (ImageView) view.findViewById(R.id.userSex);
         userSign = (TextView) view.findViewById(R.id.userSign);
@@ -121,8 +120,17 @@ public class BigWorld extends BaseFragment {
         if (userInfo == null || userInfo.getIcon() == null) {
             return;
         }
-        userFace.setImageUrl(userInfo.getIcon(),
-                GetVolley.getmInstance().getImageLoader());
+
+        Transformation transformation = new RoundedTransformationBuilder()
+                .cornerRadiusDp(4)
+                .oval(false)
+                .build();
+
+        Picasso.with(mContext)
+                .load(userInfo.getIcon())
+                .fit()
+                .transform(transformation)
+                .into(userFace);
 
         if (userInfo.bg == null) {
             Picasso.with(mContext).load(R.drawable.face).resize(1080, 608).into(userBackground);

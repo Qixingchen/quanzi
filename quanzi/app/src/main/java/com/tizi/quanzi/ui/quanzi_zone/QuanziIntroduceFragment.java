@@ -97,11 +97,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupDynsRecyclerView.setHasFixedSize(true);
 
         /*用户*/
-        groupUserAdapter = new GroupUserAdapter(mActivity,
-                groupAllInfo == null ? null : groupAllInfo.memlist,
-                groupAllInfo != null && groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0,
-                groupAllInfo == null ? "" : groupAllInfo.group.createUser,
-                groupAllInfo == null ? null : groupAllInfo.group.id);
+        groupUserAdapter = new GroupUserAdapter(mActivity, null, false, null, null);
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
         groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, (Tool.getSrceenWidthDP() - 16) / 72));
@@ -265,6 +261,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 }
             }
         }
+        ((QuanziZoneActivity) mActivity).callForUpdateGroupInfo();
     }
 
     private void quaryMore(String groupID, int lastIndex) {

@@ -62,22 +62,6 @@ public class QuanziZoneActivity extends BaseActivity {
             GroupID = GroupList.getInstance().getGroupIDByConvID(convID);
             groupID = GroupID;
         }
-        GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
-            @Override
-            public void onOK(Object ts) {
-                GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
-                mGroupAllInfo = groupAllInfo;
-                if (quanziIntroduceFragment != null) {
-                    mGroupAllInfo.group.groupNo = GroupID;
-                    quanziIntroduceFragment.setGroupInfo(groupAllInfo);
-                }
-            }
-
-            @Override
-            public void onError(String Message) {
-
-            }
-        }).queryGroup(GroupID);
     }
 
     @Override
@@ -177,5 +161,24 @@ public class QuanziZoneActivity extends BaseActivity {
         quanziSetFragment.setTags(tags);
         getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().beginTransaction().show(quanziSetFragment).commit();
+    }
+
+    public void callForUpdateGroupInfo() {
+        GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
+                mGroupAllInfo = groupAllInfo;
+                if (quanziIntroduceFragment != null) {
+                    mGroupAllInfo.group.groupNo = groupID;
+                    quanziIntroduceFragment.setGroupInfo(groupAllInfo);
+                }
+            }
+
+            @Override
+            public void onError(String Message) {
+
+            }
+        }).queryGroup(groupID);
     }
 }

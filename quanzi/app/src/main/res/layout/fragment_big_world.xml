@@ -41,12 +41,13 @@
                 android:layout_marginTop="11dp"
                 android:orientation="horizontal">
 
-                <com.android.volley.toolbox.NetworkImageView
+                <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/userFace"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="9dp"
+                    app:riv_corner_radius="4dip"
                     tools:background="@drawable/face"/>
 
                 <LinearLayout
@@ -95,7 +96,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/colorAccent"/>
+                android:background="@color/colorDiv"/>
 
             <LinearLayout
                 android:id="@+id/friend_zone"
@@ -125,7 +126,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/colorAccent"/>
+                android:background="@color/colorDiv"/>
 
             <LinearLayout
                 android:id="@+id/share"
@@ -155,7 +156,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/colorAccent"/>
+                android:background="@color/colorDiv"/>
 
             <LinearLayout
                 android:id="@+id/setting"
@@ -185,7 +186,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/colorAccent"/>
+                android:background="@color/colorDiv"/>
 
             <Button
                 android:id="@+id/log_out"

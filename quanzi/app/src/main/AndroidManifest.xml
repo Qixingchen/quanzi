@@ -144,8 +144,7 @@
         </activity>
         <activity
             android:name=".ui.user_zone.UserZoneActivity"
-            android:label="@string/title_activity_user_zone"
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_user_zone">
         </activity>
         <activity
             android:name=".ui.dyns.DynsActivity"

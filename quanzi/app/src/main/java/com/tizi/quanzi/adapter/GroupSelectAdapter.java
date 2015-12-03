@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
@@ -126,6 +127,10 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if (act == null) {
+                                Toast.makeText(mContext, "网络错误", Toast.LENGTH_LONG).show();
+                                return;
+                            }
                             signUpGroupVH.progressBar.setVisibility(View.VISIBLE);
                             signUpGroupVH.groupFace.setClickable(false);
 
@@ -169,12 +174,13 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                 }
 
                                 @Override
-                                public void onError(String Message) {
+                                public void onError(final String Message) {
                                     new Timer().setOnResult(new Timer.OnResult() {
                                         @Override
                                         public void OK() {
                                             signUpGroupVH.progressBar.setVisibility(View.GONE);
                                             signUpGroupVH.groupFace.setClickable(true);
+                                            Toast.makeText(mContext, Message, Toast.LENGTH_LONG).show();
                                         }
 
                                         @Override

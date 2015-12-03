@@ -49,7 +49,7 @@ public class BigWorld extends BaseFragment {
 
     private TextView userName, userSign;
     private ImageView userSex, userBackground, userFace;
-    private View Share, Setting, userInfoLayout, friendZone;
+    private View Share, Setting, userInfoLayout, friendZone, myZone;
     private Button logout;
     private RequreForImage requreForImage;
 
@@ -107,6 +107,7 @@ public class BigWorld extends BaseFragment {
         logout = (Button) view.findViewById(R.id.log_out);
         userBackground = (ImageView) view.findViewById(R.id.user_background);
         friendZone = view.findViewById(R.id.friend_zone);
+        myZone = view.findViewById(R.id.my_zone);
     }
 
     @Override
@@ -166,6 +167,19 @@ public class BigWorld extends BaseFragment {
                 }
                 Intent dyn = new Intent(mContext, DynsActivity.class);
                 dyn.putExtra("isUser", true);
+                startActivity(dyn);
+            }
+        });
+
+        myZone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(mContext);
+                }
+                Intent dyn = new Intent(mContext, DynsActivity.class);
+                dyn.putExtra("isUser", true);
+                dyn.putExtra("userID", AppStaticValue.getUserID());
                 startActivity(dyn);
             }
         });

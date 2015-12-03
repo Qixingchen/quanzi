@@ -55,11 +55,8 @@ public class GetThumbnailsUri {
     public static String maxDPHeiAndWei(String imageSourceUri, int MaxHei, int MaxWei, Context context) {
         int hei = getPXs(context, MaxHei);
         int wei = getPXs(context, MaxWei);
-        String ans = imageSourceUri + addUri + "/1/w/" + wei;
 
-        ans += "/h/" + hei;
-
-        return ans;
+        return maxHeiAndWei(imageSourceUri, hei, wei);
     }
 
     /**

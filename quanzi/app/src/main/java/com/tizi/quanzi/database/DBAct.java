@@ -549,4 +549,12 @@ public class DBAct {
     public void deleteAllSystemMessage() {
         db.delete(DataBaseHelper.SystemMessSQLName.TableName, null, null);
     }
+
+    /**
+     * 删除私聊记录
+     */
+    public void deletePriMessPair(String ID) {
+        db.delete(DataBaseHelper.privateMessGroupSQLNmae.TableName, DataBaseHelper.privateMessGroupSQLNmae.id + "=?",
+                new String[]{ID});
+    }
 }

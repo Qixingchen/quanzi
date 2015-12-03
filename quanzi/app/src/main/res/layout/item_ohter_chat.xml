@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:weightSum="1">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/chat_user_face"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -24,7 +24,7 @@
         android:orientation="vertical"
         android:paddingBottom="10dp"
         android:paddingEnd="10dp"
-        android:paddingStart="40dp"
+        android:paddingStart="22dp"
         android:paddingTop="10dp">
 
         <TextView
@@ -51,7 +51,7 @@
             tools:text="聊天内容sssssssssssssssssss"
             tools:visibility="visible"/>
 
-        <com.android.volley.toolbox.NetworkImageView
+        <ImageView
             android:id="@+id/contactImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

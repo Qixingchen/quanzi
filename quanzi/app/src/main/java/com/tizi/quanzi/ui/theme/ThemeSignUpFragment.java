@@ -2,7 +2,6 @@ package com.tizi.quanzi.ui.theme;
 
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,8 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
-import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.widget.AutoGridfitLayoutManager;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -69,7 +68,7 @@ public class ThemeSignUpFragment extends BaseFragment {
         groupSelectAdapter = new GroupSelectAdapter(GroupList.getInstance().getGroupList(),
                 mActivity, actID, GroupSelectAdapter.Theme_Sign_UP_Group);
         mGroupListRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(mActivity, Tool.getSrceenWidthDP() / 80);
+        mLayoutManager = new AutoGridfitLayoutManager(mContext, 80);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
         mGroupListRecyclerView.setAdapter(groupSelectAdapter);
 

@@ -21,8 +21,8 @@
             android:fitsSystemWindows="true"
             android:saveEnabled="false"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="88dp"
+            app:expandedTitleMarginStart="72dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <com.android.volley.toolbox.NetworkImageView
@@ -62,6 +62,26 @@
                 android:layout_marginStart="16dp"
                 android:orientation="vertical"
                 android:paddingTop="40dp">
+
+                <RelativeLayout
+                    android:id="@+id/user_friend_zone"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="相册"
+                        android:textSize="@dimen/small_title_text_size"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/colorDiv"/>
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -200,25 +220,6 @@
                     android:layout_marginTop="4dp"
                     android:background="@color/colorDiv"/>
 
-                <RelativeLayout
-                    android:id="@+id/user_friend_zone"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="相册"
-                        android:textSize="@dimen/small_title_text_size"/>
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@color/colorDiv"/>
 
                 <Button
                     android:id="@+id/send_message"

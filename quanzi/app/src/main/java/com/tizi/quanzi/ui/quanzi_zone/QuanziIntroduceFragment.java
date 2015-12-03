@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -42,6 +41,7 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.dyns.DynInfoFragment;
+import com.tizi.quanzi.widget.AutoGridfitLayoutManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,7 +100,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupUserAdapter = new GroupUserAdapter(mActivity, null, false, null, null);
 
         groupUsersRecyclerView.setAdapter(groupUserAdapter);
-        groupUsersRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, (Tool.getSrceenWidthDP() - 16) / 72));
+        groupUsersRecyclerView.setLayoutManager(new AutoGridfitLayoutManager(mContext, 72));
         groupFaceImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,17 +223,15 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
             collapsingtoolbar.setTitle(groupAllInfo.group.groupName);
             Picasso.with(mActivity).load(groupAllInfo.group.icon)
-                    .resize(GetThumbnailsUri.getPXs(mActivity, 120),
-                            GetThumbnailsUri.getPXs(mActivity, 120))
+                    .fit()
                     .into(groupFaceImageView);
 
             Picasso.with(mActivity).load(groupAllInfo.group.icon)
-                    .resize(GetThumbnailsUri.getPXs(mActivity, 360),
-                            GetThumbnailsUri.getPXs(mActivity, 280))
+                    .fit()
                     .into(zoneBackgroundImageView);
 
             if (groupAllInfo.group.notice != null) {
-                zoneSignTextview.setText(String.format("签名：%s", groupAllInfo.group.notice));
+                zoneSignTextview.setText(String.format("公告：%s", groupAllInfo.group.notice));
             }
             String tagsString = "";
             for (AllTags.TagsEntity tag : groupAllInfo.tagList) {
@@ -244,8 +242,9 @@ public class QuanziIntroduceFragment extends BaseFragment {
             lastIndex += StaticField.Limit.DynamicLimit;
         }
         if (groupAllInfo != null && groupUsersRecyclerView.getVisibility() == View.VISIBLE) {
-            groupUsersRecyclerView.getLayoutParams().height = (int) (70 * GetThumbnailsUri.getDpi(mActivity)
-                    * ((groupAllInfo.memlist.size() / (Tool.getSrceenWidthDP() / 60)) + 1));
+            int size = Math.min(groupAllInfo.memlist.size() + 1, 10);
+            groupUsersRecyclerView.getLayoutParams().height = (int) (76 * GetThumbnailsUri.getDpi(mActivity)
+                    * (((size - 1) / ((Tool.getSrceenWidthDP() - 16) / 72)) + 1));
         }
     }
 

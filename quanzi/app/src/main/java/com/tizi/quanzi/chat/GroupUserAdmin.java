@@ -224,13 +224,12 @@ public class GroupUserAdmin {
 
                         if (groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
                             return SendMessage.getInstance().sendRXTextMessage(convID,
-                                    String.format("你被 %s 踢出了群 %s OAQ",
+                                    String.format("你被[ %s ]踢出了群[ %s ]OAQ",
                                             MyUserInfo.getInstance().getUserInfo().getUserName(),
                                             groupAllInfo.group.groupName), attr);
                         } else {
                             return SendMessage.getInstance().sendRXTextMessage(convID,
-                                    MyUserInfo.getInstance().getUserInfo().getUserName() +
-                                            "退出了圈子" + groupAllInfo.group.groupName, attr);
+                                    String.format("[ %s ]退出了圈子[ %s ]", MyUserInfo.getInstance().getUserInfo().getUserName(), groupAllInfo.group.groupName), attr);
                         }
                     }
                 })

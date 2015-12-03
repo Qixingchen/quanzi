@@ -17,10 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
@@ -31,7 +32,6 @@ import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
@@ -156,11 +156,11 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
      */
     @Override
     public void onBindViewHolder(GroupUserViewHolder holder, final int position) {
-        holder.weibo_avatar_NetworkImageView.setOnLongClickListener(null);
-        holder.weibo_avatar_NetworkImageView.setOnClickListener(null);
+        holder.weibo_avatar_ImageView.setOnLongClickListener(null);
+        holder.weibo_avatar_ImageView.setOnClickListener(null);
         if (memlist == null || position == memlist.size()) {
-            holder.weibo_avatar_NetworkImageView.setDefaultImageResId(R.drawable.ic_add_24dp);
-            holder.weibo_avatar_NetworkImageView.setOnClickListener(new View.OnClickListener() {
+            Picasso.with(mContext).load(R.drawable.ic_add_24dp).fit().into(holder.weibo_avatar_ImageView);
+            holder.weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     addUser(groupID, false);
@@ -169,11 +169,10 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
 
         } else if (position < memlist.size()) {
             final GroupAllInfo.MemberEntity mem = memlist.get(position);
-            holder.weibo_avatar_NetworkImageView.setImageUrl(mem.icon,
-                    GetVolley.getmInstance().getImageLoader());
+            Picasso.with(mContext).load(mem.icon).fit().into(holder.weibo_avatar_ImageView);
             //自己是群主并且点击的不是自己：长按删除
             if (isCreater && mem.id.compareTo(MyUserInfo.getInstance().getUserInfo().getId()) != 0) {
-                holder.weibo_avatar_NetworkImageView.setOnLongClickListener(new View.OnLongClickListener() {
+                holder.weibo_avatar_ImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         deleteUser(mem.name, mem.id, groupID, position);
@@ -181,29 +180,26 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                     }
                 });
             }
-            //点击的是别人：进入空间
-            if (mem.id.compareTo(MyUserInfo.getInstance().getUserInfo().getId()) != 0) {
-                holder.weibo_avatar_NetworkImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
-                            @Override
-                            public void onOK(Object ts) {
-                                OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
-                                Intent otherUser = new Intent(mContext, UserZoneActivity.class);
-                                otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
-                                mContext.startActivity(otherUser);
-                            }
+            //点击进入空间
+            holder.weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            Intent otherUser = new Intent(mContext, UserZoneActivity.class);
+                            otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
+                            mContext.startActivity(otherUser);
+                        }
 
-                            @Override
-                            public void onError(String Message) {
-                                Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
-                            }
-                        }).findUserByID(mem.id);
-                    }
-                });
-            }
-
+                        @Override
+                        public void onError(String Message) {
+                            Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
+                        }
+                    }).findUserByID(mem.id);
+                }
+            });
         }
     }
 
@@ -381,7 +377,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
     public static class GroupUserViewHolder extends RecyclerView.ViewHolder {
 
         //界面元素
-        private NetworkImageView weibo_avatar_NetworkImageView;
+        private ImageView weibo_avatar_ImageView;
 
         public GroupUserViewHolder(View v) {
             super(v);
@@ -394,7 +390,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
          * @param v 布局
          */
         private void FindViewByID(View v) {
-            weibo_avatar_NetworkImageView = (NetworkImageView) v.findViewById(R.id.pic);
+            weibo_avatar_ImageView = (ImageView) v.findViewById(R.id.pic);
         }
     }
 }

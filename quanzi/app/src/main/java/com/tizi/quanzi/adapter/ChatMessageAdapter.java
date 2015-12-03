@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
@@ -22,7 +23,6 @@ import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.FindUser;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
@@ -256,9 +256,10 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                         chatMessage.imageHeight, chatMessage.imageWeight);
                 holder.contantImageView.getLayoutParams().height = imagePix[0];
                 holder.contantImageView.getLayoutParams().width = imagePix[1];
-                holder.contantImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
-                                chatMessage.url, imagePix[0], imagePix[1]),
-                        GetVolley.getmInstance().getImageLoader());
+
+                Picasso.with(mContext).load(GetThumbnailsUri.maxHeiAndWei(
+                        chatMessage.url, imagePix[0], imagePix[1])).fit().into(holder.contantImageView);
+
                 holder.contantImageView.setVisibility(View.VISIBLE);
                 holder.contantImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -286,9 +287,8 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
         }
 
         /*设置头像*/
-        holder.userFaceImageView.setImageUrl(GetThumbnailsUri.maxHeiAndWei(
-                        chatMessage.chatImage, 48 * 3, 48 * 3),
-                GetVolley.getmInstance().getImageLoader());
+        Picasso.with(mContext).load(GetThumbnailsUri.maxDPHeiAndWei(
+                chatMessage.chatImage, 48, 48, mContext)).fit().into(holder.userFaceImageView);
 
         String time = FriendTime.FriendlyDate(chatMessage.create_time);
         holder.chatTime.setText(time);

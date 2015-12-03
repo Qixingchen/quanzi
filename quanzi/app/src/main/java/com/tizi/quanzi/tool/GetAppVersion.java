@@ -39,6 +39,7 @@ public class GetAppVersion {
                     Log.i(TAG, "发现更新");
                     new AlertDialog.Builder(context)
                             .setTitle("发现更新")
+                            .setMessage(apiInfo.info.content)
                             .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -47,22 +48,23 @@ public class GetAppVersion {
                                     context.startActivity(installApk);
                                 }
                             })
-                            .setNegativeButton("不再提示", new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            AppStaticValue.setStringPrefer(StaticField.Preferences.AllowAppUpDate,
-                                                    String.valueOf(false));
-                                            dialog.dismiss();
-                                        }
-                                    }
-
-                            ).setNeutralButton("下次再说", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
+                            //                            .setNegativeButton("不再提示", new DialogInterface.OnClickListener() {
+                            //
+                            //                                        @Override
+                            //                                        public void onClick(DialogInterface dialog, int which) {
+                            //                                            AppStaticValue.setStringPrefer(StaticField.Preferences.AllowAppUpDate,
+                            //                                                    String.valueOf(false));
+                            //                                            dialog.dismiss();
+                            //                                        }
+                            //                                    }
+                            //
+                            //                            )
+                            .setNeutralButton("下次再说", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
                 } else {
                     Log.i(TAG, "未发现更新");
                 }
@@ -85,8 +87,8 @@ public class GetAppVersion {
     private static boolean isNewer(String app, String server) {
         String[] apps = app.split("\\.");
         String[] servers = server.split("\\.");
-        int lenth = apps.length > servers.length ? servers.length : apps.length;
-        for (int i = 0; i < lenth; i++) {
+        int length = Math.min(apps.length, servers.length);
+        for (int i = 0; i < length; i++) {
             if (Integer.parseInt(servers[i]) > Integer.parseInt(apps[i])) {
                 return true;
             }

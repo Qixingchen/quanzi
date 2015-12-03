@@ -357,7 +357,8 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
 
     static class DynNotifyViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView weiboUser, oldWeiboUser;
+        private CircleImageView weiboUser;
+        private ImageView oldWeiboUser;
         private TextView weiboName, weibo_date, weibo_from, weibo_content, old_weibo_content,
                 old_weibo_name, reply_content;
         private View itemView;
@@ -375,7 +376,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
          */
         private void findViewByID(View v) {
             weiboUser = (CircleImageView) v.findViewById(R.id.weibo_avatar);
-            oldWeiboUser = (CircleImageView) v.findViewById(R.id.old_weibo_avatar);
+            oldWeiboUser = (ImageView) v.findViewById(R.id.old_weibo_avatar);
 
             weiboName = (TextView) v.findViewById(R.id.weibo_name);
             weibo_date = (TextView) v.findViewById(R.id.weibo_date);

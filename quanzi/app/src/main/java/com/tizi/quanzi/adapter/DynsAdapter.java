@@ -27,6 +27,12 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
     private static final String TAG = DynsAdapter.class.getSimpleName();
     private static final int AD = 1;
     private static final int DYN_ITEM = 2;
+    private Context mContext;
+    private NeedMore needMore;
+    private Onclick onclick;
+    private boolean showUser = false;
+    private boolean isUser = false;
+    private String themeADImage;
     private SortedList<Dyns.DynsEntity> dynsList = new SortedList<>(Dyns.DynsEntity.class,
             new SortedList.Callback<Dyns.DynsEntity>() {
                 @Override
@@ -38,22 +44,22 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
 
                 @Override
                 public void onInserted(int position, int count) {
-                    notifyItemRangeInserted(position, count);
+                    notifyItemRangeInserted(position + getAddtion(), count);
                 }
 
                 @Override
                 public void onRemoved(int position, int count) {
-                    notifyItemRangeRemoved(position, count);
+                    notifyItemRangeRemoved(position + getAddtion(), count);
                 }
 
                 @Override
                 public void onMoved(int fromPosition, int toPosition) {
-                    notifyItemMoved(fromPosition, toPosition);
+                    notifyItemMoved(fromPosition + getAddtion(), toPosition + getAddtion());
                 }
 
                 @Override
                 public void onChanged(int position, int count) {
-                    notifyItemRangeChanged(position, count);
+                    notifyItemRangeChanged(position + getAddtion(), count);
                 }
 
                 @Override
@@ -66,12 +72,6 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
                     return item1.dynid.equals(item2.dynid);
                 }
             });
-    private Context mContext;
-    private NeedMore needMore;
-    private Onclick onclick;
-    private boolean showUser = false;
-    private boolean isUser = false;
-    private String themeADImage;
 
     /**
      * @param dynsList     动态List
@@ -152,8 +152,7 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
 
         if (DynsViewHolder.class.isInstance(viewHolder)) {
             DynsViewHolder holder = (DynsViewHolder) viewHolder;
-            int addtion = themeADImage == null ? 0 : 1;
-            final Dyns.DynsEntity dyns = dynsList.get(position - addtion);
+            final Dyns.DynsEntity dyns = dynsList.get(position - getAddtion());
             DynItem dynItem = new DynItem(dyns, holder.view, showUser, isUser, mContext);
 
             //点击回调
@@ -208,8 +207,11 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemCount() {
-        int addtion = themeADImage == null ? 0 : 1;
-        return dynsList == null ? addtion : dynsList.size() + addtion;
+        return dynsList == null ? getAddtion() : dynsList.size() + getAddtion();
+    }
+
+    private int getAddtion() {
+        return themeADImage == null ? 0 : 1;
     }
 
     /**

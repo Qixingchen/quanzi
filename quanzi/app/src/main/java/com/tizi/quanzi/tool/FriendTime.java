@@ -88,7 +88,7 @@ public class FriendTime {
         } else {
             ans += new SimpleDateFormat("M月d日", Locale.CHINESE).format(compareDate);
         }
-        ans += new SimpleDateFormat(" HH:mm:ss", Locale.CHINESE).format(compareDate);
+        ans += new SimpleDateFormat(" HH:mm", Locale.CHINESE).format(compareDate);
         return ans;
     }
 

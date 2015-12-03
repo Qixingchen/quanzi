@@ -3,10 +3,10 @@ package com.tizi.quanzi.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -16,7 +16,7 @@ import com.tizi.quanzi.tool.StaticField;
  */
 public abstract class ChatMessAbsViewHolder extends RecyclerView.ViewHolder {
     //界面元素
-    public NetworkImageView userFaceImageView, contantImageView;
+    public ImageView userFaceImageView, contantImageView;
     public TextView chatMessTextView, chatUserName, chatTime, voiceDuration;
     public ImageButton videoPlayButton;
     public ProgressBar audioProgressBar;
@@ -49,7 +49,7 @@ public abstract class ChatMessAbsViewHolder extends RecyclerView.ViewHolder {
      * @see com.tizi.quanzi.tool.StaticField.ChatFrom
      */
     public void findViewByID(View v, int itemViewType) {
-        userFaceImageView = (NetworkImageView) v.findViewById(R.id.chat_user_face);
+        userFaceImageView = (ImageView) v.findViewById(R.id.chat_user_face);
         chatMessTextView = (TextView) v.findViewById(R.id.chat_message);
         if (itemViewType == StaticField.ChatFrom.OTHER) {
             chatUserName = (TextView) v.findViewById(R.id.chat_user_name);
@@ -57,7 +57,7 @@ public abstract class ChatMessAbsViewHolder extends RecyclerView.ViewHolder {
             chatUserName = null;
         }
         chatTime = (TextView) v.findViewById(R.id.chat_message_time);
-        contantImageView = (NetworkImageView) v.findViewById(R.id.contactImageView);
+        contantImageView = (ImageView) v.findViewById(R.id.contactImageView);
         videoPlayButton = (ImageButton) v.findViewById(R.id.vedio_play_button);
         audioProgressBar = (ProgressBar) v.findViewById(R.id.audio_progressBar);
         audioProgressBar.setIndeterminate(false);

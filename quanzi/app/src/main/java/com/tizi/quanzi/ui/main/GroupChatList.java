@@ -2,7 +2,6 @@ package com.tizi.quanzi.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.ui.new_group.NewGroupActivity;
+import com.tizi.quanzi.widget.AutoGridfitLayoutManager;
 
 import java.util.List;
 
@@ -134,7 +134,7 @@ public class GroupChatList extends BaseFragment {
         };
         groupListAdapter = new GroupListAdapter(groupClasses, mActivity, onclick);
         mGroupListRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(mActivity, Tool.getSrceenWidthDP() / 180);
+        mLayoutManager = new AutoGridfitLayoutManager(mContext, 180);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
         mGroupListRecyclerView.setAdapter(groupListAdapter);
     }

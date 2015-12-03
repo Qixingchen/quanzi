@@ -7,7 +7,8 @@
     android:layout_marginBottom="4dp"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="4dp">
+    android:layout_marginTop="4dp"
+    android:background="@color/md_grey_300">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,6 +29,7 @@
             android:id="@+id/mess_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:textSize="@dimen/normal_text_size"
             tools:text="123333"/>
 
@@ -41,6 +43,7 @@
                 android:id="@+id/refuse_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:text="拒绝"/>
 
             <Button

@@ -30,6 +30,8 @@ import com.tizi.quanzi.ui.main.MainActivity;
 
 import java.util.ArrayList;
 
+import rx.functions.Action1;
+
 /**
  * A simple {@link Fragment} subclass.
  * 群的设置
@@ -146,9 +148,9 @@ public class QuanziSetFragment extends BaseFragment {
                         (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
                 final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
 
-                input.setHint("圈子签名");
+                input.setHint("圈子公告");
                 input.setText(group.Notice);
-                builder.setTitle("更改圈子签名").setView(layout)
+                builder.setTitle("更改圈子公告").setView(layout)
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -220,20 +222,20 @@ public class QuanziSetFragment extends BaseFragment {
                             builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    GroupUserAdmin.getInstance(mActivity).setOnResult(
-                                            new GroupUserAdmin.OnResult() {
+
+                                    GroupUserAdmin.getInstance(mContext).deleteMemberByRX(groupClass.convId, groupClass.ID, AppStaticValue.getUserID())
+                                            .subscribe(new Action1<Object>() {
                                                 @Override
-                                                public void OK() {
+                                                public void call(Object o) {
                                                     GroupList.getInstance().deleteGroup(groupClass.ID);
                                                     returnToMainActivity();
                                                 }
-
+                                            }, new Action1<Throwable>() {
                                                 @Override
-                                                public void error(String errorMessage) {
-
+                                                public void call(Throwable throwable) {
+                                                    Snackbar.make(view, throwable.getMessage(), Snackbar.LENGTH_LONG).show();
                                                 }
-                                            }
-                                    ).deleteMember(groupClass.convId, groupClass.ID, AppStaticValue.getUserID());
+                                            });
 
                                 }
                             });

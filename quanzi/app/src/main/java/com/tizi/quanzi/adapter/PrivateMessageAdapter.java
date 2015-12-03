@@ -1,7 +1,9 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.GetVolley;
@@ -83,7 +86,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
 
 
@@ -98,14 +101,14 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             privateVH.lastMessTimeTextView.setText(FriendTime.FriendlyDate(privateMessPair.lastMessTime));
             if (privateMessPair.getUnreadCount() != 0) {
                 privateVH.mMessTextView.setTypeface(Typeface.DEFAULT_BOLD);
-                privateVH.mMessTextView.setTextColor(mContext.getResources().getColor(R.color.md_red_500));
+                privateVH.mMessTextView.setTextColor(mContext.getResources().getColor(R.color.md_grey_1000));
                 privateVH.mUserNameText.setTypeface(Typeface.DEFAULT_BOLD);
-                privateVH.mUserNameText.setTextColor(mContext.getResources().getColor(R.color.md_red_500));
+                privateVH.mUserNameText.setTextColor(mContext.getResources().getColor(R.color.md_grey_1000));
             } else {
                 privateVH.mMessTextView.setTypeface(Typeface.DEFAULT);
-                privateVH.mMessTextView.setTextColor(mContext.getResources().getColor(R.color.md_red_100));
+                privateVH.mMessTextView.setTextColor(mContext.getResources().getColor(R.color.md_grey_700));
                 privateVH.mUserNameText.setTypeface(Typeface.DEFAULT);
-                privateVH.mUserNameText.setTextColor(mContext.getResources().getColor(R.color.md_red_100));
+                privateVH.mUserNameText.setTextColor(mContext.getResources().getColor(R.color.md_grey_700));
             }
             privateVH.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -115,6 +118,23 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     } else {
                         Log.w(TAG, "私聊消息被点击,但是没有 onclick 回调");
                     }
+                }
+            });
+            privateVH.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("删除列表项").setMessage("确认删除这个聊天项目么?")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DBAct.getInstance().deletePriMessPair(privateMessPair.ID);
+                                    privateMessPairs.remove(privateMessPair);
+                                    notifyItemRemoved(position);
+                                }
+                            }).setNegativeButton("取消", null).show();
+
+                    return false;
                 }
             });
         }

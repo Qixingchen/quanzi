@@ -76,7 +76,7 @@ public class LockLock extends BaseFragment {
                 if (themes == null) {
                     return;
                 }
-                Theme.ActsEntity act = themes.acts.get(position);
+                Theme.ActsEntity act = themes.acts.get(position % themes.acts.size());
                 participantsNum.setText(String.valueOf(act.signNum));
                 nowPosition = position;
             }
@@ -86,6 +86,7 @@ public class LockLock extends BaseFragment {
 
             }
         });
+        viewPager.setOffscreenPageLimit(2);
 
         boomButton.setOnClickListener(new View.OnClickListener() {
             @Override

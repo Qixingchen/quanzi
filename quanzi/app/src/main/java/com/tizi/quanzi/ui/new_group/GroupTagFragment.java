@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -167,6 +168,9 @@ public class GroupTagFragment extends BaseFragment {
                     final View layout = inflater.inflate(R.layout.dialog_one_line,
                             (ViewGroup) mActivity.findViewById(R.id.dialog_one_line));
                     final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
+                    InputFilter[] filterArray = new InputFilter[1];
+                    filterArray[0] = new InputFilter.LengthFilter(7);
+                    input.setFilters(filterArray);
                     builder.setView(layout).setTitle("输入新的标签")
                             .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                 @Override

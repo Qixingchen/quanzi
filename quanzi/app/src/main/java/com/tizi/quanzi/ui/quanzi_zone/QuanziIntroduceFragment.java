@@ -45,6 +45,10 @@ import com.tizi.quanzi.widget.AutoGridfitLayoutManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.next.tagview.TagCloudView;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -54,7 +58,8 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
     private Toolbar toolbar;
     private ImageView groupFaceImageView, zoneBackgroundImageView;
-    private TextView zoneSignTextview, zoneTagTextview;
+    private TextView zoneSignTextview;
+    private TagCloudView quanziTagView;
     private CollapsingToolbarLayout collapsingtoolbar;
     private RecyclerView groupUsersRecyclerView, groupDynsRecyclerView;
     private GroupUserAdapter groupUserAdapter;
@@ -86,7 +91,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupUsersRecyclerView = (RecyclerView) view.findViewById(R.id.group_users_item_recycler_view);
         groupDynsRecyclerView = (RecyclerView) view.findViewById(R.id.group_dyns_item_recycler_view);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        zoneTagTextview = (TextView) view.findViewById(R.id.group_tag);
+        quanziTagView = (TagCloudView) view.findViewById(R.id.group_tag_view);
     }
 
     @Override
@@ -233,11 +238,11 @@ public class QuanziIntroduceFragment extends BaseFragment {
             if (groupAllInfo.group.notice != null) {
                 zoneSignTextview.setText(String.format("公告：%s", groupAllInfo.group.notice));
             }
-            String tagsString = "";
+            List<String> tagsString = new ArrayList<>();
             for (AllTags.TagsEntity tag : groupAllInfo.tagList) {
-                tagsString += tag.tagName + ",";
+                tagsString.add(tag.tagName);
             }
-            zoneTagTextview.setText("标签:" + tagsString);
+            quanziTagView.setTags(tagsString);
             quaryMore(groupAllInfo.group.id, lastIndex);
             lastIndex += StaticField.Limit.DynamicLimit;
         }

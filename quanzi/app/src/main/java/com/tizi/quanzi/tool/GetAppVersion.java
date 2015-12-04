@@ -44,7 +44,7 @@ public class GetAppVersion {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent installApk = new Intent(Intent.ACTION_VIEW);
-                                    installApk.setData(Uri.parse(apiInfo.info.url));
+                                    installApk.setData(Uri.parse(apiInfo.info.androidUrl));
                                     context.startActivity(installApk);
                                 }
                             })

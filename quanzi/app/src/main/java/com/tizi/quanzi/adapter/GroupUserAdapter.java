@@ -159,7 +159,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         holder.weibo_avatar_ImageView.setOnLongClickListener(null);
         holder.weibo_avatar_ImageView.setOnClickListener(null);
         if (memlist == null || position == memlist.size()) {
-            Picasso.with(mContext).load(R.drawable.ic_add_24dp).fit().into(holder.weibo_avatar_ImageView);
+            holder.weibo_avatar_ImageView.setImageResource(R.drawable.ic_add_24dp);
             holder.weibo_avatar_ImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

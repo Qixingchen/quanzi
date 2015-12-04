@@ -139,7 +139,10 @@ public class InviteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             vh.userPhone.setText(mobile.mobile);
             vh.userName.setText(String.format("%s名字: %s",
                     App.getApplication().getString(R.string.app_name), mobile.userName));
-            vh.contactUserName.setText(ReadContact.findName(mobile.mobile));
+            try {
+                vh.contactUserName.setText(ReadContact.findName(mobile.mobile));
+            } catch (Exception ignore) {
+            }
             Picasso.with(vh.userFace.getContext()).load(mobile.icon)
                     .resizeDimen(R.dimen.invite_user_face, R.dimen.invite_user_face)
                     .into(vh.userFace);

@@ -43,7 +43,7 @@
 
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="108dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="60dp"
                     android:background="@drawable/corners"/>
@@ -65,32 +65,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     android:layout_toEndOf="@id/gruop_face"
                     android:maxLines="2"
                     android:textColor="@color/md_white"
                     android:textSize="@dimen/normal_edit_text_size"
                     tools:text="签名：1234\n3\n3"/>
 
-                <HorizontalScrollView
+
+                <me.next.tagview.TagCloudView
+                    android:id="@+id/group_tag_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/zoneSign"
                     android:layout_below="@id/zoneSign"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_toEndOf="@id/gruop_face">
-
-                    <TextView
-                        android:id="@+id/group_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:textColor="@color/md_white"
-                        android:textSize="@dimen/normal_edit_text_size"
-                        tools:text="12333\n\n\n1222"/>
-                </HorizontalScrollView>
+                    android:background="#0000"
+                    app:tcvBackground="@drawable/corners"
+                    app:tcvCanTagClick="false"
+                    app:tcvItemBorderHorizontal="8dp"
+                    app:tcvItemBorderVertical="6dp"
+                    app:tcvShowEndText="false"
+                    app:tcvShowRightImg="false"
+                    app:tcvTextColor="@color/md_white"
+                    tools:background="@color/md_green_500"
+                    tools:layout_height="60dp"/>
 
 
             </RelativeLayout>

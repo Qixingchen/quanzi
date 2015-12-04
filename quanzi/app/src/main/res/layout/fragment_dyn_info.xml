@@ -21,27 +21,6 @@
 
             <include layout="@layout/item_dyn"/>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/plus_one"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="20dp"
-                    tools:background="@drawable/ic_like_grey"/>
-
-                <ImageButton
-                    android:id="@+id/comment"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/ic_chat_24dp"/>
-
-            </LinearLayout>
-
 
         </LinearLayout>
 

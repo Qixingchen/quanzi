@@ -64,7 +64,8 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
 
                 @Override
                 public boolean areContentsTheSame(Dyns.DynsEntity oldItem, Dyns.DynsEntity newItem) {
-                    return oldItem.content != null && oldItem.content.equals(newItem.content);
+                    return oldItem.content != null && oldItem.content.equals(newItem.content)
+                            && oldItem.zans.equals(newItem.zans);
                 }
 
                 @Override

@@ -13,12 +13,14 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/user_face"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginEnd="4dp"
             tools:background="@drawable/face"/>
 
         <LinearLayout

@@ -212,10 +212,10 @@ public class DynItem {
                         iszan = !iszan;
                         weiboAttitudesImageView.setEnabled(true);
                         if (iszan) {
-                            weiboAttitudesImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_like_red));
+                            Picasso.with(mContext).load(R.drawable.ic_like_red).into(weiboAttitudesImageView);
                             attitudesUsersFaceAdapter.addZan(MyUserInfo.getInstance().getUserInfo().icon, MyUserInfo.getInstance().getUserInfo().id);
                         } else {
-                            weiboAttitudesImageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_like_grey));
+                            Picasso.with(mContext).load(R.drawable.ic_like_grey).into(weiboAttitudesImageView);
                             attitudesUsersFaceAdapter.removeZan(MyUserInfo.getInstance().getUserInfo().id);
                         }
                         attitudesTextView.setText(String.valueOf(addZan.zan));

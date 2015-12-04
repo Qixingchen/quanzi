@@ -133,9 +133,11 @@
 
                 <ImageView
                     android:id="@+id/weibo_attitude_image_view"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginEnd="4dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:scaleType="center"
                     android:src="@drawable/ic_like_grey"/>
 
                 <TextView
@@ -149,9 +151,12 @@
                     tools:text="20"/>
 
                 <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:id="@+id/comment"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginEnd="4dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:scaleType="center"
                     android:src="@drawable/ic_chat_24dp"/>
 
                 <TextView

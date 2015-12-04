@@ -9,7 +9,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "0.2.6-nightly"
+        versionName "0.2.7-nightly"
 
         //multiDexEnabled true
     }
@@ -119,4 +119,6 @@ dependencies {
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     //图片圆角
     compile 'com.makeramen:roundedimageview:2.2.1'
+    //标签云
+    compile 'com.github.kingideayou:tagcloudview:1.0.2'
 }

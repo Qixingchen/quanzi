@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.DynCommentAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
@@ -22,7 +23,6 @@ import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.AddZan;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.Dyns;
-import com.tizi.quanzi.gson.IsZan;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.FriendTime;
@@ -75,33 +75,46 @@ public class DynInfoFragment extends BaseFragment {
         attitudesTextView = (TextView) view.findViewById(R.id.weibo_attitudes);
         commentsTextView = (TextView) view.findViewById(R.id.weibo_comments);
         commentRecyclerView = (RecyclerView) view.findViewById(R.id.dyn_comment_item_recycler_view);
-        plusOne = (ImageView) view.findViewById(R.id.plus_one);
+        plusOne = (ImageView) view.findViewById(R.id.weibo_attitude_image_view);
         addCommentImageView = (ImageView) view.findViewById(R.id.comment);
     }
 
     @Override
     protected void initViewsAndSetEvent() {
 
-        DynamicAct.getNewInstance(isUser).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
-            @Override
-            public void onOK(Object ts) {
-                IsZan isZan = (IsZan) ts;
-                if (isZan.cnt == 0) {
-                    iszan = false;
-                    plusOne.setBackground(getResources().getDrawable(R.drawable.ic_like_grey));
-                } else {
-                    iszan = true;
-                    plusOne.setBackground(getResources().getDrawable(R.drawable.ic_like_red));
-                }
-            }
-
-            @Override
-            public void onError(String Message) {
-                Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
-            }
-        }).isZan(dyn.dynid);
+        //        DynamicAct.getNewInstance(isUser).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+        //            @Override
+        //            public void onOK(Object ts) {
+        //                IsZan isZan = (IsZan) ts;
+        //                if (isZan.cnt == 0) {
+        //                    iszan = false;
+        //                    Picasso.with(mContext).load(R.drawable.ic_like_grey).into(plusOne);
+        //                } else {
+        //                    iszan = true;
+        //                    Picasso.with(mContext).load(R.drawable.ic_like_red).into(plusOne);
+        //                }
+        //            }
+        //
+        //            @Override
+        //            public void onError(String Message) {
+        //                Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
+        //            }
+        //        }).isZan(dyn.dynid);
 
         getComment();
+        addCommentImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Tool.isGuest()) {
+                    Tool.GuestAction(mActivity);
+                    return;
+                }
+                addComment(null);
+            }
+        });
+        if (isUser) {
+            return;
+        }
         plusOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,9 +130,9 @@ public class DynInfoFragment extends BaseFragment {
                         iszan = !iszan;
                         plusOne.setEnabled(true);
                         if (iszan) {
-                            plusOne.setBackground(getResources().getDrawable(R.drawable.ic_like_red));
+                            Picasso.with(mContext).load(R.drawable.ic_like_red).into(plusOne);
                         } else {
-                            plusOne.setBackground(getResources().getDrawable(R.drawable.ic_like_grey));
+                            Picasso.with(mContext).load(R.drawable.ic_like_grey).into(plusOne);
                         }
                         attitudesTextView.setText(String.valueOf(addZan.zan));
                         dyn.zan = addZan.zan;
@@ -134,16 +147,6 @@ public class DynInfoFragment extends BaseFragment {
                 if (!iszan) {
                     DynActSendNotify.getNewInstance().plusOne(dyn, isUser);
                 }
-            }
-        });
-        addCommentImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Tool.isGuest()) {
-                    Tool.GuestAction(mActivity);
-                    return;
-                }
-                addComment(null);
             }
         });
     }

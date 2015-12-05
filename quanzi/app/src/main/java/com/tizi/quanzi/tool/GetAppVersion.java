@@ -28,11 +28,15 @@ public class GetAppVersion {
         ApiInfo.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
-                if (AppStaticValue.getStringPrefer(StaticField.Preferences.AllowAppUpDate)
-                        .compareTo(String.valueOf(false)) == 0) {
-                    Log.i(TAG, "不允许更新");
+                long lastUpdate = Long.valueOf(AppStaticValue.getStringPrefer(StaticField.Preferences.LastAppUpDateTime));
+                if (Tool.getBeijinTime() - lastUpdate < 3600 * 1000) {
                     return;
                 }
+                //                if (AppStaticValue.getStringPrefer(StaticField.Preferences.AllowAppUpDate)
+                //                        .compareTo(String.valueOf(false)) == 0) {
+                //                    Log.i(TAG, "不允许更新");
+                //                    return;
+                //                }
                 final ApiInfoGson apiInfo = (ApiInfoGson) ts;
                 String appVer = BuildConfig.VERSION_NAME;
                 if (isNewer(appVer, apiInfo.info.androidVersion)) {
@@ -47,7 +51,17 @@ public class GetAppVersion {
                                     installApk.setData(Uri.parse(apiInfo.info.androidUrl));
                                     context.startActivity(installApk);
                                 }
-                            })
+                            }).setNegativeButton("稍后提示", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    AppStaticValue.setStringPrefer(StaticField.Preferences.LastAppUpDateTime,
+                                            String.valueOf(Tool.getBeijinTime()));
+                                    dialog.dismiss();
+                                }
+                            }
+
+                    )
                             //                            .setNegativeButton("不再提示", new DialogInterface.OnClickListener() {
                             //
                             //                                        @Override

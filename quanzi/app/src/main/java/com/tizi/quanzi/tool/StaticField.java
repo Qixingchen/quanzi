@@ -32,6 +32,7 @@ public class StaticField {
         public final static String PASSWORD = "PASSWORD";
         public final static String USERPHONE = "USERPHONE";
         public final static String AllowAppUpDate = "AllowAppUpDate";
+        public final static String LastAppUpDateTime = "LastAppUpDateTime";
     }
 
     /*聊天室类型*/

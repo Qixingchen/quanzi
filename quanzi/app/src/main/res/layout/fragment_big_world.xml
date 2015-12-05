@@ -45,8 +45,7 @@
                     android:id="@+id/userFace"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="9dp"
+                    android:layout_marginStart="8dp"
                     app:riv_corner_radius="4dip"
                     tools:background="@drawable/face"/>
 
@@ -108,7 +107,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="33dp"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/ic_people_36dp"/>
 
                 <TextView
@@ -138,7 +137,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="33dp"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/ic_photo_library_36dp"/>
 
                 <TextView
@@ -168,7 +167,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="33dp"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/ic_share_light_36dp"/>
 
                 <TextView
@@ -198,7 +197,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="33dp"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/ic_settings_light_36dp"/>
 
                 <TextView

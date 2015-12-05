@@ -1,13 +1,21 @@
 package com.tizi.quanzi.adapter;
 
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Dyns;
+import com.tizi.quanzi.gson.OtherUserInfo;
+import com.tizi.quanzi.network.FindUser;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
 import java.util.List;
 
@@ -49,12 +57,31 @@ public class AttitudesUsersFaceAdapter extends RecyclerViewAdapterAbs {
      * @param position   列表位置
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         if (AttitudeUserFaceViewHolder.class.isInstance(viewHolder)) {
-            AttitudeUserFaceViewHolder holder = (AttitudeUserFaceViewHolder) viewHolder;
+            final AttitudeUserFaceViewHolder holder = (AttitudeUserFaceViewHolder) viewHolder;
             Picasso.with(holder.userface.getContext()).load(zans.get(position).icon)
-                    .resizeDimen(R.dimen.attitudes_face, R.dimen.attitudes_face)
+                    .fit()
                     .into(holder.userface);
+            holder.userface.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+                            OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                            Intent otherUser = new Intent(holder.userface.getContext(), UserZoneActivity.class);
+                            otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
+                            holder.userface.getContext().startActivity(otherUser);
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+                            Toast.makeText(holder.userface.getContext(), "此用户已不存在", Toast.LENGTH_LONG).show();
+                        }
+                    }).findUserByID(zans.get(position).userId);
+                }
+            });
         }
     }
 
@@ -78,7 +105,7 @@ public class AttitudesUsersFaceAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemCount() {
-        return Math.min(zans.size(), 7);
+        return zans.size();
     }
 
     class AttitudeUserFaceViewHolder extends RecyclerView.ViewHolder {

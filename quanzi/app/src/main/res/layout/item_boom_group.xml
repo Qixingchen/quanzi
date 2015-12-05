@@ -13,7 +13,8 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -23,8 +24,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/first_group_face"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 tools:src="@drawable/face"/>
 
             <TextView
@@ -34,14 +35,6 @@
                 android:layout_gravity="center"
                 android:textSize="@dimen/small_title_text_size"
                 tools:text="aaa"/>
-
-            <TextView
-                android:id="@+id/first_group_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="@dimen/normal_edit_text_size"
-                tools:text="自分"/>
 
         </LinearLayout>
 
@@ -59,10 +52,11 @@
 
             <TextView
                 android:id="@+id/unread_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:background="@drawable/num_pop"
+                android:gravity="center"
                 android:textSize="@dimen/normal_text_size"
                 tools:text="12"/>
 
@@ -77,8 +71,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/second_group_face"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 tools:src="@drawable/face"/>
 
@@ -89,14 +83,6 @@
                 android:layout_gravity="center"
                 android:textSize="@dimen/small_title_text_size"
                 tools:text="bbbb"/>
-
-            <TextView
-                android:id="@+id/second_group_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="@dimen/normal_edit_text_size"
-                tools:text="taren"/>
 
         </LinearLayout>
 

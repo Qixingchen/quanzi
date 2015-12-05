@@ -58,18 +58,6 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
         return vh;
     }
 
-
-    @Override
-    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        if (ThemesBoomViewHolder.class.isInstance(holder)) {
-            ThemesBoomViewHolder themeVH = (ThemesBoomViewHolder) holder;
-            if (themeVH.timer != null) {
-                themeVH.timer.cancel();
-            }
-        }
-    }
-
     /**
      * 发生绑定时，为viewHolder的元素赋值
      *

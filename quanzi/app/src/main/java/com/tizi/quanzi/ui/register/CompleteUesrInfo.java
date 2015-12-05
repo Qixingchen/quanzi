@@ -10,12 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
@@ -30,7 +30,7 @@ import java.io.File;
 public class CompleteUesrInfo extends BaseFragment {
 
     private TextInputLayout nickNameInputLayout;
-    private NetworkImageView UserPhotoImageView;
+    private ImageView UserPhotoImageView;
     private RadioGroup sexGroup;
     private Button submitButton;
     private String photoOnlineUri;
@@ -62,7 +62,7 @@ public class CompleteUesrInfo extends BaseFragment {
     @Override
     protected void findViews(View view) {
         nickNameInputLayout = (TextInputLayout) view.findViewById(R.id.nickNameInputLayout);
-        UserPhotoImageView = (NetworkImageView) view.findViewById(R.id.UserPhotoImageView);
+        UserPhotoImageView = (ImageView) view.findViewById(R.id.UserPhotoImageView);
         sexGroup = (RadioGroup) view.findViewById(R.id.sexGroup);
         submitButton = (Button) view.findViewById(R.id.submit_button);
     }
@@ -130,9 +130,7 @@ public class CompleteUesrInfo extends BaseFragment {
                             Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
                             return;
                         }
-                        UserPhotoImageView.setBackground(null);
-                        UserPhotoImageView.setImageUrl(uri,
-                                GetVolley.getmInstance().getImageLoader());
+                        Picasso.with(mContext).load(uri).fit().into(UserPhotoImageView);
                         photoOnlineUri = uri;
                     }
                 }).savePhoto(requreForImage.getCropImage().getPath());

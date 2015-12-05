@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/pic"
         android:layout_width="@dimen/weibo_pic_wei"
         android:layout_height="@dimen/weibo_pic_hei"

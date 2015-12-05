@@ -23,16 +23,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetLocationFromBaidu;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.UserInfoSetting;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.PermissionAnser;
@@ -58,7 +58,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     private TextView userSexTextView;
     private TextView userAgeTextView;
     private TextView userLocationTextView;
-    private NetworkImageView userFaceImageView;
+    private ImageView userFaceImageView;
     private TextView userSignTextView;
     private Calendar calendar = Calendar.getInstance();
     private LocationManager locationManager;
@@ -117,7 +117,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void findViews(View view) {
-        userFaceImageView = (NetworkImageView) view.findViewById(R.id.user_face_image);
+        userFaceImageView = (ImageView) view.findViewById(R.id.user_face_image);
         view.findViewById(R.id.userface).setOnClickListener(this);
         view.findViewById(R.id.userName).setOnClickListener(this);
         userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
@@ -134,8 +134,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void initViewsAndSetEvent() {
-        userFaceImageView.setImageUrl(MyUserInfo.getInstance().getUserInfo().getIcon(),
-                GetVolley.getmInstance().getImageLoader());
+        Picasso.with(mContext).load(MyUserInfo.getInstance().getUserInfo().getIcon()).fit().into(userFaceImageView);
         userNameTextView.setText(MyUserInfo.getInstance().getUserInfo().getUserName());
         userSexTextView.setText(getSex(MyUserInfo.getInstance().getUserInfo().getSex()));
         userAgeTextView.setText(MyUserInfo.getInstance().getUserInfo().getBirthday());
@@ -291,8 +290,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     public void onResult(String uri, boolean success, String errorMessage) {
                         if (success) {
                             MyUserInfo.getInstance().getUserInfo().setIcon(uri);
-                            userFaceImageView.setImageUrl(MyUserInfo.getInstance().getUserInfo().getIcon(),
-                                    GetVolley.getmInstance().getImageLoader());
+                            Picasso.with(mContext).load(MyUserInfo.getInstance().getUserInfo().getIcon()).fit().into(userFaceImageView);
                             UserInfoSetting.getNewInstance().changeFace(uri);
                         } else {
                             Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();

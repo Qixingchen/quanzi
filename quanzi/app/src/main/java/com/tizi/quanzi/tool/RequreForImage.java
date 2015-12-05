@@ -64,6 +64,12 @@ public class RequreForImage {
         return mInstance;
     }
 
+    public static void clear(Activity mActivity) {
+        if (mInstance != null && mActivity.equals(mInstance.mActivity)) {
+            mInstance.mActivity = null;
+        }
+    }
+
     /*get Image Path*/
     public static String getImageUrlWithAuthority(Context context, Uri uri) {
         InputStream is = null;

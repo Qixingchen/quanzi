@@ -10,15 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.gson.Comments;
+import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.MakeSpannableString;
@@ -109,7 +110,26 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     public void onBindViewHolder(CommentViewHolder holder, final int position) {
         final Comments.CommentsEntity comment = commentses.get(position);
         holder.comment.setText("");
-        holder.userFace.setImageUrl(comment.userIcon, GetVolley.getmInstance().getImageLoader());
+        Picasso.with(holder.userFace.getContext()).load(comment.userIcon).fit().into(holder.userFace);
+        holder.userFace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                    @Override
+                    public void onOK(Object ts) {
+                        OtherUserInfo otherUserInfo = (OtherUserInfo) ts;
+                        Intent otherUser = new Intent(activity, UserZoneActivity.class);
+                        otherUser.putExtra(StaticField.IntentName.OtherUserInfo, (Parcelable) otherUserInfo);
+                        activity.startActivity(otherUser);
+                    }
+
+                    @Override
+                    public void onError(String Message) {
+                        Toast.makeText(activity, "此用户已不存在", Toast.LENGTH_LONG).show();
+                    }
+                }).findUserByID(comment.createUser);
+            }
+        });
         if (comment.atUserId != null) {
             SpannableString atUser = MakeSpannableString.makeLinkSpan("@" + comment.atUserName, new View.OnClickListener() {
                 @Override
@@ -163,13 +183,13 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     }
 
     protected static class CommentViewHolder extends RecyclerView.ViewHolder {
-        private NetworkImageView userFace;
+        private ImageView userFace;
         private TextView userName, comment, createTime;
         private ImageButton addComment;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
-            userFace = (NetworkImageView) itemView.findViewById(R.id.user_face);
+            userFace = (ImageView) itemView.findViewById(R.id.user_face);
             userName = (TextView) itemView.findViewById(R.id.user_name);
             comment = (TextView) itemView.findViewById(R.id.comment);
             createTime = (TextView) itemView.findViewById(R.id.creat_time);

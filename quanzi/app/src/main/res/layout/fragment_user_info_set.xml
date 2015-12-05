@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
     android:paddingEnd="16dp"
     android:paddingStart="16dp"
     tools:context="com.tizi.quanzi.ui.main.UserInfoSetFragment">
@@ -24,7 +25,7 @@
                 android:text="头像"
                 android:textSize="18sp"/>
 
-            <com.android.volley.toolbox.NetworkImageView
+            <ImageView
                 android:id="@+id/user_face_image"
                 android:layout_width="48dp"
                 android:layout_height="48dp"

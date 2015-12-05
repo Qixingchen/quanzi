@@ -21,11 +21,11 @@
             android:fitsSystemWindows="true"
             android:saveEnabled="false"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginEnd="88dp"
-            app:expandedTitleMarginStart="72dp"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <com.android.volley.toolbox.NetworkImageView
+            <ImageView
                 android:id="@+id/zoneBackground"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

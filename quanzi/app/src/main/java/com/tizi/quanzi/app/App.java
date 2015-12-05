@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
@@ -17,6 +17,9 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.facebook.stetho.Stetho;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.picasso.Picasso;
+import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
@@ -49,7 +52,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
         application = this;
         appStaticValue = new AppStaticValue();
         //泄露监视器
-        //LeakCanary.install(this);
+        if (BuildConfig.DEBUG) {
+            LeakCanary.install(this);
+        }
 
         registerActivityLifecycleCallbacks(this);
 
@@ -95,28 +100,16 @@ public class App extends Application implements Application.ActivityLifecycleCal
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
+        //picasso
+        if (BuildConfig.DEBUG) {
+            Picasso.with(getApplicationContext()).setIndicatorsEnabled(true);
+        }
+
         if (!LoginAndUserAccount.getNewInstance().loginFromPrefer()) {
             Intent log_in = new Intent(application, LoginActivity.class);
             log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(log_in);
         }
-
-        //todo test build
-
-        Log.i("BOARD", Build.BOARD);
-        Log.i("SDK", Build.VERSION.SDK);
-        Log.i("DEVICE", Build.DEVICE);
-        Log.i("DISPLAY", Build.DISPLAY);
-        Log.i("ID", Build.ID);
-        Log.i("PRODUCT", Build.PRODUCT);
-        Log.i("CPU_ABI", Build.CPU_ABI);
-        Log.i("MANUFACTURER", Build.MANUFACTURER);
-        Log.i("MODEL", Build.MODEL);
-        Log.i("BOOTLOADER", Build.BOOTLOADER);
-        Log.i("RADIO", Build.RADIO);
-        Log.i("HARDWARE", Build.HARDWARE);
-        Log.i("SERIAL", Build.SERIAL);
-        Log.i("TYPE", Build.TYPE);
 
     }
 
@@ -127,7 +120,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @Override
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);
-        //        MultiDex.install(this);
+        MultiDex.install(this);
     }
 
     @Override

@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
@@ -26,7 +26,6 @@ import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.model.PrivateMessPair;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
@@ -46,7 +45,7 @@ public class UserZoneActivityFragment extends BaseFragment {
 
     private CoordinatorLayout mainContent;
     private CollapsingToolbarLayout collapsingToolbar;
-    private NetworkImageView zoneBackground;
+    private ImageView zoneBackground;
     private TextView zoneSign, userAge, userXingzuo, userLocation, userSex;
     private CircleImageView userFace;
     private Button sendMessage;
@@ -66,7 +65,7 @@ public class UserZoneActivityFragment extends BaseFragment {
     protected void findViews(View view) {
         mainContent = (CoordinatorLayout) view.findViewById(R.id.main_content);
         collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-        zoneBackground = (NetworkImageView) view.findViewById(R.id.zoneBackground);
+        zoneBackground = (ImageView) view.findViewById(R.id.zoneBackground);
         zoneSign = (TextView) view.findViewById(R.id.user_sign);
         sendMessage = (Button) view.findViewById(R.id.send_message);
         userFace = (CircleImageView) view.findViewById(R.id.user_face);
@@ -83,7 +82,7 @@ public class UserZoneActivityFragment extends BaseFragment {
             return;
         }
         collapsingToolbar.setTitle(otherUserInfo.userName);
-        zoneBackground.setImageUrl(otherUserInfo.bg, GetVolley.getmInstance().getImageLoader());
+        Picasso.with(mContext).load(otherUserInfo.bg).fit().into(zoneBackground);
         zoneSign.setText(otherUserInfo.signatrue);
         if (otherUserInfo.birthday != null) {
             userAge.setText(String.valueOf(FriendTime.getAge(otherUserInfo.birthday)));

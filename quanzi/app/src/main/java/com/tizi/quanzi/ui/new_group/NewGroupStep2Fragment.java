@@ -11,11 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.InviteListAdapter;
 import com.tizi.quanzi.chat.GroupUserAdmin;
@@ -23,7 +24,6 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.otto.PermissionAnser;
 import com.tizi.quanzi.tool.StaticField;
@@ -39,7 +39,7 @@ public class NewGroupStep2Fragment extends BaseFragment {
     private String groupID;
 
     private RecyclerView.LayoutManager mLayoutManager;
-    private NetworkImageView groupfaceimageview;
+    private ImageView groupfaceimageview;
     private TextView groupnametextview;
     private RecyclerView shareRecyclerView;
 
@@ -69,12 +69,12 @@ public class NewGroupStep2Fragment extends BaseFragment {
     protected void findViews(View view) {
         this.shareRecyclerView = (RecyclerView) view.findViewById(R.id.shareRecyclerView);
         this.groupnametextview = (TextView) view.findViewById(R.id.group_name_text_view);
-        this.groupfaceimageview = (NetworkImageView) view.findViewById(R.id.group_face_image_view);
+        this.groupfaceimageview = (ImageView) view.findViewById(R.id.group_face_image_view);
     }
 
     @Override
     protected void initViewsAndSetEvent() {
-        groupfaceimageview.setImageUrl(ans.groupFaceUri, GetVolley.getmInstance().getImageLoader());
+        Picasso.with(mContext).load(ans.groupFaceUri).fit().into(groupfaceimageview);
         groupnametextview.setText(ans.groupName);
         shareRecyclerView.setHasFixedSize(true);
         shareRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));

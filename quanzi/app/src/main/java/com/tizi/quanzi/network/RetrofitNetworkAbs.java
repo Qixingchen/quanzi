@@ -56,6 +56,7 @@ public abstract class RetrofitNetworkAbs {
                 return false;
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             saveTExceptionToLenCloud(ex);
         }
 
@@ -80,6 +81,7 @@ public abstract class RetrofitNetworkAbs {
                 }
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             saveTExceptionToLenCloud(ex);
         }
     }

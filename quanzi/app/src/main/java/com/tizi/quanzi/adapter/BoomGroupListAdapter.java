@@ -126,24 +126,14 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
             /*1*/
             vh.firstGroupName.setText(boomGroup.groupName1);
             Picasso.with(context).load(boomGroup.icon1)
-                    .resizeDimen(R.dimen.group_face, R.dimen.group_face).into(vh.firstGroupFace);
+                    .fit().into(vh.firstGroupFace);
 
             /*2*/
             vh.secondGroupName.setText(boomGroup.groupName2);
             Picasso.with(context).load(boomGroup.icon2)
-                    .resizeDimen(R.dimen.group_face, R.dimen.group_face).into(vh.secondGroupFace);
-
-            /*both*/
-            if (boomGroup.isGroup1MyGroup) {
-                vh.firstGroupDescription.setText(R.string.my_group);
-                vh.secondGroupDescription.setText(R.string.boom_group);
-            } else {
-                vh.firstGroupDescription.setText(R.string.boom_group);
-                vh.secondGroupDescription.setText(R.string.my_group);
-            }
+                    .fit().into(vh.secondGroupFace);
 
             /*unread*/
-
             Integer unreadCount = boomGroup.getUnreadCount();
             vh.unreadCount.setText(String.valueOf(unreadCount));
             if (unreadCount == 0) {
@@ -205,19 +195,15 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
     class BoomGroupItemViewHolder extends RecyclerView.ViewHolder {
         private de.hdodenhof.circleimageview.CircleImageView firstGroupFace;
         private android.widget.TextView firstGroupName;
-        private android.widget.TextView firstGroupDescription;
         private android.widget.TextView unreadCount;
         private de.hdodenhof.circleimageview.CircleImageView secondGroupFace;
         private android.widget.TextView secondGroupName;
-        private android.widget.TextView secondGroupDescription;
 
         public BoomGroupItemViewHolder(View v) {
             super(v);
-            this.secondGroupDescription = (TextView) v.findViewById(R.id.second_group_description);
             this.secondGroupName = (TextView) v.findViewById(R.id.second_group_name);
             this.secondGroupFace = (CircleImageView) v.findViewById(R.id.second_group_face);
             this.unreadCount = (TextView) v.findViewById(R.id.unread_count);
-            this.firstGroupDescription = (TextView) v.findViewById(R.id.first_group_description);
             this.firstGroupName = (TextView) v.findViewById(R.id.first_group_name);
             this.firstGroupFace = (CircleImageView) v.findViewById(R.id.first_group_face);
         }

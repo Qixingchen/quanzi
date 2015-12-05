@@ -9,7 +9,7 @@
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <ImageView
         android:id="@+id/user_face_image"
         android:layout_width="48dp"
         android:layout_height="48dp"

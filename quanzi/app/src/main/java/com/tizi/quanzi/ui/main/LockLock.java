@@ -20,6 +20,7 @@ import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
+import com.tizi.quanzi.widget.LoopViewPager;
 import com.tizi.quanzi.widget.custom_tab.SimpleCustomChromeTabsHelper;
 
 
@@ -30,7 +31,7 @@ public class LockLock extends BaseFragment {
 
     private static LockLock mInstance;
 
-    private ViewPager viewPager;
+    private LoopViewPager viewPager;
     private ImageButton participateButton, detailButton, boomButton;
     private TextView participantsNum;
 
@@ -56,7 +57,7 @@ public class LockLock extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        viewPager = (ViewPager) view.findViewById(R.id.VerticalViewPager);
+        viewPager = (LoopViewPager) view.findViewById(R.id.VerticalViewPager);
         participateButton = (ImageButton) view.findViewById(R.id.participate_button);
         detailButton = (ImageButton) view.findViewById(R.id.detail_button);
         participantsNum = (TextView) view.findViewById(R.id.num_of_participants);
@@ -86,7 +87,7 @@ public class LockLock extends BaseFragment {
 
             }
         });
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(4);
 
         boomButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +153,6 @@ public class LockLock extends BaseFragment {
                             for (Theme.ActsEntity act : themes.acts) {
                                 mCustomTabHelper.prepareUrl(act.detailUrl);
                             }
-
                         } else {
                             Log.w(TAG, themes.msg);
                         }

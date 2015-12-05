@@ -118,11 +118,7 @@
                 android:id="@+id/weibo_attitudes_users_face_recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1">
-
-
-            </android.support.v7.widget.RecyclerView>
+                android:layout_weight="1"/>
 
 
             <LinearLayout
@@ -135,7 +131,6 @@
                     android:id="@+id/weibo_attitude_image_view"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_marginEnd="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:scaleType="center"
                     android:src="@drawable/ic_like_grey"/>
@@ -145,16 +140,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="12dp"
                     android:textColor="#A7a7a7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     tools:text="20"/>
 
                 <ImageView
                     android:id="@+id/comment"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_marginEnd="4dp"
                     android:background="?attr/selectableItemBackground"
                     android:scaleType="center"
                     android:src="@drawable/ic_chat_24dp"/>
@@ -164,9 +157,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="4dp"
                     android:textColor="#A7a7a7"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     tools:text="30"/>
 
             </LinearLayout>

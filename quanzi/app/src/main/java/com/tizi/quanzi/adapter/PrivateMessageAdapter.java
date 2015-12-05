@@ -8,16 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.PrivateMessPair;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.tool.FriendTime;
 
@@ -94,8 +94,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (PrivateViewHolder.class.isInstance(holder)) {
             final PrivateViewHolder privateVH = (PrivateViewHolder) holder;
             final PrivateMessPair privateMessPair = privateMessPairs.get(position);
-            privateVH.mUserFaceImage.setImageUrl(privateMessPair.Face,
-                    GetVolley.getmInstance().getImageLoader());
+            Picasso.with(mContext).load(privateMessPair.Face).fit().into(privateVH.mUserFaceImage);
             privateVH.mUserNameText.setText(privateMessPair.Name);
             privateVH.mMessTextView.setText(privateMessPair.lastMess);
             privateVH.lastMessTimeTextView.setText(FriendTime.FriendlyDate(privateMessPair.lastMessTime));
@@ -163,7 +162,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public static class PrivateViewHolder extends RecyclerView.ViewHolder {
 
-        private NetworkImageView mUserFaceImage;
+        private ImageView mUserFaceImage;
         private TextView mUserNameText;
         private TextView mMessTextView;
         private TextView lastMessTimeTextView;
@@ -172,7 +171,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public PrivateViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            mUserFaceImage = (NetworkImageView) itemView.findViewById(R.id.user_face_image);
+            mUserFaceImage = (ImageView) itemView.findViewById(R.id.user_face_image);
             mUserNameText = (TextView) itemView.findViewById(R.id.user_name_text_view);
             mMessTextView = (TextView) itemView.findViewById(R.id.mess_text_view);
             lastMessTimeTextView = (TextView) itemView.findViewById(R.id.last_mess_time_text_view);

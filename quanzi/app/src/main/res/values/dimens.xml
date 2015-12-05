@@ -21,6 +21,6 @@
     <dimen name="dyn_image">56dp</dimen>
     <dimen name="text_size">16sp</dimen>
     <dimen name="invite_user_face">48dp</dimen>
-    <dimen name="attitudes_face">28dp</dimen>
+    <dimen name="attitudes_face">32dp</dimen>
     <item name="disable_text_alphe" format="float" type="dimen">0.6</item>
 </resources>

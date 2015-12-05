@@ -134,7 +134,7 @@ public class GroupChatList extends BaseFragment {
         };
         groupListAdapter = new GroupListAdapter(groupClasses, mActivity, onclick);
         mGroupListRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new AutoGridfitLayoutManager(mContext, 180);
+        mLayoutManager = new AutoGridfitLayoutManager(mContext, 150);
         mGroupListRecyclerView.setLayoutManager(mLayoutManager);
         mGroupListRecyclerView.setAdapter(groupListAdapter);
     }

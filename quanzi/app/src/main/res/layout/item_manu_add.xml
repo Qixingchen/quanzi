@@ -11,7 +11,7 @@
         android:id="@+id/phonenumber"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:hint="手机号的任何部分哦"
+        android:hint="对方的手机号"
         android:inputType="phone"/>
 
     <Button

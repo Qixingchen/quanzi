@@ -18,6 +18,7 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
+import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.Tool;
 
 import rx.Subscription;
@@ -96,6 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             BusProvider.getInstance().unregister(this);
         } catch (IllegalArgumentException ignore) {
         }
+        RequreForImage.clear(this);
     }
 
 

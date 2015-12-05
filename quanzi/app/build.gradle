@@ -10,8 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "0.2.7-nightly"
-
-        //multiDexEnabled true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -75,8 +74,7 @@ dependencies {
     compile 'com.android.support:percent:23.1.1'
     compile 'com.android.support:customtabs:23.1.1'
     //65K
-    //compile 'com.android.support:multidex:1.0.1'
-    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.code.gson:gson:2.4'
     //图像加载
     compile 'com.squareup.picasso:picasso:2.5.2'

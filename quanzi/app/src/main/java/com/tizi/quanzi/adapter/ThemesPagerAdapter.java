@@ -84,7 +84,7 @@ public class ThemesPagerAdapter extends PagerAdapter {
         countDownTextView = (TextView) rootView.findViewById(R.id.countdown_time);
         themeContentTextView = (TextView) rootView.findViewById(R.id.theme_content);
 
-        rootView.setOnClickListener(new View.OnClickListener() {
+        themeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent dynsIntent = new Intent(App.getApplication(), DynsActivity.class);
@@ -102,9 +102,6 @@ public class ThemesPagerAdapter extends PagerAdapter {
         /*倒计时*/
         int countDown = FriendTime.getThemeCountDown(act.beginTime, act.endTime);
         assert timer != null;
-        if (timer[position] != null) {
-            timer[position].cancel();
-        }
         timer[position] = new Timer();
         timer[position].setOnResult(new Timer.OnResult() {
             @Override

@@ -14,18 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupSelectAdapter;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
-import com.tizi.quanzi.network.GetVolley;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
@@ -279,7 +279,7 @@ public class SendDynFragment extends BaseFragment {
         for (int i = 0; i < Math.min(9, size); i++) {
             weibo_pics[i].setVisibility(View.VISIBLE);
             String uri = GetThumbnailsUri.maxHeiAndWei(photoUrls.get(i), 270, 480);
-            ((NetworkImageView) weibo_pics[i].findViewById(R.id.pic)).setImageUrl(uri, GetVolley.getmInstance().getImageLoader());
+            Picasso.with(mContext).load(uri).fit().into((ImageView) weibo_pics[i].findViewById(R.id.pic));
         }
         for (int i = size; i < 9; i++) {
             weibo_pics[i].setVisibility(View.GONE);

@@ -43,6 +43,8 @@ public class Register1stepFragment extends BaseFragment {
     private CheckBox agreeBox;
     private View agreeView;
 
+    private SimpleCustomChromeTabsHelper mCustomTabHelper;
+
     public Register1stepFragment() {
     }
 
@@ -80,7 +82,7 @@ public class Register1stepFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
 
-        final SimpleCustomChromeTabsHelper mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
+        mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
         if (SimpleCustomChromeTabsHelper.canUseCustomChromeTabs(mContext)) {
 
             mCustomTabHelper.prepareUrl(getString(R.string.user_license));
@@ -255,6 +257,11 @@ public class Register1stepFragment extends BaseFragment {
         }).setTimer(1000 * StaticField.Limit.SIGN_CODE_COUNTDOWN).start();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomTabHelper.unbindCustomTabsService();
+    }
 
     public interface NextStep {
         /**

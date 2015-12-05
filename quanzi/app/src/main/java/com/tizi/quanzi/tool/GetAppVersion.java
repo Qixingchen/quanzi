@@ -28,8 +28,8 @@ public class GetAppVersion {
         ApiInfo.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
-                long lastUpdate = Long.valueOf(AppStaticValue.getStringPrefer(StaticField.Preferences.LastAppUpDateTime));
-                if (Tool.getBeijinTime() - lastUpdate < 3600 * 1000) {
+                int lastUpdate = AppStaticValue.getIntPrefer(StaticField.Preferences.LastAppUpDateTime, 0);
+                if (Tool.getBeijinTime() / 1000 - lastUpdate < 3600 * 1000) {
                     return;
                 }
                 //                if (AppStaticValue.getStringPrefer(StaticField.Preferences.AllowAppUpDate)
@@ -55,12 +55,11 @@ public class GetAppVersion {
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    AppStaticValue.setStringPrefer(StaticField.Preferences.LastAppUpDateTime,
-                                            String.valueOf(Tool.getBeijinTime()));
+                                    AppStaticValue.setIntPrefer(StaticField.Preferences.LastAppUpDateTime,
+                                            (int) (Tool.getBeijinTime() / 1000));
                                     dialog.dismiss();
                                 }
                             }
-
                     )
                             //                            .setNegativeButton("不再提示", new DialogInterface.OnClickListener() {
                             //
@@ -103,7 +102,7 @@ public class GetAppVersion {
         String[] servers = server.split("\\.");
         int length = Math.min(apps.length, servers.length);
         for (int i = 0; i < length; i++) {
-            if (Integer.parseInt(servers[i]) > Integer.parseInt(apps[i])) {
+            if (Integer.parseInt(servers[i]) > Integer.parseInt(apps[i].split("-")[0])) {
                 return true;
             }
         }

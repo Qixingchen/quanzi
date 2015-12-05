@@ -38,6 +38,7 @@ public class LockLock extends BaseFragment {
     private int nowPosition;
     private Theme themes;
 
+    private SimpleCustomChromeTabsHelper mCustomTabHelper;
 
     public LockLock() {
         // Required empty public constructor
@@ -126,7 +127,7 @@ public class LockLock extends BaseFragment {
             }
         });
 
-        final SimpleCustomChromeTabsHelper mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
+        mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
         SimpleCustomChromeTabsHelper.CustomTabsUiBuilder uiBuilder = mCustomTabHelper.new CustomTabsUiBuilder();
         uiBuilder.setToolbarColor(mActivity.getResources().getColor(R.color.colorPrimary));
 
@@ -166,4 +167,9 @@ public class LockLock extends BaseFragment {
         ).getThemes();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomTabHelper.unbindCustomTabsService();
+    }
 }

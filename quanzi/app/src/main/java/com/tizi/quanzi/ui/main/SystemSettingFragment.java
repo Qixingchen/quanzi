@@ -20,6 +20,8 @@ public class SystemSettingFragment extends BaseFragment {
 
     private TextView version, openSourceLicenses, userLicense;
 
+    private SimpleCustomChromeTabsHelper mCustomTabHelper;
+
     public SystemSettingFragment() {
     }
 
@@ -49,7 +51,7 @@ public class SystemSettingFragment extends BaseFragment {
     @Override
     protected void initViewsAndSetEvent() {
 
-        final SimpleCustomChromeTabsHelper mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
+        mCustomTabHelper = new SimpleCustomChromeTabsHelper(mActivity);
         mCustomTabHelper.prepareUrl(getString(R.string.update_notices));
         mCustomTabHelper.prepareUrl(getString(R.string.user_license));
         mCustomTabHelper.prepareUrl(getString(R.string.open_source_license));
@@ -78,4 +80,9 @@ public class SystemSettingFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mCustomTabHelper.unbindCustomTabsService();
+    }
 }

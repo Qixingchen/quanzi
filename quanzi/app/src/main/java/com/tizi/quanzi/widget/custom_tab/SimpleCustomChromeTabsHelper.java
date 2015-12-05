@@ -45,7 +45,7 @@ public class SimpleCustomChromeTabsHelper {
     private static final String TAG = "CustomTabsHelper";
     private static final long WARM_UP_ASYNC = 0L;
     private static String sPackageNameToUse;
-    private Activity mContext;
+    private Activity mActivity;
     private CustomTabsClient mCustomTabClient;
     private CustomTabsSession mCustomTabSession;
     private SparseArrayCompat<CustomTabsCallback> mCallbacks = new SparseArrayCompat<>();
@@ -84,8 +84,8 @@ public class SimpleCustomChromeTabsHelper {
     private CustomTabFallback mFallback;
 
     public SimpleCustomChromeTabsHelper(Activity context) {
-        mContext = context;
-        sPackageNameToUse = getPackageNameToUse(mContext);
+        mActivity = context;
+        sPackageNameToUse = getPackageNameToUse(mActivity);
     }
 
     public SimpleCustomChromeTabsHelper(Activity context, @XmlRes int attrs) {
@@ -174,9 +174,19 @@ public class SimpleCustomChromeTabsHelper {
         return false;
     }
 
+    public void unbindCustomTabsService() {
+
+        if (mCustomTabConnection != null) {
+            mActivity.unbindService(mCustomTabConnection);
+        }
+        mCustomTabClient = null;
+        mCustomTabSession = null;
+        mActivity = null;
+    }
+
     private CustomTabsIntent buildCustomTabIntent(CustomTabsSession customTabSession) {
         mBuilder = new CustomTabsIntent.Builder(customTabSession);
-        return mBuilder.setToolbarColor(getThemePrimaryColor(mContext)).setShowTitle(true).build();
+        return mBuilder.setToolbarColor(getThemePrimaryColor(mActivity)).setShowTitle(true).build();
     }
 
     public void setFallback(CustomTabFallback fallback) {
@@ -192,7 +202,7 @@ public class SimpleCustomChromeTabsHelper {
             signalFallback();
             return;
         }
-        buildCustomTabIntent(mCustomTabSession).launchUrl(mContext, Uri.parse(url));
+        buildCustomTabIntent(mCustomTabSession).launchUrl(mActivity, Uri.parse(url));
     }
 
     public void openUrl(String url, CustomTabsUiBuilder builder) {
@@ -200,7 +210,7 @@ public class SimpleCustomChromeTabsHelper {
             signalFallback();
             return;
         }
-        builder.build(mContext, mCustomTabSession).launchUrl(mContext, Uri.parse(url));
+        builder.build(mActivity, mCustomTabSession).launchUrl(mActivity, Uri.parse(url));
     }
 
     public void openUrlForResult(String url, int requestCode) {
@@ -209,21 +219,21 @@ public class SimpleCustomChromeTabsHelper {
     }
 
     public void openUrlForResult(String url, int requestCode, CustomTabsUiBuilder builder) {
-        CustomTabsIntent customTabsIntent = builder.build(mContext, mCustomTabSession);
+        CustomTabsIntent customTabsIntent = builder.build(mActivity, mCustomTabSession);
         openUrlForResult(customTabsIntent, url, requestCode);
     }
 
     private void openUrlForResult(CustomTabsIntent customTabsIntent, String url, int requestCode) {
         customTabsIntent.intent.setData(Uri.parse(url));
-        mContext.startActivityForResult(customTabsIntent.intent, requestCode);
+        mActivity.startActivityForResult(customTabsIntent.intent, requestCode);
     }
 
     public void prepareUrl(String url) {
-        if (sPackageNameToUse == null && getPackageNameToUse(mContext) == null) {
+        if (sPackageNameToUse == null && getPackageNameToUse(mActivity) == null) {
             return;
         }
         if (mCustomTabClient == null || mCustomTabSession == null) {
-            CustomTabsClient.bindCustomTabsService(mContext, sPackageNameToUse, mCustomTabConnection);
+            CustomTabsClient.bindCustomTabsService(mActivity, sPackageNameToUse, mCustomTabConnection);
         } else {
             mCustomTabSession.mayLaunchUrl(Uri.parse(url), null, null);
         }
@@ -232,7 +242,7 @@ public class SimpleCustomChromeTabsHelper {
 
     private boolean hasBrowser() {
         Intent activityIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com"));
-        return Tool.isIntentSafe(mContext, activityIntent);
+        return Tool.isIntentSafe(mActivity, activityIntent);
     }
 
     private void signalFallback() {

@@ -140,6 +140,8 @@ public class StaticField {
         public final static int shareImage = 106;
         public final static int QrCodeScan = 107;
 
+        public final static int QrCodeScan_QuestCode = 0x0000c0de;
+
         public static boolean isPermissionRequest(int code) {
             return code >= 0 && code <= 255;
         }

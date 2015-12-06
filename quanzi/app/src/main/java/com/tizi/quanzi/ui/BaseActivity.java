@@ -46,6 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         this.mCompositeSubscription.add(s);
     }
 
+    @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         mContext = this;

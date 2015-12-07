@@ -115,6 +115,27 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
             themeID = act.id;
             startTime = act.beginTime;
             endTime = act.endTime;
+            int countDown = FriendTime.getThemeCountDown(startTime, endTime);
+            if (countDown < 0) {
+                countDown = -countDown;
+                if (timer != null) {
+                    timer.cancel();
+                }
+                timer = new Timer();
+                timer.setOnResult(new Timer.OnResult() {
+                    @Override
+                    public void OK() {
+                    }
+
+                    @Override
+                    public void countdown(long s, long goneS) {
+                        countdownTime.setText(String.format("%s还有%d:%02d:%02d开始", act.title,
+                                s / 3600, (s % 3600) / 60, s % 60));
+                    }
+                }).setTimer(countDown * 1000).start();
+                groupNums.setText("");
+                return;
+            }
 
             ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                 @Override
@@ -156,8 +177,6 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
 
                 }
             }).getBoomGroup(themeID);
-
-            int countDown = FriendTime.getThemeCountDown(startTime, endTime);
 
             if (timer != null) {
                 timer.cancel();

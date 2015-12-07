@@ -170,15 +170,24 @@ public class FriendTime {
 
     /**
      * 获取活动结束倒计时 (s)
+     *
+     * @return >0 距离活动结束的时间 <0距离活动开始的时间
      */
     public static int getThemeCountDown(String startTime, String endTime) {
-        if (!isInThemeTime(startTime, endTime)) {
-            return 0;
-        }
         final int AllDayS = 24 * 3600;
         int now = getDayS(getDayTimeFromUNIX(Tool.getBeijinTime()));
         int start = getDayS(getDayTimeFromString(startTime));
         int end = getDayS(getDayTimeFromString(endTime));
+
+        //还未开始,返回负值
+        if (!isInThemeTime(startTime, endTime)) {
+            int ans = now - start;
+            if (ans > 0) {
+                ans -= AllDayS;
+            }
+            return ans;
+        }
+
         //如果是跨天的活动
         if (start > end) {
             if (now > start) {

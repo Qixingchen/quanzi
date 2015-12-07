@@ -23,6 +23,7 @@ import com.tizi.quanzi.gson.AddComment;
 import com.tizi.quanzi.gson.AddZan;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.Dyns;
+import com.tizi.quanzi.gson.IsZan;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.FriendTime;
@@ -115,6 +116,25 @@ public class DynInfoFragment extends BaseFragment {
         if (isUser) {
             return;
         }
+        //判断是否已点赞
+        DynamicAct.getNewInstance(isUser).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                IsZan isZan = (IsZan) ts;
+                if (isZan.cnt == 0) {
+                    iszan = false;
+                    Picasso.with(mContext).load(R.drawable.ic_like_grey).into(plusOne);
+                } else {
+                    iszan = true;
+                    Picasso.with(mContext).load(R.drawable.ic_like_red).into(plusOne);
+                }
+            }
+
+            @Override
+            public void onError(String Message) {
+                Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
+            }
+        }).isZan(dyn.dynid);
         plusOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

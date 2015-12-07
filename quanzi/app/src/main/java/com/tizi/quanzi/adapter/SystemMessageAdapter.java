@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,26 +40,80 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
 
     public final static int DELETE_ALL = -1;
-    private List<SystemMessagePair> systemMessagePairs;
+    private SortedList<SystemMessagePair> systemMessagePairs = new SortedList<>(SystemMessagePair.class, new SortedList.Callback<SystemMessagePair>() {
+        @Override
+        public int compare(SystemMessagePair o1, SystemMessagePair o2) {
+            if (!o1.systemMessage.isread && !o2.systemMessage.isread) {
+                return (int) (o2.lastMessTime / 1000L - o1.lastMessTime / 1000L);
+            }
+            if (!o1.systemMessage.isread) {
+                return -1;
+            }
+            if (!o2.systemMessage.isread) {
+                return 1;
+            }
+            return (int) (o2.lastMessTime / 1000L - o1.lastMessTime / 1000L);
+        }
+
+        @Override
+        public void onInserted(int position, int count) {
+            notifyItemRangeInserted(position, count);
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+            notifyItemRangeRemoved(position, count);
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+            notifyItemMoved(fromPosition, toPosition);
+        }
+
+        @Override
+        public void onChanged(int position, int count) {
+            notifyItemRangeChanged(position, count);
+        }
+
+        @Override
+        public boolean areContentsTheSame(SystemMessagePair oldItem, SystemMessagePair newItem) {
+            return oldItem.systemMessage.equals(newItem.systemMessage);
+        }
+
+        @Override
+        public boolean areItemsTheSame(SystemMessagePair item1, SystemMessagePair item2) {
+            return item1.ID.equals(item2.ID);
+        }
+    });
     private Context mContext;
     private Onclick onclick;
 
     public SystemMessageAdapter(List<SystemMessagePair> systemMessagePairs, Context mContext, Onclick onclick) {
-        this.systemMessagePairs = systemMessagePairs;
+        this.systemMessagePairs.beginBatchedUpdates();
+        this.systemMessagePairs.addAll(systemMessagePairs);
+        this.systemMessagePairs.endBatchedUpdates();
         this.mContext = mContext;
         this.onclick = onclick;
-        BusProvider.getInstance().register(this);
+        try {
+            BusProvider.getInstance().register(this);
+        } catch (IllegalStateException ignore) {
+        }
     }
 
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        BusProvider.getInstance().unregister(this);
+        try {
+            BusProvider.getInstance().unregister(this);
+        } catch (IllegalStateException ignore) {
+        }
     }
 
     @Subscribe
     public void onChanged(SystemMessageList list) {
-        notifyDataSetChanged();
+        this.systemMessagePairs.beginBatchedUpdates();
+        this.systemMessagePairs.addAll(SystemMessageList.getInstance().getGroupList());
+        this.systemMessagePairs.endBatchedUpdates();
     }
 
     /**

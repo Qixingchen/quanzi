@@ -50,7 +50,7 @@ public class StartPrivateChat {
 
                 switch (list.size()) {
                     case 0:
-                        NewAVIMConversation.getInstance().setConversationCallBack(
+                        NewAVIMConversation.getNewInstance().setConversationCallBack(
                                 new NewAVIMConversation.ConversationCallBack() {
                                     @Override
                                     public void setConversationID(String conversationID) {

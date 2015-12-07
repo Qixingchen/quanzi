@@ -97,7 +97,7 @@ public class GroupChatList extends BaseFragment {
         //            Log.i(TAG, String.format("共有%d个群", groupClasses.size()));
         //            for (GroupClass groupClass : groupClasses) {
         //
-        //                FlushMess.getInstance().Flush(groupClass.convId);
+        //                FlushMess.getNewInstance().Flush(groupClass.convId);
         //            }
         //        }
         //        AppStaticValue.setStringPrefer(getString(R.string.isFirstRun) + AppStaticValue.getUserID(), "NO");

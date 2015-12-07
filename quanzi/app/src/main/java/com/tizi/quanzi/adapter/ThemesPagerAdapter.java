@@ -111,7 +111,7 @@ public class ThemesPagerAdapter extends PagerAdapter {
 
             @Override
             public void countdown(long s, long goneS) {
-                countDownTextView.setText(String.format("%d:%2d:%2d", s / 3600, (s % 3600) / 60,
+                countDownTextView.setText(String.format("%d:%02d:%02d", s / 3600, (s % 3600) / 60,
                         s % 60));
             }
         }).setTimer(countDown * 1000).start();

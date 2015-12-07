@@ -170,7 +170,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
 
                 @Override
                 public void countdown(long s, long goneS) {
-                    countdownTime.setText(String.format("%s还剩%d:%d:%d结束", act.title, s / 3600, (s % 3600) / 60,
+                    countdownTime.setText(String.format("%s还剩%d:%02d:%02d结束", act.title, s / 3600, (s % 3600) / 60,
                             s % 60));
                 }
             }).setTimer(countDown * 1000).start();

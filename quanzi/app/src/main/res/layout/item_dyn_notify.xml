@@ -123,7 +123,6 @@
                 android:layout_width="@dimen/group_face_small"
                 android:layout_height="@dimen/group_face_small"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
                 tools:src="@drawable/face"/>
 
             <TextView

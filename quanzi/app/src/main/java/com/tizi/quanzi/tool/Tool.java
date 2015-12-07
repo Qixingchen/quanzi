@@ -200,14 +200,14 @@ public class Tool {
     /**
      * Hide keyboard on touch of UI
      */
-    public static void hideKeyboard(View view, final Activity activity) {
+    public static void addHideKeyboardToAllViews(View view, final Activity activity) {
         if (view instanceof ViewGroup) {
 
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
 
                 View innerView = ((ViewGroup) view).getChildAt(i);
 
-                hideKeyboard(innerView, activity);
+                addHideKeyboardToAllViews(innerView, activity);
             }
         }
         if (!(view instanceof EditText)) {
@@ -227,7 +227,7 @@ public class Tool {
     /**
      * Hide keyboard while focus is moved
      */
-    private static void hideSoftKeyboard(View view, Activity activity) {
+    public static void hideSoftKeyboard(View view, Activity activity) {
         if (view != null) {
             InputMethodManager inputManager = (InputMethodManager) activity
                     .getSystemService(Context.INPUT_METHOD_SERVICE);

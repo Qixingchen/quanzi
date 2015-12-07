@@ -10,6 +10,7 @@
     android:layout_marginBottom="20dp"
     android:layout_marginEnd="20dp"
     android:background="@color/md_green_500"
+    android:gravity="center"
     android:textSize="@dimen/normal_text_size"
     tools:text="123"/>
 

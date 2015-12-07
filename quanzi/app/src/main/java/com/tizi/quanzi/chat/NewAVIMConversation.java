@@ -20,21 +20,13 @@ import java.util.Map;
 public class NewAVIMConversation {
 
     private final static String TAG = NewAVIMConversation.class.getSimpleName();
-    private static NewAVIMConversation mInstance;
     private ConversationCallBack conversationCallBack;
 
     private NewAVIMConversation() {
     }
 
-    public static NewAVIMConversation getInstance() {
-        if (mInstance == null) {
-            synchronized (NewAVIMConversation.class) {
-                if (mInstance == null) {
-                    mInstance = new NewAVIMConversation();
-                }
-            }
-        }
-        return mInstance;
+    public static NewAVIMConversation getNewInstance() {
+        return new NewAVIMConversation();
     }
 
     /**
@@ -64,7 +56,7 @@ public class NewAVIMConversation {
                 }
             }
         });
-        return mInstance;
+        return this;
     }
 
     /***
@@ -104,7 +96,7 @@ public class NewAVIMConversation {
      */
     public NewAVIMConversation setConversationCallBack(ConversationCallBack conversationCallBack) {
         this.conversationCallBack = conversationCallBack;
-        return mInstance;
+        return this;
 
     }
 

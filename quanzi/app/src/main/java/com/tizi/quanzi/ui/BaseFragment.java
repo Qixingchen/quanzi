@@ -37,7 +37,7 @@ public abstract class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
         findViews(view);
-        Tool.hideKeyboard(view, getActivity());
+        Tool.addHideKeyboardToAllViews(view, getActivity());
     }
 
     @Override

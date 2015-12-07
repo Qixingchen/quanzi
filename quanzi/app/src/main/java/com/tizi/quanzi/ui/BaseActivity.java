@@ -56,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             Log.e(TAG, "fragment view is null");
             view = getWindow().getDecorView().getRootView();
         }
-        Tool.hideKeyboard(view, this);
+        Tool.addHideKeyboardToAllViews(view, this);
         findView();
         initView();
         setViewEvent();

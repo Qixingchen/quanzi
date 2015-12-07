@@ -29,7 +29,7 @@ public class GetAppVersion {
             @Override
             public void onOK(Object ts) {
                 int lastUpdate = AppStaticValue.getIntPrefer(StaticField.Preferences.LastAppUpDateTime, 0);
-                if (Tool.getBeijinTime() / 1000 - lastUpdate < 3600 * 1000) {
+                if (Tool.getBeijinTime() / 1000 - lastUpdate < 3600) {
                     return;
                 }
                 //                if (AppStaticValue.getStringPrefer(StaticField.Preferences.AllowAppUpDate)
@@ -51,7 +51,7 @@ public class GetAppVersion {
                                     installApk.setData(Uri.parse(apiInfo.info.androidUrl));
                                     context.startActivity(installApk);
                                 }
-                            }).setNegativeButton("稍后提示", new DialogInterface.OnClickListener() {
+                            }).setNegativeButton("一小时后提示", new DialogInterface.OnClickListener() {
 
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -72,7 +72,7 @@ public class GetAppVersion {
                             //                                    }
                             //
                             //                            )
-                            .setNeutralButton("下次再说", new DialogInterface.OnClickListener() {
+                            .setNeutralButton("下次启动时再说", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();

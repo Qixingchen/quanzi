@@ -50,6 +50,11 @@ public class NotifiMessageFragment extends BaseFragment {
 
         notifiPagerAdapter = new NotifiPagerAdapter(mContext);
         notifiViewPager.setAdapter(notifiPagerAdapter);
+        //如果没有未读私信,但有未读通知,跳转到通知页
+        if (PrivateMessPairList.getInstance().getAllUnreadCount() == 0
+                && SystemMessageList.getInstance().getAllUnreadCount() != 0) {
+            notifiViewPager.setCurrentItem(1);
+        }
 
     }
 

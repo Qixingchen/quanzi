@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.NewAVIMConversation;
@@ -16,7 +17,9 @@ import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
+import com.tizi.quanzi.otto.FragmentResume;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
 
@@ -52,7 +55,7 @@ public class NewGroupActivity extends BaseActivity {
 
     @Override
     protected void setViewEvent() {
-        NewAVIMConversation.getInstance().setConversationCallBack(
+        NewAVIMConversation.getNewInstance().setConversationCallBack(
                 new NewAVIMConversation.ConversationCallBack() {
                     @Override
                     public void setConversationID(String conversationID) {
@@ -76,6 +79,7 @@ public class NewGroupActivity extends BaseActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_next_step) {
+            Tool.hideSoftKeyboard(view, mActivity);
 
             NewGroupStep1Fragment.NewGroupStep1Ans temp = newGroupStep1Fragment.getNewGroupAns();
             /*下一步*/
@@ -84,7 +88,7 @@ public class NewGroupActivity extends BaseActivity {
                 /*ConvID*/
                 if (convID.compareTo("0") == 0) {
                     Snackbar.make(view, "LC ConvID 为空,请稍等,正在重试", Snackbar.LENGTH_LONG).show();
-                    NewAVIMConversation.getInstance().setConversationCallBack(
+                    NewAVIMConversation.getNewInstance().setConversationCallBack(
                             new NewAVIMConversation.ConversationCallBack() {
                                 @Override
                                 public void setConversationID(String conversationID) {
@@ -163,6 +167,15 @@ public class NewGroupActivity extends BaseActivity {
         groupTagFragment = GroupTagFragment.newInstance(tags, false);
         getSupportFragmentManager().beginTransaction().hide(newGroupStep1Fragment)
                 .add(R.id.fragment, groupTagFragment).addToBackStack("GroupTagFragment").commit();
+    }
+
+    @Subscribe
+    public void onFragementResumeAndPause(FragmentResume resume) {
+        if (!resume.resumeOrPause && resume.FramgentName.equals(GroupTagFragment.class.getSimpleName())) {
+            mMenu.findItem(R.id.action_next_step).setVisible(true);
+            mMenu.findItem(R.id.action_tag_complete).setVisible(false);
+            mMenu.findItem(R.id.action_complete).setVisible(false);
+        }
     }
 
 }

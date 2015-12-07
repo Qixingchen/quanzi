@@ -177,7 +177,10 @@ public class SimpleCustomChromeTabsHelper {
     public void unbindCustomTabsService() {
 
         if (mCustomTabConnection != null) {
-            mActivity.unbindService(mCustomTabConnection);
+            try {
+                mActivity.unbindService(mCustomTabConnection);
+            } catch (Exception ignore) {
+            }
         }
         mCustomTabClient = null;
         mCustomTabSession = null;

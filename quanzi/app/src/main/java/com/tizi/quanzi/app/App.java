@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
@@ -52,7 +53,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         application = this;
         appStaticValue = new AppStaticValue();
         //泄露监视器
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             LeakCanary.install(this);
         }
 

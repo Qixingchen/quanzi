@@ -22,6 +22,8 @@ import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.otto.BusProvider;
+import com.tizi.quanzi.tool.FriendTime;
+import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.dyns.DynsActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
@@ -40,21 +42,32 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
     private final int BOOM_GROUP = 1;
     private final int NO_BOOM_GROUP = 2;
     private final int NO_SIGN_UP = 3;
+    private final int COUNT_DOWN = 4;
     private List<BoomGroupClass> boomGroups;
     private Context context;
     private String themeID;
     private OnClick onClick;
     private Boolean signed;
+    private boolean isStart;
+    private String start, end;
 
-    public BoomGroupListAdapter(Context context, String themeID) {
+    public BoomGroupListAdapter(Context context, String themeID, boolean isStart) {
         this.boomGroups = BoomGroupList.getInstance().getThemeBoomGroup(themeID);
         this.themeID = themeID;
         this.context = context;
-        BusProvider.getInstance().register(this);
+        this.isStart = isStart;
+        try {
+            BusProvider.getInstance().register(this);
+        } catch (IllegalStateException ignore) {
+        }
+
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (!isStart) {
+            return COUNT_DOWN;
+        }
         if (boomGroups == null || boomGroups.size() == 0) {
             if (signed == null || signed) {
                 return NO_BOOM_GROUP;
@@ -75,7 +88,10 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        BusProvider.getInstance().unregister(this);
+        try {
+            BusProvider.getInstance().unregister(this);
+        } catch (IllegalStateException ignore) {
+        }
     }
 
     public void setOnClick(OnClick onClick) {
@@ -105,11 +121,13 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
                 v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_no_boom_group, parent, false);
                 return new NoBoomGroupItemViewHolder(v);
+            case COUNT_DOWN:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_boom_countdown, parent, false);
+                return new CountDownItemViewHolder(v);
             default:
                 return null;
         }
-
-
     }
 
     /**
@@ -161,6 +179,9 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemCount() {
+        if (!isStart) {
+            return 1;
+        }
         if (boomGroups == null || boomGroups.size() == 0) {
             if (signed == null) {
                 ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
@@ -187,6 +208,10 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
         return boomGroups.size();
     }
 
+    public void setThemeTime(String start, String end) {
+        this.start = start;
+        this.end = end;
+    }
 
     public interface OnClick {
         void clickBoomGroup(BoomGroupClass boomGroup);
@@ -246,6 +271,27 @@ public class BoomGroupListAdapter extends RecyclerViewAdapterAbs {
                             .addToBackStack("ThemeSignUpFragment").commit();
                 }
             });
+        }
+    }
+
+    class CountDownItemViewHolder extends RecyclerView.ViewHolder {
+        private TextView countDown;
+
+        public CountDownItemViewHolder(View v) {
+            super(v);
+            countDown = (TextView) v.findViewById(R.id.countdown_time);
+            int countdownTime = FriendTime.getThemeCountDown(start, end);
+            new Timer().setOnResult(new Timer.OnResult() {
+                @Override
+                public void OK() {
+                }
+
+                @Override
+                public void countdown(long s, long goneS) {
+                    countDown.setText(String.format("还有%d:%02d:%02d开始",
+                            s / 3600, (s % 3600) / 60, s % 60));
+                }
+            }).setTimer(-countdownTime * 1000).start();
         }
     }
 }

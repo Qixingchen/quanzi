@@ -164,6 +164,7 @@ public class BigWorld extends BaseFragment {
             public void onClick(View v) {
                 if (Tool.isGuest()) {
                     Tool.GuestAction(mContext);
+                    return;
                 }
                 Intent dyn = new Intent(mContext, DynsActivity.class);
                 dyn.putExtra("isUser", true);
@@ -176,6 +177,7 @@ public class BigWorld extends BaseFragment {
             public void onClick(View v) {
                 if (Tool.isGuest()) {
                     Tool.GuestAction(mContext);
+                    return;
                 }
                 Intent dyn = new Intent(mContext, DynsActivity.class);
                 dyn.putExtra("isUser", true);

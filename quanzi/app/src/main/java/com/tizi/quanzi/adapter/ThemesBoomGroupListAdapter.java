@@ -131,12 +131,14 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
 
                     @Override
                     public void countdown(long s, long goneS) {
-                        countdownTime.setText(String.format("%s还有%d:%02d:%02d开始", act.title,
-                                s / 3600, (s % 3600) / 60, s % 60));
                     }
                 }).setTimer(countDown * 1000).start();
                 groupNums.setText("");
-                boomGroupItemRecyclerview.setVisibility(View.GONE);
+                countdownTime.setText(act.title);
+                boomGroupListAdapter = new BoomGroupListAdapter(mActivity, themeID, false);
+                boomGroupListAdapter.setThemeTime(startTime, endTime);
+                boomGroupItemRecyclerview.setAdapter(boomGroupListAdapter);
+                boomGroupItemRecyclerview.setLayoutManager(new AutoLinearLayoutManager(mActivity, OrientationHelper.VERTICAL, false));
                 return;
             }
 
@@ -160,8 +162,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                         }
                     }
 
-                    boomGroupItemRecyclerview.setVisibility(View.VISIBLE);
-                    boomGroupListAdapter = new BoomGroupListAdapter(mActivity, themeID);
+                    boomGroupListAdapter = new BoomGroupListAdapter(mActivity, themeID, true);
                     boomGroupListAdapter.setOnClick(new BoomGroupListAdapter.OnClick() {
                         @Override
                         public void clickBoomGroup(BoomGroupClass boomGroup) {

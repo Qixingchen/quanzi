@@ -16,7 +16,6 @@ import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
-import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
@@ -93,21 +92,13 @@ public class LockLock extends BaseFragment {
         boomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Theme.ActsEntity act = themes.acts.get(nowPosition);
-                if (//BuildConfig.BUILD_TYPE.equals("debug") ||
-                        FriendTime.isInThemeTime(act.beginTime, act.endTime)) {
-                    getParentFragment().getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
-                                    R.anim.no_change, R.anim.slide_out_to_bottom)
-                            .replace(R.id.fragment, BoomGroupFragment.newInstance(themes))
-                            .addToBackStack("BoomGroupFragment").commit();
-                } else {
-                    getParentFragment().getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
-                                    R.anim.no_change, R.anim.slide_out_to_bottom)
-                            .replace(R.id.fragment, CountdownFragment.newInstance(act.beginTime, act.id))
-                            .addToBackStack("CountdownFragment").commit();
-                }
+
+                getParentFragment().getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
+                                R.anim.no_change, R.anim.slide_out_to_bottom)
+                        .replace(R.id.fragment, BoomGroupFragment.newInstance(themes))
+                        .addToBackStack("BoomGroupFragment").commit();
+
             }
         });
 

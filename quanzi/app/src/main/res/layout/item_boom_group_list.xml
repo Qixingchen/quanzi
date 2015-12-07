@@ -18,6 +18,7 @@
         android:id="@+id/group_nums"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:textSize="@dimen/normal_text_size"
         tools:text="共有X个群"/>
 

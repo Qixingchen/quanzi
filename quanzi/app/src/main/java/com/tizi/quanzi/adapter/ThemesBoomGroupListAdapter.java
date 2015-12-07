@@ -2,6 +2,7 @@ package com.tizi.quanzi.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -116,7 +117,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
             startTime = act.beginTime;
             endTime = act.endTime;
             int countDown = FriendTime.getThemeCountDown(startTime, endTime);
-            if (countDown < 0) {
+            if (countDown <= 0) {
                 countDown = -countDown;
                 if (timer != null) {
                     timer.cancel();
@@ -125,6 +126,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                 timer.setOnResult(new Timer.OnResult() {
                     @Override
                     public void OK() {
+                        notifiItemChange();
                     }
 
                     @Override
@@ -134,6 +136,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                     }
                 }).setTimer(countDown * 1000).start();
                 groupNums.setText("");
+                boomGroupItemRecyclerview.setVisibility(View.GONE);
                 return;
             }
 
@@ -157,7 +160,7 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                         }
                     }
 
-
+                    boomGroupItemRecyclerview.setVisibility(View.VISIBLE);
                     boomGroupListAdapter = new BoomGroupListAdapter(mActivity, themeID);
                     boomGroupListAdapter.setOnClick(new BoomGroupListAdapter.OnClick() {
                         @Override
@@ -185,14 +188,27 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
             timer.setOnResult(new Timer.OnResult() {
                 @Override
                 public void OK() {
+                    notifiItemChange();
                 }
 
                 @Override
                 public void countdown(long s, long goneS) {
-                    countdownTime.setText(String.format("%s还剩%d:%02d:%02d结束", act.title, s / 3600, (s % 3600) / 60,
-                            s % 60));
+                    countdownTime.setText(String.format("%s还剩%d:%02d:%02d结束", act.title, s / 3600,
+                            (s % 3600) / 60, s % 60));
                 }
             }).setTimer(countDown * 1000).start();
+        }
+
+        private void notifiItemChange() {
+            Handler handler = new Handler();
+
+            final Runnable r = new Runnable() {
+                public void run() {
+                    notifyItemChanged(getLayoutPosition());
+                }
+            };
+
+            handler.post(r);
         }
     }
 }

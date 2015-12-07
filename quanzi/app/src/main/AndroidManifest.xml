@@ -29,7 +29,9 @@
     <!-- 震动 -->
     <uses-permission android:name="android.permission.VIBRATE"/>
     <!--拍照-->
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        android:maxSdkVersion="22"/>
 
     <!-- 需要相机来照相，但不是必须的 -->
     <uses-feature

@@ -6,5 +6,6 @@
     <string name="user_license">http://120.25.232.240:8080/protocol.html</string>
     <string name="open_source_license">https://github.com/Qixingchen/quanzi_public/wiki/License</string>
     <string name="update_notices">https://github.com/Qixingchen/quanzi_public/wiki/%E5%8D%87%E7%BA%A7%E8%AE%B0%E5%BD%95</string>
+    <string name="uses_permission">https://github.com/Qixingchen/quanzi_public/wiki/uses-permission</string>
 
 </resources>

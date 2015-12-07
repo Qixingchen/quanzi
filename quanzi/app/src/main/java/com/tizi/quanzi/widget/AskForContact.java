@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 
+import com.tizi.quanzi.R;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 
@@ -47,7 +48,7 @@ public class AskForContact {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent permissionNotice = new Intent(Intent.ACTION_VIEW);
-                            permissionNotice.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/uses-permission"));
+                            permissionNotice.setData(Uri.parse(activity.getString(R.string.uses_permission)));
                             if (Tool.isIntentSafe(activity, permissionNotice)) {
                                 activity.startActivity(permissionNotice);
                             }

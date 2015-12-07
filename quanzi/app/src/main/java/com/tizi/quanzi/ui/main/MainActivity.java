@@ -1,14 +1,12 @@
 package com.tizi.quanzi.ui.main;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -198,8 +196,33 @@ public class MainActivity extends BaseActivity {
     }
 
     private void ScanQRCodeBySelf() {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CAMERA}, StaticField.PermissionRequestCode.QrCodeScan);
+        //        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        //            ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CAMERA}, StaticField.PermissionRequestCode.QrCodeScan);
+        //            return;
+        //        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(String.format("%s需要扫码应用", StaticField.AppName.AppZHName))
+                    .setMessage("由于Android Marshmallow新的权限体系，索取相机权限将导致无法使用Intent获取系统相机的拍摄结果。您需要安装扫码应用才能使用此功能。 ")
+                    .setPositiveButton("下载条码扫描器", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent installApk = new Intent(Intent.ACTION_VIEW);
+                            installApk.setData(Uri.parse("market://details?id=com.google.zxing.client.android"));
+                            startActivity(installApk);
+                        }
+                    })
+                    .setNeutralButton("查看权限说明", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent permissionNotice = new Intent(Intent.ACTION_VIEW);
+                            permissionNotice.setData(Uri.parse(mActivity.getString(R.string.uses_permission)));
+                            if (Tool.isIntentSafe(mActivity, permissionNotice)) {
+                                mActivity.startActivity(permissionNotice);
+                            }
+                        }
+                    })
+                    .show();
             return;
         }
         new IntentIntegrator(this).initiateScan();

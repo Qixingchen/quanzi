@@ -19,7 +19,6 @@ import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.otto.FragmentResume;
 import com.tizi.quanzi.tool.StaticField;
-import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.main.MainActivity;
 
@@ -79,8 +78,6 @@ public class NewGroupActivity extends BaseActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_next_step) {
-            Tool.hideSoftKeyboard(view, mActivity);
-
             NewGroupStep1Fragment.NewGroupStep1Ans temp = newGroupStep1Fragment.getNewGroupAns();
             /*下一步*/
             if (temp.complete) {
@@ -96,7 +93,7 @@ public class NewGroupActivity extends BaseActivity {
                                 }
                             }
                     ).newAChatGroup();
-                    return true;
+                    return super.onOptionsItemSelected(item);
                 }
 
                 ans = temp;
@@ -141,7 +138,7 @@ public class NewGroupActivity extends BaseActivity {
             } else {
                 Snackbar.make(view, "头像和群名是必须的哦~", Snackbar.LENGTH_LONG).show();
             }
-            return true;
+            return super.onOptionsItemSelected(item);
         }
 
         if (id == R.id.action_complete) {

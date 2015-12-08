@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +16,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.adapter.TagSelectAdapter;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.BaseFragment;
-import com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,18 +34,22 @@ public class GroupTagFragment extends BaseFragment {
 
     private static final String SELECT_TAGS = "selectTags";
     private static final String NEED_OK_BTN = "needOkBtn";
+    private static final String IS_GROUP = "isGroup";
 
     private static final int MAX_TAG_NUM = 5;
+    private static final int TAG_PER_GIVEN_NUM = 5;
 
     private boolean needOkbtn;
+    private boolean isGroup;
 
 
-    private TagView[] tagTextViews = new TagView[MAX_TAG_NUM];
+    private TagView[] selectedTagTextViews = new TagView[MAX_TAG_NUM];
+    private TextView[] givenTagTextVuews = new TextView[TAG_PER_GIVEN_NUM];
     private android.widget.TextView changetags;
     private android.widget.TextView addTag;
-    private RecyclerView tagrecyclerview;
     private TextView parentTagView;
     private Button okBtn;
+    private OnOK onOK;
 
     private AllTags.TagsEntity[] showTags = new AllTags.TagsEntity[MAX_TAG_NUM];
     private Map<String, List<AllTags.TagsEntity>> tagsMap = new TreeMap<>();
@@ -59,11 +59,12 @@ public class GroupTagFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static GroupTagFragment newInstance(ArrayList<AllTags.TagsEntity> selectTags, boolean needOkBtn) {
+    public static GroupTagFragment newInstance(ArrayList<AllTags.TagsEntity> selectTags, boolean needOkBtn, boolean isGroup) {
         GroupTagFragment fragment = new GroupTagFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(SELECT_TAGS, selectTags);
         args.putBoolean(NEED_OK_BTN, needOkBtn);
+        args.putBoolean(IS_GROUP, isGroup);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,6 +80,7 @@ public class GroupTagFragment extends BaseFragment {
                 }
             }
             needOkbtn = getArguments().getBoolean(NEED_OK_BTN);
+            isGroup = getArguments().getBoolean(IS_GROUP);
         }
     }
 
@@ -92,13 +94,17 @@ public class GroupTagFragment extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        this.tagrecyclerview = (RecyclerView) view.findViewById(R.id.tag_recycler_view);
+        this.givenTagTextVuews[0] = (TextView) view.findViewById(R.id.tag_need_select_1);
+        this.givenTagTextVuews[1] = (TextView) view.findViewById(R.id.tag_need_select_2);
+        this.givenTagTextVuews[2] = (TextView) view.findViewById(R.id.tag_need_select_3);
+        this.givenTagTextVuews[3] = (TextView) view.findViewById(R.id.tag_need_select_4);
+        this.givenTagTextVuews[4] = (TextView) view.findViewById(R.id.tag_need_select_5);
         this.changetags = (TextView) view.findViewById(R.id.change_tags);
-        this.tagTextViews[4] = new TagView(view.findViewById(R.id.tag_5));
-        this.tagTextViews[3] = new TagView(view.findViewById(R.id.tag_4));
-        this.tagTextViews[2] = new TagView(view.findViewById(R.id.tag_3));
-        this.tagTextViews[1] = new TagView(view.findViewById(R.id.tag_2));
-        this.tagTextViews[0] = new TagView(view.findViewById(R.id.tag_1));
+        this.selectedTagTextViews[4] = new TagView(view.findViewById(R.id.tag_selected_5));
+        this.selectedTagTextViews[3] = new TagView(view.findViewById(R.id.tag_selected_4));
+        this.selectedTagTextViews[2] = new TagView(view.findViewById(R.id.tag_selected_3));
+        this.selectedTagTextViews[1] = new TagView(view.findViewById(R.id.tag_selected_2));
+        this.selectedTagTextViews[0] = new TagView(view.findViewById(R.id.tag_selected_1));
         parentTagView = (TextView) view.findViewById(R.id.parent_tag_text_view);
         okBtn = (Button) view.findViewById(R.id.ok_btn);
         addTag = (TextView) view.findViewById(R.id.add_tag);
@@ -106,8 +112,6 @@ public class GroupTagFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-        tagrecyclerview.setLayoutManager(new GridLayoutManager(mContext, 4));
-        tagrecyclerview.setHasFixedSize(false);
 
         changetags.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,22 +129,22 @@ public class GroupTagFragment extends BaseFragment {
                         tagsMap.put(tag.parentTagName, new ArrayList<AllTags.TagsEntity>());
                     }
                     tagsMap.get(tag.parentTagName).add(tag);
-                    setTags();
                 }
+                setTags();
             }
 
             @Override
             public void onError(String Message) {
 
             }
-        }).findAllTags();
+        }).findAllTags(isGroup);
 
         for (int i = 0; i < MAX_TAG_NUM; i++) {
             final int finalI = i;
-            tagTextViews[i].deleteButton.setOnClickListener(new View.OnClickListener() {
+            selectedTagTextViews[i].view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteTagFromShoeTags(finalI);
+                    deleteTagFromShowTags(finalI);
                     setSelectTagsTextView();
                 }
             });
@@ -152,7 +156,9 @@ public class GroupTagFragment extends BaseFragment {
             okBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((QuanziZoneActivity) mActivity).OnTagsSelectOk(getTagsList());
+                    if (onOK != null) {
+                        onOK.OK(getTagsList());
+                    }
                 }
             });
         }
@@ -187,22 +193,28 @@ public class GroupTagFragment extends BaseFragment {
                                 Snackbar.make(view, "标签不能为空", Snackbar.LENGTH_LONG).show();
                                 return;
                             }
-                            if (input.getText().toString().length() > 7) {
-                                Snackbar.make(view, "标签最长7个字符", Snackbar.LENGTH_LONG).show();
-                                return;
-                            }
                             if (getTagsList().size() >= MAX_TAG_NUM) {
                                 Snackbar.make(view, String.format("只能选择%d个标签", MAX_TAG_NUM),
                                         Snackbar.LENGTH_LONG).show();
                                 return;
                             }
-                            addTagToShowTags(AllTags.TagsEntity.getNewTag(input.getText().toString()));
+                            addTagToShowTags(AllTags.TagsEntity.getNewTag(
+                                    input.getText().toString().replace(",", " ")));
                             dialog.dismiss();
                         }
                     });
                 }
             }
         });
+
+        for (int i = 0; i < TAG_PER_GIVEN_NUM; i++) {
+            givenTagTextVuews[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
     }
 
     private void setTags() {
@@ -213,37 +225,46 @@ public class GroupTagFragment extends BaseFragment {
         }
         String nowParent = parentnames[(parentLastPosition++) % tagsMap.size()];
         parentTagView.setText(nowParent);
-        TagSelectAdapter tagSelectAdapter = new TagSelectAdapter(
-                tagsMap.get(nowParent), new TagSelectAdapter.OnSelect() {
-            @Override
-            public void select(AllTags.TagsEntity tag) {
-                if (getTagsList().size() < MAX_TAG_NUM) {
-                    for (AllTags.TagsEntity tempTag : getTagsList()) {
-                        if (tempTag.tagName.compareTo(tag.tagName) == 0) {
-                            Snackbar.make(view, "此标签已被选择", Snackbar.LENGTH_LONG).show();
-                            return;
-                        }
-                    }
-                    addTagToShowTags(tag);
-                } else {
-                    Snackbar.make(view, String.format("只能选择%d个标签", MAX_TAG_NUM), Snackbar.LENGTH_LONG).show();
+
+        final List<AllTags.TagsEntity> thisTag = tagsMap.get(nowParent);
+
+        for (int i = 0; i < TAG_PER_GIVEN_NUM; i++) {
+            final AllTags.TagsEntity tag = thisTag.get(i);
+            givenTagTextVuews[i].setText(tag.tagName);
+            givenTagTextVuews[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onSelectTag(tag);
+                }
+            });
+        }
+
+    }
+
+    private void onSelectTag(AllTags.TagsEntity tag) {
+        if (getTagsList().size() < MAX_TAG_NUM) {
+            for (AllTags.TagsEntity tempTag : getTagsList()) {
+                if (tempTag.tagName.compareTo(tag.tagName) == 0) {
+                    Snackbar.make(view, "此标签已被选择", Snackbar.LENGTH_LONG).show();
+                    return;
                 }
             }
-        });
-        tagrecyclerview.setAdapter(tagSelectAdapter);
-
+            addTagToShowTags(tag);
+        } else {
+            Snackbar.make(view, String.format("只能选择%d个标签", MAX_TAG_NUM), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void setSelectTagsTextView() {
 
         for (int i = 0; i < MAX_TAG_NUM; i++) {
             if (showTags[i] == null) {
-                tagTextViews[i].view.setVisibility(View.INVISIBLE);
-                tagTextViews[i].view.setEnabled(false);
+                selectedTagTextViews[i].view.setVisibility(View.INVISIBLE);
+                selectedTagTextViews[i].view.setEnabled(false);
             } else {
-                tagTextViews[i].tagText.setText(showTags[i].tagName);
-                tagTextViews[i].view.setVisibility(View.VISIBLE);
-                tagTextViews[i].view.setEnabled(true);
+                selectedTagTextViews[i].tagText.setText(showTags[i].tagName);
+                selectedTagTextViews[i].view.setVisibility(View.VISIBLE);
+                selectedTagTextViews[i].view.setEnabled(true);
             }
         }
 
@@ -269,7 +290,7 @@ public class GroupTagFragment extends BaseFragment {
     /**
      * 在 showTags 中删除指定的tag
      */
-    private void deleteTagFromShoeTags(int postion) {
+    private void deleteTagFromShowTags(int postion) {
         showTags[postion] = null;
         setSelectTagsTextView();
     }
@@ -282,6 +303,10 @@ public class GroupTagFragment extends BaseFragment {
             }
         }
         return ans;
+    }
+
+    public void setOnOK(OnOK onOK) {
+        this.onOK = onOK;
     }
 
     public interface OnOK {

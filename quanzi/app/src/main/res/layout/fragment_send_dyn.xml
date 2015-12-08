@@ -24,7 +24,8 @@
             android:id="@+id/select_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_camera_alt_48dp"/>
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_camera"/>
 
         <include
             android:id="@+id/pics"

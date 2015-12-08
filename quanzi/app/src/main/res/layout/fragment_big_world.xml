@@ -74,7 +74,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginStart="5dp"
-                            tools:background="@drawable/man"/>
+                            tools:background="@drawable/ic_boy_color"/>
                     </LinearLayout>
 
                     <TextView
@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_people_36dp"/>
+                    android:src="@drawable/ic_friend_zone"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -136,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_photo_library_36dp"/>
+                    android:src="@drawable/ic_personal_gallery"/>
 
                 <TextView
                     android:layout_width="wrap_content"

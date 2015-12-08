@@ -15,6 +15,15 @@ import java.util.List;
 public class OtherUserInfo extends OnlySuccess implements Parcelable {
 
 
+    public static final Creator<OtherUserInfo> CREATOR = new Creator<OtherUserInfo>() {
+        public OtherUserInfo createFromParcel(Parcel source) {
+            return new OtherUserInfo(source);
+        }
+
+        public OtherUserInfo[] newArray(int size) {
+            return new OtherUserInfo[size];
+        }
+    };
     /**
      * tags : 马达加斯加的企鹅,小时代,权利的游戏,何以笙箫默,Allen Iverson
      * id : HTDM004895dfca0c4c404097a8d3150df70b0d19
@@ -46,29 +55,7 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
     @SerializedName("userName")
     public String userName;
 
-    public List<String> getTags() {
-        if (tags != null) {
-            return Arrays.asList(tags.split(","));
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-
-    public List<String> getTags() {
-        if (tags != null) {
-            return Arrays.asList(tags.split(","));
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
     public OtherUserInfo() {
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     protected OtherUserInfo(Parcel in) {
@@ -83,6 +70,19 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
         this.userName = in.readString();
     }
 
+    public List<String> getTags() {
+        if (tags != null) {
+            return Arrays.asList(tags.split(","));
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.tags);
@@ -95,14 +95,4 @@ public class OtherUserInfo extends OnlySuccess implements Parcelable {
         dest.writeString(this.bg);
         dest.writeString(this.userName);
     }
-
-    public static final Creator<OtherUserInfo> CREATOR = new Creator<OtherUserInfo>() {
-        public OtherUserInfo createFromParcel(Parcel source) {
-            return new OtherUserInfo(source);
-        }
-
-        public OtherUserInfo[] newArray(int size) {
-            return new OtherUserInfo[size];
-        }
-    };
 }

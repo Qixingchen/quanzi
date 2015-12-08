@@ -152,15 +152,17 @@ public class QuanziZoneActivity extends BaseActivity {
     }
 
     public void callForTagFragment(ArrayList<AllTags.TagsEntity> tags) {
-        groupTagFragment = GroupTagFragment.newInstance(tags, true);
+        groupTagFragment = GroupTagFragment.newInstance(tags, true, true);
+        groupTagFragment.setOnOK(new GroupTagFragment.OnOK() {
+            @Override
+            public void OK(ArrayList<AllTags.TagsEntity> tags) {
+                quanziSetFragment.setTags(tags);
+                getSupportFragmentManager().popBackStack();
+                getSupportFragmentManager().beginTransaction().show(quanziSetFragment).commit();
+            }
+        });
         getSupportFragmentManager().beginTransaction().hide(quanziSetFragment)
                 .add(R.id.fragment, groupTagFragment).addToBackStack("GroupTagFragment").commit();
-    }
-
-    public void OnTagsSelectOk(ArrayList<AllTags.TagsEntity> tags) {
-        quanziSetFragment.setTags(tags);
-        getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().beginTransaction().show(quanziSetFragment).commit();
     }
 
     public void callForUpdateGroupInfo() {

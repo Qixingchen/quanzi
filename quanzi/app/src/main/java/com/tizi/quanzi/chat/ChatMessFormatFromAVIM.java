@@ -12,7 +12,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMVideoMessage;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
-import com.tizi.quanzi.gson.BoomGroup;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.ChatMessage;
@@ -275,7 +275,7 @@ public class ChatMessFormatFromAVIM {
             if (boomGroup != null) {
                 if (boomGroup.isGroup1MyGroup) {
                     //圈子1是自己的圈子
-                    for (BoomGroup.GroupmatchEntity.GrpmemEntity member : boomGroup.groupMenber1) {
+                    for (GroupAllInfo.MemberEntity member : boomGroup.groupMenber1) {
                         if (member.id.compareTo(chatMessage.sender) == 0) {
                             isMyGroupContainSend = true;
                             break;
@@ -283,7 +283,7 @@ public class ChatMessFormatFromAVIM {
                     }
                 } else {
                     //圈子2是自己的圈子
-                    for (BoomGroup.GroupmatchEntity.GrpmemEntity member : boomGroup.groupMenber2) {
+                    for (GroupAllInfo.MemberEntity member : boomGroup.groupMenber2) {
                         if (member.id.compareTo(chatMessage.sender) == 0) {
                             isMyGroupContainSend = true;
                             break;

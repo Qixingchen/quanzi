@@ -133,8 +133,8 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                     public void countdown(long s, long goneS) {
                     }
                 }).setTimer(countDown * 1000).start();
-                groupNums.setText("");
-                countdownTime.setText(act.title);
+                groupNums.setText(act.title);
+                countdownTime.setText("");
                 boomGroupListAdapter = new BoomGroupListAdapter(mActivity, themeID, false);
                 boomGroupListAdapter.setThemeTime(startTime, endTime);
                 boomGroupItemRecyclerview.setAdapter(boomGroupListAdapter);

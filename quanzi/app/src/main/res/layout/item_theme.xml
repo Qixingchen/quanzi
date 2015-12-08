@@ -30,7 +30,6 @@
             android:id="@+id/theme_pic"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="24dp"
             app:layout_aspectRatio="100%"
             app:layout_widthPercent="100%"
             tools:background="@color/md_green_400"/>
@@ -49,12 +48,14 @@
 
         <TextView
             android:id="@+id/theme_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:layout_below="@id/theme_pic"
+            android:background="@drawable/theme_name_corners"
             android:maxLines="1"
-            android:textColor="@color/md_white"
+            android:textColor="@color/md_grey_700"
             android:textSize="@dimen/sub_title_text_size"
+            tools:background="@color/md_white"
             tools:text="123"/>
 
     </android.support.percent.PercentRelativeLayout>

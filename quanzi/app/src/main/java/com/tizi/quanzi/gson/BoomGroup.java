@@ -43,29 +43,9 @@ public class BoomGroup extends OnlySuccess {
         @SerializedName("icon2")
         public String icon2;
         @SerializedName("grpmem1")
-        public List<GrpmemEntity> groupMenber1;
+        public List<GroupAllInfo.MemberEntity> groupMenber1;
         @SerializedName("grpmem2")
-        public List<GrpmemEntity> groupMenber2;
+        public List<GroupAllInfo.MemberEntity> groupMenber2;
 
-        public static class GrpmemEntity {
-            /**
-             * id : HTDM004825b32141fe9c41f09846e85f0902f0bd
-             * birthday : 2005-09-24
-             * icon : http://ac-hy5srahi.clouddn.com/caLxbdJcpOapVD1UR2yoJvD.jpeg
-             * sex : 1
-             * name : 账号1
-             */
-
-            @SerializedName("id")
-            public String id;
-            @SerializedName("birthday")
-            public String birthday;
-            @SerializedName("icon")
-            public String icon;
-            @SerializedName("sex")
-            public String sex;
-            @SerializedName("name")
-            public String name;
-        }
     }
 }

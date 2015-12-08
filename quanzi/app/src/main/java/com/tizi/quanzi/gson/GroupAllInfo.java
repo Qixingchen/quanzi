@@ -12,60 +12,78 @@ public class GroupAllInfo extends OnlySuccess {
 
 
     /**
-     * memlist : [{"id":"HTDM0048c94f8a6d0e8543a3b7c7e5f3470ae359","icon":"http://ac-hy5srahi.clouddn.com/GoHGsMSbB9rHwSDju25hChB.jpeg","sex":"0","name":"ht"},{"id":"HTDM0048067b632765bd493f887eb213775ea52a","icon":"http://ac-hy5srahi.clouddn.com/Y6tC89EgGAJt0SqSR1EhHrB.jpeg","sex":"1","name":"11223344"}]
-     * tagList : [{"tagName":"善良","tagId":"HTDM0048773c059f042343eeafe426bbf92b2a53","id":"HTDM0048dc32dc2ce6a840968b9df65d54fc9de0"},{"tagName":"安静","tagId":"HTDM0048773c059f042342eeafe426bbf92b2a52","id":"HTDM004856f993cfebae4017a3429ae44dea7528"}]
-     * group : {"keyIndexCode":null,"icon":"http://ac-hy5srahi.clouddn.com/T20CM0M0RnxowNaszxO1R4C.jpeg","createTime":"20150909164555","groupName":"我写作业了","remark":null,"validation":"Y","convId":"55eff12260b22f0f9c74d28a","hold":"0","type":"0","id":"HTDM0048c2d550386dfb4a73b6bd74c6f14dec7c","groupNo":"","createUser":"HTDM0048c94f8a6d0e8543a3b7c7e5f3470ae359","dirty":false,"bg":null,"rowStatus":2,"notice":"我一直以为我写作业了"}
+     * keyIndexCode : null
+     * createTime : 20151014140946
+     * icon : https://dn-hy5srahi.qbox.me/3MgrgN7Zmu9bPrAgjjc5OvfVSo7Gc5un5B10GlRC.jpg
+     * groupName : jt01111
+     * convId : 561df1aaddb24819b7cd8547
+     * remark : null
+     * validation : Y
+     * hold : 0
+     * type : 0
+     * groupNo :
+     * id : HTDM00487c8a88dac5a54699aee8cb4fb5ff7ffe
+     * createUser : HTDM004895dfca0c4c404097a8d3150df70b0d19
+     * dirty : false
+     * bg : null
+     * rowStatus : 2
+     * notice : 说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说说莫名其妙说说说说说说说说说说说说说说说说说说说说
      */
 
     @SerializedName("group")
     public GroupEntity group;
+    /**
+     * tags : null
+     * id : HTDM00486dd5ad1afaa044658d118889c2bdc202
+     * birthday : 2011-9-3
+     * icon : https://dn-hy5srahi.qbox.me/KO0OTWdqBxTuvVriUYcyCKqn103yBkMsidk6X8tA.jpg
+     * sex : 1
+     * area : 福建省泉州市
+     * name : 星辰
+     * bg : https://dn-hy5srahi.qbox.me/zLRqm9uSg6HaQCD5EdxfXRnaimY3MuyiP4SydXbm.jpg
+     * signature : 2333
+     * 无图
+     * high
+     * 刚刚好
+     * 刚刚好
+     * <p/>
+     * 刚旅途
+     */
+
     @SerializedName("memlist")
     public List<MemberEntity> memlist;
+    /**
+     * tagName : 婚前恐惧
+     * tagId : HTDM0048773c059f042340eeafe426bbf92aaa42
+     * id : HTDM0000e409ad931a27475bb561db69bc58abc6
+     */
+
     @SerializedName("tagList")
     public List<AllTags.TagsEntity> tagList;
 
     public static class GroupEntity {
-        /**
-         * keyIndexCode : null
-         * icon : http://ac-hy5srahi.clouddn.com/T20CM0M0RnxowNaszxO1R4C.jpeg
-         * createTime : 20150909164555
-         * groupName : 我写作业了
-         * remark : null
-         * validation : Y
-         * convId : 55eff12260b22f0f9c74d28a
-         * hold : 0
-         * type : 0
-         * id : HTDM0048c2d550386dfb4a73b6bd74c6f14dec7c
-         * groupNo :
-         * createUser : HTDM0048c94f8a6d0e8543a3b7c7e5f3470ae359
-         * dirty : false
-         * bg : null
-         * rowStatus : 2
-         * notice : 我一直以为我写作业了
-         */
-
         @SerializedName("keyIndexCode")
-        public String keyIndexCode;
-        @SerializedName("icon")
-        public String icon;
+        public Object keyIndexCode;
         @SerializedName("createTime")
         public String createTime;
+        @SerializedName("icon")
+        public String icon;
         @SerializedName("groupName")
         public String groupName;
+        @SerializedName("convId")
+        public String convId;
         @SerializedName("remark")
         public String remark;
         @SerializedName("validation")
         public String validation;
-        @SerializedName("convId")
-        public String convId;
         @SerializedName("hold")
         public String hold;
         @SerializedName("type")
         public int type;
-        @SerializedName("id")
-        public String id;
         @SerializedName("groupNo")
         public String groupNo;
+        @SerializedName("id")
+        public String id;
         @SerializedName("createUser")
         public String createUser;
         @SerializedName("dirty")
@@ -76,152 +94,26 @@ public class GroupAllInfo extends OnlySuccess {
         public int rowStatus;
         @SerializedName("notice")
         public String notice;
-
-        public String getKeyIndexCode() {
-            return keyIndexCode;
-        }
-
-        public void setKeyIndexCode(String keyIndexCode) {
-            this.keyIndexCode = keyIndexCode;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public String getCreateTime() {
-            return createTime;
-        }
-
-        public void setCreateTime(String createTime) {
-            this.createTime = createTime;
-        }
-
-        public String getGroupName() {
-            return groupName;
-        }
-
-        public void setGroupName(String groupName) {
-            this.groupName = groupName;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
-
-        public String getValidation() {
-            return validation;
-        }
-
-        public void setValidation(String validation) {
-            this.validation = validation;
-        }
-
-        public String getConvId() {
-            return convId;
-        }
-
-        public void setConvId(String convId) {
-            this.convId = convId;
-        }
-
-        public String getHold() {
-            return hold;
-        }
-
-        public void setHold(String hold) {
-            this.hold = hold;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getGroupNo() {
-            return groupNo;
-        }
-
-        public void setGroupNo(String groupNo) {
-            this.groupNo = groupNo;
-        }
-
-        public String getCreateUser() {
-            return createUser;
-        }
-
-        public void setCreateUser(String createUser) {
-            this.createUser = createUser;
-        }
-
-        public boolean isDirty() {
-            return dirty;
-        }
-
-        public void setDirty(boolean dirty) {
-            this.dirty = dirty;
-        }
-
-        public String getBg() {
-            return bg;
-        }
-
-        public void setBg(String bg) {
-            this.bg = bg;
-        }
-
-        public int getRowStatus() {
-            return rowStatus;
-        }
-
-        public void setRowStatus(int rowStatus) {
-            this.rowStatus = rowStatus;
-        }
-
-        public String getNotice() {
-            return notice;
-        }
-
-        public void setNotice(String notice) {
-            this.notice = notice;
-        }
     }
 
     public static class MemberEntity {
-        /**
-         * id : HTDM0048c94f8a6d0e8543a3b7c7e5f3470ae359
-         * icon : http://ac-hy5srahi.clouddn.com/GoHGsMSbB9rHwSDju25hChB.jpeg
-         * sex : 0
-         * name : ht
-         */
-
+        @SerializedName("tags")
+        public Object tags;
         @SerializedName("id")
         public String id;
+        @SerializedName("birthday")
+        public String birthday;
         @SerializedName("icon")
         public String icon;
         @SerializedName("sex")
         public String sex;
+        @SerializedName("area")
+        public String area;
         @SerializedName("name")
         public String name;
+        @SerializedName("bg")
+        public String bg;
+        @SerializedName("signature")
+        public String signature;
     }
-
 }

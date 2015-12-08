@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
@@ -43,7 +44,7 @@ public class GroupTagFragment extends BaseFragment {
     private boolean needOkbtn;
 
 
-    private TextView[] tagTextViews = new TextView[MAX_TAG_NUM];
+    private TagView[] tagTextViews = new TagView[MAX_TAG_NUM];
     private android.widget.TextView changetags;
     private android.widget.TextView addTag;
     private RecyclerView tagrecyclerview;
@@ -93,11 +94,11 @@ public class GroupTagFragment extends BaseFragment {
     protected void findViews(View view) {
         this.tagrecyclerview = (RecyclerView) view.findViewById(R.id.tag_recycler_view);
         this.changetags = (TextView) view.findViewById(R.id.change_tags);
-        this.tagTextViews[4] = (TextView) view.findViewById(R.id.tag_5);
-        this.tagTextViews[3] = (TextView) view.findViewById(R.id.tag_4);
-        this.tagTextViews[2] = (TextView) view.findViewById(R.id.tag_3);
-        this.tagTextViews[1] = (TextView) view.findViewById(R.id.tag_2);
-        this.tagTextViews[0] = (TextView) view.findViewById(R.id.tag_1);
+        this.tagTextViews[4] = new TagView(view.findViewById(R.id.tag_5));
+        this.tagTextViews[3] = new TagView(view.findViewById(R.id.tag_4));
+        this.tagTextViews[2] = new TagView(view.findViewById(R.id.tag_3));
+        this.tagTextViews[1] = new TagView(view.findViewById(R.id.tag_2));
+        this.tagTextViews[0] = new TagView(view.findViewById(R.id.tag_1));
         parentTagView = (TextView) view.findViewById(R.id.parent_tag_text_view);
         okBtn = (Button) view.findViewById(R.id.ok_btn);
         addTag = (TextView) view.findViewById(R.id.add_tag);
@@ -136,12 +137,11 @@ public class GroupTagFragment extends BaseFragment {
 
         for (int i = 0; i < MAX_TAG_NUM; i++) {
             final int finalI = i;
-            tagTextViews[i].setOnLongClickListener(new View.OnLongClickListener() {
+            tagTextViews[i].deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public void onClick(View v) {
                     deleteTagFromShoeTags(finalI);
                     setSelectTagsTextView();
-                    return true;
                 }
             });
         }
@@ -238,12 +238,12 @@ public class GroupTagFragment extends BaseFragment {
 
         for (int i = 0; i < MAX_TAG_NUM; i++) {
             if (showTags[i] == null) {
-                tagTextViews[i].setVisibility(View.INVISIBLE);
-                tagTextViews[i].setEnabled(false);
+                tagTextViews[i].view.setVisibility(View.INVISIBLE);
+                tagTextViews[i].view.setEnabled(false);
             } else {
-                tagTextViews[i].setText(showTags[i].tagName);
-                tagTextViews[i].setVisibility(View.VISIBLE);
-                tagTextViews[i].setEnabled(true);
+                tagTextViews[i].tagText.setText(showTags[i].tagName);
+                tagTextViews[i].view.setVisibility(View.VISIBLE);
+                tagTextViews[i].view.setEnabled(true);
             }
         }
 
@@ -286,6 +286,19 @@ public class GroupTagFragment extends BaseFragment {
 
     public interface OnOK {
         void OK(ArrayList<AllTags.TagsEntity> tags);
+    }
+
+    private class TagView {
+
+        private TextView tagText;
+        private ImageButton deleteButton;
+        private View view;
+
+        public TagView(View view) {
+            this.view = view;
+            tagText = (TextView) view.findViewById(R.id.tag);
+            deleteButton = (ImageButton) view.findViewById(R.id.delete_tag_button);
+        }
     }
 
 }

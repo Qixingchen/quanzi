@@ -20,7 +20,6 @@ import com.tizi.quanzi.chat.StartPrivateChat;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
-import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.model.BoomGroupClass;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.next.tagview.TagCloudView;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -51,6 +51,7 @@ public class UserZoneActivityFragment extends BaseFragment {
     private Button sendMessage;
     private OtherUserInfo otherUserInfo;
     private RelativeLayout userFriendZone;
+    private TagCloudView userTagView;
 
     public UserZoneActivityFragment() {
     }
@@ -74,6 +75,7 @@ public class UserZoneActivityFragment extends BaseFragment {
         userLocation = (TextView) view.findViewById(R.id.user_location);
         userSex = (TextView) view.findViewById(R.id.user_sex);
         userFriendZone = (RelativeLayout) view.findViewById(R.id.user_friend_zone);
+        userTagView = (TagCloudView) view.findViewById(R.id.user_tag_view);
     }
 
     @Override
@@ -110,6 +112,8 @@ public class UserZoneActivityFragment extends BaseFragment {
             }
         });
 
+        userTagView.setTags(otherUserInfo.getTags());
+
         boolean isFriend = false;
         //在自己圈内查找
         List<GroupClass> AllGroup = GroupList.getInstance().getGroupList();
@@ -130,7 +134,7 @@ public class UserZoneActivityFragment extends BaseFragment {
             if (isFriend) {
                 break;
             }
-            for (BoomGroup.GroupmatchEntity.GrpmemEntity member : boom.groupMenber1) {
+            for (GroupAllInfo.MemberEntity member : boom.groupMenber1) {
                 if (otherUserInfo.id.compareTo(member.id) == 0) {
                     isFriend = true;
                     break;
@@ -139,7 +143,7 @@ public class UserZoneActivityFragment extends BaseFragment {
             if (isFriend) {
                 break;
             }
-            for (BoomGroup.GroupmatchEntity.GrpmemEntity member : boom.groupMenber2) {
+            for (GroupAllInfo.MemberEntity member : boom.groupMenber2) {
                 if (otherUserInfo.id.compareTo(member.id) == 0) {
                     isFriend = true;
                     break;

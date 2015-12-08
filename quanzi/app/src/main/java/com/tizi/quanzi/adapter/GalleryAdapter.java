@@ -53,7 +53,7 @@ public class GalleryAdapter extends PagerAdapter {
         final ImageView image = (ImageView) vRoot.findViewById(R.id.pic);
 
         Picasso.with(activity).load(pics.get(position))
-                .placeholder(R.drawable.face)
+                .placeholder(R.drawable.ic_photo_loading)
                 .into(image);
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

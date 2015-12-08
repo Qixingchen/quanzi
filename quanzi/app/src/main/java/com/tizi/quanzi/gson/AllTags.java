@@ -3,8 +3,10 @@ package com.tizi.quanzi.gson;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +30,14 @@ public class AllTags extends OnlySuccess {
             tagsString += tag.tagName + ",";
         }
         return tagsString;
+    }
+
+    public String getTagServerString(List<TagsEntity> oldTags) {
+        ArrayList<TAG> tags = new ArrayList<>();
+        for (AllTags.TagsEntity oldtag : oldTags) {
+            tags.add(new TAG(oldtag.id, oldtag.tagName));
+        }
+        return new Gson().toJson(tags);
     }
 
     public static class TagsEntity implements Parcelable {
@@ -72,6 +82,16 @@ public class AllTags extends OnlySuccess {
             dest.writeString(this.id);
             dest.writeString(this.tagName);
             dest.writeString(this.parentTagName);
+        }
+    }
+
+    private class TAG {
+        public String tagid;
+        public String tagname;
+
+        public TAG(String tagid, String tagName) {
+            this.tagid = tagid;
+            this.tagname = tagName;
         }
     }
 }

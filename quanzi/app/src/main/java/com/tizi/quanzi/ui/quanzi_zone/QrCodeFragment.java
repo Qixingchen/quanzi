@@ -88,7 +88,7 @@ public class QrCodeFragment extends BaseFragment {
         String ApiUri = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&ecc=Q&format=png&data=";
         final String MyUri = "http://www.tizi-tech.com/sys:joinGroup=" + groupID;
         Log.i(TAG + "QrCode", ApiUri + MyUri);
-        Picasso.with(mContext).load(ApiUri + MyUri).placeholder(R.drawable.face).into(qrcodeimageview);
+        Picasso.with(mContext).load(ApiUri + MyUri).placeholder(R.drawable.ic_photo_loading).into(qrcodeimageview);
         Picasso.with(mContext).load(groupFace).into(groupfaceimageview);
         groupNameTextView.setText(groupName);
 

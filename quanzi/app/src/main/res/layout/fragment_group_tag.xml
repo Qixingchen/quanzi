@@ -21,68 +21,49 @@
                 android:layout_height="fill_parent"
                 android:src="@drawable/face"/>
 
-            <TextView
-                android:id="@+id/tag_1"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+            <include
+                android:id="@+id/tag_selected_1"
+                layout="@layout/item_selected_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="43dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/filled_circle"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textSize="@dimen/normal_edit_text_size"
-                tools:text="1111"/>
+                android:layout_marginTop="32dp"/>
 
-            <TextView
-                android:id="@+id/tag_2"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+
+            <include
+                android:id="@+id/tag_selected_2"
+                layout="@layout/item_selected_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/tag_1"
-                android:background="@drawable/filled_circle"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textSize="@dimen/normal_edit_text_size"
-                tools:text="1111"/>
+                android:layout_alignTop="@+id/tag_selected_1"/>
 
-            <TextView
-                android:id="@+id/tag_3"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+            <include
+                android:id="@+id/tag_selected_3"
+                layout="@layout/item_selected_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_toStartOf="@+id/tag_5"
-                android:background="@drawable/filled_circle"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textSize="@dimen/normal_edit_text_size"
-                tools:text="1111"/>
+                android:layout_toStartOf="@+id/tag_selected_5"/>
 
-            <TextView
-                android:id="@+id/tag_4"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
-                android:layout_below="@+id/tag_5"
-                android:layout_toStartOf="@+id/tag_2"
-                android:background="@drawable/filled_circle"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textSize="@dimen/normal_edit_text_size"
-                tools:text="1111"/>
+            <include
+                android:id="@+id/tag_selected_4"
+                layout="@layout/item_selected_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tag_selected_5"
+                android:layout_toStartOf="@+id/tag_selected_2"/>
 
-            <TextView
-                android:id="@+id/tag_5"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+            <include
+                android:id="@+id/tag_selected_5"
+                layout="@layout/item_selected_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/filled_circle"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textSize="@dimen/normal_edit_text_size"
-                tools:text="1111"/>
+                android:layout_centerVertical="true"/>
 
 
         </RelativeLayout>
@@ -103,18 +84,9 @@
                 android:id="@+id/change_tags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_toStartOf="@+id/add_tag"
-                android:text="换一批"
-                android:textSize="@dimen/small_title_text_size"/>
-
-            <TextView
-                android:id="@id/add_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="24dp"
-                android:text="自定义"
+                android:layout_marginEnd="16dp"
+                android:text="换一批"
                 android:textSize="@dimen/small_title_text_size"/>
 
         </RelativeLayout>
@@ -124,21 +96,89 @@
             android:layout_height="1dp"
             android:background="@color/md_grey_700"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/tag_recycler_view"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_marginTop="20dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <Button
-            android:id="@+id/ok_btn"
+            <TextView
+                android:id="@+id/tag_need_select_1"
+                android:layout_width="120dp"
+                android:layout_height="48sp"
+                android:gravity="center"
+                android:textColor="@color/md_deep_orange_500"
+                android:textSize="@dimen/normal_text_size"
+                tools:text="你好么感觉到了"/>
+
+            <TextView
+                android:id="@+id/tag_need_select_2"
+                android:layout_width="120dp"
+                android:layout_height="48sp"
+                android:layout_alignParentEnd="true"
+                android:gravity="center"
+                android:textColor="@color/md_deep_purple_500"
+                android:textSize="@dimen/normal_text_size"
+                tools:text="你好么感觉到了"/>
+
+            <TextView
+                android:id="@+id/tag_need_select_3"
+                android:layout_width="120dp"
+                android:layout_height="48sp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textColor="@color/md_red_500"
+                android:textSize="@dimen/normal_text_size"
+                tools:text="你好么感觉到了"/>
+
+            <TextView
+                android:id="@+id/tag_need_select_4"
+                android:layout_width="120dp"
+                android:layout_height="48sp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:textColor="@color/md_blue_500"
+                android:textSize="@dimen/normal_text_size"
+                tools:text="你好么感觉到了"/>
+
+            <TextView
+                android:id="@+id/tag_need_select_5"
+                android:layout_width="120dp"
+                android:layout_height="48sp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:gravity="center"
+                android:textColor="@color/md_green_500"
+                android:textSize="@dimen/normal_text_size"
+                tools:text="你好么感觉到了"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="完成"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ok_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="完成"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/add_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:text="自定义"
+                android:textSize="@dimen/small_title_text_size"/>
+
+        </LinearLayout>
 
 
     </LinearLayout>

@@ -74,7 +74,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginStart="5dp"
-                            tools:background="@drawable/man"/>
+                            tools:background="@drawable/ic_boy_color"/>
                     </LinearLayout>
 
                     <TextView
@@ -100,7 +100,6 @@
                 android:id="@+id/friend_zone"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="11dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -108,14 +107,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_people_36dp"/>
+                    android:src="@drawable/ic_friend_zone"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="朋友圈"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"/>
             </LinearLayout>
 
@@ -130,7 +129,6 @@
                 android:id="@+id/my_zone"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="11dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -138,14 +136,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:src="@drawable/ic_photo_library_36dp"/>
+                    android:src="@drawable/ic_personal_gallery"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="我的相册"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"/>
             </LinearLayout>
 
@@ -160,7 +158,6 @@
                 android:id="@+id/share"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="11dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -175,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="分享"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"/>
             </LinearLayout>
 
@@ -190,7 +187,6 @@
                 android:id="@+id/setting"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="11dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -205,7 +201,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="系统设置"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"/>
             </LinearLayout>
 

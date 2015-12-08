@@ -115,6 +115,10 @@ public class BigWorld extends BaseFragment {
 
         if (Tool.isGuest()) {
             logout.setText("登录");
+            Picasso.with(mContext)
+                    .load(R.drawable.ic_visitor_face)
+                    .fit()
+                    .into(userFace);
         }
 
         Login.UserEntity userInfo = MyUserInfo.getInstance().getUserInfo();
@@ -127,11 +131,13 @@ public class BigWorld extends BaseFragment {
                 .oval(false)
                 .build();
 
-        Picasso.with(mContext)
-                .load(userInfo.getIcon())
-                .fit()
-                .transform(transformation)
-                .into(userFace);
+        if (!Tool.isGuest()) {
+            Picasso.with(mContext)
+                    .load(userInfo.getIcon())
+                    .fit()
+                    .transform(transformation)
+                    .into(userFace);
+        }
 
         if (userInfo.bg == null) {
             Picasso.with(mContext).load(R.drawable.face).resize(1080, 608).into(userBackground);
@@ -142,9 +148,9 @@ public class BigWorld extends BaseFragment {
         userName.setText(userInfo.getUserName());
 
         if (userInfo.getSex() == 0) {
-            Picasso.with(mActivity).load(R.drawable.man).into(userSex);
+            Picasso.with(mActivity).load(R.drawable.ic_boy_color).into(userSex);
         } else {
-            Picasso.with(mActivity).load(R.drawable.girl).into(userSex);
+            Picasso.with(mActivity).load(R.drawable.ic_girl_color).into(userSex);
         }
         userSign.setText(userInfo.getSignature());
         userInfoLayout.setOnClickListener(new View.OnClickListener() {

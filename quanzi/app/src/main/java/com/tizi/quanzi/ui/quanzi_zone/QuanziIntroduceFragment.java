@@ -189,15 +189,22 @@ public class QuanziIntroduceFragment extends BaseFragment {
             if (GroupList.getInstance().getGroup(groupAllInfo.group.id) != null) {
                 showUsers = true;
                 isMember = true;
+                ((GroupClass) (GroupList.getInstance().getGroup(groupAllInfo.group.id))).memlist = groupAllInfo.memlist;
             }
             if (isMember) {
                 groupFaceImageView.setEnabled(true);
             }
             if (!showUsers) {
                 for (BoomGroupClass boomGroupClass : BoomGroupList.getInstance().getGroupList()) {
-                    if (boomGroupClass.groupId1.equals(groupAllInfo.group.id) ||
-                            boomGroupClass.groupId2.equals(groupAllInfo.group.id)) {
+                    if (boomGroupClass.groupId1.equals(groupAllInfo.group.id)) {
                         showUsers = true;
+                        boomGroupClass.groupMenber1 = groupAllInfo.memlist;
+                        break;
+                    }
+
+                    if (boomGroupClass.groupId2.equals(groupAllInfo.group.id)) {
+                        showUsers = true;
+                        boomGroupClass.groupMenber2 = groupAllInfo.memlist;
                         break;
                     }
                 }

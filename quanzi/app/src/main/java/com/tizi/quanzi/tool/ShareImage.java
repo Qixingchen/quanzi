@@ -15,6 +15,7 @@ import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
+import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
@@ -71,7 +72,8 @@ public class ShareImage {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle(String.format("%s申请储存权限", StaticField.AppName.AppZHName))
-                    .setMessage(StaticField.AppName.AppZHName + "需要文件储存权限来储存临时的分享文件的缓存，文件将存放在系统指定的缓存文件夹，不会污染您的设备储存区。" + "您也可以不授予此项权限，但这可能导致接收分享的应用工作不正常，详情请参看权限说明。")
+                    .setMessage(String.format(activity.getString(R.string.storage_detail),
+                            StaticField.AppName.AppZHName))
                     .setPositiveButton("好的", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -88,7 +90,7 @@ public class ShareImage {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent permissionNotice = new Intent(Intent.ACTION_VIEW);
-                    permissionNotice.setData(Uri.parse("https://github.com/Qixingchen/quanzi_public/wiki/uses-permission"));
+                    permissionNotice.setData(Uri.parse(activity.getString(R.string.uses_permission)));
                     if (Tool.isIntentSafe(activity, permissionNotice)) {
                         activity.startActivity(permissionNotice);
                     }

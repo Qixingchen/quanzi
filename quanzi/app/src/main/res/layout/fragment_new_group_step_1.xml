@@ -13,7 +13,7 @@
         android:layout_height="@dimen/group_face_small"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:src="@drawable/ic_camera_alt_48dp"/>
+        android:src="@drawable/ic_camera"/>
 
 
     <android.support.design.widget.TextInputLayout

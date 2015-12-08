@@ -3,6 +3,7 @@ package com.tizi.quanzi.model;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.BoomGroup;
+import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class BoomGroupClass extends ConvGroupAbs {
     public String groupName2;
     public String icon1;
     public String icon2;
-    public List<BoomGroup.GroupmatchEntity.GrpmemEntity> groupMenber1;
-    public List<BoomGroup.GroupmatchEntity.GrpmemEntity> groupMenber2;
+    public List<GroupAllInfo.MemberEntity> groupMenber1;
+    public List<GroupAllInfo.MemberEntity> groupMenber2;
     public boolean isGroup1MyGroup;
     // TODO: 15/10/10 add theme ID
     public String themeID;

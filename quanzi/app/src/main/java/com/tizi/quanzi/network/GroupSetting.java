@@ -1,11 +1,11 @@
 package com.tizi.quanzi.network;
 
-import com.google.gson.Gson;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.OnlySuccess;
+import com.tizi.quanzi.gson.UserTags;
 import com.tizi.quanzi.tool.Tool;
 
 import java.util.ArrayList;
@@ -89,16 +89,35 @@ public class GroupSetting extends RetrofitNetworkAbs {
      * @param oldTags 更改的 TAGS
      */
     public void changeTags(String groupID, ArrayList<AllTags.TagsEntity> oldTags) {
-        changeField(groupID, "grouptags", getTagsString(oldTags));
+        changeField(groupID, "grouptags", new AllTags().getTagServerString(oldTags));
     }
 
     /**
      * 查找所有TAG
      */
-    public void findAllTags() {
-        groupSer.queryAllAvailableTag().enqueue(new Callback<AllTags>() {
+    public void findAllTags(boolean isGroup) {
+        groupSer.queryAllAvailableTag(isGroup ? 0 : 1).enqueue(new Callback<AllTags>() {
             @Override
             public void onResponse(Response<AllTags> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
+    /**
+     * 查看用户的标签
+     *
+     * @param userID 要查询的UserID
+     */
+    public void findUserTags(String userID) {
+        groupSer.queryUserTag(userID).enqueue(new Callback<UserTags>() {
+            @Override
+            public void onResponse(Response<UserTags> response, Retrofit retrofit) {
                 myOnResponse(response);
             }
 
@@ -125,7 +144,7 @@ public class GroupSetting extends RetrofitNetworkAbs {
             groupCall = groupSer.addGroup(userid, GroupName, icon, notice, convid);
 
         } else {
-            String encodedTAG = Tool.getUTF_8String(getTagsString(oldTags));
+            String encodedTAG = Tool.getUTF_8String(new AllTags().getTagServerString(oldTags));
             groupCall = groupSer.addGroup(userid, GroupName, encodedTAG, icon, notice, convid);
         }
 
@@ -169,23 +188,5 @@ public class GroupSetting extends RetrofitNetworkAbs {
     @Override
     public GroupSetting setNetworkListener(NetworkListener networkListener) {
         return setNetworkListener(networkListener, this);
-    }
-
-    private String getTagsString(ArrayList<AllTags.TagsEntity> oldTags) {
-        ArrayList<TAG> tags = new ArrayList<>();
-        for (AllTags.TagsEntity oldtag : oldTags) {
-            tags.add(new TAG(oldtag.id, oldtag.tagName));
-        }
-        return new Gson().toJson(tags);
-    }
-
-    class TAG {
-        public String tagid;
-        public String tagname;
-
-        public TAG(String tagid, String tagName) {
-            this.tagid = tagid;
-            this.tagname = tagName;
-        }
     }
 }

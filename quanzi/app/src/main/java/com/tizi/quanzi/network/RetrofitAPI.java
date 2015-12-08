@@ -17,6 +17,7 @@ import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.gson.Theme;
+import com.tizi.quanzi.gson.UserTags;
 
 import retrofit.Call;
 import retrofit.http.GET;
@@ -99,11 +100,8 @@ public interface RetrofitAPI {
                 @Query("groupid") String groupID);
 
         @POST("group/findTagF")
-        Call<AllTags> queryAllAvailableTag();
-
-        @POST("group/findTagF")
-        Call<AllTags> queryAllAvailableUserTag(
-                @Query("type") String type //user:1 group:0/null
+        Call<AllTags> queryAllAvailableTag(
+                @Query("type") int type //user:1 group:0/null
         );
 
         @POST("group/updateFieldF")
@@ -115,6 +113,11 @@ public interface RetrofitAPI {
         @POST("group/findGroupTags")
         Call<AllTags> queryGroupTAG(
                 @Query("groupid") String groupID);
+
+        @POST("user/findUserTagF")
+        Call<UserTags> queryUserTag(
+                @Query("userid") String userID
+        );
 
 
     }

@@ -1,8 +1,11 @@
 package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.tool.Tool;
+
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.Retrofit;
@@ -84,6 +87,13 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
      */
     public void changeArea(String area) {
         changeFiled("area", area);
+    }
+
+    /**
+     * 修改用户标签
+     */
+    public void changeTag(List<AllTags.TagsEntity> tags) {
+        changeFiled("usertags", new AllTags().getTagServerString(tags));
     }
 
     /**

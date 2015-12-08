@@ -49,16 +49,16 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
      */
     public static GroupClass getGroupByEntity(Login.GroupEntity groupEntity) {
         GroupClass groupClass = new GroupClass();
-        GroupClass groupOld = (GroupClass) GroupList.getInstance().getGroup(groupEntity.getId());
-        groupClass.ID = groupEntity.getId();
-        groupClass.Name = groupEntity.getGroupName();
-        groupClass.Face = groupEntity.getIcon();
-        groupClass.Type = groupEntity.getType();
-        groupClass.Notice = groupEntity.getNotice();
-        groupClass.convId = groupEntity.getConvId();
-        groupClass.background = groupEntity.getBg();
+        GroupClass groupOld = (GroupClass) GroupList.getInstance().getGroup(groupEntity.id);
+        groupClass.ID = groupEntity.id;
+        groupClass.Name = groupEntity.groupName;
+        groupClass.Face = groupEntity.icon;
+        groupClass.Type = groupEntity.type;
+        groupClass.Notice = groupEntity.notice;
+        groupClass.convId = groupEntity.convId;
+        groupClass.background = groupEntity.bg;
         groupClass.validation = (groupEntity.validation.compareTo("Y") == 0);
-        groupClass.createUser = groupEntity.getCreateUser();
+        groupClass.createUser = groupEntity.createUser;
         groupClass.memlist = groupEntity.memlist;
         if (groupOld != null) {
             groupClass.lastMess = groupOld.lastMess;

@@ -30,9 +30,14 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.AllTags;
+import com.tizi.quanzi.gson.UserTags;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetLocationFromBaidu;
+import com.tizi.quanzi.network.GroupSetting;
+import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.UserInfoSetting;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.PermissionAnser;
@@ -41,13 +46,17 @@ import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.BaseFragment;
+import com.tizi.quanzi.ui.new_group.GroupTagFragment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import me.next.tagview.TagCloudView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,6 +107,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         }
     };
+    private TagCloudView userTagView;
+    private ArrayList<AllTags.TagsEntity> myTag;
 
     public UserInfoSetFragment() {
         // Required empty public constructor
@@ -130,6 +141,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         view.findViewById(R.id.userSign).setOnClickListener(this);
         userSignTextView = (TextView) view.findViewById(R.id.userSignTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        userTagView = (TagCloudView) view.findViewById(R.id.user_tag_view);
+        view.findViewById(R.id.user_tag).setOnClickListener(this);
     }
 
     @Override
@@ -140,6 +153,23 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         userAgeTextView.setText(MyUserInfo.getInstance().getUserInfo().getBirthday());
         userLocationTextView.setText(MyUserInfo.getInstance().getUserInfo().getArea());
         userSignTextView.setText(MyUserInfo.getInstance().getUserInfo().getSignature());
+        GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                UserTags tags = (UserTags) ts;
+                List<String> tagStrings = new ArrayList<>();
+                myTag = new ArrayList<>(tags.usertags);
+                for (AllTags.TagsEntity tag : tags.usertags) {
+                    tagStrings.add(tag.tagName);
+                }
+                userTagView.setTags(tagStrings);
+            }
+
+            @Override
+            public void onError(String Message) {
+
+            }
+        }).findUserTags(AppStaticValue.getUserID());
     }
 
     @Override
@@ -266,6 +296,25 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 });
                 builder.setTitle("修改签名").show();
                 break;
+            case R.id.user_tag:
+                GroupTagFragment groupTagFragment = GroupTagFragment.newInstance(myTag, true, false);
+                groupTagFragment.setOnOK(new GroupTagFragment.OnOK() {
+                    @Override
+                    public void OK(ArrayList<AllTags.TagsEntity> tags) {
+                        List<String> tagStrings = new ArrayList<>();
+                        for (AllTags.TagsEntity tag : tags) {
+                            tagStrings.add(tag.tagName);
+                        }
+                        userTagView.setTags(tagStrings);
+                        myTag = tags;
+                        UserInfoSetting.getNewInstance().changeTag(tags);
+                        getFragmentManager().popBackStack();
+                    }
+                });
+                getFragmentManager().beginTransaction().hide(this)
+                        .add(R.id.fragment, groupTagFragment)
+                        .addToBackStack("GroupTagFragment").commit();
+                break;
         }
     }
 
@@ -313,6 +362,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
             case StaticField.PermissionRequestCode.userInfoSetFragment_location:
                 locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                 Log.i(TAG, "定位中");
+                //noinspection ResourceType
                 locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, mLocationListener, null);
                 break;
             default:

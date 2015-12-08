@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="storage_detail">%s需要文件储存权限来储存临时的分享文件的缓存。您也可以不授予此项权限，但这可能导致接收分享的应用工作不正常，详情请参看权限说明。"</string>
+</resources>

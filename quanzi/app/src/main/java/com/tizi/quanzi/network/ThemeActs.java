@@ -105,10 +105,7 @@ public class ThemeActs extends RetrofitNetworkAbs {
      * @param flag    报名：1 取消报名：0
      */
     public void signUP(String actID, String groupID, int flag) {
-
-        final Call<GroupSignUPThemeAns> themeCall = themeService.signUp(actID, groupID, flag);
-
-        themeCall.enqueue(new Callback<GroupSignUPThemeAns>() {
+        themeService.signUp(actID, groupID, flag).enqueue(new Callback<GroupSignUPThemeAns>() {
             @Override
             public void onResponse(retrofit.Response<GroupSignUPThemeAns> response, Retrofit retrofit) {
                 myOnResponse(response);

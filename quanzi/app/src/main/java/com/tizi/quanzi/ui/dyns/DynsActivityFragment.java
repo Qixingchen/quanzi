@@ -75,6 +75,12 @@ public class DynsActivityFragment extends BaseFragment {
             @Override
             public void click(Dyns.DynsEntity dyn) {
                 DynInfoFragment dynInfoFragment = new DynInfoFragment();
+                dynInfoFragment.setOnDeleteDyn(new DynInfoFragment.OnDeleteDyn() {
+                    @Override
+                    public void onDelete(Dyns.DynsEntity dyn) {
+                        dynsAdapter.deleteItem(dyn);
+                    }
+                });
                 dynInfoFragment.setDyn(dyn);
                 dynInfoFragment.setIsUser(isUser);
                 dynInfoFragment.setShowUser(false);

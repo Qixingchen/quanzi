@@ -141,6 +141,7 @@ public class StaticField {
         public final static int QrCodeScan = 107;
 
         public final static int QrCodeScan_QuestCode = 0x0000c0de;
+        public final static int GroupDynInfo_QuestCode = 0x0000c0df;
 
         public static boolean isPermissionRequest(int code) {
             return code >= 0 && code <= 255;

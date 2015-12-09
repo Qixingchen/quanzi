@@ -65,7 +65,7 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
                 @Override
                 public boolean areContentsTheSame(Dyns.DynsEntity oldItem, Dyns.DynsEntity newItem) {
                     return oldItem.content != null && oldItem.content.equals(newItem.content)
-                            && oldItem.zans.equals(newItem.zans);
+                            && oldItem.zan == newItem.zan;
                 }
 
                 @Override
@@ -225,6 +225,20 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
         this.dynsList.beginBatchedUpdates();
         this.dynsList.addAll(dynsEntities);
         this.dynsList.endBatchedUpdates();
+    }
+
+    public void deleteItem(String dynID) {
+        for (int i = 0; i < dynsList.size(); i++) {
+            Dyns.DynsEntity dyn = dynsList.get(i);
+            if (dyn.dynid.equals(dynID)) {
+                dynsList.removeItemAt(i);
+                break;
+            }
+        }
+    }
+
+    public void deleteItem(Dyns.DynsEntity dyn) {
+        dynsList.remove(dyn);
     }
 
     public void setNeedMore(NeedMore needMore) {

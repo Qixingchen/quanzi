@@ -40,7 +40,7 @@ import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
-import com.tizi.quanzi.ui.dyns.DynInfoFragment;
+import com.tizi.quanzi.ui.dyns.DynsActivity;
 import com.tizi.quanzi.widget.AutoGridfitLayoutManager;
 
 import java.io.File;
@@ -214,14 +214,11 @@ public class QuanziIntroduceFragment extends BaseFragment {
             dynsAdapter.setOnclick(new DynsAdapter.Onclick() {
                 @Override
                 public void click(Dyns.DynsEntity dyn) {
-                    DynInfoFragment dynInfoFragment = new DynInfoFragment();
-                    dynInfoFragment.setDyn(dyn);
-                    dynInfoFragment.setShowUser(finalShowUsers);
-                    getFragmentManager().beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
-                                    R.anim.no_change, R.anim.slide_out_to_bottom)
-                            .replace(R.id.fragment, dynInfoFragment)
-                            .addToBackStack("DynInfoFragment").commit();
+                    Intent dynIntent = new Intent(mContext, DynsActivity.class);
+                    dynIntent.putExtra("dynID", dyn.dynid);
+                    dynIntent.putExtra("isUser", false);
+                    dynIntent.putExtra("showUser", finalShowUsers);
+                    mActivity.startActivityForResult(dynIntent, StaticField.PermissionRequestCode.GroupDynInfo_QuestCode);
                 }
             });
 
@@ -315,6 +312,12 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 }
                 savePhotoToLCAndSetGroupImage(requreForImage.getCropImage().getPath());
                 requreForImage = null;
+                break;
+            case StaticField.PermissionRequestCode.GroupDynInfo_QuestCode:
+                if (resultCode == Activity.RESULT_OK) {
+                    String dynID = data.getStringExtra("dynID");
+                    dynsAdapter.deleteItem(dynID);
+                }
                 break;
         }
 

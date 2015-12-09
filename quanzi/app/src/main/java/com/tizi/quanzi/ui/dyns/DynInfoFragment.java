@@ -1,6 +1,8 @@
 package com.tizi.quanzi.ui.dyns;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -46,6 +48,7 @@ public class DynInfoFragment extends BaseFragment {
     private boolean iszan;
     private boolean showUser;
     private boolean isUser = false;
+    private OnDeleteDyn onDeleteDyn;
 
     public DynInfoFragment() {
         // Required empty public constructor
@@ -61,6 +64,10 @@ public class DynInfoFragment extends BaseFragment {
 
     public void setShowUser(boolean showUser) {
         this.showUser = showUser;
+    }
+
+    public void setOnDeleteDyn(OnDeleteDyn onDeleteDyn) {
+        this.onDeleteDyn = onDeleteDyn;
     }
 
     @Override
@@ -102,6 +109,35 @@ public class DynInfoFragment extends BaseFragment {
         //            }
         //        }).isZan(dyn.dynid);
 
+        if (dyn.createUser.equals(AppStaticValue.getUserID())) {
+            ((DynsActivity) (mActivity)).needDeleteIcon(new DynsActivity.OnDelete() {
+                @Override
+                public void onDelete() {
+                    DynamicAct.getNewInstance(isUser).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                        @Override
+                        public void onOK(Object ts) {
+
+                            if (getFragmentManager().getFragments().size() == 1) {
+                                Intent intent = new Intent();
+                                intent.putExtra("dynID", dyn.dynid);
+                                mActivity.setResult(Activity.RESULT_OK, intent);
+                                mActivity.finish();
+                            } else {
+                                if (onDeleteDyn != null) {
+                                    onDeleteDyn.onDelete(dyn);
+                                }
+                                getFragmentManager().popBackStack();
+                            }
+                        }
+
+                        @Override
+                        public void onError(String Message) {
+                            Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
+                        }
+                    }).deleteDyn(dyn.dynid);
+                }
+            });
+        }
         getComment();
         addCommentImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +149,7 @@ public class DynInfoFragment extends BaseFragment {
                 addComment(null);
             }
         });
+        /*以下给非User动态增加点击操作*/
         if (isUser) {
             return;
         }
@@ -290,5 +327,9 @@ public class DynInfoFragment extends BaseFragment {
                 }
             }
         }).setNegativeButton("取消", null).show();
+    }
+
+    public interface OnDeleteDyn {
+        void onDelete(Dyns.DynsEntity dyn);
     }
 }

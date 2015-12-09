@@ -165,7 +165,7 @@ public interface RetrofitAPI {
                 @Query(value = "content", encoded = true) String content);
 
         @POST("grpdyn/delF")
-        Call<OnlySuccess> delDyn(
+        Call<OnlySuccess> deleteDyn(
                 @Query("dynid") String dynID);
 
         @POST("grpdyn/findF")
@@ -237,7 +237,7 @@ public interface RetrofitAPI {
                 @Query(value = "content", encoded = true) String content);
 
         @POST("userdyn/delF")
-        Call<OnlySuccess> delDyn(
+        Call<OnlySuccess> deleteDyn(
                 @Query("dynid") String dynID);
 
         @POST("userdyn/findF")

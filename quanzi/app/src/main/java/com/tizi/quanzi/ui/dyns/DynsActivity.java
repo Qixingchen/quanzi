@@ -30,12 +30,14 @@ public class DynsActivity extends BaseActivity {
     private String themeString;
 
     private boolean isUser;
+    private OnDelete onDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dyns);
         String dynID = getIntent().getStringExtra("dynID");
+        final boolean showUser = getIntent().getBooleanExtra("showUser", false);
         isUser = getIntent().getBooleanExtra("isUser", false);
         if (dynID == null) {
             dynsActivityFragment = new DynsActivityFragment();
@@ -50,6 +52,7 @@ public class DynsActivity extends BaseActivity {
                         DynInfoFragment dynInfoFragment = new DynInfoFragment();
                         dynInfoFragment.setDyn(dyns.dyns.get(0));
                         dynInfoFragment.setIsUser(isUser);
+                        dynInfoFragment.setShowUser(showUser);
                         getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynInfoFragment)
                                 .commit();
                     } else {
@@ -123,6 +126,7 @@ public class DynsActivity extends BaseActivity {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_dyns, menu);
         menu.findItem(R.id.action_send).setVisible(false);
+        menu.findItem(R.id.action_delete).setVisible(false);
         return true;
     }
 
@@ -146,10 +150,15 @@ public class DynsActivity extends BaseActivity {
                     public void countdown(long remainingS, long goneS) {
 
                     }
-                }).setTimer(2000, 2000).start();
+                }).setTimer(1200, 1200).start();
 
             }
             return true;
+        }
+        if (id == R.id.action_delete) {
+            if (onDelete != null) {
+                onDelete.onDelete();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -179,5 +188,20 @@ public class DynsActivity extends BaseActivity {
                 menu.findItem(R.id.action_send).setVisible(false);
             }
         }
+        if (fragmentResume.FramgentName.equals(DynInfoFragment.class.getSimpleName())) {
+            if (!fragmentResume.resumeOrPause) {
+                menu.findItem(R.id.action_delete).setVisible(false);
+            }
+        }
     }
+
+    public void needDeleteIcon(OnDelete onDelete) {
+        this.onDelete = onDelete;
+        menu.findItem(R.id.action_delete).setVisible(true);
+    }
+
+    public interface OnDelete {
+        void onDelete();
+    }
+
 }

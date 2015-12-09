@@ -39,8 +39,8 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     private SortedList<Comments.CommentsEntity> commentses = new SortedList<Comments.CommentsEntity>(Comments.CommentsEntity.class, new SortedList.Callback<Comments.CommentsEntity>() {
         @Override
         public int compare(Comments.CommentsEntity o1, Comments.CommentsEntity o2) {
-            return (int) (FriendTime.getTimeFromServerString(o1.createTime) -
-                    FriendTime.getTimeFromServerString(o2.createTime));
+            return (int) (FriendTime.getTimeFromServerString(o1.createTime) / 1000L -
+                    FriendTime.getTimeFromServerString(o2.createTime) / 1000L);
         }
 
         @Override

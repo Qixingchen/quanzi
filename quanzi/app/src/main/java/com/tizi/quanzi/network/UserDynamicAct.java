@@ -205,6 +205,21 @@ public class UserDynamicAct extends RetrofitNetworkAbs {
         });
     }
 
+    /*删除动态*/
+    public void deleteDyn(String dynID) {
+        dynsSer.deleteDyn(dynID).enqueue(new Callback<OnlySuccess>() {
+            @Override
+            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public UserDynamicAct setNetworkListener(NetworkListener networkListener) {

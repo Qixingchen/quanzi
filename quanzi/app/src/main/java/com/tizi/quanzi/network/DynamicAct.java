@@ -133,6 +133,15 @@ public class DynamicAct {
         }
     }
 
+    /*删除动态*/
+    public void deleteDyn(String dynID) {
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).deleteDyn(dynID);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).deleteDyn(dynID);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public DynamicAct setNetworkListener(RetrofitNetworkAbs.NetworkListener networkListener) {
         this.listener = networkListener;

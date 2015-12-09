@@ -178,7 +178,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
      * @param position 列表位置
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         if (DeleteAllViewHolder.class.isInstance(holder)) {
             final DeleteAllViewHolder vh = (DeleteAllViewHolder) holder;
@@ -245,6 +245,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
                             SystemMessageList.getInstance().updateGroup(
                                     SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
+                            notifyItemChanged(position);
                         }
                     });
 
@@ -258,7 +259,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                             DBAct.getInstance().addOrReplaceSysMess(systemMessage);
                             SystemMessageList.getInstance().updateGroup(
                                     SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
-
+                            notifyItemChanged(position);
                         }
                     });
                 }

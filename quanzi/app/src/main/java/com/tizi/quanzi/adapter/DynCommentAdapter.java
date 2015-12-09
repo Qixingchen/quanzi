@@ -1,8 +1,10 @@
 package com.tizi.quanzi.adapter;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.gson.Comments;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
@@ -72,9 +75,11 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     });
     private Activity activity;
     private onCommentClick onCommentClick;
+    private boolean isUser;
 
-    public DynCommentAdapter(Activity activity) {
+    public DynCommentAdapter(Activity activity, boolean isUser) {
         this.activity = activity;
+        this.isUser = isUser;
     }
 
     public DynCommentAdapter setOnCommentClick(DynCommentAdapter.onCommentClick onCommentClick) {
@@ -87,6 +92,12 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
             return;
         }
         commentses.add(commentsEntity);
+    }
+
+    public void deleteComment(Comments.CommentsEntity commentsEntity) {
+        if (commentsEntity != null) {
+            commentses.remove(commentsEntity);
+        }
     }
 
     public void setCommentses(List<Comments.CommentsEntity> commentses) {
@@ -171,6 +182,26 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
                 }
             }
         });
+        /*长按删除*/
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (!comment.senderId.equals(AppStaticValue.getUserID())) {
+                    return false;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("删除评论")
+                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (onCommentClick != null) {
+                                    onCommentClick.OnDelete(comment, position);
+                                }
+                            }
+                        }).show();
+                return false;
+            }
+        });
     }
 
     @Override
@@ -180,6 +211,8 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
 
     public interface onCommentClick {
         void Onclick(Comments.CommentsEntity comment, int position);
+
+        void OnDelete(Comments.CommentsEntity comment, int position);
     }
 
     protected static class CommentViewHolder extends RecyclerView.ViewHolder {

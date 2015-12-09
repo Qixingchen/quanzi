@@ -124,6 +124,15 @@ public class DynamicAct {
         addDYn(ThemeID, GroupID, comment, null);
     }
 
+    /*删除评论*/
+    public void deleteComment(String commentID) {
+        if (isUser) {
+            UserDynamicAct.getNewInstance().setNetworkListener(listener).deleteComment(commentID);
+        } else {
+            GroupDynamicAct.getNewInstance().setNetworkListener(listener).deleteComment(commentID);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public DynamicAct setNetworkListener(RetrofitNetworkAbs.NetworkListener networkListener) {
         this.listener = networkListener;

@@ -200,6 +200,21 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
         addDYn(ThemeID, GroupID, comment, null);
     }
 
+    /*删除评论*/
+    public void deleteComment(String commentID) {
+        dynsSer.deleteComment(commentID).enqueue(new Callback<OnlySuccess>() {
+            @Override
+            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+                myOnResponse(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                myOnFailure(t);
+            }
+        });
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public GroupDynamicAct setNetworkListener(RetrofitNetworkAbs.NetworkListener networkListener) {

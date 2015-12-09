@@ -172,7 +172,7 @@ public class DynInfoFragment extends BaseFragment {
     }
 
     private void getComment() {
-        dynCommentAdapter = new DynCommentAdapter(mActivity);
+        dynCommentAdapter = new DynCommentAdapter(mActivity, isUser);
         commentRecyclerView.setAdapter(dynCommentAdapter);
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         commentRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mContext));
@@ -185,6 +185,23 @@ public class DynInfoFragment extends BaseFragment {
                     return;
                 }
                 addComment(comment);
+            }
+
+            @Override
+            public void OnDelete(final Comments.CommentsEntity comment, int position) {
+                DynamicAct.getNewInstance(isUser).setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+                    @Override
+                    public void onOK(Object ts) {
+                        dyn.commentNum--;
+                        commentsTextView.setText(String.valueOf(dyn.commentNum));
+                        dynCommentAdapter.deleteComment(comment);
+                    }
+
+                    @Override
+                    public void onError(String Message) {
+                        Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
+                    }
+                }).deleteComment(comment.id);
             }
         });
 

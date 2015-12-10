@@ -1,5 +1,7 @@
 package com.tizi.quanzi.tool;
 
+import android.support.annotation.Nullable;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.SaveCallback;
@@ -32,8 +34,8 @@ public class SaveImageToLeanCloud {
      *
      * @param filePath 图片地址
      */
-    public void savePhoto(String filePath) {
-        savePhoto(filePath, Tool.getFileName(filePath));
+    public AVFile savePhoto(String filePath) {
+        return savePhoto(filePath, Tool.getFileName(filePath));
     }
 
     /**
@@ -43,8 +45,8 @@ public class SaveImageToLeanCloud {
      * @param filePath 图片地址
      * @param fileName 图片储存的名称
      */
-    public void savePhoto(String filePath, String fileName) {
-        savePhoto(filePath, fileName, 0, 0, 100);
+    public AVFile savePhoto(String filePath, String fileName) {
+        return savePhoto(filePath, fileName, 0, 0, 100);
     }
 
     /**
@@ -54,8 +56,8 @@ public class SaveImageToLeanCloud {
      * @param maxWei   获取的图片链接最大宽度
      * @param maxHei   获取的图片链接最大高度
      */
-    public void savePhoto(String filePath, int maxWei, int maxHei) {
-        savePhoto(filePath, Tool.getFileName(filePath), maxWei, maxHei, 100);
+    public AVFile savePhoto(String filePath, int maxWei, int maxHei) {
+        return savePhoto(filePath, Tool.getFileName(filePath), maxWei, maxHei, 100);
     }
 
     /**
@@ -66,8 +68,8 @@ public class SaveImageToLeanCloud {
      * @param maxHei   获取的图片链接最大高度
      * @param quality  图片质量
      */
-    public void savePhoto(String filePath, int maxWei, int maxHei, int quality) {
-        savePhoto(filePath, Tool.getFileName(filePath), maxWei, maxHei, quality);
+    public AVFile savePhoto(String filePath, int maxWei, int maxHei, int quality) {
+        return savePhoto(filePath, Tool.getFileName(filePath), maxWei, maxHei, quality);
     }
 
     /**
@@ -78,8 +80,8 @@ public class SaveImageToLeanCloud {
      * @param maxWei   获取的图片链接最大宽度
      * @param maxHei   获取的图片链接最大高度
      */
-    public void savePhoto(final String filePath, final String fileName, final int maxWei, final int maxHei) {
-        savePhoto(filePath, fileName, maxWei, maxHei, 100);
+    public AVFile savePhoto(final String filePath, final String fileName, final int maxWei, final int maxHei) {
+        return savePhoto(filePath, fileName, maxWei, maxHei, 100);
     }
 
     /**
@@ -91,8 +93,9 @@ public class SaveImageToLeanCloud {
      * @param maxHei   获取的图片链接最大高度
      * @param quality  图片质量
      */
-    public void savePhoto(final String filePath, final String fileName, final int maxWei, final int maxHei, final int quality) {
-        AVFile file;
+    @Nullable
+    public AVFile savePhoto(final String filePath, final String fileName, final int maxWei, final int maxHei, final int quality) {
+        AVFile file = null;
         try {
             file = AVFile.withAbsoluteLocalPath(fileName, filePath);
             final AVFile finalFile = file;
@@ -102,7 +105,7 @@ public class SaveImageToLeanCloud {
                     if (e != null) {
                         Log.w(TAG, String.format("图片%s:%s储存失败: %s", filePath, fileName, e.getMessage()));
                         if (getImageUri != null) {
-                            getImageUri.onResult(null, false, e.getMessage() + fileName + "储存失败");
+                            getImageUri.onResult(null, false, e.getMessage() + fileName + "储存失败", finalFile);
                         }
                     } else {
                         String photoUri;
@@ -113,7 +116,7 @@ public class SaveImageToLeanCloud {
                             photoUri = finalFile.getUrl();
                         }
                         if (getImageUri != null) {
-                            getImageUri.onResult(photoUri, true, null);
+                            getImageUri.onResult(photoUri, true, null, finalFile);
                         }
                     }
                 }
@@ -121,12 +124,13 @@ public class SaveImageToLeanCloud {
         } catch (IOException e) {
             e.printStackTrace();
             if (getImageUri != null) {
-                getImageUri.onResult(null, false, e.getMessage());
+                getImageUri.onResult(null, false, e.getMessage(), file);
             }
         }
+        return file;
     }
 
     public interface GetImageUri {
-        void onResult(String uri, boolean success, String errorMessage);
+        void onResult(String uri, boolean success, String errorMessage, AVFile avFile);
     }
 }

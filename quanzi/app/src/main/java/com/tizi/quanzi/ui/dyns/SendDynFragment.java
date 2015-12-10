@@ -7,6 +7,7 @@ import android.content.ClipData;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.avos.avoscloud.AVFile;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
 import com.google.gson.Gson;
@@ -27,7 +29,6 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.otto.ActivityResultAns;
-import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
@@ -66,9 +67,8 @@ public class SendDynFragment extends BaseFragment {
     private GroupSelectAdapter groupSelectAdapter;
     private ImageButton selectPhoto;
     private String selectGroupID;
-    private ArrayList<String> photoUrls = new ArrayList<>();
-
-    private int photoCount = 0;//用于统计已选择的照片数,photoUrls未上传时不会被添加
+    private ArrayMap<AVFile, Boolean> photoUploading = new ArrayMap<>(12);
+    private ArrayMap<AVFile, String> photoLocal = new ArrayMap<>(30);
 
 
     public SendDynFragment() {
@@ -100,7 +100,7 @@ public class SendDynFragment extends BaseFragment {
      */
     public boolean SendDyn() {
         String comment = dynComment.getText().toString();
-        if (photoCount != photoUrls.size()) {
+        if (photoUploading.containsValue(false)) {
             Snackbar.make(view, "正在上传照片中!", Snackbar.LENGTH_LONG).show();
             return false;
         }
@@ -112,12 +112,12 @@ public class SendDynFragment extends BaseFragment {
             Snackbar.make(view, "没有选择群", Snackbar.LENGTH_LONG).show();
             return false;
         }
-        if (photoUrls.size() == 0) {
+        if (photoUploading.size() == 0) {
             DynamicAct.getNewInstance(isUser).addDYn(themeID, selectGroupID, comment);
         } else {
             ArrayList<Pics> pics = new ArrayList<>();
-            for (String photoUrl : photoUrls) {
-                pics.add(new Pics(photoUrl));
+            for (AVFile photo : photoUploading.keySet()) {
+                pics.add(new Pics(photo.getUrl()));
             }
             DynamicAct.getNewInstance(isUser).addDYn(themeID, selectGroupID, comment,
                     new Gson().toJson(pics));
@@ -187,8 +187,8 @@ public class SendDynFragment extends BaseFragment {
 
                 @Override
                 public void onClick(View v) {
-                    photoUrls.remove(finalI);
-                    photoCount--;
+                    photoUploading.keyAt(finalI).cancel();
+                    photoUploading.removeAt(finalI);
                     flushImages();
                 }
             });
@@ -197,12 +197,12 @@ public class SendDynFragment extends BaseFragment {
         selectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (photoCount >= 9) {
+                if (photoUploading.size() >= 9) {
                     Snackbar.make(view, "您已经选择9张照片了~", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 RequreForImage.getInstance(mActivity).showDialogAndCallIntent("选择照片",
-                        StaticField.PermissionRequestCode.send_dyn, true, 9 - photoCount);
+                        StaticField.PermissionRequestCode.send_dyn, true, 9 - photoUploading.size());
             }
         });
 
@@ -215,9 +215,18 @@ public class SendDynFragment extends BaseFragment {
             ArrayList<Image> images = activityResultAns.data
                     .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
             if (images != null) {
-                photoCount += images.size();
+                int photoCount = photoUploading.size() + images.size();
+                if (photoCount > 9) {
+                    Snackbar.make(view, String.format("选择数量超过9张,%d张未保存", photoCount - 9),
+                            Snackbar.LENGTH_LONG).show();
+                    int overPhotoNum = photoCount - 9;
+                    int deleteStart = images.size() - overPhotoNum;
+                    int deleteEnd = images.size() - 1;
+                    for (int i = deleteEnd; i >= deleteStart; i--) {
+                        images.remove(i);
+                    }
+                }
                 for (Image image : images) {
-
                     savePhoto(image.path);
                 }
             } else {
@@ -233,12 +242,11 @@ public class SendDynFragment extends BaseFragment {
         final ClipData clipData = activityResultAns.data.getClipData();
         if (clipData != null) {
             int size = activityResultAns.data.getClipData().getItemCount();
-            photoCount += size;
+            int photoCount = photoUploading.size() + size;
             if (photoCount > 9) {
                 Snackbar.make(view, String.format("选择数量超过9张,%d张未保存", photoCount - 9),
                         Snackbar.LENGTH_LONG).show();
                 size -= photoCount - 9;
-                photoCount = 9;
             }
             final int finalSize = size;
             Observable.create(new Observable.OnSubscribe<Uri>() {
@@ -260,26 +268,38 @@ public class SendDynFragment extends BaseFragment {
                     });
                 }
             }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
-                @Override
-                public void call(String s) {
-                    savePhoto(s);
-                }
-            });
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+                            savePhoto(s);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            Snackbar.make(view, "图片解析错误", Snackbar.LENGTH_LONG).show();
+                            throwable.printStackTrace();
+                        }
+                    });
         } else {
             String filepath = RequreForImage.getInstance(mActivity).getFilePathFromIntent(activityResultAns.data);
-            photoCount++;
             savePhoto(filepath);
         }
     }
 
 
     private void flushImages() {
-        int size = photoUrls.size();
+        int size = photoUploading.size();
         for (int i = 0; i < Math.min(9, size); i++) {
             weibo_pics[i].setVisibility(View.VISIBLE);
-            String uri = GetThumbnailsUri.maxHeiAndWei(photoUrls.get(i), 270, 480);
-            Picasso.with(mContext).load(uri).fit().into((ImageView) weibo_pics[i].findViewById(R.id.pic));
+            Picasso.with(mContext).load("file://" + photoLocal.get(photoUploading.keyAt(i)))
+                    .fit().centerInside()
+                    .into((ImageView) (weibo_pics[i].findViewById(R.id.pic)));
+            if (photoUploading.valueAt(i)) {
+                (weibo_pics[i].findViewById(R.id.pic)).setAlpha(1.0f);
+            } else {
+                (weibo_pics[i].findViewById(R.id.pic)).setAlpha(0.3f);
+            }
         }
         for (int i = size; i < 9; i++) {
             weibo_pics[i].setVisibility(View.GONE);
@@ -287,18 +307,25 @@ public class SendDynFragment extends BaseFragment {
     }
 
     private void savePhoto(String filepath) {
-        SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
+        AVFile avFile = SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
             @Override
-            public void onResult(String uri, boolean success, String errormess) {
+            public void onResult(String uri, boolean success, String errormess, AVFile avFile1) {
                 if (success) {
-                    photoUrls.add(uri);
+                    int index = photoUploading.indexOfKey(avFile1);
+                    if (index < 0) {
+                        return;
+                    }
+                    photoUploading.setValueAt(index, true);
                     flushImages();
                 } else {
                     Snackbar.make(view, errormess, Snackbar.LENGTH_LONG).show();
-                    photoCount--;
                 }
             }
         }).savePhoto(filepath);
+        photoUploading.put(avFile, false);
+        photoLocal.put(avFile, filepath);
+        flushImages();
+
     }
 
 }

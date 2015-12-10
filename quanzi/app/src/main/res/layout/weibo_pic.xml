@@ -7,5 +7,5 @@
     android:layout_height="@dimen/weibo_pic_hei"
     android:layout_marginBottom="5dp"
     android:layout_marginEnd="5dp"
-    android:scaleType="centerCrop"
+    android:scaleType="centerInside"
     tools:background="@color/md_grey_800"/>

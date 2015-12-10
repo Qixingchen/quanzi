@@ -12,14 +12,14 @@
         android:layout_height="@dimen/weibo_pic_hei"
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="5dp"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         tools:background="@color/md_grey_800"/>
 
     <ImageButton
         android:id="@+id/delete_photo"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:background="@color/md_white"
+        android:background="@color/md_grey_700"
         android:src="@drawable/ic_delete_24dp"/>
 
 </RelativeLayout>

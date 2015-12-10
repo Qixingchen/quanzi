@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVFile;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
@@ -336,7 +337,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
                 SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                     @Override
-                    public void onResult(String uri, boolean success, String errorMessage) {
+                    public void onResult(String uri, boolean success, String errorMessage, AVFile avFile) {
                         if (success) {
                             MyUserInfo.getInstance().getUserInfo().setIcon(uri);
                             Picasso.with(mContext).load(MyUserInfo.getInstance().getUserInfo().getIcon()).fit().into(userFaceImageView);

@@ -9,14 +9,15 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "0.2.11-nightly"
+        versionName "0.2.12-dev"
         multiDexEnabled true
     }
     buildTypes {
         release {
             //minifyEnabled false
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            shrinkResources true
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     dexOptions {

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 
+import com.avos.avoscloud.AVFile;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
@@ -125,7 +126,7 @@ public class CompleteUesrInfo extends BaseFragment {
 
                 SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                     @Override
-                    public void onResult(String uri, boolean success, String errorMessage) {
+                    public void onResult(String uri, boolean success, String errorMessage, AVFile avFile) {
                         if (!success) {
                             Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
                             return;

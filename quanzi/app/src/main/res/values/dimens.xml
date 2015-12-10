@@ -13,8 +13,8 @@
     <dimen name="sub_title_text_size">18sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="group_introduce_face_size">120dp</dimen>
-    <dimen name="weibo_pic_wei">80dp</dimen>
-    <dimen name="weibo_pic_hei">80dp</dimen>
+    <dimen name="weibo_pic_wei">100dp</dimen>
+    <dimen name="weibo_pic_hei">100dp</dimen>
     <dimen name="group_face_small">64dp</dimen>
 
     <dimen name="dyn_user_icon">50dp</dimen>

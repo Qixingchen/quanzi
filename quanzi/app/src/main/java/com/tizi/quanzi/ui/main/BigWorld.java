@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
@@ -282,7 +283,7 @@ public class BigWorld extends BaseFragment {
 
                 SaveImageToLeanCloud.getNewInstance().setGetImageUri(new SaveImageToLeanCloud.GetImageUri() {
                     @Override
-                    public void onResult(String uri, boolean success, String errorMessage) {
+                    public void onResult(String uri, boolean success, String errorMessage, AVFile avFile) {
                         if (success) {
                             Picasso.with(mContext).load(uri).into(userBackground);
                             MyUserInfo.getInstance().getUserInfo().bg = uri;

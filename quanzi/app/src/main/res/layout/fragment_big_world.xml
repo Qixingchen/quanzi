@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_fragment_background"
     tools:context="com.tizi.quanzi.ui.main.BigWorld">
 
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/color_fragment_background">
+        android:layout_marginStart="8dp">
 
         <LinearLayout
             android:layout_width="fill_parent"

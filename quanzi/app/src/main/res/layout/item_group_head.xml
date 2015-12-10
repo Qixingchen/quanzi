@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <ImageView
+        android:id="@+id/zoneBackground"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:fitsSystemWindows="true"
+        android:foreground="#A333"
+        android:scaleType="centerCrop"
+        app:layout_collapseMode="parallax"
+        tools:background="@drawable/face"/>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="108dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="60dp"
+            android:background="@drawable/corners"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/gruop_face"
+            android:layout_width="@dimen/group_introduce_face_size"
+            android:layout_height="@dimen/group_introduce_face_size"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            app:civ_border_color="#80CECECE"
+            app:civ_border_width="8dp"
+            app:layout_collapseMode="parallax"
+            tools:src="@drawable/face"/>
+
+        <TextView
+            android:id="@+id/zoneSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@id/gruop_face"
+            android:maxLines="2"
+            android:textColor="@color/md_white"
+            android:textSize="@dimen/normal_edit_text_size"
+            tools:text="签名：1234\n3\n3"/>
+
+
+        <me.next.tagview.TagCloudView
+            android:id="@+id/group_tag_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/zoneSign"
+            android:layout_below="@id/zoneSign"
+            android:background="#0000"
+            app:tcvBackground="@drawable/corners"
+            app:tcvCanTagClick="false"
+            app:tcvItemBorderHorizontal="8dp"
+            app:tcvItemBorderVertical="6dp"
+            app:tcvShowEndText="false"
+            app:tcvShowRightImg="false"
+            app:tcvTextColor="@color/md_white"
+            tools:background="@color/md_green_500"
+            tools:layout_height="60dp"/>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

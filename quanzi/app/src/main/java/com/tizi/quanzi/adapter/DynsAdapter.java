@@ -27,12 +27,15 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
     private static final String TAG = DynsAdapter.class.getSimpleName();
     private static final int AD = 1;
     private static final int DYN_ITEM = 2;
+    private static final int HEAD_VIEW1 = 3;
+    private static final int HEAD_VIEW2 = 4;
     private Context mContext;
     private NeedMore needMore;
     private Onclick onclick;
     private boolean showUser = false;
     private boolean isUser = false;
     private String themeADImage;
+    private View view1, view2;
     private SortedList<Dyns.DynsEntity> dynsList = new SortedList<>(Dyns.DynsEntity.class,
             new SortedList.Callback<Dyns.DynsEntity>() {
                 @Override
@@ -93,6 +96,11 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
         this.isUser = isUser;
     }
 
+    public void setHeadViews(View view1, View view2) {
+        this.view1 = view1;
+        this.view2 = view2;
+    }
+
     public void setShowUser(boolean showUser) {
         this.showUser = showUser;
         notifyDataSetChanged();
@@ -121,6 +129,14 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
                         .inflate(R.layout.item_theme_ad, parent, false);
                 vh = new ADViewHolder(v);
                 break;
+            case HEAD_VIEW1:
+                v = view1;
+                vh = new HeadView(v);
+                break;
+            case HEAD_VIEW2:
+                v = view2;
+                vh = new HeadView(v);
+                break;
             default:
                 vh = null;
         }
@@ -131,6 +147,12 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
     public int getItemViewType(int position) {
         if (position == 0 && themeADImage != null) {
             return AD;
+        }
+        if (position == 0 && view1 != null) {
+            return HEAD_VIEW1;
+        }
+        if (position == 1 && view2 != null) {
+            return HEAD_VIEW2;
         }
         return DYN_ITEM;
     }
@@ -212,7 +234,17 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
     }
 
     private int getAddtion() {
-        return themeADImage == null ? 0 : 1;
+        int ans = 0;
+        if (themeADImage != null) {
+            ans++;
+        }
+        if (view1 != null) {
+            ans++;
+        }
+        if (view2 != null) {
+            ans++;
+        }
+        return ans;
     }
 
     /**
@@ -277,6 +309,13 @@ public class DynsAdapter extends RecyclerViewAdapterAbs {
         public ADViewHolder(View itemView) {
             super(itemView);
             adImageView = (ImageView) itemView.findViewById(R.id.theme_ad_image);
+        }
+    }
+
+    class HeadView extends RecyclerView.ViewHolder {
+
+        public HeadView(View itemView) {
+            super(itemView);
         }
     }
 

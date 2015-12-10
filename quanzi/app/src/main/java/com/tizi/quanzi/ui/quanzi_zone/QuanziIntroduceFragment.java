@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
@@ -60,13 +60,14 @@ public class QuanziIntroduceFragment extends BaseFragment {
     private ImageView groupFaceImageView, zoneBackgroundImageView;
     private TextView zoneSignTextview;
     private TagCloudView quanziTagView;
-    private CollapsingToolbarLayout collapsingtoolbar;
     private RecyclerView groupUsersRecyclerView, groupDynsRecyclerView;
     private GroupUserAdapter groupUserAdapter;
     private DynsAdapter dynsAdapter;
     private GroupAllInfo groupAllInfo;
     private boolean hasMoreToGet = true;
     private int lastIndex = 0;
+
+    private View groupHeadView, userView;
 
     private RequreForImage requreForImage;
 
@@ -82,24 +83,30 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        zoneBackgroundImageView = (ImageView) view.findViewById(R.id.zoneBackground);
-        groupFaceImageView = (ImageView) view.findViewById(R.id.gruop_face);
-        zoneSignTextview = (TextView) view.findViewById(R.id.zoneSign);
 
-        collapsingtoolbar =
-                (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-        groupUsersRecyclerView = (RecyclerView) view.findViewById(R.id.group_users_item_recycler_view);
-        groupDynsRecyclerView = (RecyclerView) view.findViewById(R.id.group_dyns_item_recycler_view);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        quanziTagView = (TagCloudView) view.findViewById(R.id.group_tag_view);
+
+        groupHeadView = LayoutInflater.from(mContext)
+                .inflate(R.layout.item_group_head, (ViewGroup) view, false);
+
+        zoneBackgroundImageView = (ImageView) groupHeadView.findViewById(R.id.zoneBackground);
+        groupFaceImageView = (ImageView) groupHeadView.findViewById(R.id.gruop_face);
+        zoneSignTextview = (TextView) groupHeadView.findViewById(R.id.zoneSign);
+        quanziTagView = (TagCloudView) groupHeadView.findViewById(R.id.group_tag_view);
+
+        userView = LayoutInflater.from(mContext)
+                .inflate(R.layout.item_group_users, (ViewGroup) view, false);
+        groupUsersRecyclerView = (RecyclerView) userView.findViewById(R.id.group_users_item_recycler_view);
+
+        groupDynsRecyclerView = (RecyclerView) view.findViewById(R.id.group_dyns_item_recycler_view);
+
+
     }
 
     @Override
     protected void initViewsAndSetEvent() {
 
         ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
-
-        groupDynsRecyclerView.setHasFixedSize(true);
 
         /*用户*/
         groupUserAdapter = new GroupUserAdapter(mActivity, null, false, null, null);
@@ -118,6 +125,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         groupFaceImageView.setEnabled(false);
         /*动态*/
         dynsAdapter = new DynsAdapter(null, null, mActivity, false);
+        dynsAdapter.setHeadViews(groupHeadView, userView);
         lastIndex = 0;
         dynsAdapter.setNeedMore(new DynsAdapter.NeedMore() {
             @Override
@@ -128,8 +136,8 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 }
             }
         });
-        groupDynsRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         groupDynsRecyclerView.setAdapter(dynsAdapter);
+        groupDynsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         groupDynsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
@@ -230,7 +238,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
             }
 
 
-            collapsingtoolbar.setTitle(groupAllInfo.group.groupName);
+            toolbar.setTitle(groupAllInfo.group.groupName);
             Picasso.with(mActivity).load(groupAllInfo.group.icon)
                     .fit()
                     .into(groupFaceImageView);
@@ -252,8 +260,11 @@ public class QuanziIntroduceFragment extends BaseFragment {
         }
         if (groupAllInfo != null && groupUsersRecyclerView.getVisibility() == View.VISIBLE) {
             int size = Math.min(groupAllInfo.memlist.size() + 1, 10);
-            groupUsersRecyclerView.getLayoutParams().height = (int) (76 * GetThumbnailsUri.getDpi(mActivity)
+            int wei = (int) (mContext.getResources().getDisplayMetrics().widthPixels
+                    - 8 * GetThumbnailsUri.getDpi(mActivity) * 2);
+            int hei = (int) (76 * GetThumbnailsUri.getDpi(mActivity)
                     * (((size - 1) / ((Tool.getSrceenWidthDP() - 16) / 72)) + 1));
+            groupUsersRecyclerView.setLayoutParams(new LinearLayout.LayoutParams(wei, hei));
         }
     }
 

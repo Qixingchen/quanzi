@@ -272,6 +272,30 @@ public class DBAct {
         return ans;
     }
 
+    /**
+     * 查询所有的图片消息
+     */
+    public List<String> quaryPhotoMess(String ConversationId) {
+        Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
+                new String[]{DataBaseHelper.chatHistorySQLName.url},//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.type + "=? and "
+                        + DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
+                new String[]{String.valueOf(StaticField.ChatContantType.IMAGE), ConversationId},//条件的参数
+                null,//groupBy
+                null,//having
+                null, //+ " DESC"//orderBy
+                null //limit
+        );
+        chatMessageCursor.moveToFirst();
+        List<String> ans = new ArrayList<>();
+        while (!chatMessageCursor.isAfterLast()) {
+            ans.add(chatMessageCursor.getString(0));
+            chatMessageCursor.moveToNext();
+        }
+        chatMessageCursor.close();
+        return ans;
+    }
+
     /*SystemMessage*/
 
     /**

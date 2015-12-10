@@ -264,9 +264,10 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 holder.contantImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ArrayList<String> image = new ArrayList<>();
-                        image.add(chatMessage.url);
-                        StartGalleryActivity.startByStringList(image, 0, mContext);
+                        ArrayList<String> image = new ArrayList<>(
+                                DBAct.getInstance().quaryPhotoMess(chatMessage.ConversationId));
+
+                        StartGalleryActivity.startByStringList(image, image.indexOf(chatMessage.url), mContext);
                     }
                 });
                 break;

@@ -188,6 +188,7 @@ public class SendDynFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     photoUploading.keyAt(finalI).cancel();
+                    photoUploading.keyAt(finalI).deleteInBackground();
                     photoUploading.removeAt(finalI);
                     flushImages();
                 }

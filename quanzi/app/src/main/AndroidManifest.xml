@@ -43,6 +43,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <!-- LeanCloud 服务 -->
@@ -56,12 +57,12 @@
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
         </receiver>
+        <!--通知操作接收器-->
         <receiver android:name=".notification.NotifiReceiver">
             <intent-filter>
                 <action android:name="quanzi.Notification.BROADCAST"/>
             </intent-filter>
         </receiver>
-
         <!--内容提供器-->
         <provider
             android:name="android.support.v4.content.FileProvider"

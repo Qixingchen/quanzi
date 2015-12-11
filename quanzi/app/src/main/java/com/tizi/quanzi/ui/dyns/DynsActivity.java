@@ -56,7 +56,7 @@ public class DynsActivity extends BaseActivity {
                         getSupportFragmentManager().beginTransaction().add(R.id.fragment, dynInfoFragment)
                                 .commit();
                     } else {
-                        Snackbar.make(view, "找不到对应动态 数量:" + dyns.dyns.size(), Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(view, "找不到对应动态 可能已被删除或无权访问" + dyns.dyns.size(), Snackbar.LENGTH_LONG).show();
                     }
                 }
 

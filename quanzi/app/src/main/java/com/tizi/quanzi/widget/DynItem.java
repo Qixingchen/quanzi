@@ -98,12 +98,12 @@ public class DynItem {
         /*头像显示和点击*/
         if (showUser) {
             Picasso.with(mContext).load(dyn.icon)
-                    .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
+                    .fit()
                     .into(weibo_avatar_ImageView);
             userNameTextView.setText(dyn.nickName);
         } else {
             Picasso.with(mContext).load(dyn.groupIcon)
-                    .resizeDimen(R.dimen.dyn_user_icon, R.dimen.dyn_user_icon)
+                    .fit()
                     .into(weibo_avatar_ImageView);
             userNameTextView.setText(dyn.groupName);
         }
@@ -121,11 +121,13 @@ public class DynItem {
         }
         for (int i = 0; i < picsNum; i++) {
             String thumUri = dyn.pics.get(i).url;
-            thumUri = GetThumbnailsUri.maxHeiAndWei(thumUri,
-                    mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_hei),
-                    mContext.getResources().getDimensionPixelSize(R.dimen.weibo_pic_hei));
+            thumUri = GetThumbnailsUri.getUriLink(thumUri,
+                    (int) mContext.getResources().getDimension(R.dimen.weibo_pic_hei),
+                    (int) mContext.getResources().getDimension(R.dimen.weibo_pic_wei), mContext);
             Picasso.with(mContext).load(thumUri)
-                    .resizeDimen(R.dimen.weibo_pic_hei, R.dimen.weibo_pic_wei)
+                    .fit()
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_photo_loading)
                     .into(weibo_pics_ImageView[i]);
             final int finalI = i;
             weibo_pics_ImageView[i].setOnClickListener(new View.OnClickListener() {

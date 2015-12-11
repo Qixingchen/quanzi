@@ -110,8 +110,7 @@ public class RetrofitNetwork {
             Request request = chain.request();
 
             long t1 = System.nanoTime();
-            //Log.i(TAG, String.format("Sending request %s on %s%n%s",
-            //request.url(), chain.connection(), "request.headers()"));
+            Log.i(TAG, String.format("Sending request %s", request.url()));
 
             Response response = chain.proceed(request);
 

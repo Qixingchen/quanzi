@@ -121,7 +121,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
             final SignUPGroupViewHolder signUpGroupVH = (SignUPGroupViewHolder) viewHolder;
 
             Picasso.with(mContext).load(group.Face)
-                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                    .fit()
                     .into(signUpGroupVH.groupFace);
             signUpGroupVH.groupFace.setOnClickListener(
                     new View.OnClickListener() {
@@ -202,7 +202,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
         if (DynSelectGroup.class.isInstance(viewHolder)) {
             final DynSelectGroup dynSelectGroup = (DynSelectGroup) viewHolder;
             Picasso.with(mContext).load(group.Face.toString())
-                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                    .fit()
                     .into(dynSelectGroup.groupFaceImageView);
             dynSelectGroup.groupNameTextview.setText(group.Name);
             dynSelectGroup.itemView.setOnClickListener(new View.OnClickListener() {

@@ -44,7 +44,7 @@ public class GetThumbnailsUri {
     }
 
     /**
-     * 按照长宽获取
+     * 按照长宽获取,质量默认50
      *
      * @param imageSourceUri 原始uri
      * @param MaxHei         高最长 DP 长度
@@ -56,7 +56,25 @@ public class GetThumbnailsUri {
         int hei = getPXs(context, MaxHei);
         int wei = getPXs(context, MaxWei);
 
-        return maxHeiAndWei(imageSourceUri, hei, wei);
+        return maxHeiAndWei(imageSourceUri, hei, wei, 50);
+    }
+
+
+    /**
+     * 按照长宽获取
+     *
+     * @param imageSourceUri 原始uri
+     * @param MaxHei         高最长 DP 长度
+     * @param MaxWei         宽最长 DP 长度
+     * @param quality        图片质量
+     *
+     * @return 处理后的uri
+     */
+    public static String maxDPHeiAndWei(String imageSourceUri, int MaxHei, int MaxWei, int quality, Context context) {
+        int hei = getPXs(context, MaxHei);
+        int wei = getPXs(context, MaxWei);
+
+        return maxHeiAndWei(imageSourceUri, hei, wei, quality);
     }
 
     /**
@@ -71,9 +89,44 @@ public class GetThumbnailsUri {
     public static String maxHeiAndWei(String imageSourceUri, int MaxHei, int MaxWei) {
         String ans = imageSourceUri + addUri + "/1/w/" + MaxWei;
 
-        ans += "/h/" + MaxHei;
+        ans += "/h/" + MaxHei + "/q/" + 75;
 
         return ans;
+    }
+
+    /**
+     * 按照长宽获取
+     *
+     * @param imageSourceUri 原始uri
+     * @param MaxHei         高最长长度
+     * @param MaxWei         宽最长长度
+     *
+     * @return 处理后的uri
+     */
+    public static String maxHeiAndWei(String imageSourceUri, int MaxHei, int MaxWei, int quality) {
+        String ans = imageSourceUri + addUri + "/1/w/" + MaxWei;
+
+        ans += "/h/" + MaxHei + "/q/" + quality;
+
+        return ans;
+    }
+
+    /**
+     * 更新网络状态获取图片链接
+     * Wi-Fi 返回原图
+     * 普通网络返回 半高,质量40的图
+     *
+     * @param imageSourceUri 图片地址
+     * @param HeiDP          DP高度
+     * @param WeiDP          DP宽度
+     * @param context        上下文
+     */
+    public static String getUriLink(String imageSourceUri, int HeiDP, int WeiDP, Context context) {
+        if (NetworkStatue.isWifi()) {
+            return imageSourceUri;
+        } else {
+            return maxDPHeiAndWei(imageSourceUri, HeiDP / 2, WeiDP / 2, 40, context);
+        }
     }
 
 }

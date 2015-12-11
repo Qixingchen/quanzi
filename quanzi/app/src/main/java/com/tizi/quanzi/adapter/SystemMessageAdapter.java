@@ -306,11 +306,11 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
             }
 
             Picasso.with(mContext).load(systemMessage.user_icon)
-                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                    .fit()
                     .into(dynNotifyViewHolder.weiboUser);
 
             Picasso.with(mContext).load(systemMessage.dyn_icon)
-                    .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                    .fit()
                     .into(dynNotifyViewHolder.oldWeiboUser);
 
             if (systemMessagePair.getUnreadCount() != 0) {

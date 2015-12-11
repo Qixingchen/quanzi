@@ -9,7 +9,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "0.2.12-nightly"
+        versionName "0.2.13-dev"
         multiDexEnabled true
     }
     buildTypes {
@@ -79,6 +79,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     //图像加载
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.bumptech.glide:glide:3.6.1'
     //circleimageview
     compile 'de.hdodenhof:circleimageview:2.0.0'
     //缩放图

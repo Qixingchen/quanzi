@@ -18,7 +18,7 @@
         <RelativeLayout
             android:id="@+id/weibo_user"
             android:layout_width="wrap_content"
-            android:layout_height="64dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
@@ -27,8 +27,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/weibo_avatar"
                 style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="@dimen/group_face_small"
-                android:layout_height="@dimen/group_face_small"
+                android:layout_width="@dimen/notifi_face_small"
+                android:layout_height="@dimen/notifi_face_small"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
                 tools:src="@drawable/face"/>
@@ -47,9 +47,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="false"
-                android:layout_alignStart="@+id/weibo_name">
+                android:layout_alignStart="@+id/weibo_name"
+                android:layout_below="@id/weibo_name">
 
                 <TextView
                     android:id="@+id/weibo_date"
@@ -84,11 +84,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/weibo_user"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="4dp"
             android:lineSpacingExtra="4dp"
-            android:paddingBottom="15dp"
+            android:paddingBottom="8dp"
             android:textColorLink="?attr/colorAccent"
             android:textSize="16sp"
             tools:text="Content"/>
@@ -98,11 +98,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/weibo_content"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="4dp"
             android:lineSpacingExtra="4dp"
-            android:paddingBottom="15dp"
+            android:paddingBottom="8dp"
             android:textColorLink="?attr/colorAccent"
             android:textSize="14sp"
             tools:text="Content"/>
@@ -110,7 +110,7 @@
         <RelativeLayout
             android:id="@+id/old_weibo_user"
             android:layout_width="wrap_content"
-            android:layout_height="64dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@id/reply_content"
             android:layout_marginBottom="5dp"
@@ -120,8 +120,8 @@
 
             <ImageView
                 android:id="@+id/old_weibo_avatar"
-                android:layout_width="@dimen/group_face_small"
-                android:layout_height="@dimen/group_face_small"
+                android:layout_width="@dimen/notifi_face_small"
+                android:layout_height="@dimen/notifi_face_small"
                 android:layout_centerVertical="true"
                 tools:src="@drawable/face"/>
 
@@ -141,14 +141,14 @@
                 android:id="@+id/old_weibo_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="false"
                 android:layout_alignStart="@+id/old_weibo_name"
+                android:layout_below="@id/old_weibo_name"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
                 android:lineSpacingExtra="4dp"
-                android:paddingBottom="15dp"
+                android:paddingBottom="8dp"
                 android:textColorLink="?attr/colorAccent"
                 android:textSize="16sp"
                 tools:text="Content"/>

@@ -107,7 +107,7 @@ public class NewGroupStep1Fragment extends BaseFragment {
                         String photoUri = uri;
                         //finalFile.getThumbnailUrl(false, 200, 200);
                         Picasso.with(mActivity).load(photoUri)
-                                .resizeDimen(R.dimen.group_face_small, R.dimen.group_face_small)
+                                .fit()
                                 .into(UserPhotoImageView);
                         groupFaceUri = photoUri;
                     }

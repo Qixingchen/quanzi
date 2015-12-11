@@ -16,6 +16,7 @@
     <dimen name="weibo_pic_wei">100dp</dimen>
     <dimen name="weibo_pic_hei">100dp</dimen>
     <dimen name="group_face_small">64dp</dimen>
+    <dimen name="notifi_face_small">36dp</dimen>
 
     <dimen name="dyn_user_icon">50dp</dimen>
     <dimen name="dyn_image">56dp</dimen>

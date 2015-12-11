@@ -4,11 +4,11 @@
 
 
     <size
-        android:width="1dp"
-        android:height="1dp"/>
+        android:width="1px"
+        android:height="1px"/>
 
 
-    <solid android:color="@color/md_grey_800"/>
+    <solid android:color="@color/md_grey_500"/>
 
 
 </shape>

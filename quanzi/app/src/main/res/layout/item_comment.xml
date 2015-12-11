@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/user_face"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/notifi_face_small"
+            android:layout_height="@dimen/notifi_face_small"
             android:layout_marginEnd="4dp"
             tools:background="@drawable/face"/>
 

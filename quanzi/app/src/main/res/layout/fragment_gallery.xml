@@ -15,8 +15,12 @@
         android:id="@+id/pics_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/md_red_500"
-        android:textSize="@dimen/small_title_text_size"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:shadowColor="@color/md_grey_800"
+        android:shadowRadius="4"
+        android:textColor="@color/md_white"
+        android:textSize="@dimen/sub_title_text_size"
         tools:text="1/9"/>
 
 </RelativeLayout>

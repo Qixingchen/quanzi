@@ -6,8 +6,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -82,12 +86,16 @@ public class GroupTagFragment extends BaseFragment {
             needOkbtn = getArguments().getBoolean(NEED_OK_BTN);
             isGroup = getArguments().getBoolean(IS_GROUP);
         }
+        //noinspection ConstantConditions
+        ((AppCompatActivity) mActivity).getSupportActionBar().setTitle("设置标签");
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        //setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_group_tag, container, false);
 
     }
@@ -309,6 +317,24 @@ public class GroupTagFragment extends BaseFragment {
         this.onOK = onOK;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_tag_complete) {
+            if (onOK != null) {
+                onOK.OK(getTagsList());
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_tag_fragment, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
     public interface OnOK {
         void OK(ArrayList<AllTags.TagsEntity> tags);
     }
@@ -325,5 +351,4 @@ public class GroupTagFragment extends BaseFragment {
             deleteButton = (ImageButton) view.findViewById(R.id.delete_tag_button);
         }
     }
-
 }

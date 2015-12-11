@@ -129,4 +129,21 @@ public class GetThumbnailsUri {
         }
     }
 
+    /**
+     * 更新网络状态获取图片链接
+     * Wi-Fi 返回原图
+     * 普通网络返回 半高,质量40的图
+     *
+     * @param imageSourceUri 图片地址
+     * @param HeiPX          PX高度
+     * @param WeiPX          PX宽度
+     */
+    public static String getUriLink(String imageSourceUri, int HeiPX, int WeiPX) {
+        if (NetworkStatue.isWifi()) {
+            return imageSourceUri;
+        } else {
+            return maxHeiAndWei(imageSourceUri, HeiPX / 2, WeiPX / 2, 40);
+        }
+    }
+
 }

@@ -8,7 +8,7 @@
         android:height="1px"/>
 
 
-    <solid android:color="@color/md_grey_500"/>
+    <solid android:color="@color/colorDiv"/>
 
 
 </shape>

@@ -6,26 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        android:minHeight="?attr/actionBarSize"
-        android:paddingTop="@dimen/statue_bar_top_padding"
-        android:theme="@style/Theme.Toolbar.LightOverflow"/>
-
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/group_users_item_recycler_view"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginEnd="8dp"-->
-    <!--android:layout_marginStart="8dp"-->
-    <!--tools:layout_height="100dp"/>-->
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/group_dyns_item_recycler_view"
         android:layout_width="match_parent"

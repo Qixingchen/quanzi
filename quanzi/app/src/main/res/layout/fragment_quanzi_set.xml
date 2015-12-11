@@ -1,27 +1,15 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.quanzi_zone.QuanziSetFragment">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        android:minHeight="?attr/actionBarSize"
-        android:paddingTop="@dimen/statue_bar_top_padding"
-        app:title="圈子设置"/>
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_marginStart="16dp">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -155,7 +143,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:text="退出圈圈"
-                android:textSize="@dimen/small_title_text_size"/>
+                android:textSize="18sp"/>
 
         </LinearLayout>
     </ScrollView>

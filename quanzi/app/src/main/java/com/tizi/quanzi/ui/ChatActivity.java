@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -82,7 +81,6 @@ public class ChatActivity extends BaseActivity {
     private ImageButton insertImageButton, insertVoiceButton;
     private int LastPosition = -1;
     //toolbar
-    private Toolbar toolbar;
     private String toolbarTitle;
     //swipe to cancel
     private TextView recordTimeText;
@@ -127,8 +125,6 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     protected void findView() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         this.SendButton = (ImageButton) findViewById(R.id.SendButton);
         SendButton.setOnTouchListener(null);
         this.InputMessage = (EditText) findViewById(R.id.InputMessage);

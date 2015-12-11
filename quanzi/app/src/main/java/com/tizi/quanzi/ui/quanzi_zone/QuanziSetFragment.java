@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +87,7 @@ public class QuanziSetFragment extends BaseFragment {
 
     @Override
     public void initViewsAndSetEvent() {
+        ((AppCompatActivity) mActivity).getSupportActionBar().setTitle("圈子设置");
         final GroupClass group = (GroupClass) GroupList.getInstance().getGroup(groupAllInfo.group.groupNo);
         if (group == null) {
             Log.e(TAG, "group 获取失败");

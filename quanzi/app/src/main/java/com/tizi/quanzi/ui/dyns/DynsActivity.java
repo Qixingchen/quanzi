@@ -3,7 +3,6 @@ package com.tizi.quanzi.ui.dyns;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -69,7 +68,6 @@ public class DynsActivity extends BaseActivity {
             DynamicAct.getNewInstance(isUser).setNetworkListener(listener).getDynamicByID(dynID);
 
         }
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
     }
 
     /**

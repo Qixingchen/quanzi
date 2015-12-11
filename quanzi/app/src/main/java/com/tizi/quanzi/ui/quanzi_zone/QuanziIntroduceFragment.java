@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +56,6 @@ import me.next.tagview.TagCloudView;
  */
 public class QuanziIntroduceFragment extends BaseFragment {
 
-    private Toolbar toolbar;
     private ImageView groupFaceImageView, zoneBackgroundImageView;
     private TextView zoneSignTextview;
     private TagCloudView quanziTagView;
@@ -84,8 +83,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
     @Override
     protected void findViews(View view) {
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
         groupHeadView = LayoutInflater.from(mContext)
                 .inflate(R.layout.item_group_head, (ViewGroup) view, false);
 
@@ -105,8 +102,6 @@ public class QuanziIntroduceFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndSetEvent() {
-
-        ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
 
         /*用户*/
         groupUserAdapter = new GroupUserAdapter(mActivity, null, false, null, null);
@@ -179,7 +174,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         }
         for (GroupAllInfo.MemberEntity member : groupAllInfo.memlist) {
             if (member.id.compareTo(AppStaticValue.getUserID()) == 0) {
-                ((QuanziZoneActivity) mActivity).showSetting();
+                addSettingMenu();
                 groupUserAdapter.setIsMember(true);
                 break;
             }
@@ -237,8 +232,8 @@ public class QuanziIntroduceFragment extends BaseFragment {
                 groupUsersRecyclerView.setVisibility(View.GONE);
             }
 
-
-            toolbar.setTitle(groupAllInfo.group.groupName);
+            //noinspection ConstantConditions
+            ((AppCompatActivity) (mActivity)).getSupportActionBar().setTitle(groupAllInfo.group.groupName);
             Picasso.with(mActivity).load(groupAllInfo.group.icon)
                     .fit()
                     .into(groupFaceImageView);
@@ -274,7 +269,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
         if (groupAllInfo != null) {
             for (GroupAllInfo.MemberEntity member : groupAllInfo.memlist) {
                 if (member.id.compareTo(AppStaticValue.getUserID()) == 0) {
-                    ((QuanziZoneActivity) mActivity).showSetting();
+                    addSettingMenu();
                     groupUserAdapter.setIsMember(true);
                     break;
                 }
@@ -377,5 +372,11 @@ public class QuanziIntroduceFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+    private void addSettingMenu() {
+        menuAdded(R.id.action_group_settings, "圈子设置", MenuItem.SHOW_AS_ACTION_IF_ROOM, R.drawable.ic_group_settings);
+
+    }
+
 
 }

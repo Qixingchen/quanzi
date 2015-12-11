@@ -257,7 +257,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 holder.contantImageView.getLayoutParams().height = imagePix[0];
                 holder.contantImageView.getLayoutParams().width = imagePix[1];
 
-                Picasso.with(mContext).load(GetThumbnailsUri.maxHeiAndWei(
+                Picasso.with(mContext).load(GetThumbnailsUri.getUriLink(
                         chatMessage.url, imagePix[0], imagePix[1])).fit().into(holder.contantImageView);
 
                 holder.contantImageView.setVisibility(View.VISIBLE);

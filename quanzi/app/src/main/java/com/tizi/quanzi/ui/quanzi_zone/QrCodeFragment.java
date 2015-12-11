@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,8 @@ public class QrCodeFragment extends BaseFragment {
             groupName = getArguments().getString(GROUP_NAME);
             groupFace = getArguments().getString(GROUP_FACE);
         }
+        //noinspection ConstantConditions
+        ((AppCompatActivity) mActivity).getSupportActionBar().setTitle("二维码");
     }
 
     @Override

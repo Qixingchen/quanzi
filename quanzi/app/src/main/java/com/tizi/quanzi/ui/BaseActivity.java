@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,10 +33,11 @@ import rx.subscriptions.CompositeSubscription;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected final String TAG = this.getClass().getSimpleName();
+    public Menu mMenu;
     protected Context mContext;
     protected View view;
     protected Activity mActivity;
-    protected Menu mMenu;
+    protected Toolbar toolbar;
 
     private CompositeSubscription mCompositeSubscription;
 
@@ -58,6 +60,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             view = getWindow().getDecorView().getRootView();
         }
         Tool.addHideKeyboardToAllViews(view, this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
         findView();
         initView();
         setViewEvent();

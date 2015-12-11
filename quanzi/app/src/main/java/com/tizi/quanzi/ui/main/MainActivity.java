@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -38,8 +37,7 @@ public class MainActivity extends BaseActivity {
     private MainFragment mainFragment;
     private NotifiMessageFragment notifiMessageFragment;
     private UserInfoSetFragment userInfoSetFragment;
-    //toolbar
-    private Toolbar toolbar;
+
 
     private Menu menu;
 
@@ -60,13 +58,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void findView() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         mainFragment = new MainFragment();
     }
 
     @Override
     protected void initView() {
-        setSupportActionBar(toolbar);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment, mainFragment).commit();
     }

@@ -3,7 +3,6 @@ package com.tizi.quanzi.ui.new_group;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -28,7 +27,6 @@ public class NewGroupActivity extends BaseActivity {
     NewGroupStep1Fragment newGroupStep1Fragment;
     NewGroupStep2Fragment newGroupStep2Fragment;
     NewGroupStep1Fragment.NewGroupStep1Ans ans;
-    Toolbar toolbar;
     private String convID = "0";
     private Menu mMenu;
 
@@ -41,7 +39,6 @@ public class NewGroupActivity extends BaseActivity {
 
     @Override
     protected void findView() {
-        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         newGroupStep1Fragment = new NewGroupStep1Fragment();
     }
 

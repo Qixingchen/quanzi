@@ -13,7 +13,6 @@ import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
-import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.new_group.GroupTagFragment;
 
@@ -42,7 +41,6 @@ public class QuanziZoneActivity extends BaseActivity {
 
     @Override
     protected void findView() {
-
     }
 
     @Override
@@ -73,9 +71,9 @@ public class QuanziZoneActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_quanzi_zone, menu);
-        menu.findItem(R.id.action_settings).setVisible(false);
+        //menu.findItem(R.id.action_settings).setVisible(false);
         if (forJoin) {
-            menu.findItem(R.id.action_settings).setVisible(false);
+            //menu.findItem(R.id.action_settings).setVisible(false);
             menu.findItem(R.id.action_join_group).setVisible(true);
         }
         return super.onCreateOptionsMenu(menu);
@@ -89,7 +87,7 @@ public class QuanziZoneActivity extends BaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_group_settings) {
             quanziSetFragment = QuanziSetFragment.newInstance(mGroupAllInfo);
             getSupportFragmentManager().beginTransaction()
                     // TODO: 15/11/25 why crash on sdk 23?
@@ -124,6 +122,7 @@ public class QuanziZoneActivity extends BaseActivity {
                     Snackbar.make(view, Message, Snackbar.LENGTH_LONG).show();
                 }
             }).queryGroup(groupID);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -133,22 +132,6 @@ public class QuanziZoneActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         quanziIntroduceFragment.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public void showSetting() {
-        new Timer().setOnResult(new Timer.OnResult() {
-            @Override
-            public void OK() {
-                if (mMenu != null) {
-                    mMenu.findItem(R.id.action_settings).setVisible(true);
-                }
-            }
-
-            @Override
-            public void countdown(long remainingS, long goneS) {
-
-            }
-        }).setTimer(200).start();
     }
 
     public void callForTagFragment(ArrayList<AllTags.TagsEntity> tags) {

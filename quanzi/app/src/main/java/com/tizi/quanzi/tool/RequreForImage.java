@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -25,11 +23,11 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 /**
@@ -73,14 +71,31 @@ public class RequreForImage {
     /*get Image Path*/
     public static String getImageUrlWithAuthority(Context context, Uri uri) {
         InputStream is = null;
+        OutputStream os = null;
+        File file = null;
         if (uri.getAuthority() != null) {
             try {
                 is = context.getContentResolver().openInputStream(uri);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.RGB_565;
-                Bitmap bmp = BitmapFactory.decodeStream(is, null, options);
-                return writeToTempImageAndGetPathUri(context, bmp, getImageFileName(uri));
-            } catch (FileNotFoundException e) {
+                String RootPath = context.getCacheDir().getAbsolutePath();
+                String FilePath = RootPath + "/image/" + getImageFileName(uri);
+                file = new File(FilePath);
+                if (!file.getParentFile().exists()) {
+                    file.getParentFile().mkdirs();
+                }
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    Log.e("在保存图片时出错：", e.toString());
+                }
+                os = new FileOutputStream(file);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = is.read(buf)) > 0) {
+                    os.write(buf, 0, len);
+                }
+                os.flush();
+
+            } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 try {
@@ -88,20 +103,14 @@ public class RequreForImage {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        return null;
-    }
-
-    private static String writeToTempImageAndGetPathUri(Context context, Bitmap inImage, String fileName) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-
-        String RootPath = context.getCacheDir().getAbsolutePath();
-        String FilePath = RootPath + "/image/" + fileName;
-        ZipPic.saveMyBitmap(FilePath, inImage, 100);
-
-        return FilePath;
+        return file.getAbsolutePath();
     }
 
     private static String getImageFileName(Uri uri) {

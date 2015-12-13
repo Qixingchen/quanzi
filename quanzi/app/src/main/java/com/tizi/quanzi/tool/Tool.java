@@ -26,6 +26,7 @@ import com.tizi.quanzi.network.ApiInfo;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.ui.login.LoginActivity;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Calendar;
@@ -57,6 +58,14 @@ public class Tool {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static File getCacheCacheDir() {
+        if (hasSdcard()) {
+            return App.getApplication().getExternalCacheDir();
+        } else {
+            return App.getApplication().getCacheDir();
         }
     }
 

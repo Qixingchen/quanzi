@@ -298,7 +298,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 builder.setTitle("修改签名").show();
                 break;
             case R.id.user_tag:
-                GroupTagFragment groupTagFragment = GroupTagFragment.newInstance(myTag, true, false);
+                GroupTagFragment groupTagFragment = GroupTagFragment.newInstance(myTag, false);
                 groupTagFragment.setOnOK(new GroupTagFragment.OnOK() {
                     @Override
                     public void OK(ArrayList<AllTags.TagsEntity> tags) {

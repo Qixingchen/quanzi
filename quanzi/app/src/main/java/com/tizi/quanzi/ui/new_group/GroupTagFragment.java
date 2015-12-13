@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -37,13 +36,11 @@ public class GroupTagFragment extends BaseFragment {
 
 
     private static final String SELECT_TAGS = "selectTags";
-    private static final String NEED_OK_BTN = "needOkBtn";
     private static final String IS_GROUP = "isGroup";
 
     private static final int MAX_TAG_NUM = 5;
     private static final int TAG_PER_GIVEN_NUM = 5;
 
-    private boolean needOkbtn;
     private boolean isGroup;
 
 
@@ -52,7 +49,6 @@ public class GroupTagFragment extends BaseFragment {
     private android.widget.TextView changetags;
     private android.widget.TextView addTag;
     private TextView parentTagView;
-    private Button okBtn;
     private OnOK onOK;
 
     private AllTags.TagsEntity[] showTags = new AllTags.TagsEntity[MAX_TAG_NUM];
@@ -63,11 +59,10 @@ public class GroupTagFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static GroupTagFragment newInstance(ArrayList<AllTags.TagsEntity> selectTags, boolean needOkBtn, boolean isGroup) {
+    public static GroupTagFragment newInstance(ArrayList<AllTags.TagsEntity> selectTags, boolean isGroup) {
         GroupTagFragment fragment = new GroupTagFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(SELECT_TAGS, selectTags);
-        args.putBoolean(NEED_OK_BTN, needOkBtn);
         args.putBoolean(IS_GROUP, isGroup);
         fragment.setArguments(args);
         return fragment;
@@ -83,7 +78,6 @@ public class GroupTagFragment extends BaseFragment {
                     showTags[i] = selectTags.get(i);
                 }
             }
-            needOkbtn = getArguments().getBoolean(NEED_OK_BTN);
             isGroup = getArguments().getBoolean(IS_GROUP);
         }
         //noinspection ConstantConditions
@@ -95,9 +89,7 @@ public class GroupTagFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_group_tag, container, false);
-
     }
 
     @Override
@@ -114,7 +106,6 @@ public class GroupTagFragment extends BaseFragment {
         this.selectedTagTextViews[1] = new TagView(view.findViewById(R.id.tag_selected_2));
         this.selectedTagTextViews[0] = new TagView(view.findViewById(R.id.tag_selected_1));
         parentTagView = (TextView) view.findViewById(R.id.parent_tag_text_view);
-        okBtn = (Button) view.findViewById(R.id.ok_btn);
         addTag = (TextView) view.findViewById(R.id.add_tag);
     }
 
@@ -158,18 +149,6 @@ public class GroupTagFragment extends BaseFragment {
             });
         }
         setSelectTagsTextView();
-
-        if (needOkbtn) {
-            okBtn.setVisibility(View.VISIBLE);
-            okBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onOK != null) {
-                        onOK.OK(getTagsList());
-                    }
-                }
-            });
-        }
 
         addTag.setOnClickListener(new View.OnClickListener() {
             @Override

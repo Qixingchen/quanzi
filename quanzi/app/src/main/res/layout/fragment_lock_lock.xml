@@ -7,8 +7,9 @@
     tools:context="com.tizi.quanzi.ui.main.LockLock">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        style="@style/width_match_parent_max_600"
         android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
         <com.tizi.quanzi.widget.LoopViewPager

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:background="@color/md_purple_700">
+    tools:background="@color/md_blue_700">
 
     <TextView
         android:id="@+id/theme_title"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:textColor="@color/md_deep_orange_600"
+        android:textColor="#bcc7d7"
         android:textSize="@dimen/small_title_text_size"
         tools:text="脱单大作战"/>
 

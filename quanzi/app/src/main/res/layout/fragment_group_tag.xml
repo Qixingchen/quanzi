@@ -77,7 +77,7 @@
                 android:id="@+id/parent_tag_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/small_title_text_size"
+                android:textSize="@dimen/sub_title_text_size"
                 tools:text="哪个是你擅长的?"/>
 
             <TextView
@@ -87,7 +87,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="16dp"
                 android:text="换一批"
-                android:textSize="@dimen/small_title_text_size"/>
+                android:textSize="@dimen/sub_title_text_size"/>
 
         </RelativeLayout>
 
@@ -162,7 +162,7 @@
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
             android:text="自定义"
-            android:textSize="@dimen/small_title_text_size"/>
+            android:textSize="@dimen/sub_title_text_size"/>
 
 
     </LinearLayout>

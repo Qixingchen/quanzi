@@ -39,5 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginBottom="16dp"
+        android:textSize="@dimen/chat_time_text_size"
         tools:text="12:12"/>
 </LinearLayout>

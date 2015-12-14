@@ -29,7 +29,7 @@
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:textColor="@color/md_blue_500"
-            android:textSize="@dimen/normal_edit_text_size"
+            android:textSize="@dimen/chat_name_text_size"
             tools:text="qixingchen"/>
 
         <TextView
@@ -104,7 +104,7 @@
             android:layout_marginEnd="4dp"
             android:layout_marginStart="4dp"
             android:textColor="@color/md_grey_800"
-            android:textSize="@dimen/normal_edit_text_size"
+            android:textSize="@dimen/chat_time_text_size"
             tools:text="time:time"/>
 
     </LinearLayout>
@@ -114,7 +114,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="4dp"
         tools:background="@drawable/face"/>
 
 

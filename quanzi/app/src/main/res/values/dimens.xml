@@ -8,9 +8,9 @@
     <dimen name="group_face">107dp</dimen>
     <dimen name="max_chat_width">300dp</dimen>
     <dimen name="quanzi_padding_top">5dp</dimen>
-    <dimen name="small_title_text_size">26sp</dimen>
-    <dimen name="normal_text_size">16sp</dimen>
-    <dimen name="sub_title_text_size">18sp</dimen>
+    <dimen name="small_title_text_size">22sp</dimen>
+    <dimen name="normal_text_size">15sp</dimen>
+    <dimen name="sub_title_text_size">16sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="group_introduce_face_size">120dp</dimen>
     <dimen name="weibo_pic_wei">100dp</dimen>
@@ -20,8 +20,11 @@
 
     <dimen name="dyn_user_icon">50dp</dimen>
     <dimen name="dyn_image">56dp</dimen>
-    <dimen name="text_size">16sp</dimen>
+    <dimen name="text_size">14sp</dimen>
     <dimen name="invite_user_face">48dp</dimen>
     <dimen name="attitudes_face">32dp</dimen>
     <item name="disable_text_alphe" format="float" type="dimen">0.6</item>
+
+    <dimen name="chat_time_text_size">12sp</dimen>
+    <dimen name="chat_name_text_size">14sp</dimen>
 </resources>

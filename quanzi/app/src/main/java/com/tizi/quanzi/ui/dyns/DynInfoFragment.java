@@ -43,6 +43,7 @@ public class DynInfoFragment extends BaseFragment {
     private TextView attitudesTextView, commentsTextView;
     private DynCommentAdapter dynCommentAdapter;
     private RecyclerView commentRecyclerView;
+    private View DynView;
 
     private Dyns.DynsEntity dyn;
     private boolean iszan;
@@ -79,12 +80,14 @@ public class DynInfoFragment extends BaseFragment {
 
     @Override
     protected void findViews(View view) {
-        new DynItem(dyn, view, showUser, isUser, mContext);
-        attitudesTextView = (TextView) view.findViewById(R.id.weibo_attitudes);
-        commentsTextView = (TextView) view.findViewById(R.id.weibo_comments);
+        DynView = LayoutInflater.from(mContext)
+                .inflate(R.layout.item_dyn, (ViewGroup) view, false);
+        new DynItem(dyn, DynView, showUser, isUser, mContext);
+        attitudesTextView = (TextView) DynView.findViewById(R.id.weibo_attitudes);
+        commentsTextView = (TextView) DynView.findViewById(R.id.weibo_comments);
         commentRecyclerView = (RecyclerView) view.findViewById(R.id.dyn_comment_item_recycler_view);
-        plusOne = (ImageView) view.findViewById(R.id.weibo_attitude_image_view);
-        addCommentImageView = (ImageView) view.findViewById(R.id.comment);
+        plusOne = (ImageView) DynView.findViewById(R.id.weibo_attitude_image_view);
+        addCommentImageView = (ImageView) DynView.findViewById(R.id.comment);
     }
 
     @Override
@@ -210,6 +213,7 @@ public class DynInfoFragment extends BaseFragment {
 
     private void getComment() {
         dynCommentAdapter = new DynCommentAdapter(mActivity, isUser);
+        dynCommentAdapter.setHeadView(DynView);
         commentRecyclerView.setAdapter(dynCommentAdapter);
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         commentRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(mContext));

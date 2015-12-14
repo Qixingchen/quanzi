@@ -34,9 +34,16 @@ import java.util.List;
 /**
  * Created by qixingchen on 15/9/25.
  */
-public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.CommentViewHolder> {
+public class DynCommentAdapter extends RecyclerViewAdapterAbs {
 
-    private SortedList<Comments.CommentsEntity> commentses = new SortedList<Comments.CommentsEntity>(Comments.CommentsEntity.class, new SortedList.Callback<Comments.CommentsEntity>() {
+    private static final int COMMENT_VIEW = 1;
+    private static final int HEADER_VIEW = 2;
+    private Activity activity;
+    private onCommentClick onCommentClick;
+    private boolean isUser;
+    private View headView;
+    private SortedList<Comments.CommentsEntity> commentses = new SortedList<>(
+            Comments.CommentsEntity.class, new SortedList.Callback<Comments.CommentsEntity>() {
         @Override
         public int compare(Comments.CommentsEntity o1, Comments.CommentsEntity o2) {
             return (int) (FriendTime.getTimeFromServerString(o1.createTime) / 1000L -
@@ -45,22 +52,22 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
 
         @Override
         public void onInserted(int position, int count) {
-            notifyItemRangeInserted(position, count);
+            notifyItemRangeInserted(position + getAddtion(), count);
         }
 
         @Override
         public void onRemoved(int position, int count) {
-            notifyItemRangeRemoved(position, count);
+            notifyItemRangeRemoved(position + getAddtion(), count);
         }
 
         @Override
         public void onMoved(int fromPosition, int toPosition) {
-            notifyItemMoved(fromPosition, toPosition);
+            notifyItemMoved(fromPosition + getAddtion(), toPosition);
         }
 
         @Override
         public void onChanged(int position, int count) {
-            notifyItemRangeChanged(position, count);
+            notifyItemRangeChanged(position + getAddtion(), count);
         }
 
         @Override
@@ -73,13 +80,14 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
             return item1.id.equals(item2.id);
         }
     });
-    private Activity activity;
-    private onCommentClick onCommentClick;
-    private boolean isUser;
 
     public DynCommentAdapter(Activity activity, boolean isUser) {
         this.activity = activity;
         this.isUser = isUser;
+    }
+
+    public void setHeadView(View headView) {
+        this.headView = headView;
     }
 
     public DynCommentAdapter setOnCommentClick(DynCommentAdapter.onCommentClick onCommentClick) {
@@ -110,15 +118,51 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
     }
 
     @Override
-    public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_comment, parent, false);
-        return new CommentViewHolder(v);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v;
+        RecyclerView.ViewHolder vh;
+        switch (viewType) {
+            case COMMENT_VIEW:
+                v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_comment, parent, false);
+                vh = new CommentViewHolder(v);
+                break;
+            case HEADER_VIEW:
+                v = headView;
+                vh = new HeaderViewHolder(v);
+                break;
+            default:
+                vh = null;
+        }
+
+        return vh;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position < getAddtion()) {
+            if (position == 0) {
+                return HEADER_VIEW;
+            }
+        }
+        return COMMENT_VIEW;
+    }
+
+    /**
+     * 发生绑定时，为viewHolder的元素赋值
+     *
+     * @param holder   被绑定的ViewHolder
+     * @param position 列表位置
+     */
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof CommentViewHolder) {
+            onBindCommentViewHolder((CommentViewHolder) holder, position - getAddtion());
+        }
     }
 
 
-    @Override
-    public void onBindViewHolder(CommentViewHolder holder, final int position) {
+    private void onBindCommentViewHolder(CommentViewHolder holder, final int position) {
         final Comments.CommentsEntity comment = commentses.get(position);
         holder.comment.setText("");
         Picasso.with(holder.userFace.getContext()).load(comment.userIcon).fit().into(holder.userFace);
@@ -206,7 +250,15 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
 
     @Override
     public int getItemCount() {
-        return commentses == null ? 0 : commentses.size();
+        return commentses == null ? getAddtion() : commentses.size() + getAddtion();
+    }
+
+    private int getAddtion() {
+        if (headView != null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     public interface onCommentClick {
@@ -227,6 +279,13 @@ public class DynCommentAdapter extends RecyclerView.Adapter<DynCommentAdapter.Co
             comment = (TextView) itemView.findViewById(R.id.comment);
             createTime = (TextView) itemView.findViewById(R.id.creat_time);
             addComment = (ImageButton) itemView.findViewById(R.id.add_comment);
+        }
+    }
+
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

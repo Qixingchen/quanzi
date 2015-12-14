@@ -7,7 +7,8 @@
     android:layout_marginBottom="4dp"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="4dp">
+    android:layout_marginTop="4dp"
+    android:foreground="?attr/selectableItemBackground">
 
 
     <RelativeLayout
@@ -19,10 +20,9 @@
             android:id="@+id/weibo_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp">
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/weibo_avatar"
@@ -56,7 +56,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
-                    android:paddingBottom="10dp"
                     android:textSize="12sp"
                     tools:text="Date"/>
 
@@ -88,7 +87,6 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="4dp"
             android:lineSpacingExtra="4dp"
-            android:paddingBottom="8dp"
             android:textColorLink="?attr/colorAccent"
             android:textSize="16sp"
             tools:text="Content"/>
@@ -100,9 +98,8 @@
             android:layout_below="@id/weibo_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="4dp"
             android:lineSpacingExtra="4dp"
-            android:paddingBottom="8dp"
+            android:paddingTop="4dp"
             android:textColorLink="?attr/colorAccent"
             android:textSize="14sp"
             tools:text="Content"/>
@@ -115,7 +112,7 @@
             android:layout_below="@id/reply_content"
             android:layout_marginBottom="5dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="4dp"
             android:background="@color/md_blue_grey_200">
 
             <ImageView
@@ -146,9 +143,9 @@
                 android:layout_below="@id/old_weibo_name"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="4dp"
                 android:lineSpacingExtra="4dp"
                 android:paddingBottom="8dp"
+                android:paddingTop="4dp"
                 android:textColorLink="?attr/colorAccent"
                 android:textSize="16sp"
                 tools:text="Content"/>

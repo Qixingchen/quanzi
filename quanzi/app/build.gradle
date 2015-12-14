@@ -58,7 +58,6 @@ android {
 //        }
         GITHUB {
             buildConfigField "boolean", "AllowUpdate", "true"
-            buildConfigField "string", "Flavors", name
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
     }

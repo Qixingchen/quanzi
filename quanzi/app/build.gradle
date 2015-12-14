@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
@@ -18,6 +22,17 @@ android {
             minifyEnabled false
             shrinkResources true
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        String productFlavorsName = outputFile.name;
+                        String[] name = productFlavorsName.split("-");
+                        def fileName = "${releaseTime()}_v${defaultConfig.versionName}_${name[1]}.apk";
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
         }
     }
     dexOptions {
@@ -36,6 +51,18 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    productFlavors {
+//        GOOGLE {
+//            buildConfigField "boolean", "AllowUpdate", "false"
+//        }
+        GITHUB {
+            buildConfigField "boolean", "AllowUpdate", "true"
+            buildConfigField "string", "Flavors", name
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+    }
+
 }
 // todo 检查被停用的接口
 //allprojects {

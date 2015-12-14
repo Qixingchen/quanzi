@@ -33,6 +33,7 @@ import java.util.List;
 
 /**
  * Created by qixingchen on 15/9/25.
+ * 动态评论
  */
 public class DynCommentAdapter extends RecyclerViewAdapterAbs {
 

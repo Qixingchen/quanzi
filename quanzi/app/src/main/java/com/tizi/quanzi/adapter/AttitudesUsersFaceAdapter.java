@@ -23,6 +23,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Yulan on 2015/11/29.
+ * 点赞用户头像
+ * 用于属于个人动态的DynItem
  */
 public class AttitudesUsersFaceAdapter extends RecyclerViewAdapterAbs {
 

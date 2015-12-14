@@ -13,7 +13,6 @@ import android.view.MenuItem;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.squareup.otto.Subscribe;
-import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.dataStatic.GroupList;
@@ -46,9 +45,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // TODO: 15/10/13 play政策不允许做这个 do not forget delete
-        if (!BuildConfig.DEBUG) {
-            GetAppVersion.doit(this);
-        }
+        GetAppVersion.doit(this);
         Intent joinGroup = getIntent();
         if (Intent.ACTION_VIEW.equals(joinGroup.getAction())) {
             Uri uri = joinGroup.getData();

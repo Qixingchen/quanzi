@@ -56,8 +56,8 @@ public class SystemSettingFragment extends BaseFragment {
         mCustomTabHelper.prepareUrl(getString(R.string.user_license));
         mCustomTabHelper.prepareUrl(getString(R.string.open_source_license));
 
-        version.setText(String.format("%s  版本%s (version code : %s )", getString(R.string.app_name),
-                BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+        version.setText(String.format("%s  版本%s (版本号 : %s ,渠道: %s)", getString(R.string.app_name),
+                BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.FLAVOR));
         version.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

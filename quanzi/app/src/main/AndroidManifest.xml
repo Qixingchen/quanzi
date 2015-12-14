@@ -48,6 +48,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--渠道统计-->
+        <meta-data
+            android:name="leancloud"
+            android:value="${LEANCLOUD_CHANNEL_VALUE}"/>
+
         <!-- LeanCloud 服务 -->
         <service
             android:name="com.avos.avoscloud.PushService"

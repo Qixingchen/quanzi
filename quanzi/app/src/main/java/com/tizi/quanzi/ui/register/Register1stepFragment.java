@@ -202,7 +202,7 @@ public class Register1stepFragment extends BaseFragment {
                 }
 
                 if (sign.compareTo("") == 0) {
-                    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+                    if (BuildConfig.DEBUG) {
                         nextStep.register1stepOK(phoneNumber, password);
                     } else {
                         Snackbar.make(view,

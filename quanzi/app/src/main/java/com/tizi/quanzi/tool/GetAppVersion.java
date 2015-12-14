@@ -25,6 +25,9 @@ public class GetAppVersion {
     private static final String TAG = GetAppVersion.class.getSimpleName();
 
     public static void doit(final Context context) {
+        if (!BuildConfig.AllowUpdate || BuildConfig.DEBUG) {
+            return;
+        }
         ApiInfo.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {

@@ -161,6 +161,7 @@ public class StaticField {
         public static final int MAX_QUANZI = 10;
         public static final int SIGN_CODE_COUNTDOWN = 10;
         public static final int MAX_MEMBER_IN_GROUP = 10;
+        public static final int DYN_IMAGE_SIZE = 9;
     }
 
     /*系统消息还是私聊*/

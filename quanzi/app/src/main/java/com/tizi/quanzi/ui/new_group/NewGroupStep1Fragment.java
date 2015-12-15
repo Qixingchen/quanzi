@@ -89,7 +89,7 @@ public class NewGroupStep1Fragment extends BaseFragment {
         }
         switch (activityResultAns.requestCode) {
             case StaticField.PermissionRequestCode.new_group_face_photo:
-                String filePath = requreForImage.getFilePathFromIntent(activityResultAns.data);
+                String filePath = requreForImage.getFilePathFromIntentMaybeCamera(activityResultAns.data);
 
                 requreForImage.startPhotoCrop(Uri.fromFile(new File(filePath)), 1, 1,
                         StaticField.PermissionRequestCode.new_group_face_photo_crop);

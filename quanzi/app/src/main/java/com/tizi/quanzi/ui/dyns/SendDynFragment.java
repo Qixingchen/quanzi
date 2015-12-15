@@ -3,8 +3,6 @@ package com.tizi.quanzi.ui.dyns;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ClipData;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.util.ArrayMap;
@@ -18,8 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.avos.avoscloud.AVFile;
-import com.darsh.multipleimageselect.helpers.Constants;
-import com.darsh.multipleimageselect.models.Image;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
@@ -29,6 +25,7 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.otto.ActivityResultAns;
+import com.tizi.quanzi.tool.GetMutipieImage;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.SaveImageToLeanCloud;
 import com.tizi.quanzi.tool.StaticField;
@@ -36,13 +33,6 @@ import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.ArrayList;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +44,7 @@ public class SendDynFragment extends BaseFragment {
     private static final String THEME_ID = "themeID";
     private static final String GROUP_ID = "groupID";
     private static final String IS_USER = "isUser";
+    private static final int IMAGE_MAX_SIZE = StaticField.Limit.DYN_IMAGE_SIZE;
 
     private String themeString;
     private String themeID;
@@ -62,13 +53,13 @@ public class SendDynFragment extends BaseFragment {
 
 
     private android.widget.EditText dynComment;
-    private View[] weibo_pics = new View[9];
+    private View[] weibo_pics = new View[IMAGE_MAX_SIZE];
     private android.support.v7.widget.RecyclerView groupItemRecyclerview;
     private GroupSelectAdapter groupSelectAdapter;
     private ImageButton selectPhoto;
     private String selectGroupID;
-    private ArrayMap<AVFile, Boolean> photoUploading = new ArrayMap<>(12);
-    private ArrayMap<AVFile, String> photoLocal = new ArrayMap<>(30);
+    private ArrayMap<AVFile, Boolean> photoUploading = new ArrayMap<>(IMAGE_MAX_SIZE + 6);
+    private ArrayMap<AVFile, String> photoLocal = new ArrayMap<>(3 * IMAGE_MAX_SIZE);
 
 
     public SendDynFragment() {
@@ -181,7 +172,7 @@ public class SendDynFragment extends BaseFragment {
             view.findViewById(R.id.select_group).setVisibility(View.GONE);
         }
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < IMAGE_MAX_SIZE; i++) {
             final int finalI = i;
             weibo_pics[i].findViewById(R.id.delete_photo).setOnClickListener(new View.OnClickListener() {
 
@@ -198,12 +189,12 @@ public class SendDynFragment extends BaseFragment {
         selectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (photoUploading.size() >= 9) {
-                    Snackbar.make(view, "您已经选择9张照片了~", Snackbar.LENGTH_LONG).show();
+                if (photoUploading.size() >= IMAGE_MAX_SIZE) {
+                    Snackbar.make(view, String.format("您已经选择%d张照片了~", IMAGE_MAX_SIZE), Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 RequreForImage.getInstance(mActivity).showDialogAndCallIntent("选择照片",
-                        StaticField.PermissionRequestCode.send_dyn, true, 9 - photoUploading.size());
+                        StaticField.PermissionRequestCode.send_dyn, true, IMAGE_MAX_SIZE - photoUploading.size());
             }
         });
 
@@ -213,78 +204,17 @@ public class SendDynFragment extends BaseFragment {
     public void onActivityResult(ActivityResultAns activityResultAns) {
         if (activityResultAns.requestCode == StaticField.PermissionRequestCode.send_dyn
                 && activityResultAns.resultCode == Activity.RESULT_OK && activityResultAns.data != null) {
-            ArrayList<Image> images = activityResultAns.data
-                    .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES);
-            if (images != null) {
-                int photoCount = photoUploading.size() + images.size();
-                if (photoCount > 9) {
-                    Snackbar.make(view, String.format("选择数量超过9张,%d张未保存", photoCount - 9),
-                            Snackbar.LENGTH_LONG).show();
-                    int overPhotoNum = photoCount - 9;
-                    int deleteStart = images.size() - overPhotoNum;
-                    int deleteEnd = images.size() - 1;
-                    for (int i = deleteEnd; i >= deleteStart; i--) {
-                        images.remove(i);
-                    }
+            new GetMutipieImage().setOnImageGet(new GetMutipieImage.OnImageGet() {
+                @Override
+                public void OK(String FilePath) {
+                    savePhoto(FilePath);
                 }
-                for (Image image : images) {
-                    savePhoto(image.path);
-                }
-            } else {
-                photoFromSystem(activityResultAns);
-            }
-        }
-    }
 
-    /**
-     * 使用系统带的方法获取图片
-     */
-    private void photoFromSystem(ActivityResultAns activityResultAns) {
-        final ClipData clipData = activityResultAns.data.getClipData();
-        if (clipData != null) {
-            int size = activityResultAns.data.getClipData().getItemCount();
-            int photoCount = photoUploading.size() + size;
-            if (photoCount > 9) {
-                Snackbar.make(view, String.format("选择数量超过9张,%d张未保存", photoCount - 9),
-                        Snackbar.LENGTH_LONG).show();
-                size -= photoCount - 9;
-            }
-            final int finalSize = size;
-            Observable.create(new Observable.OnSubscribe<Uri>() {
                 @Override
-                public void call(Subscriber<? super Uri> subscriber) {
-                    for (int i = 0; i < finalSize; i++) {
-                        subscriber.onNext(clipData.getItemAt(i).getUri());
-                    }
-                    subscriber.onCompleted();
+                public void Error(String errorMessage) {
+                    Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
                 }
-            }).flatMap(new Func1<Uri, Observable<String>>() {
-                @Override
-                public Observable<String> call(final Uri uri) {
-                    return Observable.create(new Observable.OnSubscribe<String>() {
-                        @Override
-                        public void call(Subscriber<? super String> subscriber) {
-                            subscriber.onNext(RequreForImage.getImageUrlWithAuthority(mActivity, uri));
-                        }
-                    });
-                }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<String>() {
-                        @Override
-                        public void call(String s) {
-                            savePhoto(s);
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            Snackbar.make(view, "图片解析错误", Snackbar.LENGTH_LONG).show();
-                            throwable.printStackTrace();
-                        }
-                    });
-        } else {
-            String filepath = RequreForImage.getInstance(mActivity).getFilePathFromIntent(activityResultAns.data);
-            savePhoto(filepath);
+            }).getMutipieImage(activityResultAns.data, IMAGE_MAX_SIZE - photoUploading.size());
         }
     }
 

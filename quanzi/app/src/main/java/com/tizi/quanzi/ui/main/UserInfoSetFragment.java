@@ -328,7 +328,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         switch (activityResultAns.requestCode) {
             case StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo:
-                String ans = requreForImage.getFilePathFromIntent(activityResultAns.data);
+                String ans = requreForImage.getFilePathFromIntentMaybeCamera(activityResultAns.data);
                 requreForImage.startPhotoCrop(Uri.fromFile(new File(ans)), 1, 1,
                         StaticField.PermissionRequestCode.userInfoSetFragment_user_face_photo_crop);
                 break;

@@ -307,7 +307,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                     requreForImage = null;
                     return;
                 }
-                String filepath = requreForImage.getFilePathFromIntent(data);
+                String filepath = requreForImage.getFilePathFromIntentMaybeCamera(data);
                 requreForImage.startPhotoCrop(Uri.fromFile(new File(filepath)), 1, 1,
                         StaticField.PermissionRequestCode.QuanziIntroduceFragment_group_face_crop);
                 break;

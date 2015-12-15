@@ -121,6 +121,22 @@ public class RequreForImage {
         return fileName;
     }
 
+    /**
+     * 获取本地图片并压缩
+     *
+     * @param data 图片信息
+     */
+    public static String getFilePathFromIntent(Intent data) {
+
+        String FilePath;
+        if (data == null || data.getData() == null) {
+            return null;
+        } else {
+            FilePath = getImageUrlWithAuthority(App.getApplication(), data.getData());
+        }
+        return FilePath;
+    }
+
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
@@ -317,34 +333,14 @@ public class RequreForImage {
         return image;
     }
 
-    /**
-     * 获取本地图片并压缩
-     *
-     * @param data 图片信息
-     */
-    public String getFilePathFromIntent(Intent data) {
-        return getFilePathFromIntent(data, true);
-    }
-
-    public String getFilePathFromIntent(Intent data, boolean needZip) {
-
+    public String getFilePathFromIntentMaybeCamera(Intent data) {
         String FilePath;
         if (data == null || data.getData() == null) {
             FilePath = photoTakenUri;
         } else {
             FilePath = getImageUrlWithAuthority(mActivity, data.getData());
         }
-
-        if (ZipPic.getSize(FilePath) < 150 * 1024) {
-            return FilePath;
-        }
-
-        boolean compass = true;
-        if (compass && needZip) {
-            FilePath = ZipPic.saveMyBitmap(mActivity, ZipPic.compressBySize(FilePath, 1080), 75);
-        }
         return FilePath;
-
     }
 
     private void takePhoto(int eventCode, boolean ignorePermission) {

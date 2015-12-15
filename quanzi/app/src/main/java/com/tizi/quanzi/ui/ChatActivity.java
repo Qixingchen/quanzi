@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.Vibrator;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,6 +49,7 @@ import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.otto.ExitChatActivity;
+import com.tizi.quanzi.tool.GetMutipieImage;
 import com.tizi.quanzi.tool.RecodeAudio;
 import com.tizi.quanzi.tool.RequreForImage;
 import com.tizi.quanzi.tool.StaticField;
@@ -337,7 +339,8 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 requreForImage = RequreForImage.getInstance(mActivity);
-                requreForImage.showDialogAndCallIntent("选择图片", StaticField.PermissionRequestCode.chat_insert_photo);
+                requreForImage.showDialogAndCallIntent("选择图片", StaticField.PermissionRequestCode.chat_insert_photo,
+                        true, Integer.MAX_VALUE);
             }
         });
 
@@ -581,20 +584,47 @@ public class ChatActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            SendMessage.getInstance()
-                    .setSendOK(new SendMessage.SendOK() {
-                        @Override
-                        public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                            onMessageSendOK(Message);
-                        }
+            if (data == null) {
+                SendMessage.getInstance()
+                        .setSendOK(new SendMessage.SendOK() {
+                            @Override
+                            public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                                onMessageSendOK(Message);
+                            }
 
-                        @Override
-                        public void sendError(String errorMessage, String CONVERSATION_ID) {
+                            @Override
+                            public void sendError(String errorMessage, String CONVERSATION_ID) {
+                                onMessageSendError(errorMessage);
+                            }
+                        })
+                        .sendImageMesage(CONVERSATION_ID, requreForImage.getFilePathFromIntentMaybeCamera(null),
+                                setAttrs());
+            } else {
+                new GetMutipieImage().setOnImageGet(new GetMutipieImage.OnImageGet() {
+                    @Override
+                    public void OK(String FilePath) {
+                        SendMessage.getInstance()
+                                .setSendOK(new SendMessage.SendOK() {
+                                    @Override
+                                    public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                                        onMessageSendOK(Message);
+                                    }
 
-                        }
-                    })
-                    .sendImageMesage(CONVERSATION_ID, requreForImage.getFilePathFromIntent(data),
-                            setAttrs());
+                                    @Override
+                                    public void sendError(String errorMessage, String CONVERSATION_ID) {
+                                        onMessageSendError(errorMessage);
+                                    }
+                                })
+                                .sendImageMesage(CONVERSATION_ID, FilePath,
+                                        setAttrs());
+                    }
+
+                    @Override
+                    public void Error(String errorMessage) {
+                        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                    }
+                }).getMutipieImage(data);
+            }
 
         }
     }

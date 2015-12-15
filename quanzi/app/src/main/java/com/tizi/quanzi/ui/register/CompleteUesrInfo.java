@@ -114,7 +114,7 @@ public class CompleteUesrInfo extends BaseFragment {
         }
         switch (activityResultAns.requestCode) {
             case StaticField.PermissionRequestCode.register_user_face:
-                String filePath = requreForImage.getFilePathFromIntent(activityResultAns.data);
+                String filePath = requreForImage.getFilePathFromIntentMaybeCamera(activityResultAns.data);
                 if (filePath == null) {
                     return;
                 }

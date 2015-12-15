@@ -271,7 +271,7 @@ public class BigWorld extends BaseFragment {
         switch (ans.requestCode) {
             case StaticField.PermissionRequestCode.user_back_ground:
 
-                String filepath = requreForImage.getFilePathFromIntent(ans.data, false);
+                String filepath = requreForImage.getFilePathFromIntentMaybeCamera(ans.data);
                 File file = new File(filepath);
                 requreForImage.startPhotoCrop(Uri.fromFile(file), 9, 16,
                         StaticField.PermissionRequestCode.user_back_ground_crop);

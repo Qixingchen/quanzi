@@ -342,12 +342,12 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String ConvID = GroupList.getInstance().getGroup(groupID).convId;
-                        GroupUserAdmin.getInstance(mContext).deleteMemberByRX(ConvID, groupID, userID)
+                        GroupUserAdmin.getInstance(mContext).deleteMember(ConvID, groupID, userID)
                                 .subscribe(new Action1<Object>() {
                                     @Override
                                     public void call(Object o) {
                                         memlist.removeItemAt(postion);
-                                        notifyItemRemoved(postion);
+                                        notifyDataSetChanged();
                                     }
                                 }, new Action1<Throwable>() {
                                     @Override

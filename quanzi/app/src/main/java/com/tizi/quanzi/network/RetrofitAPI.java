@@ -96,7 +96,7 @@ public interface RetrofitAPI {
                 @Query("groupid") String groupID);
 
         @POST("group/findGroupAllInfoF")
-        public Observable<GroupAllInfo> queryGroupRX(
+        Observable<GroupAllInfo> queryGroupRX(
                 @Query("groupid") String groupID);
 
         @POST("group/findTagF")

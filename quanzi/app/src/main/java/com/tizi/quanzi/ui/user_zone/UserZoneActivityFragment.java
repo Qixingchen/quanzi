@@ -118,6 +118,9 @@ public class UserZoneActivityFragment extends BaseFragment {
         //在自己圈内查找
         List<GroupClass> AllGroup = GroupList.getInstance().getGroupList();
         for (GroupClass groupClass : AllGroup) {
+            if (groupClass.memlist == null) {
+                continue;
+            }
             for (GroupAllInfo.MemberEntity member : groupClass.memlist) {
                 if (otherUserInfo.id.compareTo(member.id) == 0) {
                     isFriend = true;

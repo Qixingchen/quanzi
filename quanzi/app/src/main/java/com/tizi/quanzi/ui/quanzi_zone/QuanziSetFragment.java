@@ -224,8 +224,7 @@ public class QuanziSetFragment extends BaseFragment {
                             builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
-                                    GroupUserAdmin.getInstance(mContext).deleteMemberByRX(groupClass.convId, groupClass.ID, AppStaticValue.getUserID())
+                                    GroupUserAdmin.getInstance(mContext).deleteMember(groupClass.convId, groupClass.ID, AppStaticValue.getUserID())
                                             .subscribe(new Action1<Object>() {
                                                 @Override
                                                 public void call(Object o) {

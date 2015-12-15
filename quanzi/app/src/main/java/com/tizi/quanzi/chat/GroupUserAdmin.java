@@ -1,7 +1,6 @@
 package com.tizi.quanzi.chat;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
@@ -19,7 +18,6 @@ import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.network.GroupSetting;
 import com.tizi.quanzi.network.RetrofitAPI;
 import com.tizi.quanzi.network.RetrofitNetwork;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
@@ -124,121 +122,17 @@ public class GroupUserAdmin {
      * @param groupID 组ID
      * @param userID  成员ID
      */
-    public void deleteMember(final String convID, final String groupID, String userID) {
-        if (userID.compareTo(AppStaticValue.getUserID()) == 0) {
-            //发送系统通知
-            GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
-                @Override
-                public void onOK(Object ts) {
-                    GroupAllInfo groupAllInfo = (GroupAllInfo) ts;
-                    Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
-                    attr = SendMessage.setSysMessAttr(attr, convID,
-                            StaticField.SystemMessAttrName.systemFlag.kicked, "");
-                    SendMessage sendMessage = SendMessage.getInstance().setSendOK(
-                            new SendMessage.SendOK() {
-                                @Override
-                                public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                                    Log.i(TAG, "已发送删除通知");
-                                }
-
-                                @Override
-                                public void sendError(String errorMessage, String CONVERSATION_ID) {
-                                    Toast.makeText(mContext, "发送删除通知失败", Toast.LENGTH_LONG).show();
-                                    Log.w(TAG, "发送删除通知失败" + errorMessage);
-                                    if (onResult != null) {
-                                        onResult.error(errorMessage);
-                                    }
-                                }
-                            });
-                    if (groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
-                        sendMessage.sendTextMessage(convID, "你被踢出了OAQ", attr);
-                    } else {
-                        sendMessage.sendTextMessage(convID, MyUserInfo.getInstance().getUserInfo().getUserName() +
-                                "退出了圈子" + groupAllInfo.group.groupName, attr);
-                    }
-                }
-
-                @Override
-                public void onError(String Message) {
-
-                }
-            }).queryGroup(groupID);
-        }
-        //LeanCloud删除
-        List<String> userIds = new ArrayList<>();
-        userIds.add(userID);
-        AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
-        conversation.kickMembers(userIds, new AVIMConversationCallback() {
-            @Override
-            public void done(AVIMException e) {
-                if (e != null) {
-                    Log.w(TAG, "LC删除好友失败");
-                    if (onResult != null) {
-                        onResult.error(e.getMessage());
-                    }
-                } else {
-                    Log.i(TAG, "LC删除好友成功");
-                }
-            }
-        });
-
-
-        //后台删除
-        UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
-            @Override
-            public void onOK(Object ts) {
-                if (onResult != null) {
-                    onResult.OK();
-                }
-            }
-
-            @Override
-            public void onError(String Message) {
-                if (onResult != null) {
-                    onResult.error("后台删除好友失败:" + Message);
-                }
-            }
-        }).deleteUser(groupID, userID);
-    }
-
-    /**
-     * 在组类删除用户
-     *
-     * @param convID  组的convID
-     * @param groupID 组ID
-     * @param userID  成员ID
-     */
-    public Observable deleteMemberByRX(final String convID, final String groupID, final String userID) {
-
-
+    public Observable deleteMember(final String convID, final String groupID, final String userID) {
+        final GroupAllInfo[] GroupAllInfo = new GroupAllInfo[1];
         return RetrofitNetwork.retrofit.create(RetrofitAPI.Group.class).queryGroupRX(groupID)
                 .subscribeOn(Schedulers.io())
-                .flatMap(new Func1<GroupAllInfo, Observable<SendMessage.RXSendOK>>() {
+                //LeanCloud 删除
+                .flatMap(new Func1<GroupAllInfo, Observable<GroupAllInfo>>() {
                     @Override
-                    public Observable<SendMessage.RXSendOK> call(GroupAllInfo groupAllInfo) {
-
-
-                        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
-                        attr = SendMessage.setSysMessAttr(attr, convID,
-                                StaticField.SystemMessAttrName.systemFlag.kicked, "");
-
-                        if (groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID()) == 0) {
-                            return SendMessage.getInstance().sendRXTextMessage(convID,
-                                    String.format("你被[ %s ]踢出了群[ %s ]OAQ",
-                                            MyUserInfo.getInstance().getUserInfo().getUserName(),
-                                            groupAllInfo.group.groupName), attr);
-                        } else {
-                            return SendMessage.getInstance().sendRXTextMessage(convID,
-                                    String.format("[ %s ]退出了圈子[ %s ]", MyUserInfo.getInstance().getUserInfo().getUserName(), groupAllInfo.group.groupName), attr);
-                        }
-                    }
-                })
-                .flatMap(new Func1<SendMessage.RXSendOK, Observable<Object>>() {
-                    @Override
-                    public Observable<Object> call(SendMessage.RXSendOK rxSendOK) {
-                        return Observable.create(new Observable.OnSubscribe<Object>() {
+                    public Observable<GroupAllInfo> call(final GroupAllInfo groupAllInfo) {
+                        return Observable.create(new Observable.OnSubscribe<GroupAllInfo>() {
                             @Override
-                            public void call(final Subscriber<? super Object> subscriber) {
+                            public void call(final Subscriber<? super GroupAllInfo> subscriber) {
                                 //LeanCloud删除
                                 List<String> userIds = new ArrayList<>();
                                 userIds.add(userID);
@@ -250,25 +144,27 @@ public class GroupUserAdmin {
                                             Log.w(TAG, "LC删除好友失败");
                                             subscriber.onError(new Throwable("LC删除好友失败" + e.getMessage()));
                                         } else {
-                                            subscriber.onNext(null);
+                                            GroupAllInfo[0] = groupAllInfo;
+                                            subscriber.onNext(groupAllInfo);
                                         }
                                     }
                                 });
                             }
                         });
                     }
-                }).flatMap(new Func1<Object, Observable<Object>>() {
-
+                })
+                //后台删除
+                .flatMap(new Func1<GroupAllInfo, Observable<GroupAllInfo>>() {
                     @Override
-                    public Observable<Object> call(Object objectObservable) {
-                        return Observable.create(new Observable.OnSubscribe<Object>() {
+                    public Observable<GroupAllInfo> call(final GroupAllInfo groupAllInfo) {
+                        return Observable.create(new Observable.OnSubscribe<GroupAllInfo>() {
                             @Override
-                            public void call(final Subscriber<? super Object> subscriber) {
+                            public void call(final Subscriber<? super GroupAllInfo> subscriber) {
                                 //后台删除
                                 UserManageInGroup.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                                     @Override
                                     public void onOK(Object ts) {
-                                        subscriber.onNext(null);
+                                        subscriber.onNext(groupAllInfo);
                                     }
 
                                     @Override
@@ -279,9 +175,57 @@ public class GroupUserAdmin {
                             }
                         });
                     }
+                })
+                //通知,返回发通知的ConvID
+                .flatMap(new Func1<GroupAllInfo, Observable<String>>() {
+                             @Override
+                             public Observable<String> call(final GroupAllInfo groupAllInfo) {
+                                 return Observable.create(new Observable.OnSubscribe<String>() {
+                                     @Override
+                                     public void call(final Subscriber<? super String> subscriber) {
+                                         if (groupAllInfo.group.createUser.compareTo(AppStaticValue.getUserID())
+                                                 == 0) {
+                                             StartPrivateChat.getNewInstance(new StartPrivateChat.GetConvID() {
+                                                 @Override
+                                                 public void onConvID(String convID) {
+                                                     subscriber.onNext(convID);
+
+                                                 }
+
+                                                 @Override
+                                                 public void onError(String errorMessage) {
+                                                     subscriber.onError(new Throwable(errorMessage));
+                                                 }
+                                             }).getPrivateChatConvID(userID);
+                                         } else {
+                                             subscriber.onNext(convID);
+                                         }
+                                     }
+                                 });
+                             }
+                         }
+
+                )
+                .flatMap(new Func1<String, Observable<SendMessage.RXSendOK>>() {
+                    @Override
+                    public Observable<SendMessage.RXSendOK> call(String SendConvID) {
+                        Map<String, Object> attr = SendMessage.setMessAttr(groupID,
+                                StaticField.ConvType.twoPerson);
+                        attr = SendMessage.setSysMessAttr(attr, convID,
+                                StaticField.SystemMessAttrName.systemFlag.kicked, "");
+                        if (GroupAllInfo[0].group.createUser.equals(AppStaticValue.getUserID())) {
+                            return SendMessage.getInstance().sendRXTextMessage(SendConvID,
+                                    String.format("你被[ %s ]踢出了群[ %s ]OAQ",
+                                            MyUserInfo.getInstance().getUserInfo().getUserName(),
+                                            GroupAllInfo[0].group.groupName), attr);
+                        } else {
+                            return SendMessage.getInstance().sendRXTextMessage(convID,
+                                    String.format("[ %s ]退出了圈子[ %s ]", MyUserInfo.getInstance().getUserInfo().getUserName(), GroupAllInfo[0].group.groupName), attr);
+                        }
+
+
+                    }
                 });
-
-
     }
 
     /**

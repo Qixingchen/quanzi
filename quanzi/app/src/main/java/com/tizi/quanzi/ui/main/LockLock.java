@@ -125,6 +125,9 @@ public class LockLock extends BaseFragment {
         detailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (themes == null) {
+                    return;
+                }
                 Theme.ActsEntity act = themes.acts.get(nowPosition);
                 if (SimpleCustomChromeTabsHelper.canUseCustomChromeTabs(mActivity)) {
                     mCustomTabHelper.openUrl(act.detailUrl);

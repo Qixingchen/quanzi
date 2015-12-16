@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
@@ -13,6 +14,7 @@ import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -277,7 +279,8 @@ public class DBAct {
      */
     public List<String> quaryPhotoMess(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
-                new String[]{DataBaseHelper.chatHistorySQLName.url},//返回的列,null表示全选
+                new String[]{DataBaseHelper.chatHistorySQLName.local_path,
+                        DataBaseHelper.chatHistorySQLName.url},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.type + "=? and "
                         + DataBaseHelper.chatHistorySQLName.ConversationId + "=?",//条件
                 new String[]{String.valueOf(StaticField.ChatContantType.IMAGE), ConversationId},//条件的参数
@@ -289,7 +292,12 @@ public class DBAct {
         chatMessageCursor.moveToFirst();
         List<String> ans = new ArrayList<>();
         while (!chatMessageCursor.isAfterLast()) {
-            ans.add(chatMessageCursor.getString(0));
+            String localPath = chatMessageCursor.getString(0);
+            if (TextUtils.isEmpty(localPath) || !new File(localPath).exists()) {
+                ans.add(chatMessageCursor.getString(1));
+            } else {
+                ans.add(localPath);
+            }
             chatMessageCursor.moveToNext();
         }
         chatMessageCursor.close();

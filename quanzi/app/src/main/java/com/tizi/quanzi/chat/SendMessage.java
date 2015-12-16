@@ -23,6 +23,7 @@ import com.tizi.quanzi.tool.StaticField;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -34,13 +35,14 @@ import rx.Subscriber;
 public class SendMessage {
     private SendMessage mInstance;
     private SendOK sendOK;
+    private ChatViewSendOK chatViewSendOK;
 
 
     private SendMessage() {
         mInstance = this;
     }
 
-    public static SendMessage getInstance() {
+    public static SendMessage getNewInstance() {
         return new SendMessage();
     }
 
@@ -106,12 +108,17 @@ public class SendMessage {
         return mInstance;
     }
 
+    public SendMessage setChatViewSendOK(ChatViewSendOK chatViewSendOK) {
+        this.chatViewSendOK = chatViewSendOK;
+        return this;
+    }
+
     /**
      * 发送图片消息
      *
      * @param Filepath 图片地址
      */
-    public void sendImageMesage(final String convID, String Filepath, Map<String, Object> attr) {
+    public void sendImageMesage(final String convID, final String Filepath, Map<String, Object> attr) {
         AVIMImageMessage message;
         try {
             message = new AVIMImageMessage(Filepath);
@@ -121,6 +128,11 @@ public class SendMessage {
         }
 
         message.setAttrs(attr);
+        final String tempID = UUID.randomUUID().toString();
+
+        ChatMessage chatMessage = ChatMessage.getImageChatMessage(
+                (int) attr.get(StaticField.ChatMessAttrName.type), convID, Filepath, tempID);
+        onChatViewMessagePreSend(chatMessage, convID);
 
         final AVIMImageMessage finalMessage = message;
         final AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
@@ -130,13 +142,13 @@ public class SendMessage {
                     public void done(AVIMException e) {
                         if (null != e) {
                             if (BuildConfig.DEBUG) {
-                                onMessageSendError(e.getMessage(), convID);
+                                onMessageSendError(e.getMessage(), convID, tempID);
                             } else {
-                                onMessageSendError("网络错误", convID);
+                                onMessageSendError("网络错误", convID, tempID);
                                 e.printStackTrace();
                             }
                         } else {
-                            onMessageSendOK(finalMessage, conversation.getConversationId());
+                            sendOK(finalMessage, conversation.getConversationId(), tempID, Filepath);
                         }
                     }
                 }
@@ -149,10 +161,17 @@ public class SendMessage {
      *
      * @param Filepath 音频地址
      */
-    public void sendAudioMessage(final String convID, String Filepath, Map<String, Object> attr) {
+    public void sendAudioMessage(final String convID, final String Filepath, Map<String, Object> attr) {
         try {
             AVIMAudioMessage message = new AVIMAudioMessage(Filepath);
             message.setAttrs(attr);
+            final String tempID = UUID.randomUUID().toString();
+
+            ChatMessage chatMessage = ChatMessage.getVoiceChatMessage(
+                    (int) attr.get(StaticField.ChatMessAttrName.type), convID, Filepath, tempID, 0
+            );
+            onChatViewMessagePreSend(chatMessage, convID);
+
             final AVIMAudioMessage finalMessage = message;
             final AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
             conversation.sendMessage(message, new AVIMConversationCallback() {
@@ -160,13 +179,13 @@ public class SendMessage {
                 public void done(AVIMException e) {
                     if (e != null) {
                         if (BuildConfig.DEBUG) {
-                            onMessageSendError(e.getMessage(), convID);
+                            onMessageSendError(e.getMessage(), convID, tempID);
                         } else {
-                            onMessageSendError("网络错误", convID);
+                            onMessageSendError("网络错误", convID, tempID);
                             e.printStackTrace();
                         }
                     } else {
-                        onMessageSendOK(finalMessage, conversation.getConversationId());
+                        sendOK(finalMessage, conversation.getConversationId(), tempID, Filepath);
                     }
                 }
             });
@@ -184,6 +203,12 @@ public class SendMessage {
         final AVIMTextMessage message = new AVIMTextMessage();
         message.setText(text);
         message.setAttrs(attr);
+        final String tempID = UUID.randomUUID().toString();
+
+        ChatMessage chatMessage = ChatMessage.getTextChatMessage(
+                (int) attr.get(StaticField.ChatMessAttrName.type), text, convID, tempID
+        );
+        onChatViewMessagePreSend(chatMessage, convID);
         final AVIMConversation conversation = AppStaticValue.getImClient().getConversation(convID);
         conversation.sendMessage(message,
                 new AVIMConversationCallback() {
@@ -191,13 +216,13 @@ public class SendMessage {
                     public void done(AVIMException e) {
                         if (null != e) {
                             if (BuildConfig.DEBUG) {
-                                onMessageSendError(e.getMessage(), convID);
+                                onMessageSendError(e.getMessage(), convID, tempID);
                             } else {
-                                onMessageSendError("网络错误", convID);
+                                onMessageSendError("网络错误", convID, tempID);
                                 e.printStackTrace();
                             }
                         } else {
-                            onMessageSendOK(message, conversation.getConversationId());
+                            sendOK(message, conversation.getConversationId(), tempID, null);
                         }
                     }
                 }
@@ -222,9 +247,9 @@ public class SendMessage {
                             public void done(AVIMException e) {
                                 if (null != e) {
                                     if (BuildConfig.DEBUG) {
-                                        onMessageSendError(e.getMessage(), convID);
+                                        onMessageSendError(e.getMessage(), convID, "");
                                     } else {
-                                        onMessageSendError("网络错误", convID);
+                                        onMessageSendError("网络错误", convID, "");
                                         e.printStackTrace();
                                     }
                                 } else {
@@ -238,6 +263,15 @@ public class SendMessage {
         });
         return okObservable;
 
+    }
+
+    private void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID, String tempID, String localFile) {
+        if (chatViewSendOK != null) {
+            onChatViewMessageSendOK(Message, CONVERSATION_ID, tempID, localFile);
+        }
+        if (sendOK != null) {
+            onMessageSendOK(Message, CONVERSATION_ID);
+        }
     }
 
     /**
@@ -276,9 +310,48 @@ public class SendMessage {
         }
     }
 
-    private void onMessageSendError(String errorMessage, String CONVERSATION_ID) {
+    private void onChatViewMessagePreSend(ChatMessage chatMessage, String CONVERSATION_ID) {
+        if (chatViewSendOK == null) {
+            return;
+        }
+
+        Log.d("预发送", chatMessage.toString());
+        DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+
+        chatViewSendOK.preSend(chatMessage, CONVERSATION_ID);
+
+    }
+
+    private void onChatViewMessageSendOK(AVIMTypedMessage Message, String CONVERSATION_ID,
+                                         String tempID, String localFile) {
+        DBAct.getInstance().deleteMessage(tempID);
+        ChatMessage chatMessage =
+                ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
+        chatMessage.local_path = localFile;
+        DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        if (chatMessage.ChatBothUserType == StaticField.ConvType.GROUP) {
+            GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
+                    ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+        }
+        if (chatMessage.ChatBothUserType == StaticField.ConvType.twoPerson) {
+            PrivateMessPairList.getInstance().updateGroupLastMess(CONVERSATION_ID,
+                    ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+        }
+        if (chatMessage.ChatBothUserType == StaticField.ConvType.BoomGroup) {
+            BoomGroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
+                    ChatMessage.getContentText(chatMessage), chatMessage.create_time);
+        }
+        if (chatViewSendOK != null) {
+            chatViewSendOK.sendOK(chatMessage, CONVERSATION_ID, tempID);
+        }
+    }
+
+    private void onMessageSendError(String errorMessage, String CONVERSATION_ID, String tempID) {
         if (sendOK != null) {
             sendOK.sendError(errorMessage, CONVERSATION_ID);
+        }
+        if (chatViewSendOK != null) {
+            chatViewSendOK.sendError(errorMessage, CONVERSATION_ID, tempID);
         }
     }
 
@@ -286,6 +359,21 @@ public class SendMessage {
         void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID);
 
         void sendError(String errorMessage, String CONVERSATION_ID);
+    }
+
+    /*用于在聊天进行时的回调*/
+    public interface ChatViewSendOK {
+        /**
+         * @param Message         AVIM 消息
+         * @param CONVERSATION_ID 消息对应的CONVID
+         * @param tempID          此消息对应的临时ID
+         */
+        void sendOK(ChatMessage Message, String CONVERSATION_ID, String tempID);
+
+        /*正在发送 不保证是否成功*/
+        void preSend(ChatMessage Message, String CONVERSATION_ID);
+
+        void sendError(String errorMessage, String CONVERSATION_ID, String tempID);
     }
 
     public class RXSendOK {

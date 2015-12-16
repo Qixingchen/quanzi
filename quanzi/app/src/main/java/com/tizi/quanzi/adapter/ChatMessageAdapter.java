@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -256,11 +258,19 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                         chatMessage.imageHeight, chatMessage.imageWeight);
                 holder.contantImageView.getLayoutParams().height = imagePix[0];
                 holder.contantImageView.getLayoutParams().width = imagePix[1];
-
-                Picasso.with(mContext)
-                        .load(GetThumbnailsUri.getUriLink(chatMessage.url, imagePix[0], imagePix[1]))
-                        .placeholder(R.drawable.ic_photo_loading)
-                        .fit().into(holder.contantImageView);
+                if (TextUtils.isEmpty(chatMessage.local_path) || !new File(chatMessage.local_path).exists()) {
+                    Picasso.with(mContext)
+                            .load(GetThumbnailsUri.getUriLink(chatMessage.url, imagePix[0], imagePix[1]))
+                            .placeholder(R.drawable.ic_photo_loading)
+                            .resize(imagePix[1], imagePix[0])
+                            .into(holder.contantImageView);
+                } else {
+                    Picasso.with(mContext)
+                            //                            .load("file://" + chatMessage.local_path)
+                            .load("file:///data/user/0/com.tizi.quanzi/cache/image/image%3A89851.jpg")
+                            .resize(imagePix[1], imagePix[0])
+                            .into(holder.contantImageView);
+                }
 
                 holder.contantImageView.setVisibility(View.VISIBLE);
                 holder.contantImageView.setOnClickListener(new View.OnClickListener() {
@@ -268,8 +278,11 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                     public void onClick(View v) {
                         ArrayList<String> image = new ArrayList<>(
                                 DBAct.getInstance().quaryPhotoMess(chatMessage.ConversationId));
-
-                        StartGalleryActivity.startByStringList(image, image.indexOf(chatMessage.url), mContext);
+                        int index = image.indexOf(chatMessage.url);
+                        if (index == 0) {
+                            index = image.indexOf(chatMessage.local_path);
+                        }
+                        StartGalleryActivity.startByStringList(image, index, mContext);
                     }
                 });
                 break;
@@ -301,6 +314,9 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
         if (!chatMessage.isread) {
             chatMessage.isread = true;
             DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        }
+        if (chatMessage.voice_duration == 0) {
+            holder.voiceDuration.setVisibility(View.GONE);
         }
         holder.voiceDuration.setText(String.format("%d s", (int) chatMessage.voice_duration + 1));
 
@@ -376,6 +392,14 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
         chatMessageList.beginBatchedUpdates();
         chatMessageList.addAll(chatMessages);
         chatMessageList.endBatchedUpdates();
+    }
+
+    public void updateTempMess(String messID, ChatMessage chatMessage) {
+        for (int i = chatMessageList.size() - 1; i >= 0; i--) {
+            if (chatMessageList.get(i).messID.equals(messID)) {
+                chatMessageList.updateItemAt(i, chatMessage);
+            }
+        }
     }
 
     /**

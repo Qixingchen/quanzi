@@ -85,7 +85,7 @@ public class RequreForImage {
                 os = new FileOutputStream(file);
                 byte[] buf = new byte[1024];
                 int len;
-                while ((len = is.read(buf)) > 0) {
+                while ((len = is.read(buf)) != -1) {
                     os.write(buf, 0, len);
                 }
                 os.flush();

@@ -91,6 +91,23 @@ public class ZipPic {
     }
 
     /**
+     * 获取图片的宽高
+     *
+     * @param filePath 文件地址
+     *
+     * @return ans[0] : 宽 ans[1] :高
+     */
+    public static int[] getImageSize(String filePath) {
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;// 不去真的解析图片，只是获取图片的头部信息，包含宽高等；
+        BitmapFactory.decodeFile(filePath, opts);
+        int[] ans = new int[2];
+        ans[0] = opts.outWidth;
+        ans[1] = opts.outHeight;
+        return ans;
+    }
+
+    /**
      * 通过压缩图片的尺寸来压缩图片大小
      *
      * @param bitmap       要压缩图片

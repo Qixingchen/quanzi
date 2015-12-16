@@ -5,10 +5,12 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
+import android.text.TextUtils;
 
 import com.tizi.quanzi.adapter.ChatMessAbsViewHolder;
 import com.tizi.quanzi.model.ChatMessage;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -17,8 +19,8 @@ import java.io.IOException;
  */
 public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
 
-    private ChatMessage chatMessage;
     public ChatMessAbsViewHolder holder;
+    private ChatMessage chatMessage;
     private int voiceSecondMuL10;
     private VoicePlayAsync mInstance = this;
     private Context context;
@@ -37,7 +39,16 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
         holder.audioProgressBar.setProgress(0);
         player = new MediaPlayer();
         try {
-            player.setDataSource(chatMessage.url);
+            if (TextUtils.isEmpty(chatMessage.local_path)) {
+                player.setDataSource(chatMessage.url);
+            } else {
+                File file = new File(chatMessage.local_path);
+                if (file.exists()) {
+                    player.setDataSource(chatMessage.local_path);
+                } else if (!TextUtils.isEmpty(chatMessage.url)) {
+                    player.setDataSource(chatMessage.url);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

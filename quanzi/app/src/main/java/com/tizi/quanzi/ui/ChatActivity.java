@@ -24,14 +24,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.chat.ChatMessFormatFromAVIM;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.SendMessage;
@@ -77,7 +74,6 @@ public class ChatActivity extends BaseActivity {
     private android.widget.EditText InputMessage;
     private android.widget.ImageButton SendButton;
     private String CONVERSATION_ID = "";
-    private AVIMConversation conversation;
     private RequreForImage requreForImage;
     private RecodeAudio recodeAudio;
     private int ChatType;
@@ -95,6 +91,37 @@ public class ChatActivity extends BaseActivity {
     //下方数量
     private View scrollToEndView;
     private TextView underMessSumTextView;
+    //发送回调
+    private SendMessage.ChatViewSendOK sendOK = new SendMessage.ChatViewSendOK() {
+        @Override
+        public void sendOK(ChatMessage Message, String convID, String tempID) {
+            if (convID.equals(CONVERSATION_ID)) {
+                chatMessageAdapter.updateTempMess(tempID, Message);
+            }
+        }
+
+        /**
+         * 消息预发送时的处理
+         * 加入列表并跳转到最后
+         *
+         * @param Message 预发送的消息
+         */
+        @Override
+        public void preSend(ChatMessage Message, String convID) {
+            if (convID.equals(CONVERSATION_ID)) {
+                chatMessageAdapter.addOrUpdateMessage(Message);
+                chatmessagerecyclerView.scrollToPosition(
+                        chatMessageAdapter.chatMessageList.size());
+            }
+        }
+
+        @Override
+        public void sendError(String errorMessage, String convID, String tempID) {
+            //// TODO: 15/12/16  sendError
+            Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+        }
+
+    };
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,17 +205,7 @@ public class ChatActivity extends BaseActivity {
                                     Toast.makeText(context, "录音最长60s", Toast.LENGTH_SHORT).show();
                                     Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                                     v.vibrate(200);
-                                    SendMessage.getNewInstance().setSendOK(new SendMessage.SendOK() {
-                                        @Override
-                                        public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                                            onMessageSendOK(Message);
-                                        }
-
-                                        @Override
-                                        public void sendError(String errorMessage, String CONVERSATION_ID) {
-                                            onMessageSendError(errorMessage);
-                                        }
-                                    })
+                                    SendMessage.getNewInstance().setChatViewSendOK(sendOK)
                                             .sendAudioMessage(CONVERSATION_ID, Filepath,
                                                     setAttrs());
                                 }
@@ -218,17 +235,7 @@ public class ChatActivity extends BaseActivity {
                         Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
                         Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                         v.vibrate(200);
-                        SendMessage.getNewInstance().setSendOK(new SendMessage.SendOK() {
-                            @Override
-                            public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                                onMessageSendOK(Message);
-                            }
-
-                            @Override
-                            public void sendError(String errorMessage, String CONVERSATION_ID) {
-                                onMessageSendError(errorMessage);
-                            }
-                        })
+                        SendMessage.getNewInstance().setChatViewSendOK(sendOK)
                                 .sendAudioMessage(CONVERSATION_ID, Filepath,
                                         setAttrs());
                     } else if (recodeAudio.AllPermissionGrant() && Filepath != null
@@ -355,20 +362,7 @@ public class ChatActivity extends BaseActivity {
                             return;
                         }
 
-                        SendMessage.getNewInstance().setSendOK(
-                                new SendMessage.SendOK() {
-                                    @Override
-                                    public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                                        onMessageSendOK(Message);
-                                        InputMessage.getText().clear();
-                                    }
-
-                                    @Override
-                                    public void sendError(String errorMessage, String CONVERSATION_ID) {
-                                        onMessageSendError(errorMessage);
-                                    }
-                                }
-                        )
+                        SendMessage.getNewInstance().setChatViewSendOK(sendOK)
                                 .sendTextMessage(CONVERSATION_ID, text, setAttrs());
 
                     }
@@ -485,7 +479,6 @@ public class ChatActivity extends BaseActivity {
         super.onResume();
         CONVERSATION_ID = getIntent().getStringExtra("conversation");
         AppStaticValue.UI_CONVERSATION_ID = CONVERSATION_ID;
-        conversation = AppStaticValue.getImClient().getConversation(CONVERSATION_ID);
         AddNotification.getInstance().chatActivityOpened(CONVERSATION_ID);
 
         //更换静音按钮的文字
@@ -607,20 +600,9 @@ public class ChatActivity extends BaseActivity {
 
     private void sendImageMessage(String filePath) {
         SendMessage.getNewInstance()
-                .setSendOK(new SendMessage.SendOK() {
-                    @Override
-                    public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                        onMessageSendOK(Message);
-                    }
-
-                    @Override
-                    public void sendError(String errorMessage, String CONVERSATION_ID) {
-                        onMessageSendError(errorMessage);
-                    }
-                })
+                .setChatViewSendOK(sendOK)
                 .sendImageMesage(CONVERSATION_ID, filePath, setAttrs());
     }
-
 
     /*聊天消息回调接口*/
     private void setMessageCallback() {
@@ -669,24 +651,6 @@ public class ChatActivity extends BaseActivity {
             attr = SendMessage.setMessAttr(PrivateMessPairList.getInstance().getGroupIDByConvID(CONVERSATION_ID), ChatType);
         }
         return attr;
-    }
-
-    /**
-     * 消息发送成功时的处理
-     * 加入列表并跳转到最后
-     *
-     * @param Message 发送成功的消息
-     */
-    private void onMessageSendOK(AVIMTypedMessage Message) {
-        ChatMessage chatMessage =
-                ChatMessFormatFromAVIM.ChatMessageFromAVMessage(Message);
-        chatMessageAdapter.addOrUpdateMessage(chatMessage);
-        chatmessagerecyclerView.scrollToPosition(
-                chatMessageAdapter.chatMessageList.size() - 1);
-    }
-
-    private void onMessageSendError(String errorMess) {
-        Toast.makeText(context, "发送失败" + errorMess, Toast.LENGTH_LONG).show();
     }
 
     private void setTitle() {

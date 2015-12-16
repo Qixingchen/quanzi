@@ -1,4 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.tizi.quanzi.ui.quanzi_zone.QuanziZoneActivity">
 
@@ -6,5 +7,6 @@
         android:id="@+id/action_join_group"
         android:orderInCategory="100"
         android:title="加入"
-        android:visible="false"/>
+        android:visible="false"
+        app:showAsAction="always|withText"/>
 </menu>

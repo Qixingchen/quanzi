@@ -169,7 +169,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
 
                                         }
                                     }).setTimer(1200, 1200).start();
-                                    SendMessage.getInstance().sendTextMessage(group.convId, text,
+                                    SendMessage.getNewInstance().sendTextMessage(group.convId, text,
                                             SendMessage.setMessAttr(group.ID, StaticField.ConvType.GROUP, true));
                                 }
 

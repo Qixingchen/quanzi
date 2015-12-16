@@ -119,7 +119,7 @@ public class QuanziSetFragment extends BaseFragment {
                                 //后台
 
                                 //LC发送广播
-                                SendMessage.getInstance().sendTextMessage(
+                                SendMessage.getNewInstance().sendTextMessage(
                                         group.convId, name,
                                         SendMessage.setSysMessAttr(
                                                 SendMessage.setMessAttr(group.ID,

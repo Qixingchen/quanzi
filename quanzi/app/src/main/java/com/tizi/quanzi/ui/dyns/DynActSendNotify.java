@@ -36,7 +36,7 @@ public class DynActSendNotify {
             @Override
             public void onConvID(String convID) {
                 Map<String, Object> attrs = setDynNotifiAttrs(null, dyn, isUser);
-                SendMessage.getInstance().sendTextMessage(convID, MyUserInfo.getInstance().getUserInfo().getUserName()
+                SendMessage.getNewInstance().sendTextMessage(convID, MyUserInfo.getInstance().getUserInfo().getUserName()
                         + "对你点赞了", attrs);
             }
 
@@ -76,7 +76,7 @@ public class DynActSendNotify {
             @Override
             public void onConvID(String convID) {
                 Map<String, Object> attrs = setDynNotifiAttrs(commentsEntity, dyn, isUser);
-                SendMessage.getInstance().sendTextMessage(convID, comment, attrs);
+                SendMessage.getNewInstance().sendTextMessage(convID, comment, attrs);
             }
 
             @Override
@@ -111,7 +111,7 @@ public class DynActSendNotify {
             @Override
             public void onConvID(String convID) {
                 Map<String, Object> attrs = setDynNotifiAttrs(commentsEntity, dyn, isUser);
-                SendMessage.getInstance().sendTextMessage(convID, comment, attrs);
+                SendMessage.getNewInstance().sendTextMessage(convID, comment, attrs);
             }
 
             @Override

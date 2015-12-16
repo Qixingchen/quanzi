@@ -89,7 +89,7 @@ public class GroupUserAdmin {
                     }
                     return;
                 }
-                SendMessage.getInstance().setSendOK(
+                SendMessage.getNewInstance().setSendOK(
                         new SendMessage.SendOK() {
                             @Override
                             public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
@@ -214,12 +214,12 @@ public class GroupUserAdmin {
                         attr = SendMessage.setSysMessAttr(attr, convID,
                                 StaticField.SystemMessAttrName.systemFlag.kicked, "");
                         if (GroupAllInfo[0].group.createUser.equals(AppStaticValue.getUserID())) {
-                            return SendMessage.getInstance().sendRXTextMessage(SendConvID,
+                            return SendMessage.getNewInstance().sendRXTextMessage(SendConvID,
                                     String.format("你被[ %s ]踢出了群[ %s ]OAQ",
                                             MyUserInfo.getInstance().getUserInfo().getUserName(),
                                             GroupAllInfo[0].group.groupName), attr);
                         } else {
-                            return SendMessage.getInstance().sendRXTextMessage(convID,
+                            return SendMessage.getNewInstance().sendRXTextMessage(convID,
                                     String.format("[ %s ]退出了圈子[ %s ]", MyUserInfo.getInstance().getUserInfo().getUserName(), GroupAllInfo[0].group.groupName), attr);
                         }
 
@@ -256,7 +256,7 @@ public class GroupUserAdmin {
         Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.GROUP);
         attr = SendMessage.setSysMessAttr(attr, convID,
                 StaticField.SystemMessAttrName.systemFlag.group_delete, "圈子已解散");
-        SendMessage.getInstance().setSendOK(
+        SendMessage.getNewInstance().setSendOK(
                 new SendMessage.SendOK() {
                     @Override
                     public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {

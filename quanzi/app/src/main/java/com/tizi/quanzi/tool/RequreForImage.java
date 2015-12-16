@@ -1,14 +1,12 @@
 package com.tizi.quanzi.tool;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
@@ -16,12 +14,10 @@ import android.widget.Toast;
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.soundcloud.android.crop.Crop;
-import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.otto.BusProvider;
-import com.tizi.quanzi.otto.PermissionAnser;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,7 +36,6 @@ public class RequreForImage {
     private String[] items = new String[]{"选择图片", "拍照"};
     private String photoTakenUri;
     private Activity mActivity;
-    private int lastEventCode;
     private Uri cropImage;
 
     private RequreForImage() {
@@ -165,7 +160,6 @@ public class RequreForImage {
      * @param selectLimit   允许采集的最大数量
      */
     public void showDialogAndCallIntent(String Title, final int eventCode, final boolean allowMultiple, final int selectLimit) {
-        lastEventCode = eventCode;
         new AlertDialog.Builder(mActivity)
                 .setTitle(Title)
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -181,7 +175,7 @@ public class RequreForImage {
                                         }
                                         break;
                                     case 1:
-                                        takePhoto(eventCode, false);
+                                        takePhoto(eventCode);
                                         break;
                                 }
                             }
@@ -199,7 +193,12 @@ public class RequreForImage {
 
     /*发起多选,包括如果本身应该是多选,只是因为已经选了多张而使得limit=1的情况*/
     private void intentForMultiple(final int limit, final int eventCode) {
-        int selector = AppStaticValue.getIntPrefer("MULTIPLE_SELECTOR", 9);
+        int selector = 9;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            selector = AppStaticValue.getIntPrefer("MULTIPLE_SELECTOR", 1);
+        } else {
+            selector = AppStaticValue.getIntPrefer("MULTIPLE_SELECTOR", 9);
+        }
         if (selector == 9) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
@@ -246,6 +245,7 @@ public class RequreForImage {
     }
 
     /*第三方库多选*/
+    @Deprecated
     private void intentFor3pMultiple(int limit, int eventCode) {
         Intent intentFromGallery = new Intent(mActivity, AlbumSelectActivity.class);
         intentFromGallery.putExtra(Constants.INTENT_EXTRA_LIMIT, limit);
@@ -343,38 +343,18 @@ public class RequreForImage {
         return FilePath;
     }
 
-    private void takePhoto(int eventCode, boolean ignorePermission) {
-        if (!ignorePermission) {
-            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, eventCode);
-                return;
-            }
-            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, eventCode);
-                return;
-            }
-        }
+    private void takePhoto(int eventCode) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(
                 mActivity.getPackageManager()) != null) {
-            Uri uri;
+            //todo external cache
+            File photoFile = createImageFile(false);
+            Uri uri = FileProvider.getUriForFile(mActivity,
+                    App.getApplication().getPackageName(), photoFile);
+            mActivity.grantUriPermission(App.getApplication().getPackageName(),
+                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-            if (hasPermission()) {
-                // Create the File where the photo should go
-                File photoFile = createImageFile(true);
-                uri = Uri.fromFile(photoFile);
-            } else {
-                File photoFile = createImageFile(false);
-                uri = FileProvider.getUriForFile(mActivity,
-                        App.getApplication().getPackageName(), photoFile);
-                mActivity.grantUriPermission(App.getApplication().getPackageName(),
-                        uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            }
-
-            // Continue only if the File was successfully created
             if (uri != null) {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 mActivity.startActivityForResult(takePictureIntent, eventCode);
@@ -384,34 +364,4 @@ public class RequreForImage {
         }
     }
 
-
-    /**
-     * 取得授权
-     *
-     * @param permission 需要授权的权限
-     */
-    private void requestPermission(String permission, int eventCode) {
-        ActivityCompat.requestPermissions(mActivity, new String[]{permission}, eventCode);
-    }
-
-    /*授权回调*/
-    @Subscribe
-    public void onRequestPermissionsResult(PermissionAnser permissionAnser) {
-        if (lastEventCode == permissionAnser.requestCode) {
-            takePhoto(lastEventCode, true);
-        }
-    }
-
-    private boolean hasPermission() {
-
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
-    }
 }

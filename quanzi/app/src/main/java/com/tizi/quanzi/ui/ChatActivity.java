@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.darsh.multipleimageselect.helpers.Constants;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
@@ -177,7 +178,7 @@ public class ChatActivity extends BaseActivity {
                                     Toast.makeText(context, "录音最长60s", Toast.LENGTH_SHORT).show();
                                     Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                                     v.vibrate(200);
-                                    SendMessage.getInstance().setSendOK(new SendMessage.SendOK() {
+                                    SendMessage.getNewInstance().setSendOK(new SendMessage.SendOK() {
                                         @Override
                                         public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
                                             onMessageSendOK(Message);
@@ -217,7 +218,7 @@ public class ChatActivity extends BaseActivity {
                         Toast.makeText(context, "录音结束", Toast.LENGTH_SHORT).show();
                         Vibrator v = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                         v.vibrate(200);
-                        SendMessage.getInstance().setSendOK(new SendMessage.SendOK() {
+                        SendMessage.getNewInstance().setSendOK(new SendMessage.SendOK() {
                             @Override
                             public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
                                 onMessageSendOK(Message);
@@ -354,7 +355,7 @@ public class ChatActivity extends BaseActivity {
                             return;
                         }
 
-                        SendMessage.getInstance().setSendOK(
+                        SendMessage.getNewInstance().setSendOK(
                                 new SendMessage.SendOK() {
                                     @Override
                                     public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
@@ -584,39 +585,14 @@ public class ChatActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                SendMessage.getInstance()
-                        .setSendOK(new SendMessage.SendOK() {
-                            @Override
-                            public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                                onMessageSendOK(Message);
-                            }
-
-                            @Override
-                            public void sendError(String errorMessage, String CONVERSATION_ID) {
-                                onMessageSendError(errorMessage);
-                            }
-                        })
-                        .sendImageMesage(CONVERSATION_ID, requreForImage.getFilePathFromIntentMaybeCamera(null),
-                                setAttrs());
+            if (data == null || (data.getData() == null && data
+                    .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES) == null)) {
+                sendImageMessage(requreForImage.getFilePathFromIntentMaybeCamera(null));
             } else {
                 new GetMutipieImage().setOnImageGet(new GetMutipieImage.OnImageGet() {
                     @Override
                     public void OK(String FilePath) {
-                        SendMessage.getInstance()
-                                .setSendOK(new SendMessage.SendOK() {
-                                    @Override
-                                    public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
-                                        onMessageSendOK(Message);
-                                    }
-
-                                    @Override
-                                    public void sendError(String errorMessage, String CONVERSATION_ID) {
-                                        onMessageSendError(errorMessage);
-                                    }
-                                })
-                                .sendImageMesage(CONVERSATION_ID, FilePath,
-                                        setAttrs());
+                        sendImageMessage(FilePath);
                     }
 
                     @Override
@@ -627,6 +603,22 @@ public class ChatActivity extends BaseActivity {
             }
 
         }
+    }
+
+    private void sendImageMessage(String filePath) {
+        SendMessage.getNewInstance()
+                .setSendOK(new SendMessage.SendOK() {
+                    @Override
+                    public void sendOK(AVIMTypedMessage Message, String CONVERSATION_ID) {
+                        onMessageSendOK(Message);
+                    }
+
+                    @Override
+                    public void sendError(String errorMessage, String CONVERSATION_ID) {
+                        onMessageSendError(errorMessage);
+                    }
+                })
+                .sendImageMesage(CONVERSATION_ID, filePath, setAttrs());
     }
 
 

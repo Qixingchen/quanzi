@@ -109,10 +109,11 @@ public class ChatActivity extends BaseActivity {
         @Override
         public void preSend(ChatMessage Message, String convID) {
             if (convID.equals(CONVERSATION_ID)) {
-                chatMessageAdapter.addOrUpdateMessage(Message);
                 chatmessagerecyclerView.scrollToPosition(
-                        chatMessageAdapter.chatMessageList.size());
+                        chatMessageAdapter.chatMessageList.size() - 1);
+                chatMessageAdapter.addOrUpdateMessage(Message);
             }
+            setScrollToEnd();
         }
 
         @Override
@@ -626,6 +627,7 @@ public class ChatActivity extends BaseActivity {
                     chatmessagerecyclerView.smoothScrollToPosition(
                             chatMessageAdapter.chatMessageList.size());
                 }
+                setScrollToEnd();
 
             }
 

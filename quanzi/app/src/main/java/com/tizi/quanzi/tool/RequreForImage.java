@@ -346,9 +346,12 @@ public class RequreForImage {
     public String getFilePathFromIntentMaybeCamera(Intent data) {
         String FilePath;
         if (data == null || data.getData() == null) {
-            FilePath = photoTakenUri;
+            FilePath = ZipPic.getNewInstance().compressByWidth(photoTakenUri, StaticField.Limit.IMAGE_WIDTH,
+                    StaticField.Limit.IMAGE_QUALITY);
         } else {
             FilePath = getImageUrlWithAuthority(mActivity, data.getData());
+            FilePath = ZipPic.getNewInstance().compressByWidth(FilePath, StaticField.Limit.IMAGE_WIDTH,
+                    StaticField.Limit.IMAGE_QUALITY);
         }
         return FilePath;
     }

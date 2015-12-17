@@ -1,6 +1,5 @@
 package com.tizi.quanzi.tool;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -14,12 +13,34 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by qixingchen on 15/8/19.
  * 图片压缩工具类
  */
 public class ZipPic {
+
+    public static ZipPic getNewInstance() {
+        return new ZipPic();
+    }
+
+    /**
+     * 获取图片的宽高
+     *
+     * @param filePath 文件地址
+     *
+     * @return ans[0] : 宽 ans[1] :高
+     */
+    public static int[] getImageSize(String filePath) {
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;// 不去真的解析图片，只是获取图片的头部信息，包含宽高等；
+        BitmapFactory.decodeFile(filePath, opts);
+        int[] ans = new int[2];
+        ans[0] = opts.outWidth;
+        ans[1] = opts.outHeight;
+        return ans;
+    }
 
     /**
      * 通过降低图片的质量来压缩图片
@@ -29,7 +50,7 @@ public class ZipPic {
      *
      * @return 压缩后的图片位图对象
      */
-    public static Bitmap compressByQuality(Bitmap bitmap, int maxSize) {
+    public Bitmap compressByQuality(Bitmap bitmap, int maxSize) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int quality = 100;
         bitmap.compress(CompressFormat.JPEG, quality, baos);
@@ -54,8 +75,7 @@ public class ZipPic {
         }
     }
 
-
-    public static long getSize(String pathName) {
+    public long getSize(String pathName) {
         File file = new File(pathName);
         if (file.exists()) {
             return file.length();
@@ -71,7 +91,7 @@ public class ZipPic {
      *
      * @return 缩放后的图片
      */
-    public static Bitmap compressBySize(String pathName, int targetWidth) {
+    private Bitmap compressByWidth(String pathName, int targetWidth) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;// 不去真的解析图片，只是获取图片的头部信息，包含宽高等；
         Bitmap bitmap = BitmapFactory.decodeFile(pathName, opts);
@@ -90,21 +110,9 @@ public class ZipPic {
         return bitmap;
     }
 
-    /**
-     * 获取图片的宽高
-     *
-     * @param filePath 文件地址
-     *
-     * @return ans[0] : 宽 ans[1] :高
-     */
-    public static int[] getImageSize(String filePath) {
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;// 不去真的解析图片，只是获取图片的头部信息，包含宽高等；
-        BitmapFactory.decodeFile(filePath, opts);
-        int[] ans = new int[2];
-        ans[0] = opts.outWidth;
-        ans[1] = opts.outHeight;
-        return ans;
+    public String compressByWidth(String filepath, int targetWidth, int quality) {
+        Bitmap bitmap = compressByWidth(filepath, targetWidth);
+        return saveMyBitmap(bitmap, quality);
     }
 
     /**
@@ -232,7 +240,7 @@ public class ZipPic {
      *
      * @param bitmap
      */
-    private static void recycleBitmap(Bitmap bitmap) {
+    private void recycleBitmap(Bitmap bitmap) {
         if (bitmap != null && !bitmap.isRecycled()) {
             bitmap.recycle();
             System.gc();
@@ -244,16 +252,16 @@ public class ZipPic {
     /**
      * 储存图像
      *
-     * @param mActivity 用于生成路径
-     * @param mBitmap   要储存的图像
-     * @param quality   图像质量
+     * @param mBitmap 要储存的图像
+     * @param quality 图像质量
      *
      * @return 储存路径
      */
 
-    public static String saveMyBitmap(Activity mActivity, Bitmap mBitmap, int quality) {
-        String imageFileName = String.valueOf(new Date().getTime() / 1000) + "small.jpg";
-        File file = new File(mActivity.getExternalCacheDir().getAbsolutePath()
+    public String saveMyBitmap(Bitmap mBitmap, int quality) {
+        String imageFileName = String.valueOf(new Date().getTime() / 1000)
+                + UUID.randomUUID().toString() + "small.jpg";
+        File file = new File(Tool.getCacheCacheDir().getAbsolutePath()
                 + "/image/" + AppStaticValue.getUserID(), imageFileName);
 
 
@@ -266,7 +274,7 @@ public class ZipPic {
 
     }
 
-    public static void saveMyBitmap(String FilePath, Bitmap mBitmap, int quality) {
+    public void saveMyBitmap(String FilePath, Bitmap mBitmap, int quality) {
         File f = new File(FilePath);
         if (!f.getParentFile().exists()) {
             f.getParentFile().mkdirs();

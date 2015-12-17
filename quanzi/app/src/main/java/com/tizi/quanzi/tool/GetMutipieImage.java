@@ -54,8 +54,22 @@ public class GetMutipieImage {
                     images.remove(i);
                 }
             }
-            for (Image image : images) {
+            for (final Image image : images) {
                 onImageGet.OK(image.path);
+                Observable.create(new Observable.OnSubscribe<String>() {
+                    @Override
+                    public void call(Subscriber<? super String> subscriber) {
+                        subscriber.onNext(ZipPic.getNewInstance().compressByWidth(image.path, StaticField.Limit.IMAGE_WIDTH,
+                                StaticField.Limit.IMAGE_QUALITY));
+                    }
+                }).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<String>() {
+                            @Override
+                            public void call(String s) {
+                                onImageGet.OK(s);
+                            }
+                        });
             }
         } else {
             photoFromSystem(data, max);
@@ -91,7 +105,19 @@ public class GetMutipieImage {
                         }
                     });
                 }
-            }).subscribeOn(Schedulers.io())
+            }).flatMap(new Func1<String, Observable<String>>() {
+                @Override
+                public Observable<String> call(final String s) {
+                    return Observable.create(new Observable.OnSubscribe<String>() {
+                        @Override
+                        public void call(Subscriber<? super String> subscriber) {
+                            subscriber.onNext(ZipPic.getNewInstance().compressByWidth(s, StaticField.Limit.IMAGE_WIDTH,
+                                    StaticField.Limit.IMAGE_QUALITY));
+                        }
+                    });
+                }
+            })
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<String>() {
                         @Override
@@ -111,6 +137,8 @@ public class GetMutipieImage {
                     });
         } else {
             String filepath = RequreForImage.getFilePathFromIntent(data);
+            filepath = ZipPic.getNewInstance().compressByWidth(filepath, StaticField.Limit.IMAGE_WIDTH,
+                    StaticField.Limit.IMAGE_QUALITY);
             onImageGet.OK(filepath);
         }
     }

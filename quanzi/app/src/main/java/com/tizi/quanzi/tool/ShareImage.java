@@ -63,7 +63,7 @@ public class ShareImage {
     public void shareImage(final Activity activity, final Bitmap bitmap, final String fileName) {
         String RootPath = App.getApplication().getCacheDir().getAbsolutePath();
         String filePath = RootPath + "/image/" + fileName;
-        ZipPic.saveMyBitmap(filePath, bitmap, 100);
+        ZipPic.getNewInstance().saveMyBitmap(filePath, bitmap, 100);
         shareSavedImage(activity, filePath);
     }
 
@@ -107,7 +107,7 @@ public class ShareImage {
 
         String RootPath = Tool.getCacheCacheDir().getAbsolutePath();
         String FilePath = RootPath + "/" + StaticField.AppName.AppEngName + "/" + fileName;
-        ZipPic.saveMyBitmap(FilePath, bitmap, 100);
+        ZipPic.getNewInstance().saveMyBitmap(FilePath, bitmap, 100);
 
         saveImage(activity, FilePath);
     }

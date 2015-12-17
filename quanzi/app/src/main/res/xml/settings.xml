@@ -64,4 +64,44 @@
             android:title="系统消息"/>
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="关于">
+        <Preference
+            android:key="version"
+            android:title="软件版本">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/update_notices"/>
+        </Preference>
+
+        <Preference
+            android:key="flavor"
+            android:title="软件渠道">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/update_notices"/>
+        </Preference>
+
+        <Preference
+            android:summary="@string/open_source_license"
+            android:title="开源协议">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/open_source_license"/>
+        </Preference>
+
+        <Preference
+            android:summary="@string/user_license"
+            android:title="用户协议">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/user_license"/>
+        </Preference>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

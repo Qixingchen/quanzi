@@ -7,16 +7,23 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
+import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.PermissionAnser;
+import com.tizi.quanzi.ui.BaseActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 /**
  * Created by qixingchen on 15/11/13.
@@ -25,8 +32,7 @@ import java.io.File;
 public class ShareImage {
 
     private static ShareImage mInstance;
-    private Bitmap lastBitMap;
-    private String lastFileName;
+    private String lastFilePath;
     private Activity lastActivity;
 
     private ShareImage() {
@@ -58,10 +64,30 @@ public class ShareImage {
         String RootPath = App.getApplication().getCacheDir().getAbsolutePath();
         String filePath = RootPath + "/image/" + fileName;
         ZipPic.saveMyBitmap(filePath, bitmap, 100);
-        shareImage(activity, filePath);
+        shareSavedImage(activity, filePath);
     }
 
-    private void shareImage(Activity activity, String filePath) {
+    public void shareImage(final Activity activity, final String srcFilePath) {
+        String RootPath = App.getApplication().getCacheDir().getAbsolutePath();
+        String filePath = RootPath + "/image/" + Tool.getFileName(srcFilePath);
+        try {
+            copy(new File(srcFilePath), new File(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+            e.printStackTrace();
+            String errorString;
+            if (BuildConfig.DEBUG) {
+                errorString = e.getMessage();
+            } else {
+                errorString = "保存错误";
+            }
+            Snackbar.make(((BaseActivity) activity).view, errorString, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        shareSavedImage(activity, filePath);
+    }
+
+    private void shareSavedImage(Activity activity, String filePath) {
         Intent shareIntent = new Intent();
 
         Uri contentUri = FileProvider.getUriForFile(App.getApplication(),
@@ -79,26 +105,60 @@ public class ShareImage {
 
     public void saveImage(Activity activity, Bitmap bitmap, String fileName) {
 
+        String RootPath = Tool.getCacheCacheDir().getAbsolutePath();
+        String FilePath = RootPath + "/" + StaticField.AppName.AppEngName + "/" + fileName;
+        ZipPic.saveMyBitmap(FilePath, bitmap, 100);
+
+        saveImage(activity, FilePath);
+    }
+
+    public void saveImage(Activity activity, String srcFilePath) {
+
         if (ActivityCompat.checkSelfPermission(App.getApplication(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            lastBitMap = bitmap;
-            lastFileName = fileName;
+            lastFilePath = srcFilePath;
             lastActivity = activity;
             ActivityCompat.requestPermissions(activity,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     StaticField.PermissionRequestCode.saveImageToExternalStorage);
             return;
         }
+        String fileName = Tool.getFileName(srcFilePath);
         String RootPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-        String FilePath = RootPath + "/" + StaticField.AppName.AppEngName + "/" + fileName;
-        ZipPic.saveMyBitmap(FilePath, bitmap, 100);
-        Toast.makeText(activity, "保存成功在：" + FilePath, Toast.LENGTH_LONG).show();
+        String dstfilePath = RootPath + "/" + StaticField.AppName.AppEngName + "/" + fileName;
+        File dstFile = new File(dstfilePath);
+
+        try {
+            copy(new File(srcFilePath), dstFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            String errorString;
+            if (BuildConfig.DEBUG) {
+                errorString = e.getMessage();
+            } else {
+                errorString = "保存错误";
+            }
+            Snackbar.make(((BaseActivity) activity).view, errorString, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        Toast.makeText(activity, "保存成功在：" + dstfilePath, Toast.LENGTH_LONG).show();
 
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(FilePath);
-        Uri contentUri = Uri.fromFile(f);
+        Uri contentUri = Uri.fromFile(dstFile);
         mediaScanIntent.setData(contentUri);
         activity.sendBroadcast(mediaScanIntent);
+    }
+
+
+    private void copy(File src, File dst) throws IOException {
+        FileInputStream inStream = new FileInputStream(src);
+        FileOutputStream outStream = new FileOutputStream(dst);
+        FileChannel inChannel = inStream.getChannel();
+        FileChannel outChannel = outStream.getChannel();
+        inChannel.transferTo(0, inChannel.size(), outChannel);
+        inStream.close();
+        outStream.close();
     }
 
     @Subscribe
@@ -106,11 +166,10 @@ public class ShareImage {
         switch (permissionAnser.requestCode) {
             case StaticField.PermissionRequestCode.saveImageToExternalStorage:
                 if (permissionAnser.allGreen) {
-                    saveImage(lastActivity, lastBitMap, lastFileName);
+                    saveImage(lastActivity, lastFilePath);
                 }
                 lastActivity = null;
-                lastFileName = null;
-                lastBitMap = null;
+                lastFilePath = null;
                 break;
         }
 

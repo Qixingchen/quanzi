@@ -2,8 +2,10 @@ package com.tizi.quanzi.ui.main;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
+import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.notification.AddNotification;
 
@@ -19,6 +21,12 @@ public class SettingItemsFragment extends PreferenceFragmentCompat implements Sh
         addPreferencesFromResource(R.xml.settings);
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+        Preference versionPref = findPreference("version");
+        versionPref.setSummary(String.format("%s  版本 %s [版本号 : %s]", getString(R.string.app_name),
+                BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+
+        Preference flavorPref = findPreference("flavor");
+        flavorPref.setSummary(BuildConfig.FLAVOR);
     }
 
     @Override

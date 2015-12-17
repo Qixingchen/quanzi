@@ -34,8 +34,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected final String TAG = this.getClass().getSimpleName();
     public Menu mMenu;
+    public View view;
     protected Context mContext;
-    protected View view;
     protected Activity mActivity;
     protected Toolbar toolbar;
 

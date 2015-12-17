@@ -199,7 +199,8 @@ public class Tool {
      */
     public static String getFileName(String filePath) {
         int last = filePath.lastIndexOf("/");
-        return filePath.substring(last + 1);
+
+        return filePath.substring(last + 1).replace("%", "_");
     }
 
     public static long getBeijinTime() {

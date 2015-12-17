@@ -62,6 +62,8 @@ public class GalleryAdapter extends PagerAdapter {
 
         Picasso.with(activity).load(pics.get(position))
                 .placeholder(R.drawable.ic_photo_loading)
+                .centerInside()
+                .fit()
                 .into(image);
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

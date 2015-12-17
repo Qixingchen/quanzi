@@ -32,8 +32,8 @@ import com.tizi.quanzi.ui.theme.ThemeSignUpFragment;
 
 
 public class MainActivity extends BaseActivity {
+    public MainFragment mainFragment;
     private String toolbarTitle = "主题";
-    private MainFragment mainFragment;
     private NotifiMessageFragment notifiMessageFragment;
     private UserInfoSetFragment userInfoSetFragment;
 

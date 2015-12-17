@@ -96,7 +96,8 @@ public class LockLock extends BaseFragment {
                 getParentFragment().getFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
                                 R.anim.no_change, R.anim.slide_out_to_bottom)
-                        .replace(R.id.fragment, BoomGroupFragment.newInstance(themes))
+                        .hide(((MainActivity) mActivity).mainFragment)
+                        .add(R.id.fragment, BoomGroupFragment.newInstance(themes))
                         .addToBackStack("BoomGroupFragment").commit();
 
             }
@@ -113,7 +114,8 @@ public class LockLock extends BaseFragment {
                 getParentFragment().getFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_from_bottom, R.anim.disapear,
                                 R.anim.no_change, R.anim.slide_out_to_bottom)
-                        .replace(R.id.fragment, ThemeSignUpFragment.newInstance(act.id))
+                        .hide(((MainActivity) mActivity).mainFragment)
+                        .add(R.id.fragment, ThemeSignUpFragment.newInstance(act.id))
                         .addToBackStack("ThemeSignUpFragment").commit();
             }
         });

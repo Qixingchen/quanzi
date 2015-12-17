@@ -4,7 +4,6 @@ package com.tizi.quanzi.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
@@ -267,7 +266,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                             .into(holder.contantImageView);
                 } else {
                     Picasso.with(mContext)
-                            .load(Uri.parse("file://" + chatMessage.local_path))
+                            .load("file://" + chatMessage.local_path)
                             .placeholder(R.drawable.ic_photo_loading)
                             .resize(imagePix[1], imagePix[0])
                             .into(holder.contantImageView);

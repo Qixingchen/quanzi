@@ -4,6 +4,7 @@ package com.tizi.quanzi.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
@@ -266,8 +267,8 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                             .into(holder.contantImageView);
                 } else {
                     Picasso.with(mContext)
-                            //                            .load("file://" + chatMessage.local_path)
-                            .load("file:///data/user/0/com.tizi.quanzi/cache/image/image%3A89851.jpg")
+                            .load(Uri.parse("file://" + chatMessage.local_path))
+                            .placeholder(R.drawable.ic_photo_loading)
                             .resize(imagePix[1], imagePix[0])
                             .into(holder.contantImageView);
                 }
@@ -279,8 +280,8 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                         ArrayList<String> image = new ArrayList<>(
                                 DBAct.getInstance().quaryPhotoMess(chatMessage.ConversationId));
                         int index = image.indexOf(chatMessage.url);
-                        if (index == 0) {
-                            index = image.indexOf(chatMessage.local_path);
+                        if (index == -1) {
+                            index = image.indexOf("file://" + chatMessage.local_path);
                         }
                         StartGalleryActivity.startByStringList(image, index, mContext);
                     }

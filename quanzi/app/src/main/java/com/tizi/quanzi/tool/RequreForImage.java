@@ -71,22 +71,27 @@ public class RequreForImage {
         if (uri.getAuthority() != null) {
             try {
                 is = context.getContentResolver().openInputStream(uri);
-                String RootPath = context.getCacheDir().getAbsolutePath();
+                String RootPath = Tool.getCacheCacheDir().getAbsolutePath();
                 String FilePath = RootPath + "/image/" + getImageFileName(uri);
                 file = new File(FilePath);
                 if (!file.getParentFile().exists()) {
+                    //noinspection ResultOfMethodCallIgnored
                     file.getParentFile().mkdirs();
                 }
                 try {
+                    //noinspection ResultOfMethodCallIgnored
                     file.createNewFile();
                 } catch (IOException e) {
                     Log.e("在保存图片时出错：", e.toString());
+                    throw e;
                 }
                 os = new FileOutputStream(file);
-                byte[] buf = new byte[1024];
+                byte[] buf = new byte[1024 * 8];
                 int len;
-                while ((len = is.read(buf)) != -1) {
-                    os.write(buf, 0, len);
+                if (is != null) {
+                    while ((len = is.read(buf)) != -1) {
+                        os.write(buf, 0, len);
+                    }
                 }
                 os.flush();
 
@@ -94,18 +99,22 @@ public class RequreForImage {
                 e.printStackTrace();
             } finally {
                 try {
-                    is.close();
+                    if (is != null) {
+                        is.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    os.close();
+                    if (os != null) {
+                        os.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        return file.getAbsolutePath();
+        return file != null ? file.getAbsolutePath() : null;
     }
 
     private static String getImageFileName(Uri uri) {
@@ -113,6 +122,7 @@ public class RequreForImage {
         if (!fileName.contains(".")) {
             fileName += ".jpg";
         }
+        fileName = fileName.replace("%", "_");
         return fileName;
     }
 

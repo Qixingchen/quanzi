@@ -296,7 +296,7 @@ public class DBAct {
             if (TextUtils.isEmpty(localPath) || !new File(localPath).exists()) {
                 ans.add(chatMessageCursor.getString(1));
             } else {
-                ans.add(localPath);
+                ans.add("file://" + localPath);
             }
             chatMessageCursor.moveToNext();
         }

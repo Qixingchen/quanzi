@@ -1,6 +1,8 @@
 package com.tizi.quanzi.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +13,21 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.List;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by qixingchen on 15/7/16.
@@ -26,17 +36,17 @@ import java.util.List;
 public class GroupListAdapter extends RecyclerViewAdapterAbs {
 
     private List<GroupClass> groupClasses;
-    private Context context;
+    private Context mContext;
     private Onclick onclick;
 
     /**
      * @param kGroupClasses 群组列表
-     * @param context       上下文
+     * @param mContext      上下文
      * @param onclick       群组被点击时的回调
      */
-    public GroupListAdapter(final List<GroupClass> kGroupClasses, Context context, Onclick onclick) {
+    public GroupListAdapter(final List<GroupClass> kGroupClasses, Context mContext, Onclick onclick) {
         this.groupClasses = kGroupClasses;
-        this.context = context;
+        this.mContext = mContext;
         this.onclick = onclick;
         BusProvider.getInstance().register(this);
     }
@@ -80,30 +90,86 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (MyViewHolder.class.isInstance(holder)) {
-            MyViewHolder myViewHolder = (MyViewHolder) holder;
+            final MyViewHolder myViewHolder = (MyViewHolder) holder;
 
             myViewHolder.unreadCountTextview.setVisibility(View.GONE);
             if (position == groupClasses.size()) {
                 myViewHolder.groupNameTextview.setText("创建圈子");
-                Picasso.with(context).load(R.drawable.add_group)
+                Picasso.with(mContext).load(R.drawable.add_group)
                         .resizeDimen(R.dimen.group_face, R.dimen.group_face)
                         .into(myViewHolder.groupFaceImageView);
                 myViewHolder.lastTimeTextview.setText("");
                 myViewHolder.groupNameTextview.setText("");
                 myViewHolder.lastMessTextview.setText("");
-
+                myViewHolder.itemView.setOnLongClickListener(null);
             } else {
-                if (groupClasses.get(position).getUnreadCount() != 0) {
+                final GroupClass group = groupClasses.get(position);
+                if (group.getUnreadCount() != 0) {
                     myViewHolder.unreadCountTextview.setVisibility(View.VISIBLE);
-                    myViewHolder.unreadCountTextview.setText(String.valueOf(groupClasses.get(position).getUnreadCount()));
+                    myViewHolder.unreadCountTextview.setText(String.valueOf(group.getUnreadCount()));
                 }
-                myViewHolder.groupNameTextview.setText(groupClasses.get(position).Name);
-                myViewHolder.lastMessTextview.setText(groupClasses.get(position).lastMess);
-                myViewHolder.lastTimeTextview.setText(FriendTime.FriendlyDate(groupClasses.get(position).lastMessTime));
-                Picasso.with(context)
-                        .load(groupClasses.get(position).Face)
+                myViewHolder.setGroupName(group);
+                myViewHolder.lastMessTextview.setText(group.lastMess);
+                myViewHolder.lastTimeTextview.setText(FriendTime.FriendlyDate(group.lastMessTime));
+                Picasso.with(mContext)
+                        .load(group.Face)
                         .resizeDimen(R.dimen.group_face, R.dimen.group_face)
                         .into(myViewHolder.groupFaceImageView);
+
+                /*长按事件*/
+                myViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        final boolean needNotifi = AppStaticValue.getNeedNotifi(group.convId);
+                        String noticeName;
+                        if (needNotifi) {
+                            noticeName = "静音";
+                        } else {
+                            noticeName = "取消静音";
+                        }
+
+                        String[] items = {noticeName, "清空记录"};
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                        builder.setTitle(group.Name).setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        AppStaticValue.setNeedNotifi(group.convId, !needNotifi);
+                                        String name = group.Name;
+                                        if (needNotifi) {
+                                            name += mContext.getString(R.string.dis_allow_notice);
+                                        } else {
+                                            name += mContext.getString(R.string.allow_notice);
+                                        }
+                                        myViewHolder.groupNameTextview.setText(name);
+                                        break;
+                                    case 1:
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                                        builder.setTitle("确认删除聊天记录么？").setMessage("删除后无法恢复");
+                                        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                DBAct.getInstance().deleteAllMessage(group.convId);
+                                                group.lastMess = "";
+                                                group.lastMessTime = 0;
+                                                notifyItemChanged(position);
+                                            }
+                                        });
+                                        builder.setNegativeButton("取消", null);
+                                        builder.create().show();
+                                        break;
+                                }
+                            }
+                        }).show();
+
+                        AppStaticValue.setNeedNotifi(group.convId, !needNotifi);
+                        myViewHolder.setGroupName(group);
+                        return true;
+                    }
+                });
             }
             myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,6 +177,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                     onclick.itemClick(position);
                 }
             });
+
         }
 
     }
@@ -172,6 +239,30 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
             lastMessTextview = (TextView) itemView.findViewById(R.id.last_mess_text_view);
             unreadCountTextview = (TextView) itemView.findViewById(R.id.unread_count);
             lastTimeTextview = (TextView) itemView.findViewById(R.id.last_mess_time_text_view);
+        }
+
+        private void setGroupName(final GroupClass groupClass) {
+            Observable.create(new Observable.OnSubscribe<String>() {
+                @Override
+                public void call(Subscriber<? super String> subscriber) {
+                    boolean needNotifi = AppStaticValue.getNeedNotifi(groupClass.convId);
+                    String name = groupClass.Name;
+                    if (needNotifi) {
+                        name += itemView.getContext().getString(R.string.allow_notice);
+                    } else {
+                        name += itemView.getContext().getString(R.string.dis_allow_notice);
+                    }
+                    subscriber.onNext(name);
+                }
+            })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+                            groupNameTextview.setText(s);
+                        }
+                    });
         }
     }
 

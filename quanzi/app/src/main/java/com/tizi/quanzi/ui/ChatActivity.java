@@ -60,6 +60,12 @@ import com.tizi.quanzi.widget.swipe_to_cancel.ViewProxy;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 /**
  * 聊天界面
  */
@@ -168,7 +174,7 @@ public class ChatActivity extends BaseActivity {
         if (toolbar == null) {
             return;
         }
-        toolbar.setTitle(avimNetworkEvents.isNetWorkAvailable ? toolbarTitle : "等待网络");
+        setTitle();
     }
 
     /*需要退出*/
@@ -494,6 +500,7 @@ public class ChatActivity extends BaseActivity {
         if (id == R.id.action_mute_notifications) {
             boolean needNotifi = AppStaticValue.getNeedNotifi(CONVERSATION_ID);
             AppStaticValue.setNeedNotifi(CONVERSATION_ID, !needNotifi);
+            setTitle();
             if (needNotifi) {
                 item.setTitle("静音");
             } else {
@@ -537,7 +544,6 @@ public class ChatActivity extends BaseActivity {
             mLayoutManager.scrollToPosition(chatMessageAdapter.lastReadPosition() + 1);
         }
         setTitle();
-        toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
 
         ((LinearLayoutManager) mLayoutManager).setStackFromEnd(true);
 
@@ -709,5 +715,27 @@ public class ChatActivity extends BaseActivity {
                 }
                 break;
         }
+        Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                boolean needNotifi = AppStaticValue.getNeedNotifi(CONVERSATION_ID);
+                String name = toolbarTitle;
+                if (needNotifi) {
+                    name += mContext.getString(R.string.allow_notice);
+                } else {
+                    name += mContext.getString(R.string.dis_allow_notice);
+                }
+                subscriber.onNext(name);
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        toolbarTitle = s;
+                        toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
+                    }
+                });
     }
 }

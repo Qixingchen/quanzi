@@ -40,6 +40,9 @@ public class GetThumbnailsUri {
         if (MaxShort != 0) {
             ans += "/h/" + MaxShort;
         }
+        if (!imageSourceUri.contains("webp")) {
+            ans += "/format/webp";
+        }
         return ans;
     }
 
@@ -90,7 +93,9 @@ public class GetThumbnailsUri {
         String ans = imageSourceUri + addUri + "/1/w/" + MaxWei;
 
         ans += "/h/" + MaxHei + "/q/" + 75;
-
+        if (!imageSourceUri.contains("webp")) {
+            ans += "/format/webp";
+        }
         return ans;
     }
 
@@ -107,14 +112,16 @@ public class GetThumbnailsUri {
         String ans = imageSourceUri + addUri + "/1/w/" + MaxWei;
 
         ans += "/h/" + MaxHei + "/q/" + quality;
-
+        if (!imageSourceUri.contains("webp")) {
+            ans += "/format/webp";
+        }
         return ans;
     }
 
     /**
      * 更新网络状态获取图片链接
      * Wi-Fi 返回原图
-     * 普通网络返回 半高,质量40的图
+     * 普通网络返回 半高,质量70的 webp 图
      *
      * @param imageSourceUri 图片地址
      * @param HeiDP          DP高度
@@ -123,16 +130,16 @@ public class GetThumbnailsUri {
      */
     public static String getUriLink(String imageSourceUri, int HeiDP, int WeiDP, Context context) {
         if (NetworkStatue.isWifi()) {
-            return imageSourceUri;
+            return getWebPUri(imageSourceUri);
         } else {
-            return maxDPHeiAndWei(imageSourceUri, HeiDP / 2, WeiDP / 2, 40, context);
+            return maxDPHeiAndWei(imageSourceUri, HeiDP / 2, WeiDP / 2, 70, context);
         }
     }
 
     /**
      * 更新网络状态获取图片链接
      * Wi-Fi 返回原图
-     * 普通网络返回 半高,质量40的图
+     * 普通网络返回 半高,质量70的 webp 图
      *
      * @param imageSourceUri 图片地址
      * @param HeiPX          PX高度
@@ -140,10 +147,17 @@ public class GetThumbnailsUri {
      */
     public static String getUriLink(String imageSourceUri, int HeiPX, int WeiPX) {
         if (NetworkStatue.isWifi()) {
-            return imageSourceUri;
+            return getWebPUri(imageSourceUri);
         } else {
-            return maxHeiAndWei(imageSourceUri, HeiPX / 2, WeiPX / 2, 40);
+            return maxHeiAndWei(imageSourceUri, HeiPX / 2, WeiPX / 2, 70);
         }
+    }
+
+    public static String getWebPUri(String imageSourceUri) {
+        if (!imageSourceUri.contains("webp")) {
+            return imageSourceUri + addUri + "/format/webp";
+        }
+        return imageSourceUri;
     }
 
 }

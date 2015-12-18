@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -112,7 +111,7 @@ public class ZipPic {
 
     public String compressByWidth(String filepath, int targetWidth, int quality) {
         Bitmap bitmap = compressByWidth(filepath, targetWidth);
-        return saveMyBitmap(bitmap, quality);
+        return saveMyBitmap(bitmap, quality, Tool.getFileName(filepath));
     }
 
     /**
@@ -259,11 +258,15 @@ public class ZipPic {
      */
 
     public String saveMyBitmap(Bitmap mBitmap, int quality) {
-        String imageFileName = String.valueOf(new Date().getTime() / 1000)
-                + UUID.randomUUID().toString() + "small.jpg";
-        File file = new File(Tool.getCacheCacheDir().getAbsolutePath()
-                + "/image/" + AppStaticValue.getUserID(), imageFileName);
+        String imageFileName = UUID.randomUUID().toString();
+        return saveMyBitmap(mBitmap, quality, imageFileName);
 
+    }
+
+    public String saveMyBitmap(Bitmap mBitmap, int quality, String fileName) {
+        fileName = fileName.substring(0, fileName.indexOf("."));
+        File file = new File(Tool.getCacheCacheDir().getAbsolutePath()
+                + "/image/" + AppStaticValue.getUserID(), fileName + ".webp");
 
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
@@ -290,7 +293,7 @@ public class ZipPic {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        mBitmap.compress(CompressFormat.JPEG, quality, fOut);
+        mBitmap.compress(CompressFormat.WEBP, quality, fOut);
         try {
             fOut.flush();
         } catch (IOException e) {

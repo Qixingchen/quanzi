@@ -2,6 +2,7 @@ package com.tizi.quanzi.chat;
 
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
@@ -130,7 +131,7 @@ public class SendMessage {
         message.setAttrs(attr);
         final String tempID = UUID.randomUUID().toString();
 
-        ChatMessage chatMessage = ChatMessage.getImageChatMessage(
+        final ChatMessage chatMessage = ChatMessage.getImageChatMessage(
                 (int) attr.get(StaticField.ChatMessAttrName.type), convID, Filepath, tempID);
         onChatViewMessagePreSend(chatMessage, convID);
 
@@ -142,9 +143,9 @@ public class SendMessage {
                     public void done(AVIMException e) {
                         if (null != e) {
                             if (BuildConfig.DEBUG) {
-                                onMessageSendError(e.getMessage(), convID, tempID);
+                                onMessageSendError(e.getMessage(), convID, tempID, chatMessage);
                             } else {
-                                onMessageSendError("网络错误", convID, tempID);
+                                onMessageSendError("网络错误", convID, tempID, chatMessage);
                                 e.printStackTrace();
                             }
                         } else {
@@ -167,7 +168,7 @@ public class SendMessage {
             message.setAttrs(attr);
             final String tempID = UUID.randomUUID().toString();
 
-            ChatMessage chatMessage = ChatMessage.getVoiceChatMessage(
+            final ChatMessage chatMessage = ChatMessage.getVoiceChatMessage(
                     (int) attr.get(StaticField.ChatMessAttrName.type), convID, Filepath, tempID, 0
             );
             onChatViewMessagePreSend(chatMessage, convID);
@@ -179,9 +180,9 @@ public class SendMessage {
                 public void done(AVIMException e) {
                     if (e != null) {
                         if (BuildConfig.DEBUG) {
-                            onMessageSendError(e.getMessage(), convID, tempID);
+                            onMessageSendError(e.getMessage(), convID, tempID, chatMessage);
                         } else {
-                            onMessageSendError("网络错误", convID, tempID);
+                            onMessageSendError("网络错误", convID, tempID, chatMessage);
                             e.printStackTrace();
                         }
                     } else {
@@ -205,7 +206,7 @@ public class SendMessage {
         message.setAttrs(attr);
         final String tempID = UUID.randomUUID().toString();
 
-        ChatMessage chatMessage = ChatMessage.getTextChatMessage(
+        final ChatMessage chatMessage = ChatMessage.getTextChatMessage(
                 (int) attr.get(StaticField.ChatMessAttrName.type), text, convID, tempID
         );
         onChatViewMessagePreSend(chatMessage, convID);
@@ -216,9 +217,9 @@ public class SendMessage {
                     public void done(AVIMException e) {
                         if (null != e) {
                             if (BuildConfig.DEBUG) {
-                                onMessageSendError(e.getMessage(), convID, tempID);
+                                onMessageSendError(e.getMessage(), convID, tempID, chatMessage);
                             } else {
-                                onMessageSendError("网络错误", convID, tempID);
+                                onMessageSendError("网络错误", convID, tempID, chatMessage);
                                 e.printStackTrace();
                             }
                         } else {
@@ -247,9 +248,9 @@ public class SendMessage {
                             public void done(AVIMException e) {
                                 if (null != e) {
                                     if (BuildConfig.DEBUG) {
-                                        onMessageSendError(e.getMessage(), convID, "");
+                                        onMessageSendError(e.getMessage(), convID, "", null);
                                     } else {
-                                        onMessageSendError("网络错误", convID, "");
+                                        onMessageSendError("网络错误", convID, "", null);
                                         e.printStackTrace();
                                     }
                                 } else {
@@ -346,12 +347,16 @@ public class SendMessage {
         }
     }
 
-    private void onMessageSendError(String errorMessage, String CONVERSATION_ID, String tempID) {
+    private void onMessageSendError(String errorMessage, String CONVERSATION_ID,
+                                    String tempID, ChatMessage chatMessage) {
+        chatMessage.status = AVIMMessage.AVIMMessageStatus.AVIMMessageStatusFailed.getStatusCode();
+        DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+
         if (sendOK != null) {
             sendOK.sendError(errorMessage, CONVERSATION_ID);
         }
         if (chatViewSendOK != null) {
-            chatViewSendOK.sendError(errorMessage, CONVERSATION_ID, tempID);
+            chatViewSendOK.sendError(errorMessage, CONVERSATION_ID, tempID, chatMessage);
         }
     }
 
@@ -373,7 +378,7 @@ public class SendMessage {
         /*正在发送 不保证是否成功*/
         void preSend(ChatMessage Message, String CONVERSATION_ID);
 
-        void sendError(String errorMessage, String CONVERSATION_ID, String tempID);
+        void sendError(String errorMessage, String CONVERSATION_ID, String tempID, ChatMessage Message);
     }
 
     public class RXSendOK {

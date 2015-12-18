@@ -1,13 +1,14 @@
 package com.tizi.quanzi.model;
 
+import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.tool.ZipPic;
 
-import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -64,13 +65,18 @@ public class ChatMessage implements Serializable {
         chatMessage.text = text;
         chatMessage.ConversationId = conversationId;
         chatMessage.local_path = local_path;
-        File file = new File(local_path);
-        if (!file.exists()) {
-            Log.e("文件不存在", local_path);
-        }
         chatMessage.messID = messID;
         chatMessage.create_time = Tool.getBeijinTime();
         chatMessage.voice_duration = voice_duration;
+        chatMessage.status = AVIMMessage.AVIMMessageStatus.AVIMMessageStatusSending.getStatusCode();
+        chatMessage.From = StaticField.ChatFrom.ME;
+        chatMessage.uid = AppStaticValue.getUserID();
+        Login.UserEntity user = MyUserInfo.getInstance().getUserInfo();
+        if (user != null) {
+            chatMessage.chatImage = user.icon;
+            chatMessage.userName = user.userName;
+        }
+        chatMessage.isSelfSend = true;
         return chatMessage;
     }
 

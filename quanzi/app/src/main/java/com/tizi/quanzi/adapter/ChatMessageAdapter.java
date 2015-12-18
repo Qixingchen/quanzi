@@ -12,9 +12,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
@@ -45,6 +48,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
     public SortedList<ChatMessage> chatMessageList;
     private Context mContext;
     private VoicePlayAsync voicePlayAsync;
+    private OnResend onResend;
 
     /**
      * @param chatMessageList 聊天记录List
@@ -81,7 +85,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
 
             @Override
             public boolean areContentsTheSame(ChatMessage oldItem, ChatMessage newItem) {
-                return oldItem.equals(newItem);
+                return oldItem.status == newItem.status && oldItem.equals(newItem);
             }
 
             @Override
@@ -197,7 +201,8 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
      * @param position 列表位置
      */
     private void onBindChatMessViewHolder(final ChatMessAbsViewHolder holder, final int position) {
-        final ChatMessage chatMessage = chatMessageList.get(position);
+        ChatMessage tempchatMessage = chatMessageList.get(position);
+        final ChatMessage chatMessage = tempchatMessage;
 
         holder.setAllAdditionVisibilityGone();
 
@@ -359,6 +364,28 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 }).findUserByID(chatMessage.sender);
             }
         });
+
+        /*自己发送的*/
+        if (holder instanceof MyMessViewHolder) {
+            ((MyMessViewHolder) holder).reSendButton.setVisibility(View.GONE);
+            ((MyMessViewHolder) holder).progressBar.setVisibility(View.GONE);
+            if (chatMessage.status == AVIMMessage.AVIMMessageStatus.AVIMMessageStatusSending.getStatusCode()) {
+                ((MyMessViewHolder) holder).progressBar.setVisibility(View.VISIBLE);
+            } else if (chatMessage.status == AVIMMessage.AVIMMessageStatus.AVIMMessageStatusFailed.getStatusCode()) {
+                ((MyMessViewHolder) holder).reSendButton.setVisibility(View.VISIBLE);
+                ((MyMessViewHolder) holder).reSendButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onResend != null) {
+                            if (onResend.onResend(chatMessage)) {
+                                chatMessageList.remove(chatMessage);
+                                DBAct.getInstance().deleteMessage(chatMessage.messID);
+                            }
+                        }
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -397,7 +424,9 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
     public void updateTempMess(String messID, ChatMessage chatMessage) {
         for (int i = chatMessageList.size() - 1; i >= 0; i--) {
             if (chatMessageList.get(i).messID.equals(messID)) {
-                chatMessageList.updateItemAt(i, chatMessage);
+                chatMessageList.removeItemAt(i);
+                chatMessageList.add(chatMessage);
+                break;
             }
         }
     }
@@ -417,6 +446,14 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
         return position;
     }
 
+    public void setOnResend(OnResend onResend) {
+        this.onResend = onResend;
+    }
+
+    public interface OnResend {
+        boolean onResend(ChatMessage chatMessage);
+    }
+
     /**
      * 实现BaseViewHolder
      */
@@ -431,9 +468,14 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
      * 实现BaseViewHolder
      */
     public static class MyMessViewHolder extends ChatMessAbsViewHolder {
+        private ProgressBar progressBar;
+        private ImageButton reSendButton;
+
         public MyMessViewHolder(View v) {
             super(v);
             findViewByID(v, StaticField.ChatFrom.ME);
+            progressBar = (ProgressBar) v.findViewById(R.id.sending_progressbar);
+            reSendButton = (ImageButton) v.findViewById(R.id.resend_button);
         }
     }
 

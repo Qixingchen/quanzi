@@ -18,6 +18,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
+import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.ShareImage;
 import com.tizi.quanzi.tool.Tool;
 
@@ -69,8 +70,13 @@ public class GalleryAdapter extends PagerAdapter {
         final View vRoot = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_big_pic, container, false);
         final ImageView image = (ImageView) vRoot.findViewById(R.id.pic);
-
-        Picasso.with(activity).load(pics.get(position))
+        final String imageUri;
+        if (Uri.parse(pics.get(position)).getScheme().equals("file")) {
+            imageUri = pics.get(position);
+        } else {
+            imageUri = GetThumbnailsUri.getWebPUri(pics.get(position));
+        }
+        Picasso.with(activity).load(imageUri)
                 .placeholder(R.drawable.ic_photo_loading)
                 .centerInside()
                 .fit()
@@ -90,7 +96,7 @@ public class GalleryAdapter extends PagerAdapter {
                         @Override
                         public void call(final Subscriber<? super File> subscriber) {
 
-                            Request request = new Request.Builder().url(pics.get(position)).build();
+                            Request request = new Request.Builder().url(imageUri).build();
                             new OkHttpClient().newCall(request).enqueue(new Callback() {
                                 @Override
                                 public void onFailure(Request request, IOException e) {

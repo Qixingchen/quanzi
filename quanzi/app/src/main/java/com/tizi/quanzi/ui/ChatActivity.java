@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
@@ -111,17 +112,44 @@ public class ChatActivity extends BaseActivity {
             if (convID.equals(CONVERSATION_ID)) {
                 chatmessagerecyclerView.scrollToPosition(
                         chatMessageAdapter.chatMessageList.size() - 1);
+                chatmessagerecyclerView.scrollToPosition(
+                        chatMessageAdapter.chatMessageList.size());
                 chatMessageAdapter.addOrUpdateMessage(Message);
             }
             setScrollToEnd();
         }
 
         @Override
-        public void sendError(String errorMessage, String convID, String tempID) {
-            //// TODO: 15/12/16  sendError
+        public void sendError(String errorMessage, String convID, String tempID, ChatMessage chatMessage) {
             Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+            chatMessage.status = AVIMMessage.AVIMMessageStatus.AVIMMessageStatusFailed.getStatusCode();
+            chatMessageAdapter.updateTempMess(tempID, chatMessage);
         }
 
+    };
+    //重发回调
+    private ChatMessageAdapter.OnResend onResend = new ChatMessageAdapter.OnResend() {
+        @Override
+        public boolean onResend(ChatMessage chatMessage) {
+            switch (chatMessage.type) {
+                case StaticField.ChatContantType.TEXT:
+                    SendMessage.getNewInstance().setChatViewSendOK(sendOK)
+                            .sendTextMessage(CONVERSATION_ID, chatMessage.text, setAttrs());
+                    break;
+                case StaticField.ChatContantType.IMAGE:
+                    SendMessage.getNewInstance().setChatViewSendOK(sendOK)
+                            .sendImageMesage(CONVERSATION_ID, chatMessage.local_path, setAttrs());
+                    break;
+                case StaticField.ChatContantType.VOICE:
+                    SendMessage.getNewInstance().setChatViewSendOK(sendOK)
+                            .sendAudioMessage(CONVERSATION_ID, chatMessage.local_path, setAttrs());
+                    break;
+                default:
+                    return false;
+
+            }
+            return true;
+        }
     };
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -365,6 +393,7 @@ public class ChatActivity extends BaseActivity {
 
                         SendMessage.getNewInstance().setChatViewSendOK(sendOK)
                                 .sendTextMessage(CONVERSATION_ID, text, setAttrs());
+                        InputMessage.setText("");
 
                     }
                 }
@@ -500,6 +529,7 @@ public class ChatActivity extends BaseActivity {
         List<ChatMessage> chatMessageList =
                 DBAct.getInstance().queryMessage(CONVERSATION_ID, 0);
         chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);
+        chatMessageAdapter.setOnResend(onResend);
         chatmessagerecyclerView.setAdapter(chatMessageAdapter);
         if (LastPosition != -1) {
             mLayoutManager.scrollToPosition(LastPosition);

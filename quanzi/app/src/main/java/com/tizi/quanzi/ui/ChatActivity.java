@@ -382,7 +382,7 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 requreForImage = RequreForImage.getInstance(mActivity);
-                requreForImage.showDialogAndCallIntent("选择图片", StaticField.PermissionRequestCode.chat_insert_photo,
+                requreForImage.showDialogAndCallIntent("发送图片", StaticField.PermissionRequestCode.chat_insert_photo,
                         true, Integer.MAX_VALUE);
             }
         });

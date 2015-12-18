@@ -194,10 +194,10 @@ public class SendDynFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (photoUploading.size() >= IMAGE_MAX_SIZE) {
-                    Snackbar.make(view, String.format("您已经选择%d张照片了~", IMAGE_MAX_SIZE), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, String.format("您已经选择%d张图片了~", IMAGE_MAX_SIZE), Snackbar.LENGTH_LONG).show();
                     return;
                 }
-                requreForImage.showDialogAndCallIntent("选择照片",
+                requreForImage.showDialogAndCallIntent("发送图片",
                         StaticField.PermissionRequestCode.send_dyn, true, IMAGE_MAX_SIZE - photoUploading.size());
             }
         });

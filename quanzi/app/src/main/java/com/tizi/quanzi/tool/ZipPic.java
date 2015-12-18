@@ -102,10 +102,17 @@ public class ZipPic {
         if (widthRatio > 1) {
             opts.inSampleSize = widthRatio;
         }
+        if (imgWidth > targetWidth) {
+            imgHeight = (int) (imgHeight * (1.0 * (targetWidth) / imgWidth));
+            imgWidth = targetWidth;
+        }
         // 设置好缩放比例后，加载图片进内容；
         opts.inJustDecodeBounds = false;
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         bitmap = BitmapFactory.decodeFile(pathName, opts);
+        if (widthRatio > 1) {
+            bitmap = Bitmap.createScaledBitmap(bitmap, imgWidth, imgHeight, true);
+        }
         return bitmap;
     }
 

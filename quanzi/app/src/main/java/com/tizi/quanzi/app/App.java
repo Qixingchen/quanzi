@@ -106,7 +106,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
             Picasso.with(getApplicationContext()).setIndicatorsEnabled(true);
             //            Picasso.with(getApplicationContext()).setLoggingEnabled(true);
             //            Picasso.with(getApplicationContext()).setIndicatorsEnabled(true);
-
         }
 
         if (!LoginAndUserAccount.getNewInstance().loginFromPrefer()) {

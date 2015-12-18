@@ -86,7 +86,7 @@ public class GetMutipieImage {
             if (size > max) {
                 onImageGet.Error(String.format("选择数量超过%d张,%d张未保存", max, size - max));
             }
-            final int finalSize = size;
+            final int finalSize = Math.min(size, max);
             Observable.create(new Observable.OnSubscribe<Uri>() {
                 @Override
                 public void call(Subscriber<? super Uri> subscriber) {

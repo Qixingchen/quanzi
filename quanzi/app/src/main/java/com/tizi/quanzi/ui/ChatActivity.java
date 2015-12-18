@@ -610,7 +610,8 @@ public class ChatActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (data == null || (data.getData() == null && data
-                    .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES) == null)) {
+                    .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES) == null)
+                    && data.getClipData() == null) {
                 sendImageMessage(requreForImage.getFilePathFromIntentMaybeCamera(null));
             } else {
                 new GetMutipieImage().setOnImageGet(new GetMutipieImage.OnImageGet() {

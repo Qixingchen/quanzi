@@ -3,6 +3,7 @@ package com.tizi.quanzi.ui.dyns;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.util.ArrayMap;
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.avos.avoscloud.AVFile;
+import com.darsh.multipleimageselect.helpers.Constants;
 import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
@@ -61,6 +63,7 @@ public class SendDynFragment extends BaseFragment {
     private ArrayMap<AVFile, Boolean> photoUploading = new ArrayMap<>(IMAGE_MAX_SIZE + 6);
     private ArrayMap<AVFile, String> photoLocal = new ArrayMap<>(3 * IMAGE_MAX_SIZE);
 
+    private RequreForImage requreForImage;
 
     public SendDynFragment() {
         // Required empty public constructor
@@ -125,6 +128,7 @@ public class SendDynFragment extends BaseFragment {
             themeID = getArguments().getString(GROUP_ID);
             isUser = getArguments().getBoolean(IS_USER, false);
         }
+        requreForImage = RequreForImage.getInstance(mActivity);
     }
 
     @Override
@@ -193,7 +197,7 @@ public class SendDynFragment extends BaseFragment {
                     Snackbar.make(view, String.format("您已经选择%d张照片了~", IMAGE_MAX_SIZE), Snackbar.LENGTH_LONG).show();
                     return;
                 }
-                RequreForImage.getInstance(mActivity).showDialogAndCallIntent("选择照片",
+                requreForImage.showDialogAndCallIntent("选择照片",
                         StaticField.PermissionRequestCode.send_dyn, true, IMAGE_MAX_SIZE - photoUploading.size());
             }
         });
@@ -203,18 +207,25 @@ public class SendDynFragment extends BaseFragment {
     @Subscribe
     public void onActivityResult(ActivityResultAns activityResultAns) {
         if (activityResultAns.requestCode == StaticField.PermissionRequestCode.send_dyn
-                && activityResultAns.resultCode == Activity.RESULT_OK && activityResultAns.data != null) {
-            new GetMutipieImage().setOnImageGet(new GetMutipieImage.OnImageGet() {
-                @Override
-                public void OK(String FilePath) {
-                    savePhoto(FilePath);
-                }
+                && activityResultAns.resultCode == Activity.RESULT_OK) {
+            Intent data = activityResultAns.data;
+            if (data == null || (data.getData() == null && data
+                    .getParcelableArrayListExtra(Constants.INTENT_EXTRA_IMAGES) == null)
+                    && data.getClipData() == null) {
+                savePhoto(requreForImage.getFilePathFromIntentMaybeCamera(null));
+            } else {
+                new GetMutipieImage().setOnImageGet(new GetMutipieImage.OnImageGet() {
+                    @Override
+                    public void OK(String FilePath) {
+                        savePhoto(FilePath);
+                    }
 
-                @Override
-                public void Error(String errorMessage) {
-                    Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
-                }
-            }).getMutipieImage(activityResultAns.data, IMAGE_MAX_SIZE - photoUploading.size());
+                    @Override
+                    public void Error(String errorMessage) {
+                        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+                    }
+                }).getMutipieImage(data, IMAGE_MAX_SIZE - photoUploading.size());
+            }
         }
     }
 

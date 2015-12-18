@@ -424,8 +424,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
     public void updateTempMess(String messID, ChatMessage chatMessage) {
         for (int i = chatMessageList.size() - 1; i >= 0; i--) {
             if (chatMessageList.get(i).messID.equals(messID)) {
-                chatMessageList.removeItemAt(i);
-                chatMessageList.add(chatMessage);
+                chatMessageList.updateItemAt(i, chatMessage);
                 break;
             }
         }

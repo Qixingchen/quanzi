@@ -266,7 +266,7 @@ public class ZipPic {
     public String saveMyBitmap(Bitmap mBitmap, int quality, String fileName) {
         fileName = fileName.substring(0, fileName.indexOf("."));
         File file = new File(Tool.getCacheCacheDir().getAbsolutePath()
-                + "/image/" + AppStaticValue.getUserID(), fileName + ".webp");
+                + "/image/" + AppStaticValue.getUserID(), fileName + ".jpg");
 
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
@@ -293,7 +293,7 @@ public class ZipPic {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        mBitmap.compress(CompressFormat.WEBP, quality, fOut);
+        mBitmap.compress(CompressFormat.JPEG, quality, fOut);
         try {
             fOut.flush();
         } catch (IOException e) {

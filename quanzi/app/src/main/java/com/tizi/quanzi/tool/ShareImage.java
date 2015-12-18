@@ -127,8 +127,11 @@ public class ShareImage {
         String RootPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
         String dstfilePath = RootPath + "/" + StaticField.AppName.AppEngName + "/" + fileName;
         File dstFile = new File(dstfilePath);
-
+        if (!dstFile.getParentFile().exists()) {
+            dstFile.getParentFile().mkdirs();
+        }
         try {
+            dstFile.createNewFile();
             copy(new File(srcFilePath), dstFile);
         } catch (IOException e) {
             e.printStackTrace();

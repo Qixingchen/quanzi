@@ -5,6 +5,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.tizi.quanzi.gson.BaiduLocation;
 import com.tizi.quanzi.log.Log;
+import com.tizi.quanzi.tool.DevSettings;
 
 import java.io.IOException;
 
@@ -43,6 +44,10 @@ public class GetLocationFromBaidu {
     }
 
     public void getLocation() {
+        if (DevSettings.disallowBaiduLocation()) {
+            onResult.error("百度定位已禁用");
+            return;
+        }
         retrofit.create(RetrofitAPI.BaiduLocation.class).getLocation("CPuqLrXjjpwuSoZFBl8qHFPb", "bd09ll")
                 .enqueue(new Callback<BaiduLocation>() {
                     @Override

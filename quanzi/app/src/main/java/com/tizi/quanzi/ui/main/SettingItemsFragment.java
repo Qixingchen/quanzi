@@ -1,7 +1,9 @@
 package com.tizi.quanzi.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
@@ -15,7 +17,9 @@ import com.tizi.quanzi.notification.AddNotification;
 public class SettingItemsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final static String TAG = SettingItemsFragment.class.getSimpleName();
+    private Fragment fragment = this;
 
+    @SuppressLint("StringFormatInvalid")
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.settings);
@@ -27,6 +31,19 @@ public class SettingItemsFragment extends PreferenceFragmentCompat implements Sh
 
         Preference flavorPref = findPreference("flavor");
         flavorPref.setSummary(BuildConfig.FLAVOR);
+
+        Preference devSettings = findPreference("dev_settings");
+        devSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                DevSettingsFragmet devSettingsFragmet = new DevSettingsFragmet();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.setting_fragment, devSettingsFragmet)
+                        .addToBackStack("DevSettings").commit();
+
+                return false;
+            }
+        });
     }
 
     @Override

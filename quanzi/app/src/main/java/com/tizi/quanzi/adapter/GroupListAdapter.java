@@ -164,9 +164,6 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                                 }
                             }
                         }).show();
-
-                        AppStaticValue.setNeedNotifi(group.convId, !needNotifi);
-                        myViewHolder.setGroupName(group);
                         return true;
                     }
                 });

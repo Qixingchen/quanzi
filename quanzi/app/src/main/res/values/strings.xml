@@ -36,5 +36,5 @@
     <string name="action_send">发送</string>
     <string name="action_comment">评论</string>
     <string name="allow_notice"/>
-    <string name="dis_allow_notice">🔕</string>
+    <string name="dis_allow_notice">\uD83D\uDD15</string>
 </resources>

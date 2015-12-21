@@ -5,39 +5,9 @@
     android:layout_height="match_parent"
     tools:context="com.tizi.quanzi.ui.main.SystemSettingFragment">
 
-
     <FrameLayout
         android:id="@+id/setting_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/open_source_licenses"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="开源协议"
-            android:textColor="@color/md_blue_300"
-            android:textSize="@dimen/sub_title_text_size"/>
-
-        <TextView
-            android:id="@+id/user_license"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="用户协议"
-            android:textColor="@color/md_blue_300"
-            android:textSize="@dimen/sub_title_text_size"/>
-
-
-    </LinearLayout>
-
 
 </FrameLayout>

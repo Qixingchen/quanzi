@@ -70,6 +70,9 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         }
         synchronized (groupList) {
             for (T group : groupList) {
+                if (group.ID == null) {
+                    return null;
+                }
                 if (group.ID.compareTo(id) == 0) {
                     return group;
                 }

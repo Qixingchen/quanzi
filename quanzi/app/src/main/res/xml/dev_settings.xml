@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="开发者设置">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="dev_mode"
+            android:summary="改动可能导致应用无响应或崩溃，请在开发者指导下使用"
+            android:title="开发者模式"/>
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="开发者设置">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:dependency="dev_mode"
+            android:key="compact_weixin_share"
+            android:summary="开启后可能导致正确编写的Android应用无法接收您的分享"
+            android:title="兼容微信分享"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:dependency="dev_mode"
+            android:key="disallow_baidu_location"
+            android:summary="即使定位器超时或无定位权限时也不使用基于IP的百度网络定位"
+            android:title="禁用百度网络定位"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

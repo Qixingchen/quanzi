@@ -154,22 +154,27 @@ public class GalleryAdapter extends PagerAdapter {
     }
 
     private void shareImage(Uri imageUri) {
-        final ProgressDialog progressDialog = showDialog();
-        downloadFile(imageUri).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<File>() {
-                    @Override
-                    public void call(File file) {
-                        ShareImage.getInstance().shareImage(activity, file.getAbsolutePath());
-                        progressDialog.cancel();
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Toast.makeText(activity, throwable.getMessage(), Toast.LENGTH_LONG).show();
-                        throwable.printStackTrace();
-                        progressDialog.cancel();
-                    }
-                });
+        if (imageUri.getScheme().equals("file")) {
+            ShareImage.getInstance().shareImage(activity,
+                    imageUri.toString().replace("file://", ""));
+        } else {
+            final ProgressDialog progressDialog = showDialog();
+            downloadFile(imageUri).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<File>() {
+                        @Override
+                        public void call(File file) {
+                            ShareImage.getInstance().shareImage(activity, file.getAbsolutePath());
+                            progressDialog.cancel();
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            Toast.makeText(activity, throwable.getMessage(), Toast.LENGTH_LONG).show();
+                            throwable.printStackTrace();
+                            progressDialog.cancel();
+                        }
+                    });
+        }
     }
 
     private Observable<File> downloadFile(final Uri imageUri) {
@@ -182,7 +187,7 @@ public class GalleryAdapter extends PagerAdapter {
                         .enqueue(new Callback() {
                             @Override
                             public void onFailure(Request request, IOException e) {
-                                // handle failure
+                                subscriber.onError(e);
                             }
 
                             @Override

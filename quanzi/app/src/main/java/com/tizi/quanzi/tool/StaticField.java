@@ -204,5 +204,8 @@ public class StaticField {
         public static final String needPriMessNotifi = "notifications_pri_mess";
         public static final String needZanNotifi = "notifications_zan";
         public static final String needSystemNotifi = "notifications_system";
+        public static final String disallowBaiduLocation = "disallow_baidu_location";
+        public static final String compactWeixinShare = "compact_weixin_share";
+        public static final String devMode = "dev_mode";
     }
 }

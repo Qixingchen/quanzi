@@ -61,19 +61,44 @@ public class ShareImage {
     }
 
     public void shareImage(final Activity activity, final Bitmap bitmap, final String fileName) {
+        if (DevSettings.compatWeixinShare()) {
+            weixinShare(activity, bitmap, fileName);
+            return;
+        }
         String RootPath = App.getApplication().getCacheDir().getAbsolutePath();
         String filePath = RootPath + "/image/" + fileName;
         ZipPic.getNewInstance().saveMyBitmap(filePath, bitmap, 100);
         shareSavedImage(activity, filePath);
     }
 
+
     public void shareImage(final Activity activity, final String srcFilePath) {
+
+        if (DevSettings.compatWeixinShare()) {
+            String RootPath = App.getApplication().getExternalCacheDir().getAbsolutePath();
+            String filePath = RootPath + "/image/" + Tool.getFileName(srcFilePath);
+            try {
+                copy(new File(srcFilePath), new File(filePath));
+            } catch (IOException e) {
+                e.printStackTrace();
+                String errorString;
+                if (BuildConfig.DEBUG) {
+                    errorString = e.getMessage();
+                } else {
+                    errorString = "保存错误";
+                }
+                Snackbar.make(((BaseActivity) activity).view, errorString, Snackbar.LENGTH_LONG).show();
+                return;
+            }
+            weixinShare(activity, srcFilePath);
+            return;
+        }
+
         String RootPath = App.getApplication().getCacheDir().getAbsolutePath();
         String filePath = RootPath + "/image/" + Tool.getFileName(srcFilePath);
         try {
             copy(new File(srcFilePath), new File(filePath));
         } catch (IOException e) {
-            e.printStackTrace();
             e.printStackTrace();
             String errorString;
             if (BuildConfig.DEBUG) {
@@ -153,6 +178,20 @@ public class ShareImage {
         activity.sendBroadcast(mediaScanIntent);
     }
 
+    private void weixinShare(Activity activity, String filepath) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filepath)));
+        shareIntent.setType("image/*");
+        activity.startActivity(Intent.createChooser(shareIntent, "分享图像"));
+    }
+
+    private void weixinShare(Activity activity, Bitmap bitmap, String fileName) {
+        String RootPath = Tool.getCacheCacheDir().getAbsolutePath();
+        String filePath = RootPath + "/image/" + fileName;
+        ZipPic.getNewInstance().saveMyBitmap(filePath, bitmap, 100);
+        weixinShare(activity, filePath);
+    }
 
     private void copy(File src, File dst) throws IOException {
         FileInputStream inStream = new FileInputStream(src);

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/group_face_small"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    tools:background="@color/md_green_300">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/group_face_image_view"
+        android:layout_width="@dimen/group_face_small"
+        android:layout_height="@dimen/group_face_small"
+        tools:src="@drawable/face"/>
+
+    <ImageView
+        android:id="@+id/group_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/group_face_image_view"
+        tools:src="@drawable/ic_group_24dp"/>
+
+    <TextView
+        android:id="@+id/group_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/group_type"
+        android:layout_toEndOf="@id/group_type"
+        android:maxWidth="240dp"
+        android:singleLine="true"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="123333"/>
+
+    <ImageView
+        android:id="@+id/disallow_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/group_type"
+        android:layout_toEndOf="@id/group_name_text_view"
+        android:src="@drawable/ic_notifications_off_black_24dp"/>
+
+    <TextView
+        android:id="@+id/last_mess_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/group_type"
+        tools:text="19:12"/>
+
+    <TextView
+        android:id="@+id/last_mess_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@id/group_type"
+        android:layout_marginBottom="8dp"
+        android:maxWidth="300dp"
+        android:singleLine="true"
+        android:text="12222222"/>
+
+    <TextView
+        android:id="@+id/unread_count"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/num_pop"
+        android:gravity="center"
+        android:textSize="@dimen/normal_text_size"
+        tools:text="123"/>
+
+</RelativeLayout>

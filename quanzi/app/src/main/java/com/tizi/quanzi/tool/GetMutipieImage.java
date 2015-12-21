@@ -144,7 +144,7 @@ public class GetMutipieImage {
     }
 
     public interface OnImageGet {
-        void OK(String FilePath);
+        void OK(String filePath);
 
         void Error(String errorMessage);
     }

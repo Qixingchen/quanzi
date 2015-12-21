@@ -4,6 +4,9 @@
         name="image"
         path="image/"/>
     <external-path
+        name="image_external_cache"
+        path="Android/data/com.tizi.quanzi/cache/image"/>
+    <external-path
         name="image_external"
-        path="cache/image/"/>
+        path="image/"/>
 </paths>

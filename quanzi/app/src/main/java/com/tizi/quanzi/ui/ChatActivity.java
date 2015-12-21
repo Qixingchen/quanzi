@@ -500,12 +500,12 @@ public class ChatActivity extends BaseActivity {
         if (id == R.id.action_mute_notifications) {
             boolean needNotifi = AppStaticValue.getNeedNotifi(CONVERSATION_ID);
             AppStaticValue.setNeedNotifi(CONVERSATION_ID, !needNotifi);
-            setTitle();
             if (needNotifi) {
-                item.setTitle("静音");
-            } else {
                 item.setTitle("启用通知");
+            } else {
+                item.setTitle("静音");
             }
+            setTitle();
         }
 
         return super.onOptionsItemSelected(item);
@@ -622,8 +622,8 @@ public class ChatActivity extends BaseActivity {
             } else {
                 new GetMutipieImage().setOnImageGet(new GetMutipieImage.OnImageGet() {
                     @Override
-                    public void OK(String FilePath) {
-                        sendImageMessage(FilePath);
+                    public void OK(String filePath) {
+                        sendImageMessage(filePath);
                     }
 
                     @Override

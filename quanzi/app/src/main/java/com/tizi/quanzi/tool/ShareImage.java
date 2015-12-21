@@ -93,9 +93,9 @@ public class ShareImage {
         Uri contentUri = FileProvider.getUriForFile(App.getApplication(),
                 App.getApplication().getPackageName(), new File(filePath));
         App.getApplication().grantUriPermission(App.getApplication().getPackageName(),
-                contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         shareIntent.setData(contentUri);
-        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
         shareIntent.setType("image/*");

@@ -216,8 +216,8 @@ public class SendDynFragment extends BaseFragment {
             } else {
                 new GetMutipieImage().setOnImageGet(new GetMutipieImage.OnImageGet() {
                     @Override
-                    public void OK(String FilePath) {
-                        savePhoto(FilePath);
+                    public void OK(String filePath) {
+                        savePhoto(filePath);
                     }
 
                     @Override

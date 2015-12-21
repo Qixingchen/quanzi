@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.tizi.quanzi"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.tizi.quanzi"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -28,7 +27,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <!-- 震动 -->
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <!--拍照-->
+    <!-- 拍照 -->
     <uses-permission
         android:name="android.permission.CAMERA"
         android:maxSdkVersion="22"/>
@@ -46,7 +45,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--渠道统计-->
+        <!-- 渠道统计 -->
         <meta-data
             android:name="leancloud"
             android:value="${LEANCLOUD_CHANNEL_VALUE}"/>
@@ -62,13 +61,13 @@
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
         </receiver>
-        <!--通知操作接收器-->
+        <!-- 通知操作接收器 -->
         <receiver android:name=".notification.NotifiReceiver">
             <intent-filter>
                 <action android:name="quanzi.Notification.BROADCAST"/>
             </intent-filter>
         </receiver>
-        <!--内容提供器-->
+        <!-- 内容提供器 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.tizi.quanzi"
@@ -78,7 +77,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
-
 
         <activity
             android:name=".ui.login.LoginActivity"
@@ -93,7 +91,6 @@
             android:name=".ui.main.MainActivity"
             android:label="@string/title_activity_main"
             android:launchMode="singleTop">
-
             <intent-filter>
                    
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -113,10 +110,8 @@
                 <data
                     android:host="www.tizi-tech.com"
                     android:scheme="http"/>
-
                    
             </intent-filter>
-
         </activity>
         <activity
             android:name=".ui.register.RegisterActivity"
@@ -163,6 +158,24 @@
             </intent-filter>
         </activity>
         <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
+        <activity
+            android:name=".ui.chat_list.ChatListActivity"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

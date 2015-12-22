@@ -58,7 +58,7 @@ public class AppStaticValue {
 
     /* 设置数据库*/
     public static void setDataBaseHelper(String userID) {
-        db = new DataBaseHelper(App.getApplication(), userID, null, 1);
+        db = new DataBaseHelper(App.getApplication(), userID, null, 2);
         db1 = db.getWritableDatabase();
     }
 

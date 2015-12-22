@@ -1,5 +1,6 @@
 package com.tizi.quanzi.notification;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -131,20 +133,23 @@ public class AddNotification {
      *
      * @return 样式建立完成的 NotificationCompat.Builder
      */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private NotificationCompat.Builder setBuildStyle(NotificationCompat.Builder mBuilder) {
         mBuilder.setSmallIcon(R.mipmap.ic_launcher)
                 .setCategory(Notification.CATEGORY_MESSAGE)
                 .setWhen(notifiContacts.get(0).createTime)
                 .setVisibility(Notification.VISIBILITY_PRIVATE)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOnlyAlertOnce(true)
                 .setNumber(notifiContacts.size())
                 .setLights(Color.WHITE, 1000, 500)
                 .setAutoCancel(true)
                 .setColor(mContext.getResources().getColor(R.color.colorPrimary));
 
-        if (needSound && notifiContacts.size() == 1) {
+        if (needSound) {
             mBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         }
-        if (needVibrate && notifiContacts.size() == 1) {
+        if (needVibrate) {
             mBuilder.setVibrate(new long[]{0, 400});
         }
 

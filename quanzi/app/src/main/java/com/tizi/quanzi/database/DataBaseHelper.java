@@ -25,12 +25,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         /*私聊群*/
         db.execSQL("create table privateMessGroup( id varchar(40) PRIMARY KEY not null,Serializable blob )");
+
+        /*聊天组*/
+        db.execSQL("create table ChatGroup( id varchar(40) PRIMARY KEY not null,type integer,Serializable blob )");
     }
 
     /* 更改数据库版本的操作*/
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion == 1 && newVersion == 2) {
+            db.execSQL("create table ChatGroup( id varchar(40) PRIMARY KEY not null,type integer,Serializable blob )");
+        }
     }
 
     /*每次成功打开数据库后首先被执行*/
@@ -86,6 +91,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static class privateMessGroupSQLNmae {
         public static final String TableName = "privateMessGroup";
         public static final String id = "id";
+        public static final String Serializable = "Serializable";
+    }
+
+    /**
+     * ChatGroup 表名
+     */
+    public static class chatGroupSQLNmae {
+        public static final String TableName = "ChatGroup";
+        public static final String id = "id";
+        public static final String type = "type";
         public static final String Serializable = "Serializable";
     }
 }

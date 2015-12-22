@@ -2,6 +2,7 @@ package com.tizi.quanzi.dataStatic;
 
 import android.support.annotation.Nullable;
 
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.ChatMessage;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         }
         for (T t : groupList) {
             setUnreadMessage(t.convId, t.ID);
+            DBAct.getInstance().addOrReplaceChatGroup(t);
         }
 
         sort();
@@ -125,6 +127,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         }
         sort();
         noticeAllCallBack();
+        DBAct.getInstance().addOrReplaceChatGroup(group);
     }
 
     /**

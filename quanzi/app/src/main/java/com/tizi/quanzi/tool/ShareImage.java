@@ -77,8 +77,13 @@ public class ShareImage {
         if (DevSettings.compatWeixinShare()) {
             String RootPath = App.getApplication().getExternalCacheDir().getAbsolutePath();
             String filePath = RootPath + "/image/" + Tool.getFileName(srcFilePath);
+            File cacheFile = new File(filePath);
+            if (!cacheFile.getParentFile().exists()) {
+                cacheFile.getParentFile().mkdirs();
+            }
             try {
-                copy(new File(srcFilePath), new File(filePath));
+                cacheFile.createNewFile();
+                copy(new File(srcFilePath), cacheFile);
             } catch (IOException e) {
                 e.printStackTrace();
                 String errorString;
@@ -96,7 +101,12 @@ public class ShareImage {
 
         String RootPath = App.getApplication().getCacheDir().getAbsolutePath();
         String filePath = RootPath + "/image/" + Tool.getFileName(srcFilePath);
+        File cacheFile = new File(filePath);
+        if (!cacheFile.getParentFile().exists()) {
+            cacheFile.getParentFile().mkdirs();
+        }
         try {
+            cacheFile.createNewFile();
             copy(new File(srcFilePath), new File(filePath));
         } catch (IOException e) {
             e.printStackTrace();

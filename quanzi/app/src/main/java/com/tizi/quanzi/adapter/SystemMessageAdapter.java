@@ -82,6 +82,9 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
 
         @Override
         public boolean areItemsTheSame(SystemMessagePair item1, SystemMessagePair item2) {
+            if (item1.ID == null) {
+                return false;
+            }
             return item1.ID.equals(item2.ID);
         }
     });
@@ -231,21 +234,19 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                             GroupUserAdmin.getInstance(mContext).setOnResult(new GroupUserAdmin.OnResult() {
                                 @Override
                                 public void OK() {
-
+                                    systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
+                                    systemMessage.setIsread(true);
+                                    DBAct.getInstance().addOrReplaceSysMess(systemMessage);
+                                    SystemMessageList.getInstance().updateGroup(
+                                            SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
+                                    notifyItemChanged(position);
                                 }
 
                                 @Override
                                 public void error(String errorMessage) {
                                     Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
                                 }
-                            }).
-                                    acceptToJoinGroup(true, systemMessage.getConvid(), systemMessage.getGroup_id());
-                            systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
-                            systemMessage.setIsread(true);
-                            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
-                            SystemMessageList.getInstance().updateGroup(
-                                    SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
-                            notifyItemChanged(position);
+                            }).acceptToJoinGroup(true, systemMessage.getConvid(), systemMessage.getGroup_id());
                         }
                     });
 

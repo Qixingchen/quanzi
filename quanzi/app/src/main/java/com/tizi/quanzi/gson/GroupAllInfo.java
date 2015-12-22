@@ -2,6 +2,7 @@ package com.tizi.quanzi.gson;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -96,7 +97,7 @@ public class GroupAllInfo extends OnlySuccess {
         public String notice;
     }
 
-    public static class MemberEntity {
+    public static class MemberEntity implements Serializable {
         @SerializedName("tags")
         public Object tags;
         @SerializedName("id")

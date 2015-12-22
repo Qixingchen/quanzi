@@ -8,10 +8,12 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.tizi.quanzi.app.AppStaticValue;
+import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.model.SystemMessage;
+import com.tizi.quanzi.model.SystemMessagePair;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.io.File;
@@ -444,6 +446,68 @@ public class DBAct {
         return privateMessPair;
     }
 
+    /*chatGroup*/
+    public List<ConvGroupAbs> quaryAllChatGroup() {
+        Cursor cursor = db.query(DataBaseHelper.chatGroupSQLNmae.TableName,//table name
+                null,//返回的列,null表示全选
+                null,//条件
+                null,//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        List<ConvGroupAbs> groups = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            ConvGroupAbs temp = ConvGroupAbsFromCursor(cursor);
+            if (temp != null) {
+                groups.add(temp);
+            }
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return groups;
+    }
+
+    public ConvGroupAbs quaryChatGroup(String id) {
+        Cursor cursor = db.query(DataBaseHelper.chatGroupSQLNmae.TableName,//table name
+                null,//返回的列,null表示全选
+                DataBaseHelper.chatGroupSQLNmae.id + "=?",//条件
+                new String[]{id},//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        ConvGroupAbs ans = null;
+        cursor.moveToFirst();
+        if (cursor.getCount() == 1) {
+            ans = ConvGroupAbsFromCursor(cursor);
+        }
+
+
+        cursor.close();
+        return ans;
+    }
+
+    /**
+     * 根据 Cursor 转换 PrivateMessPair
+     *
+     * @param cursor 查询到的游标
+     *
+     * @return 返回的 PrivateMessPair
+     */
+    @Nullable
+    private ConvGroupAbs ConvGroupAbsFromCursor(Cursor cursor) {
+        ConvGroupAbs pair = null;
+        byte[] SerializString = cursor.getBlob(
+                cursor.getColumnIndex(DataBaseHelper.chatGroupSQLNmae.Serializable));
+        Object object = SerializedObjectFormat.readSerializedObject(SerializString);
+        if (object != null) {
+            pair = (ConvGroupAbs) object;
+        }
+        return pair;
+    }
+
     /*判断*/
 
 
@@ -550,6 +614,23 @@ public class DBAct {
         content.put(DataBaseHelper.privateMessGroupSQLNmae.Serializable,
                 SerializedObjectFormat.getSerializedObject(privateMessPair));
         db.replace(DataBaseHelper.privateMessGroupSQLNmae.TableName, null, content);
+    }
+
+    /**
+     * 添加或更新 ChatMessPair
+     */
+    public void addOrReplaceChatGroup(ConvGroupAbs group) {
+
+        if (group instanceof SystemMessagePair) {
+            return;
+        }
+
+        ContentValues content = new ContentValues();
+        content.put(DataBaseHelper.chatGroupSQLNmae.id, group.ID);
+        content.put(DataBaseHelper.chatGroupSQLNmae.type, group.Type);
+        content.put(DataBaseHelper.chatGroupSQLNmae.Serializable,
+                SerializedObjectFormat.getSerializedObject(group));
+        db.replace(DataBaseHelper.chatGroupSQLNmae.TableName, null, content);
     }
 
 

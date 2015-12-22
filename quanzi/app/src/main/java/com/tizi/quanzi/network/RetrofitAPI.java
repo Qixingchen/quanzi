@@ -126,7 +126,8 @@ public interface RetrofitAPI {
         @POST("group/acceptGroupInvite")
         Call<GroupInviteAns> acceptGroupInvite(
                 @Query("groupid") String groupID,
-                @Query("userid") String userid);
+                @Query("userid") String userid,
+                @Query("convid") String convID);
 
         @POST("group/exitGroupF")
         Call<OnlySuccess> exitOrDeleteMember(

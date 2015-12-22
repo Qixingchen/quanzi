@@ -1,19 +1,25 @@
 package com.tizi.quanzi.ui.chat_list;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatListAdapter;
 import com.tizi.quanzi.chat.SendMessage;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
+import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.tool.GetMutipieImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
+import com.tizi.quanzi.ui.ChatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +34,46 @@ public class ChatListActivity extends BaseActivity {
     private String text;
     private List<String> filePathList = new ArrayList<>();
 
+    private ProgressDialog progressDialog;
+    private SendMessage.ChatViewSendOK sendOK = new SendMessage.ChatViewSendOK() {
+
+        /**
+         * @param Message         AVIM 消息
+         * @param CONVERSATION_ID 消息对应的CONVID
+         * @param tempID          此消息对应的临时ID
+         */
+        @Override
+        public void sendOK(ChatMessage Message, String CONVERSATION_ID, String tempID) {
+            Toast.makeText(mContext, "发送成功", Toast.LENGTH_LONG).show();
+            progressDialog.cancel();
+            finish();
+        }
+
+        @Override
+        public void preSend(ChatMessage Message, String CONVERSATION_ID) {
+
+        }
+
+        @Override
+        public void sendError(String errorMessage, final String CONVERSATION_ID, String tempID, ChatMessage Message) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("发送失败").setMessage(errorMessage)
+                    .setPositiveButton("去重试", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent chatActivity = new Intent(mContext, ChatActivity.class);
+                            chatActivity.putExtra("conversation", CONVERSATION_ID);
+                        }
+                    }).show();
+            progressDialog.cancel();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
+        Log.i(TAG, "onStart");
     }
 
     /**
@@ -50,6 +92,8 @@ public class ChatListActivity extends BaseActivity {
     protected void initView() {
         Intent intent = getIntent();
         String type = intent.getType();
+        ConvGroupAbs group = (ConvGroupAbs) intent.getSerializableExtra("group");
+
         if ("text/plain".equals(type)) {
             messType = StaticField.ChatContantType.TEXT;
             text = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -69,6 +113,11 @@ public class ChatListActivity extends BaseActivity {
             }).getMutipieImage(intent);
         }
 
+        if (group != null) {
+            sendMessage(group);
+            return;
+        }
+
 
         chatListAdapter = new ChatListAdapter();
         recyclerView.setAdapter(chatListAdapter);
@@ -82,51 +131,40 @@ public class ChatListActivity extends BaseActivity {
     protected void setViewEvent() {
         chatListAdapter.setOnClick(new ChatListAdapter.OnClick() {
             @Override
-            public void onClick(ConvGroupAbs group, int chatType) {
-                if (messType == StaticField.ChatContantType.IMAGE) {
-                    for (String filePath : filePathList) {
-                        SendMessage.getNewInstance()
-                                .setChatViewSendOK(new SendMessage.ChatViewSendOK() {
-                                    @Override
-                                    public void sendOK(ChatMessage Message, String CONVERSATION_ID, String tempID) {
-
-                                    }
-
-                                    @Override
-                                    public void preSend(ChatMessage Message, String CONVERSATION_ID) {
-
-                                    }
-
-                                    @Override
-                                    public void sendError(String errorMessage, String CONVERSATION_ID, String tempID, ChatMessage Message) {
-
-                                    }
-                                })
-                                .sendImageMesage(group.convId, filePath, setAttrs(chatType, group.ID));
-                    }
-                } else if (messType == StaticField.ChatContantType.TEXT) {
-                    SendMessage.getNewInstance()
-                            .setChatViewSendOK(new SendMessage.ChatViewSendOK() {
-                                @Override
-                                public void sendOK(ChatMessage Message, String CONVERSATION_ID, String tempID) {
-
-                                }
-
-                                @Override
-                                public void preSend(ChatMessage Message, String CONVERSATION_ID) {
-
-                                }
-
-                                @Override
-                                public void sendError(String errorMessage, String CONVERSATION_ID, String tempID, ChatMessage Message) {
-
-                                }
-                            })
-                            .sendTextMessage(group.convId, text, setAttrs(chatType, group.ID));
-                }
-                finish();
+            public void onClick(ConvGroupAbs group) {
+                sendMessage(group);
             }
         });
+    }
+
+    private void sendMessage(ConvGroupAbs group) {
+        if (messType == StaticField.ChatContantType.IMAGE) {
+            for (String filePath : filePathList) {
+                SendMessage.getNewInstance()
+                        .setChatViewSendOK(sendOK)
+                        .sendImageMesage(group.convId, filePath, setAttrs(group.Type, group.ID));
+            }
+        } else if (messType == StaticField.ChatContantType.TEXT) {
+            SendMessage.getNewInstance()
+                    .setChatViewSendOK(sendOK)
+                    .sendTextMessage(group.convId, text, setAttrs(group.Type, group.ID));
+        }
+        progressDialog = showDialog();
+    }
+
+    /**
+     * 进度条
+     */
+    private ProgressDialog showDialog() {
+        ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(true);
+        progressDialog.setMessage("发送中");
+
+        progressDialog.show();
+
+        return progressDialog;
     }
 
     /**

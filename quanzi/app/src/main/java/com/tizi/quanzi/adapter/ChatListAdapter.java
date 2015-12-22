@@ -12,11 +12,10 @@ import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.dataStatic.BoomGroupList;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
 import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.model.PrivateMessPair;
@@ -24,6 +23,8 @@ import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.StaticField;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
@@ -86,18 +87,8 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
         }
         convGroupAbsSortedList.clear();
         convGroupAbsSortedList.beginBatchedUpdates();
-
-        for (Object group : GroupList.getInstance().getGroupList()) {
-            convGroupAbsSortedList.add((ConvGroupAbs) group);
-        }
-
-        for (Object group : PrivateMessPairList.getInstance().getGroupList()) {
-            convGroupAbsSortedList.add((ConvGroupAbs) group);
-        }
-
-        for (Object group : BoomGroupList.getInstance().getGroupList()) {
-            convGroupAbsSortedList.add((ConvGroupAbs) group);
-        }
+        List<ConvGroupAbs> groups = DBAct.getInstance().quaryAllChatGroup();
+        convGroupAbsSortedList.addAll(groups);
         convGroupAbsSortedList.endBatchedUpdates();
     }
 
@@ -144,28 +135,33 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
         final ChatListViewHolder vh = (ChatListViewHolder) holder;
         final ConvGroupAbs group = convGroupAbsSortedList.get(position);
 
-        int chatType = 0;
         if (group instanceof GroupClass) {
             vh.groupType.setImageResource(R.drawable.ic_group_black_24dp);
-            chatType = StaticField.ConvType.GROUP;
         } else if (group instanceof PrivateMessPair) {
             vh.groupType.setImageResource(R.drawable.ic_person_black_24dp);
-            chatType = StaticField.ConvType.twoPerson;
         } else if (group instanceof BoomGroupClass) {
             vh.groupType.setImageResource(R.drawable.ic_whatshot_black_24dp);
-            chatType = StaticField.ConvType.BoomGroup;
         }
-        if (chatType != StaticField.ConvType.BoomGroup) {
+        if (group.Type != StaticField.ConvType.BoomGroup) {
             Picasso.with(vh.groupFace.getContext())
                     .load(GetThumbnailsUri.getUriLink(group.Face, 64, 64, vh.groupFace.getContext()))
                     .fit().into(vh.groupFace);
+            vh.groupName.setText(group.Name);
         } else {
-            Picasso.with(vh.groupFace.getContext())
-                    .load(R.drawable.ic_whatshot_black_24dp)
-                    .fit().into(vh.groupFace);
+            if (isMyGroup(((BoomGroupClass) group).groupId1)) {
+                Picasso.with(vh.groupFace.getContext())
+                        .load(((BoomGroupClass) group).icon2)
+                        .fit().into(vh.groupFace);
+            } else {
+                Picasso.with(vh.groupFace.getContext())
+                        .load(((BoomGroupClass) group).icon1)
+                        .fit().into(vh.groupFace);
+            }
+            vh.groupName.setText(String.format("%s 与 %s",
+                    ((BoomGroupClass) group).groupName1, ((BoomGroupClass) group).groupName2));
         }
 
-        vh.groupName.setText(group.Name);
+
         if (group.lastMessTime == 0) {
             vh.lastChatTime.setVisibility(View.GONE);
             vh.LastChatMess.setVisibility(View.GONE);
@@ -202,12 +198,11 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
                         }
                     }
                 });
-        final int finalChatType = chatType;
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onClick != null) {
-                    onClick.onClick(convGroupAbsSortedList.get(position), finalChatType);
+                    onClick.onClick(convGroupAbsSortedList.get(position));
                 }
             }
         });
@@ -225,8 +220,23 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
         this.onClick = onClick;
     }
 
+    /**
+     * 判断是不是自己的群
+     *
+     * @param GroupID 群号
+     *
+     * @return true：是自己的圈子
+     */
+    private boolean isMyGroup(String GroupID) {
+        if (GroupList.getInstance().getGroup(GroupID) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public interface OnClick {
-        void onClick(ConvGroupAbs group, int chatType);
+        void onClick(ConvGroupAbs group);
     }
 
     class ChatListViewHolder extends RecyclerView.ViewHolder {

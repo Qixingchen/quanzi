@@ -38,6 +38,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by qixingchen on 15/9/3.
  * 管理群用户
+ * todo rx化,更新新的API
  */
 public class GroupUserAdmin {
     private final static String TAG = GroupUserAdmin.class.getSimpleName();
@@ -292,6 +293,9 @@ public class GroupUserAdmin {
                 GroupInviteAns groupInviteAns = (GroupInviteAns) ts;
                 GroupClass groupClass = GroupClass.getGroupByGroupInviteAns(groupInviteAns);
                 GroupList.getInstance().addGroup(groupClass);
+                if (onResult != null) {
+                    onResult.OK();
+                }
             }
 
             @Override
@@ -300,28 +304,10 @@ public class GroupUserAdmin {
                     onResult.error("后台失败" + Message);
                 }
             }
-        }).acceptJoinGroup(groupID, AppStaticValue.getUserID());
-
-        //LC
-        List<String> userIds = new ArrayList<>();
-        userIds.add(AppStaticValue.getUserID());
-        AppStaticValue.getImClient().getConversation(convID).addMembers(userIds, new AVIMConversationCallback() {
-            @Override
-            public void done(AVIMException e) {
-                if (e == null) {
-                    if (onResult != null) {
-                        onResult.OK();
-                    }
-                } else {
-                    Log.w(TAG, "LC addMembers err:" + e.getMessage());
-                    if (onResult != null) {
-                        onResult.error("LC addMembers err:" + e.getMessage());
-                    }
-                }
-            }
-        });
+        }).acceptJoinGroup(groupID, AppStaticValue.getUserID(), convID);
 
         //碰撞圈子
+        // TODO: 15/12/22 加群成功后再获取
         ThemeActs.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {

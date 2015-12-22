@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.tizi.quanzi.ui.chat_list.ChatListActivity">
+    tools:context=".ui.chat_list.ChatListActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

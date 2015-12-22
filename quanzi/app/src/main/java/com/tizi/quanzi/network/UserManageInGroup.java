@@ -43,9 +43,9 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
     /**
      * 同意加入圈子
      */
-    public void acceptJoinGroup(String GroupID, String UserID) {
+    public void acceptJoinGroup(String GroupID, String UserID, String convID) {
 
-        groupMemberSer.acceptGroupInvite(GroupID, UserID).enqueue(new Callback<GroupInviteAns>() {
+        groupMemberSer.acceptGroupInvite(GroupID, UserID, convID).enqueue(new Callback<GroupInviteAns>() {
             @Override
             public void onResponse(retrofit.Response<GroupInviteAns> response, Retrofit retrofit) {
                 myOnResponse(response);

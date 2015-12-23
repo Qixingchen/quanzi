@@ -457,7 +457,20 @@ public class ChatActivity extends BaseActivity {
                     }).findUserByID(PrivateMessPairList.getInstance().getGroupIDByConvID(CONVERSATION_ID));
                     return true;
                 case StaticField.ConvType.BoomGroup:
-                    // TODO: 15/10/13 boom group zone
+                    BoomGroupClass boom = BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
+                    if (boom == null) {
+                        Snackbar.make(view, "出错了", Snackbar.LENGTH_LONG).show();
+                        return true;
+                    }
+                    String groupID;
+                    if (GroupList.getInstance().getGroup(boom.groupId1) == null) {
+                        groupID = boom.groupId1;
+                    } else {
+                        groupID = boom.groupId2;
+                    }
+                    Intent boomIntent = new Intent(this, QuanziZoneActivity.class);
+                    boomIntent.putExtra("groupID", groupID);
+                    startActivity(boomIntent);
                     return true;
                 default:
                     return true;

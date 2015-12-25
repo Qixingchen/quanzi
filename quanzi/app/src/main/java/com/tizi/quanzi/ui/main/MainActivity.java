@@ -99,10 +99,10 @@ public class MainActivity extends BaseActivity {
         int num = PrivateMessPairList.getInstance().getAllUnreadCount()
                 + SystemMessageList.getInstance().getAllUnreadCount();
         if (num != 0) {
-
+            item.setIcon(R.drawable.ic_notifications_24dp);
             item.setTitle("消息(" + num + ")条");
         } else {
-
+            item.setIcon(R.drawable.ic_notifications_none_24dp);
             item.setTitle("消息");
         }
     }

@@ -4,9 +4,10 @@
       tools:context="com.tizi.quanzi.ui.main.MainActivity">
     <item
         android:id="@+id/action_notifi_message"
+        android:icon="@drawable/ic_notifications_none_24dp"
         android:orderInCategory="100"
         android:title="@string/notify_message"
-        app:showAsAction="withText|always"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_scan_qr_code"

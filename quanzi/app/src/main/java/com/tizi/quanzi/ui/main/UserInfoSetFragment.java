@@ -149,7 +149,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     @Override
     protected void initViewsAndSetEvent() {
         Picasso.with(mContext).load(MyUserInfo.getInstance().getUserInfo().getIcon()).fit().into(userFaceImageView);
-        userNameTextView.setText(MyUserInfo.getInstance().getUserInfo().getUserName());
+        //userNameTextView.setText(MyUserInfo.getInstance().getUserInfo().getUserName());
         userSexTextView.setText(getSex(MyUserInfo.getInstance().getUserInfo().getSex()));
         userAgeTextView.setText(MyUserInfo.getInstance().getUserInfo().getBirthday());
         userLocationTextView.setText(MyUserInfo.getInstance().getUserInfo().getArea());
@@ -195,7 +195,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        userNameTextView.setText(input.getText().toString());
+                        //userNameTextView.setText(input.getText().toString());
                         UserInfoSetting.getNewInstance().changeName(input.getText().toString());
                         MyUserInfo.getInstance().getUserInfo().setUserName(input.getText().toString());
                     }

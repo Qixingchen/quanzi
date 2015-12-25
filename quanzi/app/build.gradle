@@ -8,6 +8,8 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
 
+    dataBinding { enabled = true }
+
     defaultConfig {
         applicationId "com.tizi.quanzi"
         minSdkVersion 17
@@ -81,10 +83,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.2.1'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
 
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'android-apt'
 //./gradlew assembleDebug
 // app/build/outputs/dexcount/debug.txt
 
@@ -105,7 +109,7 @@ dependencies {
     compile 'com.android.support:percent:23.1.1'
     compile 'com.android.support:customtabs:23.1.1'
     //gms
-    compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
     //65K
     compile 'com.android.support:multidex:1.0.1'
     //gson
@@ -166,4 +170,6 @@ dependencies {
     //zxing team
     compile 'com.journeyapps:zxing-android-embedded:3.0.3@aar'
     compile 'com.google.zxing:core:3.2.0'
+    //databind
+    apt 'com.android.databinding:compiler:1.1'
 }

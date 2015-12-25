@@ -1,6 +1,11 @@
 package com.tizi.quanzi.gson;
 
+import android.databinding.Bindable;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
+
 import com.google.gson.annotations.SerializedName;
+import com.tizi.quanzi.BR;
 
 import java.util.List;
 
@@ -62,7 +67,7 @@ public class Login extends OnlySuccess {
         this.group = group;
     }
 
-    public static class UserEntity {
+    public static class UserEntity implements Observable {
         @SerializedName("id")
         public String id;
         @SerializedName("birthday")
@@ -79,14 +84,15 @@ public class Login extends OnlySuccess {
         public String groupNum;
         @SerializedName("bg")
         public String bg;
-        @SerializedName("userName")
-        public String userName;
         @SerializedName("account")
         public String account;
         @SerializedName("signature")
         public String signature;
         @SerializedName("mobile")
         public String mobile;
+        @SerializedName("userName")
+        private String userName;
+        private PropertyChangeRegistry pcr = new PropertyChangeRegistry();
 
         public String getId() {
             return id;
@@ -144,12 +150,14 @@ public class Login extends OnlySuccess {
             this.groupNum = groupNum;
         }
 
+        @Bindable
         public String getUserName() {
             return userName;
         }
 
         public void setUserName(String userName) {
             this.userName = userName;
+            pcr.notifyChange(this, BR.userName);
         }
 
         public String getAccount() {
@@ -174,6 +182,26 @@ public class Login extends OnlySuccess {
 
         public void setMobile(String mobile) {
             this.mobile = mobile;
+        }
+
+        /**
+         * Adds a callback to listen for changes to the Observable.
+         *
+         * @param callback The callback to start listening.
+         */
+        @Override
+        public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+            pcr.add(callback);
+        }
+
+        /**
+         * Removes a callback from those listening for changes.
+         *
+         * @param callback The callback that should stop listening.
+         */
+        @Override
+        public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+            pcr.remove(callback);
         }
     }
 

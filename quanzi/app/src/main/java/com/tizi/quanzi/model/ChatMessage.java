@@ -74,7 +74,7 @@ public class ChatMessage implements Serializable {
         Login.UserEntity user = MyUserInfo.getInstance().getUserInfo();
         if (user != null) {
             chatMessage.chatImage = user.icon;
-            chatMessage.userName = user.userName;
+            chatMessage.userName = user.getUserName();
         }
         chatMessage.isSelfSend = true;
         return chatMessage;

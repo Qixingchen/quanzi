@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.tizi.quanzi.gson.Login$UserEntity"/>
+            type="com.tizi.quanzi.gson.Login.UserEntity"/>
     </data>
 
     <FrameLayout
@@ -45,6 +45,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_alignParentEnd="true"
+                        app:imageUrl="@{user.icon}"
                         tools:background="@drawable/face"/>
 
                 </RelativeLayout>
@@ -109,6 +110,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginBottom="3dp"
+                        android:text="@{user.sex==0?@string/boy:@string/girl}"
                         android:textSize="18sp"
                         tools:text="123"/>
 
@@ -141,6 +143,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginBottom="3dp"
+                        android:text="@{user.birthday}"
                         android:textSize="18sp"
                         tools:text="123"/>
 
@@ -183,6 +186,7 @@
                         android:layout_marginBottom="3dp"
                         android:layout_marginEnd="4dp"
                         android:layout_toStartOf="@+id/userLocation"
+                        android:text="@{user.area}"
                         android:textSize="18sp"
                         tools:text="123"/>
 
@@ -220,6 +224,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:text="@{user.signature}"
                         android:textSize="18sp"
                         tools:text="123"/>
 

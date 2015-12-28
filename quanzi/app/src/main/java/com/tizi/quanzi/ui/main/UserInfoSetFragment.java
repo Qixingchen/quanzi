@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -33,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.databinding.FragmentUserInfoSetBinding;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.UserTags;
 import com.tizi.quanzi.log.Log;
@@ -108,6 +110,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         }
     };
+    private FragmentUserInfoSetBinding binding;
     private TagCloudView userTagView;
     private ArrayList<AllTags.TagsEntity> myTag;
 
@@ -119,7 +122,9 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_info_set, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user_info_set, container, false);
+        return binding.getRoot();
+        //return inflater.inflate(R.layout.fragment_user_info_set, container, false);
     }
 
     @Override
@@ -148,12 +153,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void initViewsAndSetEvent() {
-        Picasso.with(mContext).load(MyUserInfo.getInstance().getUserInfo().getIcon()).fit().into(userFaceImageView);
-        //userNameTextView.setText(MyUserInfo.getInstance().getUserInfo().getUserName());
-        userSexTextView.setText(getSex(MyUserInfo.getInstance().getUserInfo().getSex()));
-        userAgeTextView.setText(MyUserInfo.getInstance().getUserInfo().getBirthday());
-        userLocationTextView.setText(MyUserInfo.getInstance().getUserInfo().getArea());
-        userSignTextView.setText(MyUserInfo.getInstance().getUserInfo().getSignature());
+        binding.setUser(MyUserInfo.getInstance().getUserInfo());
+
         GroupSetting.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
             @Override
             public void onOK(Object ts) {
@@ -195,9 +196,9 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //userNameTextView.setText(input.getText().toString());
-                        UserInfoSetting.getNewInstance().changeName(input.getText().toString());
-                        MyUserInfo.getInstance().getUserInfo().setUserName(input.getText().toString());
+                        String name = input.getText().toString();
+                        UserInfoSetting.getNewInstance().changeName(name);
+                        binding.getUser().setUserName(name);
                     }
                 });
                 builder.setTitle("修改昵称").show();

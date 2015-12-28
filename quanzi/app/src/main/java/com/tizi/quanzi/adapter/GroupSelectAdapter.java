@@ -140,7 +140,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                     GroupSignUPThemeAns ans = (GroupSignUPThemeAns) ts;
 
                                     Login.UserEntity my = MyUserInfo.getInstance().getUserInfo();
-                                    String username = my == null ? "" : my.userName;
+                                    String username = my == null ? "" : my.getUserName();
 
                                     boolean selectAfter = !isSignedIn.get(position);
                                     String text;

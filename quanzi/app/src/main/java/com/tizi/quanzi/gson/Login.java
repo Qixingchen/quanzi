@@ -1,11 +1,9 @@
 package com.tizi.quanzi.gson;
 
+import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.databinding.Observable;
-import android.databinding.PropertyChangeRegistry;
 
 import com.google.gson.annotations.SerializedName;
-import com.tizi.quanzi.BR;
 
 import java.util.List;
 
@@ -67,7 +65,7 @@ public class Login extends OnlySuccess {
         this.group = group;
     }
 
-    public static class UserEntity implements Observable {
+    public static class UserEntity extends BaseObservable {
         @SerializedName("id")
         public String id;
         @SerializedName("birthday")
@@ -92,7 +90,6 @@ public class Login extends OnlySuccess {
         public String mobile;
         @SerializedName("userName")
         private String userName;
-        private PropertyChangeRegistry pcr = new PropertyChangeRegistry();
 
         public String getId() {
             return id;
@@ -157,7 +154,7 @@ public class Login extends OnlySuccess {
 
         public void setUserName(String userName) {
             this.userName = userName;
-            pcr.notifyChange(this, BR.userName);
+            notifyPropertyChanged(BR.);
         }
 
         public String getAccount() {
@@ -184,25 +181,6 @@ public class Login extends OnlySuccess {
             this.mobile = mobile;
         }
 
-        /**
-         * Adds a callback to listen for changes to the Observable.
-         *
-         * @param callback The callback to start listening.
-         */
-        @Override
-        public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
-            pcr.add(callback);
-        }
-
-        /**
-         * Removes a callback from those listening for changes.
-         *
-         * @param callback The callback that should stop listening.
-         */
-        @Override
-        public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
-            pcr.remove(callback);
-        }
     }
 
     public static class GroupEntity extends GroupAllInfo.GroupEntity {

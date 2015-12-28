@@ -37,4 +37,7 @@
     <string name="action_comment">评论</string>
     <string name="allow_notice"/>
     <string name="dis_allow_notice">\uD83D\uDD15</string>
+
+    <string name="boy">男</string>
+    <string name="girl">女</string>
 </resources>

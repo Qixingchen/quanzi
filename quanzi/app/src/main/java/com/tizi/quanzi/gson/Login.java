@@ -1,9 +1,11 @@
 package com.tizi.quanzi.gson;
 
-import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.databinding.Observable;
+import android.databinding.PropertyChangeRegistry;
 
 import com.google.gson.annotations.SerializedName;
+import com.tizi.quanzi.BR;
 
 import java.util.List;
 
@@ -65,86 +67,101 @@ public class Login extends OnlySuccess {
         this.group = group;
     }
 
-    public static class UserEntity extends BaseObservable {
+    public static class UserEntity implements Observable {
         @SerializedName("id")
-        public String id;
+        private String id;
         @SerializedName("birthday")
-        public String birthday;
+        private String birthday;
         @SerializedName("icon")
-        public String icon;
+        private String icon;
         @SerializedName("sex")
-        public int sex;
+        private int sex;
         @SerializedName("area")
-        public String area;
+        private String area;
         @SerializedName("token")
-        public String token;
+        private String token;
         @SerializedName("groupNum")
-        public String groupNum;
+        private String groupNum;
         @SerializedName("bg")
-        public String bg;
+        private String bg;
         @SerializedName("account")
-        public String account;
+        private String account;
         @SerializedName("signature")
-        public String signature;
+        private String signature;
         @SerializedName("mobile")
-        public String mobile;
+        private String mobile;
         @SerializedName("userName")
         private String userName;
+        private PropertyChangeRegistry pcr = new PropertyChangeRegistry();
 
+        @Bindable
         public String getId() {
             return id;
         }
 
         public void setId(String id) {
             this.id = id;
+            pcr.notifyChange(this, BR.id);
         }
 
+        @Bindable
         public String getBirthday() {
             return birthday;
         }
 
         public void setBirthday(String birthday) {
             this.birthday = birthday;
+            pcr.notifyChange(this, BR.birthday);
         }
 
+        @Bindable
         public String getIcon() {
             return icon;
         }
 
         public void setIcon(String icon) {
             this.icon = icon;
+            pcr.notifyChange(this, BR.icon);
         }
 
+        @Bindable
         public int getSex() {
             return sex;
         }
 
         public void setSex(int sex) {
             this.sex = sex;
+            pcr.notifyChange(this, BR.sex);
         }
 
+        @Bindable
         public String getArea() {
             return area;
         }
 
         public void setArea(String area) {
             this.area = area;
+            pcr.notifyChange(this, BR.area);
         }
 
+        @Bindable
         public String getToken() {
             return token;
         }
 
         public void setToken(String token) {
             this.token = token;
+            pcr.notifyChange(this, BR.token);
         }
 
+        @Bindable
         public String getGroupNum() {
             return groupNum;
         }
 
         public void setGroupNum(String groupNum) {
             this.groupNum = groupNum;
+            pcr.notifyChange(this, BR.groupNum);
         }
 
         @Bindable
@@ -154,33 +171,68 @@ public class Login extends OnlySuccess {
 
         public void setUserName(String userName) {
             this.userName = userName;
-            notifyPropertyChanged(BR.);
+            pcr.notifyChange(this, BR.userName);
         }
 
+        @Bindable
         public String getAccount() {
             return account;
         }
 
         public void setAccount(String account) {
             this.account = account;
+            pcr.notifyChange(this, BR.account);
         }
 
+        @Bindable
         public String getSignature() {
             return signature;
         }
 
         public void setSignature(String signature) {
             this.signature = signature;
+            pcr.notifyChange(this, BR.signature);
         }
 
+        @Bindable
         public String getMobile() {
             return mobile;
         }
 
         public void setMobile(String mobile) {
             this.mobile = mobile;
+            pcr.notifyChange(this, BR.mobile);
         }
 
+        @Bindable
+        public String getBg() {
+            return bg;
+        }
+
+        public void setBg(String bg) {
+            this.bg = bg;
+            pcr.notifyChange(this, BR.bg);
+        }
+
+        /**
+         * Adds a callback to listen for changes to the Observable.
+         *
+         * @param callback The callback to start listening.
+         */
+        @Override
+        public void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+            pcr.add(callback);
+        }
+
+        /**
+         * Removes a callback from those listening for changes.
+         *
+         * @param callback The callback that should stop listening.
+         */
+        @Override
+        public void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+            pcr.remove(callback);
+        }
     }
 
     public static class GroupEntity extends GroupAllInfo.GroupEntity {

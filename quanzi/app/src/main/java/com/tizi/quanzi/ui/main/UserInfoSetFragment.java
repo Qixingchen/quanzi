@@ -30,12 +30,12 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVFile;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
 import com.tizi.quanzi.databinding.FragmentUserInfoSetBinding;
 import com.tizi.quanzi.gson.AllTags;
+import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.gson.UserTags;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.GetLocationFromBaidu;
@@ -77,6 +77,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
     private RequreForImage requreForImage;
     private ProgressBar progressBar;
     private boolean isGetLocation;
+    private FragmentUserInfoSetBinding binding;
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
@@ -110,7 +111,6 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
         }
     };
-    private FragmentUserInfoSetBinding binding;
     private TagCloudView userTagView;
     private ArrayList<AllTags.TagsEntity> myTag;
 
@@ -176,6 +176,9 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
+
+        final Login.UserEntity user = binding.getUser();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
         LayoutInflater inflater = mActivity.getLayoutInflater();
@@ -198,7 +201,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     public void onClick(DialogInterface dialog, int which) {
                         String name = input.getText().toString();
                         UserInfoSetting.getNewInstance().changeName(name);
-                        binding.getUser().setUserName(name);
+                        user.setUserName(name);
                     }
                 });
                 builder.setTitle("修改昵称").show();
@@ -206,7 +209,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
             case R.id.userSex:
                 final int[] position = {0};
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(mActivity);
-                builder2.setSingleChoiceItems(new String[]{"男", "女"}, MyUserInfo.getInstance().getUserInfo().getSex(),
+                builder2.setSingleChoiceItems(new String[]{"男", "女"}, user.getSex(),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -223,8 +226,7 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UserInfoSetting.getNewInstance().changeSex(String.valueOf(position[0]));
-                        userSexTextView.setText(getSex(position[0]));
-                        MyUserInfo.getInstance().getUserInfo().setSex(position[0]);
+                        user.setSex(position[0]);
                     }
                 }).show();
                 break;
@@ -238,16 +240,13 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                                         > new Date().getTime()) {
                                     Snackbar.make(view, "您不能选择未来的时间", Snackbar.LENGTH_LONG).show();
                                 }
-
-                                userAgeTextView.setText(String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth));
                                 UserInfoSetting.getNewInstance().chagngeBirthday(year, monthOfYear + 1, dayOfMonth);
-                                MyUserInfo.getInstance().getUserInfo()
-                                        .setBirthday(String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth));
+                                user.setBirthday(String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth));
                             }
                         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                                 calendar.get(Calendar.DAY_OF_MONTH));
-                if (MyUserInfo.getInstance().getUserInfo().getBirthday() != null) {
-                    String date[] = MyUserInfo.getInstance().getUserInfo().getBirthday().split("-");
+                if (user.getBirthday() != null) {
+                    String date[] = user.getBirthday().split("-");
                     int year = Integer.valueOf(date[0]);
                     int month = Integer.valueOf(date[1]);
                     int day = Integer.valueOf(date[2]);
@@ -291,9 +290,8 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        userSignTextView.setText(input.getText().toString());
                         UserInfoSetting.getNewInstance().changeSign(input.getText().toString());
-                        MyUserInfo.getInstance().getUserInfo().setSignature(input.getText().toString());
+                        user.setSignature(input.getText().toString());
                     }
                 });
                 builder.setTitle("修改签名").show();
@@ -340,15 +338,14 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
                     @Override
                     public void onResult(String uri, boolean success, String errorMessage, AVFile avFile) {
                         if (success) {
-                            MyUserInfo.getInstance().getUserInfo().setIcon(uri);
-                            Picasso.with(mContext).load(MyUserInfo.getInstance().getUserInfo().getIcon()).fit().into(userFaceImageView);
+                            binding.getUser().setIcon(uri);
                             UserInfoSetting.getNewInstance().changeFace(uri);
                         } else {
                             Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
                         }
                     }
                 }).savePhoto(requreForImage.getCropImage().getPath(),
-                        MyUserInfo.getInstance().getUserInfo().getId() + "face.jpg");
+                        binding.getUser().getId() + "face.jpg");
                 break;
         }
     }
@@ -378,11 +375,10 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         UserInfoSetting.getNewInstance().changeLongitude(Longitude);
         Log.i(TAG, String.format("Latitude:%f,Longitude:%f", Latitude, Longitude));
         UserInfoSetting.getNewInstance().changeArea(area);
-        MyUserInfo.getInstance().getUserInfo().setArea(area);
+        binding.getUser().setArea(area);
         if (!isAttached) {
             return;
         }
-        userLocationTextView.setText(area);
         isGetLocation = true;
         progressBar.setVisibility(View.GONE);
     }
@@ -406,12 +402,5 @@ public class UserInfoSetFragment extends BaseFragment implements View.OnClickLis
         }).getLocation();
     }
 
-    private String getSex(int sex) {
-        if (sex == 0) {
-            return "男";
-        } else {
-            return "女";
-        }
-    }
 }
 

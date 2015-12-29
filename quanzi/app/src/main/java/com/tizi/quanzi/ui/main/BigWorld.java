@@ -140,10 +140,10 @@ public class BigWorld extends BaseFragment {
                     .into(userFace);
         }
 
-        if (userInfo.bg == null) {
+        if (userInfo.getBg() == null) {
             Picasso.with(mContext).load(R.drawable.face).resize(1080, 608).into(userBackground);
         } else {
-            Picasso.with(mContext).load(userInfo.bg).resize(1080, 608).into(userBackground);
+            Picasso.with(mContext).load(userInfo.getBg()).resize(1080, 608).into(userBackground);
         }
 
         userName.setText(userInfo.getUserName());
@@ -286,7 +286,7 @@ public class BigWorld extends BaseFragment {
                     public void onResult(String uri, boolean success, String errorMessage, AVFile avFile) {
                         if (success) {
                             Picasso.with(mContext).load(uri).into(userBackground);
-                            MyUserInfo.getInstance().getUserInfo().bg = uri;
+                            MyUserInfo.getInstance().getUserInfo().setBg(uri);
                             UserInfoSetting.getNewInstance().changeBackground(uri);
                         } else {
                             Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();

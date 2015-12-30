@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ic_selected_tag_background"
     tools:context="com.tizi.quanzi.ui.new_group.GroupTagFragment">
 
     <LinearLayout
@@ -18,8 +19,7 @@
 
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:src="@drawable/face"/>
+                android:layout_height="fill_parent"/>
 
             <include
                 android:id="@+id/tag_selected_1"
@@ -77,6 +77,7 @@
                 android:id="@+id/parent_tag_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/md_white"
                 android:textSize="@dimen/sub_title_text_size"
                 tools:text="哪个是你擅长的?"/>
 
@@ -87,6 +88,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="16dp"
                 android:text="换一批"
+                android:textColor="@color/md_white"
                 android:textSize="@dimen/sub_title_text_size"/>
 
         </RelativeLayout>
@@ -100,6 +102,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_selecting_tag_background"/>
 
             <TextView
                 android:id="@+id/tag_need_select_1"
@@ -116,7 +124,7 @@
                 android:layout_height="48sp"
                 android:layout_alignParentEnd="true"
                 android:gravity="center"
-                android:textColor="@color/md_deep_purple_500"
+                android:textColor="@color/md_deep_purple_300"
                 android:textSize="@dimen/normal_text_size"
                 tools:text="你好么感觉到了"/>
 
@@ -162,6 +170,7 @@
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
             android:text="自定义"
+            android:textColor="@color/md_white"
             android:textSize="@dimen/sub_title_text_size"/>
 
 

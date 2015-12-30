@@ -8,6 +8,10 @@
         <variable
             name="user"
             type="com.tizi.quanzi.gson.Login.UserEntity"/>
+
+        <variable
+            name="vm"
+            type="com.tizi.quanzi.view_model.UserInfoSetFragmentViewModel"/>
     </data>
 
     <FrameLayout
@@ -29,9 +33,9 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/userface"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:onClick="@{vm.userFaceOnClick}">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -41,7 +45,6 @@
                         android:textSize="18sp"/>
 
                     <ImageView
-                        android:id="@+id/user_face_image"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_alignParentEnd="true"
@@ -58,9 +61,9 @@
                     android:background="@color/colorDiv"/>
 
                 <RelativeLayout
-                    android:id="@+id/userName"
                     android:layout_width="fill_parent"
-                    android:layout_height="48dp">
+                    android:layout_height="48dp"
+                    android:onClick="@{vm.userNameOnClick}">
 
                     <TextView
 
@@ -71,7 +74,6 @@
                         android:textSize="18sp"/>
 
                     <TextView
-                        android:id="@+id/userNameTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -91,9 +93,9 @@
                     android:background="@color/colorDiv"/>
 
                 <RelativeLayout
-                    android:id="@+id/userSex"
                     android:layout_width="fill_parent"
-                    android:layout_height="48dp">
+                    android:layout_height="48dp"
+                    android:onClick="@{vm.userSexOnClick}">
 
                     <TextView
 
@@ -104,7 +106,6 @@
                         android:textSize="18sp"/>
 
                     <TextView
-                        android:id="@+id/userSexTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -124,12 +125,11 @@
                     android:background="@color/colorDiv"/>
 
                 <RelativeLayout
-                    android:id="@+id/userAge"
                     android:layout_width="fill_parent"
-                    android:layout_height="48dp">
+                    android:layout_height="48dp"
+                    android:onClick="@{vm.userAgeOnClick}">
 
                     <TextView
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -137,7 +137,6 @@
                         android:textSize="18sp"/>
 
                     <TextView
-                        android:id="@+id/userAgeTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -161,7 +160,6 @@
                     android:layout_height="48dp">
 
                     <TextView
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -195,6 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:onClick="@{vm.userLocationOnClick}"
                         android:text="获取"/>
 
                 </RelativeLayout>
@@ -207,9 +206,9 @@
                     android:background="@color/colorDiv"/>
 
                 <RelativeLayout
-                    android:id="@+id/userSign"
                     android:layout_width="fill_parent"
-                    android:layout_height="48dp">
+                    android:layout_height="48dp"
+                    android:onClick="@{vm.userSignOnClick}">
 
                     <TextView
                         android:layout_width="wrap_content"

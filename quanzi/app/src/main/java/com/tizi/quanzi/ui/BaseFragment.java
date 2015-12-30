@@ -28,15 +28,18 @@ import rx.subscriptions.CompositeSubscription;
  */
 public abstract class BaseFragment extends Fragment {
     protected final String TAG = this.getClass().getSimpleName();
+    public boolean isAttached = false;
     protected Activity mActivity;
     protected Context mContext;
     protected Fragment mFragment;
     protected View view;
-    protected boolean isAttached = false;
-
     protected List<Integer> menus = new ArrayList<>();
 
     private CompositeSubscription mCompositeSubscription;
+
+    public BaseActivity getBaseActivity() {
+        return (BaseActivity) mActivity;
+    }
 
     public abstract View onCreateView(LayoutInflater inflater, ViewGroup container,
                                       Bundle savedInstanceState);

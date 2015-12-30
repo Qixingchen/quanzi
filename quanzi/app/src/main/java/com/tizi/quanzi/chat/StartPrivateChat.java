@@ -35,7 +35,7 @@ public class StartPrivateChat {
         members.add(userID);
 
         AVIMConversationQuery query = AppStaticValue.getImClient().getQuery();
-        query.whereEqualTo("attr.type", StaticField.ConvType.twoPerson);
+        query.whereEqualTo("attr.type", StaticField.ConvType.TWO_PERSON);
         query.withMembers(members);
         query.whereSizeEqual("m", isSelf ? 1 : 2);
         query.findInBackground(new AVIMConversationQueryCallback() {

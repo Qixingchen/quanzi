@@ -83,7 +83,7 @@ public class NewGroupStep2Fragment extends BaseFragment {
                 new InviteListAdapter.OnAddUser() {
                     @Override
                     public void add(String userID) {
-                        final String convID = GroupList.getInstance().getGroup(groupID).convId;
+                        final String convID = GroupList.getInstance().getGroup(groupID).getConvId();
 
                         GroupUserAdmin.getInstance(mContext)
                                 .setOnResult(new GroupUserAdmin.OnResult() {

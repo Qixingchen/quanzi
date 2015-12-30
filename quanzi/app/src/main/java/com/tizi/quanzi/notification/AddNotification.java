@@ -299,11 +299,11 @@ public class AddNotification {
                     return groupMessage(chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
                             groupID, chatMessage.create_time, chatMessage.userName);
 
-                case StaticField.ConvType.twoPerson:
+                case StaticField.ConvType.TWO_PERSON:
                     return priMessage(chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
                             chatMessage.sender, chatMessage.create_time, chatMessage.userName);
 
-                case StaticField.ConvType.BoomGroup:
+                case StaticField.ConvType.BOOM_GROUP:
                     groupID = BoomGroupList.getInstance().getGroupIDByConvID(chatMessage.ConversationId);
                     if (groupID.equals("")) {
                         return null;

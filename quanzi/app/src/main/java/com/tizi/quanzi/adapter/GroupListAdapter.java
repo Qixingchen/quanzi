@@ -109,10 +109,10 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                     myViewHolder.unreadCountTextview.setText(String.valueOf(group.getUnreadCount()));
                 }
                 myViewHolder.setGroupName(group);
-                myViewHolder.lastMessTextview.setText(group.lastMess);
-                myViewHolder.lastTimeTextview.setText(FriendTime.FriendlyDate(group.lastMessTime));
+                myViewHolder.lastMessTextview.setText(group.getLastMess());
+                myViewHolder.lastTimeTextview.setText(FriendTime.FriendlyDate(group.getLastMessTime()));
                 Picasso.with(mContext)
-                        .load(group.Face)
+                        .load(group.getFace())
                         .resizeDimen(R.dimen.group_face, R.dimen.group_face)
                         .into(myViewHolder.groupFaceImageView);
 
@@ -121,7 +121,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                     @Override
                     public boolean onLongClick(View v) {
 
-                        final boolean needNotifi = AppStaticValue.getNeedNotifi(group.convId);
+                        final boolean needNotifi = AppStaticValue.getNeedNotifi(group.getConvId());
                         String noticeName;
                         if (needNotifi) {
                             noticeName = "静音";
@@ -132,13 +132,13 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                         String[] items = {noticeName, "清空记录"};
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                        builder.setTitle(group.Name).setItems(items, new DialogInterface.OnClickListener() {
+                        builder.setTitle(group.getName()).setItems(items, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        AppStaticValue.setNeedNotifi(group.convId, !needNotifi);
-                                        String name = group.Name;
+                                        AppStaticValue.setNeedNotifi(group.getConvId(), !needNotifi);
+                                        String name = group.getName();
                                         if (needNotifi) {
                                             name += mContext.getString(R.string.dis_allow_notice);
                                         } else {
@@ -152,9 +152,9 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                                         builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                DBAct.getInstance().deleteAllMessage(group.convId);
-                                                group.lastMess = "";
-                                                group.lastMessTime = 0;
+                                                DBAct.getInstance().deleteAllMessage(group.getConvId());
+                                                group.setLastMess("");
+                                                group.setLastMessTime(0);
                                                 notifyItemChanged(position);
                                             }
                                         });
@@ -242,8 +242,8 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
             Observable.create(new Observable.OnSubscribe<String>() {
                 @Override
                 public void call(Subscriber<? super String> subscriber) {
-                    boolean needNotifi = AppStaticValue.getNeedNotifi(groupClass.convId);
-                    String name = groupClass.Name;
+                    boolean needNotifi = AppStaticValue.getNeedNotifi(groupClass.getConvId());
+                    String name = groupClass.getName();
                     if (needNotifi) {
                         name += itemView.getContext().getString(R.string.allow_notice);
                     } else {

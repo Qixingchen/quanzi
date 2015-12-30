@@ -71,7 +71,7 @@ public class GroupUserAdmin {
      * @param userID  成员ID
      */
     public void addMember(String convID, final String groupID, String userID) {
-        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.twoPerson);
+        Map<String, Object> attr = SendMessage.setMessAttr(groupID, StaticField.ConvType.TWO_PERSON);
         attr = SendMessage.setSysMessAttr(attr, convID,
                 StaticField.SystemMessAttrName.systemFlag.invitation, "");
 
@@ -108,7 +108,7 @@ public class GroupUserAdmin {
                         }
                 ).sendTextMessage(avimConversation.getConversationId(),
                         MyUserInfo.getInstance().getUserInfo().getUserName() + "邀请你来加入圈子" +
-                                GroupList.getInstance().getGroup(groupID).Name
+                                GroupList.getInstance().getGroup(groupID).getName()
                         , finalAttr);
             }
         });
@@ -211,7 +211,7 @@ public class GroupUserAdmin {
                     @Override
                     public Observable<SendMessage.RXSendOK> call(String SendConvID) {
                         Map<String, Object> attr = SendMessage.setMessAttr(groupID,
-                                StaticField.ConvType.twoPerson);
+                                StaticField.ConvType.TWO_PERSON);
                         attr = SendMessage.setSysMessAttr(attr, convID,
                                 StaticField.SystemMessAttrName.systemFlag.kicked, "");
                         if (GroupAllInfo[0].group.createUser.equals(AppStaticValue.getUserID())) {

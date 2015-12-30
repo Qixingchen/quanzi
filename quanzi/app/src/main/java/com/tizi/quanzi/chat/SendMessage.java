@@ -291,11 +291,11 @@ public class SendMessage {
                 GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                         ChatMessage.getContentText(chatMessage), chatMessage.create_time);
             }
-            if (chatMessage.ChatBothUserType == StaticField.ConvType.twoPerson) {
+            if (chatMessage.ChatBothUserType == StaticField.ConvType.TWO_PERSON) {
                 PrivateMessPairList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                         ChatMessage.getContentText(chatMessage), chatMessage.create_time);
             }
-            if (chatMessage.ChatBothUserType == StaticField.ConvType.BoomGroup) {
+            if (chatMessage.ChatBothUserType == StaticField.ConvType.BOOM_GROUP) {
                 BoomGroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                         ChatMessage.getContentText(chatMessage), chatMessage.create_time);
             }
@@ -334,11 +334,11 @@ public class SendMessage {
             GroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                     ChatMessage.getContentText(chatMessage), chatMessage.create_time);
         }
-        if (chatMessage.ChatBothUserType == StaticField.ConvType.twoPerson) {
+        if (chatMessage.ChatBothUserType == StaticField.ConvType.TWO_PERSON) {
             PrivateMessPairList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                     ChatMessage.getContentText(chatMessage), chatMessage.create_time);
         }
-        if (chatMessage.ChatBothUserType == StaticField.ConvType.BoomGroup) {
+        if (chatMessage.ChatBothUserType == StaticField.ConvType.BOOM_GROUP) {
             BoomGroupList.getInstance().updateGroupLastMess(CONVERSATION_ID,
                     ChatMessage.getContentText(chatMessage), chatMessage.create_time);
         }

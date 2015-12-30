@@ -152,12 +152,12 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                     List<BoomGroupClass> booms = BoomGroupClass.getBoomGroupListFromBoomGroupGson(boomGroup.groupmatch, themeID);
 
                     for (BoomGroupClass boom : booms) {
-                        ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(boom.convId);
+                        ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(boom.getConvId());
                         if (chatMessage != null) {
-                            boom.lastMessTime = chatMessage.create_time;
-                            boom.lastMess = ChatMessage.getContentText(chatMessage);
+                            boom.setLastMessTime(chatMessage.create_time);
+                            boom.setLastMess(ChatMessage.getContentText(chatMessage));
                         }
-                        if (BoomGroupList.getInstance().getGroup(boom.ID) == null) {
+                        if (BoomGroupList.getInstance().getGroup(boom.getID()) == null) {
                             BoomGroupList.getInstance().addGroup(boom);
                         }
                     }
@@ -167,8 +167,8 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                         @Override
                         public void clickBoomGroup(BoomGroupClass boomGroup) {
                             Intent chatmess = new Intent(mActivity, ChatActivity.class);
-                            chatmess.putExtra("chatType", StaticField.ConvType.BoomGroup);
-                            chatmess.putExtra("conversation", boomGroup.convId);
+                            chatmess.putExtra("chatType", StaticField.ConvType.BOOM_GROUP);
+                            chatmess.putExtra("conversation", boomGroup.getConvId());
                             mActivity.startActivity(chatmess);
                         }
                     });

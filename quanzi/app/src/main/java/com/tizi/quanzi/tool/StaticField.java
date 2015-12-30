@@ -37,9 +37,9 @@ public class StaticField {
 
     /*聊天室类型*/
     public static class ConvType {
-        public final static int twoPerson = 0;
+        public final static int TWO_PERSON = 0;
         public final static int GROUP = 1;
-        public final static int BoomGroup = 2;
+        public final static int BOOM_GROUP = 2;
     }
 
     /*聊天信息附带参数字段*/

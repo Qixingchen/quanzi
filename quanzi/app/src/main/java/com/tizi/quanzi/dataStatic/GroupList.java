@@ -62,10 +62,10 @@ public class GroupList extends ConvGroupAbsList<GroupClass> {
                 getGroupArrayListByEntityList(groupEntityList);
 
         for (GroupClass groupClass : groupClassArrayList) {
-            ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(groupClass.convId);
+            ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(groupClass.getConvId());
             if (chatMessage != null) {
-                groupClass.lastMessTime = chatMessage.create_time;
-                groupClass.lastMess = ChatMessage.getContentText(chatMessage);
+                groupClass.setLastMessTime(chatMessage.create_time);
+                groupClass.setLastMess(ChatMessage.getContentText(chatMessage));
             }
         }
 

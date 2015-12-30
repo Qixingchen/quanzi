@@ -30,14 +30,14 @@ public class SystemMessagePair extends ConvGroupAbs implements Serializable {
      */
     public static SystemMessagePair SysMessPairFromSystemMess(SystemMessage systemMessage) {
         SystemMessagePair systemMessagePair = new SystemMessagePair();
-        systemMessagePair.Type = StaticField.PrivateMessOrSysMess.SysMess;
-        systemMessagePair.Name = systemMessage.user_name;
-        systemMessagePair.Face = systemMessage.user_icon;
-        systemMessagePair.ID = systemMessage.getId();
-        systemMessagePair.convId = systemMessage.getConvid();
+        systemMessagePair.setType(StaticField.PrivateMessOrSysMess.SysMess);
+        systemMessagePair.setName(systemMessage.user_name);
+        systemMessagePair.setFace(systemMessage.user_icon);
+        systemMessagePair.setID(systemMessage.getId());
+        systemMessagePair.setConvId(systemMessage.getConvid());
         systemMessagePair.systemMessage = systemMessage;
-        systemMessagePair.lastMess = systemMessage.getContent();
-        systemMessagePair.lastMessTime = systemMessage.create_time;
+        systemMessagePair.setLastMess(systemMessage.getContent());
+        systemMessagePair.setLastMessTime(systemMessage.create_time);
         if (systemMessage.getStatus() == StaticField.SystemMessAttrName.statueCode.complete) {
             systemMessage.setIsread(true);
         }

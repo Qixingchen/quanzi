@@ -200,7 +200,7 @@ public class UserZoneActivityFragment extends BaseFragment {
         }
         Intent chat = new Intent(getActivity(), ChatActivity.class);
         chat.putExtra("conversation", convID);
-        chat.putExtra("chatType", StaticField.ConvType.twoPerson);
+        chat.putExtra("chatType", StaticField.ConvType.TWO_PERSON);
         startActivity(chat);
     }
 }

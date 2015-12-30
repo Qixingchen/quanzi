@@ -98,7 +98,7 @@ public class QuanziSetFragment extends BaseFragment {
             Snackbar.make(view, "圈子不存在", Snackbar.LENGTH_LONG).show();
             return;
         }
-        quanziName.setText(group.Name);
+        quanziName.setText(group.getName());
         nameView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +110,7 @@ public class QuanziSetFragment extends BaseFragment {
                 final EditText input = (EditText) layout.findViewById(R.id.dialog_edit_text);
 
                 input.setHint("圈子名称");
-                input.setText(group.Name);
+                input.setText(group.getName());
                 builder.setTitle("更改圈子名称").setView(layout)
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
@@ -120,21 +120,21 @@ public class QuanziSetFragment extends BaseFragment {
 
                                 //LC发送广播
                                 SendMessage.getNewInstance().sendTextMessage(
-                                        group.convId, name,
+                                        group.getConvId(), name,
                                         SendMessage.setSysMessAttr(
-                                                SendMessage.setMessAttr(group.ID,
+                                                SendMessage.setMessAttr(group.getID(),
                                                         StaticField.ConvType.GROUP),
-                                                group.convId,
+                                                group.getConvId(),
                                                 StaticField.SystemMessAttrName.systemFlag.group_change_name,
                                                 ""));
 
                                 //GroupList更新
-                                group.Name = name;
+                                group.setName(name);
                                 GroupList.getInstance().updateGroup(group);
                                 quanziName.setText(name);
 
                                 //后台更新
-                                GroupSetting.getNewInstance().ChangeName(group.ID, group.Name);
+                                GroupSetting.getNewInstance().ChangeName(group.getID(), group.getName());
 
                             }
                         }).setNegativeButton("取消", null).show();
@@ -164,7 +164,7 @@ public class QuanziSetFragment extends BaseFragment {
                                 quanziSign.setText(sign);
 
                                 //后台更新
-                                GroupSetting.getNewInstance().ChangeSign(group.ID, group.Notice);
+                                GroupSetting.getNewInstance().ChangeSign(group.getID(), group.Notice);
 
                             }
                         }).setNegativeButton("取消", null).show();
@@ -205,7 +205,7 @@ public class QuanziSetFragment extends BaseFragment {
                                             new GroupUserAdmin.OnResult() {
                                                 @Override
                                                 public void OK() {
-                                                    GroupList.getInstance().deleteGroup(groupClass.ID);
+                                                    GroupList.getInstance().deleteGroup(groupClass.getID());
                                                     returnToMainActivity();
                                                 }
 
@@ -214,7 +214,7 @@ public class QuanziSetFragment extends BaseFragment {
 
                                                 }
                                             }
-                                    ).deleteGroup(groupClass.convId, groupClass.ID);
+                                    ).deleteGroup(groupClass.getConvId(), groupClass.getID());
                                 }
                             });
                             builder.setNegativeButton("取消", null);
@@ -224,11 +224,11 @@ public class QuanziSetFragment extends BaseFragment {
                             builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    GroupUserAdmin.getInstance(mContext).deleteMember(groupClass.convId, groupClass.ID, AppStaticValue.getUserID())
+                                    GroupUserAdmin.getInstance(mContext).deleteMember(groupClass.getConvId(), groupClass.getID(), AppStaticValue.getUserID())
                                             .subscribe(new Action1<Object>() {
                                                 @Override
                                                 public void call(Object o) {
-                                                    GroupList.getInstance().deleteGroup(groupClass.ID);
+                                                    GroupList.getInstance().deleteGroup(groupClass.getID());
                                                     returnToMainActivity();
                                                 }
                                             }, new Action1<Throwable>() {
@@ -251,7 +251,7 @@ public class QuanziSetFragment extends BaseFragment {
         qrcodeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QrCodeFragment qrCodeFragment = QrCodeFragment.newInstance(group.ID, group.Name, group.Face);
+                QrCodeFragment qrCodeFragment = QrCodeFragment.newInstance(group.getID(), group.getName(), group.getFace());
                 getFragmentManager().beginTransaction()
                         .replace(R.id.fragment, qrCodeFragment)
                         .addToBackStack("qrCodeFragment").commit();

@@ -40,7 +40,7 @@ public class NotifiReceiver extends BroadcastReceiver {
                 conversationIntent.putExtra("conversation", Conversation);
                 String groupID = GroupList.getInstance().getGroupIDByConvID(Conversation);
                 if (groupID.compareTo("") == 0) {
-                    conversationIntent.putExtra("chatType", StaticField.ConvType.twoPerson);
+                    conversationIntent.putExtra("chatType", StaticField.ConvType.TWO_PERSON);
                 } else {
                     conversationIntent.putExtra("chatType", StaticField.ConvType.GROUP);
                 }

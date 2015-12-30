@@ -94,10 +94,10 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (PrivateViewHolder.class.isInstance(holder)) {
             final PrivateViewHolder privateVH = (PrivateViewHolder) holder;
             final PrivateMessPair privateMessPair = privateMessPairs.get(position);
-            Picasso.with(mContext).load(privateMessPair.Face).fit().into(privateVH.mUserFaceImage);
-            privateVH.mUserNameText.setText(privateMessPair.Name);
-            privateVH.mMessTextView.setText(privateMessPair.lastMess);
-            privateVH.lastMessTimeTextView.setText(FriendTime.FriendlyDate(privateMessPair.lastMessTime));
+            Picasso.with(mContext).load(privateMessPair.getFace()).fit().into(privateVH.mUserFaceImage);
+            privateVH.mUserNameText.setText(privateMessPair.getName());
+            privateVH.mMessTextView.setText(privateMessPair.getLastMess());
+            privateVH.lastMessTimeTextView.setText(FriendTime.FriendlyDate(privateMessPair.getLastMessTime()));
             if (privateMessPair.getUnreadCount() != 0) {
                 privateVH.mMessTextView.setTypeface(Typeface.DEFAULT_BOLD);
                 privateVH.mMessTextView.setTextColor(mContext.getResources().getColor(R.color.md_grey_1000));
@@ -127,7 +127,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    DBAct.getInstance().deletePriMessPair(privateMessPair.ID);
+                                    DBAct.getInstance().deletePriMessPair(privateMessPair.getID());
                                     privateMessPairs.remove(privateMessPair);
                                     notifyItemRemoved(position);
                                 }

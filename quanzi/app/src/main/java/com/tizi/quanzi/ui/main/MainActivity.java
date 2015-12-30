@@ -276,7 +276,7 @@ public class MainActivity extends BaseActivity {
                     String groupID = contents.substring(last + 1);
                     boolean forjoin = true;
                     for (Object group : GroupList.getInstance().getGroupList()) {
-                        if (((GroupClass) group).ID.equals(groupID)) {
+                        if (((GroupClass) group).getID().equals(groupID)) {
                             forjoin = false;
                             break;
                         }

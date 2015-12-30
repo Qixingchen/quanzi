@@ -39,11 +39,11 @@ public class BoomGroupClass extends ConvGroupAbs {
 
     public static BoomGroupClass getBoomGroupFromBoomGroupGson(BoomGroup.GroupmatchEntity boomGroup, String themeID) {
         BoomGroupClass temp = new BoomGroupClass();
-        temp.convId = boomGroup.convId;
-        temp.Type = StaticField.ConvType.BoomGroup;
-        temp.ID = boomGroup.id;
-        temp.lastMess = "";
-        temp.lastMessTime = 0;
+        temp.setConvId(boomGroup.convId);
+        temp.setType(StaticField.ConvType.BOOM_GROUP);
+        temp.setID(boomGroup.id);
+        temp.setLastMess("");
+        temp.setLastMessTime(0);
         temp.groupId1 = boomGroup.groupId1;
         temp.groupId2 = boomGroup.groupId2;
         temp.groupName1 = boomGroup.groupName1;

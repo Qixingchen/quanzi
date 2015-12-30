@@ -43,7 +43,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
             groupList.addAll(newGroupList);
         }
         for (T t : groupList) {
-            setUnreadMessage(t.convId, t.ID);
+            setUnreadMessage(t.getConvId(), t.getID());
             DBAct.getInstance().addOrReplaceChatGroup(t);
         }
 
@@ -72,10 +72,10 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         }
         synchronized (groupList) {
             for (T group : groupList) {
-                if (group.ID == null) {
+                if (group.getID() == null) {
                     return null;
                 }
-                if (group.ID.compareTo(id) == 0) {
+                if (group.getID().compareTo(id) == 0) {
                     return group;
                 }
             }
@@ -90,8 +90,8 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     public String getGroupIDByConvID(String convID) {
         synchronized (groupList) {
             for (T group : groupList) {
-                if (group.convId.compareTo(convID) == 0) {
-                    return group.ID;
+                if (group.getConvId().compareTo(convID) == 0) {
+                    return group.getID();
                 }
             }
         }
@@ -105,7 +105,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     public T getGroupByConvID(String convID) {
         synchronized (groupList) {
             for (T group : groupList) {
-                if (group.convId != null && group.convId.equals(convID)) {
+                if (group.getConvId() != null && group.getConvId().equals(convID)) {
                     return group;
                 }
             }
@@ -117,13 +117,13 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
      * 添加一个组,如果同 ID 已存在，则忽略
      */
     public void addGroup(T group) {
-        if (getGroup(group.ID) != null) {
+        if (getGroup(group.getID()) != null) {
             return;
         }
-        setUnreadMessage(group.convId, group.ID);
+        setUnreadMessage(group.getConvId(), group.getID());
         synchronized (groupList) {
             groupList.add(group);
-            setUnreadMessage(group.convId, group.ID);
+            setUnreadMessage(group.getConvId(), group.getID());
         }
         sort();
         noticeAllCallBack();
@@ -136,7 +136,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     public boolean deleteGroup(String groupID) {
         synchronized (groupList) {
             for (T groupclass : groupList) {
-                if (groupclass.ID.compareTo(groupID) == 0) {
+                if (groupclass.getID().compareTo(groupID) == 0) {
                     groupList.remove(groupclass);
                     noticeAllCallBack();
                     return true;
@@ -152,7 +152,7 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
     public void updateGroup(T group) {
         synchronized (groupList) {
             for (T groupclass : groupList) {
-                if (groupclass.ID.compareTo(group.ID) == 0) {
+                if (groupclass.getID().compareTo(group.getID()) == 0) {
                     groupList.remove(groupclass);
                     groupList.add(group);
                     break;
@@ -171,16 +171,16 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
             Collections.sort(groupList, new Comparator<T>() {
                 @Override
                 public int compare(T lhs, T rhs) {
-                    if (lhs.lastMessTime == 0 && rhs.lastMessTime == 0) {
+                    if (lhs.getLastMessTime() == 0 && rhs.getLastMessTime() == 0) {
                         return 0;
                     }
-                    if (lhs.lastMessTime == 0) {
+                    if (lhs.getLastMessTime() == 0) {
                         return Integer.MAX_VALUE;
                     }
-                    if (rhs.lastMessTime == 0) {
+                    if (rhs.getLastMessTime() == 0) {
                         return Integer.MIN_VALUE;
                     }
-                    return (int) -(lhs.lastMessTime - rhs.lastMessTime);
+                    return (int) -(lhs.getLastMessTime() - rhs.getLastMessTime());
                 }
             });
         }
@@ -194,8 +194,8 @@ public abstract class ConvGroupAbsList<T extends ConvGroupAbs> {
         synchronized (groupList) {
             T group = getGroupByConvID(convID);
             if (group != null) {
-                group.lastMess = lastMess;
-                group.lastMessTime = lastTime;
+                group.setLastMess(lastMess);
+                group.setLastMessTime(lastTime);
                 isUpdated = true;
             }
         }

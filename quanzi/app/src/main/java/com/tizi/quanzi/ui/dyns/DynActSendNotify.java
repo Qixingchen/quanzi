@@ -141,7 +141,7 @@ public class DynActSendNotify {
     (String reply_comment_id, String reply_comment,
      String reply_userid, String reply_username, String dynid, String dyn_content, String dyn_icon,
      String dyn_create_userid, String dyn_create_username, boolean isUser) {
-        Map<String, Object> attrs = SendMessage.setMessAttr("", StaticField.ConvType.twoPerson);
+        Map<String, Object> attrs = SendMessage.setMessAttr("", StaticField.ConvType.TWO_PERSON);
         attrs = SendMessage.setSysMessAttr(attrs, null, StaticField.SystemMessAttrName.systemFlag.dyn_comment, "");
 
         attrs.put("reply_comment_id", reply_comment_id);

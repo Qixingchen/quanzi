@@ -18,7 +18,6 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.facebook.stetho.Stetho;
-import com.squareup.leakcanary.LeakCanary;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.BuildConfig;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
@@ -54,7 +53,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         appStaticValue = new AppStaticValue();
         //泄露监视器
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            LeakCanary.install(this);
+            //LeakCanary.install(this);
         }
 
         registerActivityLifecycleCallbacks(this);

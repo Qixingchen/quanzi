@@ -5,6 +5,7 @@ import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.Login;
+import com.tizi.quanzi.tool.StaticField;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,21 +51,21 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
     public static GroupClass getGroupByEntity(Login.GroupEntity groupEntity) {
         GroupClass groupClass = new GroupClass();
         GroupClass groupOld = (GroupClass) GroupList.getInstance().getGroup(groupEntity.id);
-        groupClass.ID = groupEntity.id;
-        groupClass.Name = groupEntity.groupName;
-        groupClass.Face = groupEntity.icon;
-        groupClass.Type = groupEntity.type;
+        groupClass.setID(groupEntity.id);
+        groupClass.setName(groupEntity.groupName);
+        groupClass.setFace(groupEntity.icon);
+        groupClass.setType(StaticField.ConvType.GROUP);
         groupClass.Notice = groupEntity.notice;
-        groupClass.convId = groupEntity.convId;
+        groupClass.setConvId(groupEntity.convId);
         groupClass.background = groupEntity.bg;
         groupClass.validation = (groupEntity.validation.compareTo("Y") == 0);
         groupClass.createUser = groupEntity.createUser;
         groupClass.memlist = groupEntity.memlist;
         if (groupOld != null) {
-            groupClass.lastMess = groupOld.lastMess;
-            groupClass.lastMessTime = groupOld.lastMessTime;
+            groupClass.setLastMess(groupOld.getLastMess());
+            groupClass.setLastMessTime(groupOld.getLastMessTime());
         } else {
-            groupClass.lastMessTime = 0;
+            groupClass.setLastMessTime(0);
         }
 
         return groupClass;
@@ -80,16 +81,16 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
     public static GroupClass getGroupByGroupInviteAns(GroupInviteAns groupInviteAns) {
         GroupClass groupClass = new GroupClass();
         Login.GroupEntity groupans = groupInviteAns.groups.get(0);
-        groupClass.ID = groupans.id;
-        groupClass.Name = groupans.groupName;
-        groupClass.Face = groupans.icon;
-        groupClass.Type = groupans.type;
+        groupClass.setID(groupans.id);
+        groupClass.setName(groupans.groupName);
+        groupClass.setFace(groupans.icon);
+        groupClass.setType(StaticField.ConvType.GROUP);
         groupClass.Notice = groupans.notice;
-        groupClass.convId = groupans.convId;
+        groupClass.setConvId(groupans.convId);
         groupClass.validation = true;
         groupClass.createUser = groupans.createUser;
-        groupClass.lastMessTime = 0;
-        groupClass.lastMess = "";
+        groupClass.setLastMessTime(0);
+        groupClass.setLastMess("");
         groupClass.background = groupans.bg;
         return groupClass;
     }

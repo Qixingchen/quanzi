@@ -270,7 +270,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
         final InviteListAdapter.OnAddUser onAddUser = new InviteListAdapter.OnAddUser() {
             @Override
             public void add(String userID) {
-                final String convID = GroupList.getInstance().getGroup(groupid).convId;
+                final String convID = GroupList.getInstance().getGroup(groupid).getConvId();
 
                 GroupUserAdmin.getInstance(mContext)
                         .setOnResult(new GroupUserAdmin.OnResult() {
@@ -341,7 +341,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.Grou
                 .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String ConvID = GroupList.getInstance().getGroup(groupID).convId;
+                        String ConvID = GroupList.getInstance().getGroup(groupID).getConvId();
                         GroupUserAdmin.getInstance(mContext).deleteMember(ConvID, groupID, userID)
                                 .subscribe(new Action1<Object>() {
                                     @Override

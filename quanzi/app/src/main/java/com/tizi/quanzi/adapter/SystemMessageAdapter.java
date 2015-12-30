@@ -44,7 +44,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         @Override
         public int compare(SystemMessagePair o1, SystemMessagePair o2) {
             if (!o1.systemMessage.isread && !o2.systemMessage.isread) {
-                return (int) (o2.lastMessTime / 1000L - o1.lastMessTime / 1000L);
+                return (int) (o2.getLastMessTime() / 1000L - o1.getLastMessTime() / 1000L);
             }
             if (!o1.systemMessage.isread) {
                 return -1;
@@ -52,7 +52,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
             if (!o2.systemMessage.isread) {
                 return 1;
             }
-            return (int) (o2.lastMessTime / 1000L - o1.lastMessTime / 1000L);
+            return (int) (o2.getLastMessTime() / 1000L - o1.getLastMessTime() / 1000L);
         }
 
         @Override
@@ -82,10 +82,10 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
 
         @Override
         public boolean areItemsTheSame(SystemMessagePair item1, SystemMessagePair item2) {
-            if (item1.ID == null) {
+            if (item1.getID() == null) {
                 return false;
             }
-            return item1.ID.equals(item2.ID);
+            return item1.getID().equals(item2.getID());
         }
     });
     private Context mContext;

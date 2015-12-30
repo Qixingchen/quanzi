@@ -3,7 +3,9 @@ package com.tizi.quanzi.tool;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -26,5 +28,15 @@ public class BindingHelper {
     @BindingAdapter({"bind:imageUrl"})
     public static void loadImage(ImageView view, String url) {
         Picasso.with(view.getContext()).load(url).fit().into(view);
+    }
+
+    @BindingAdapter({"bind:lastMessTime"})
+    public static void setLastTime(TextView textView, long lastMessTine) {
+        if (lastMessTine == 0) {
+            textView.setVisibility(View.GONE);
+        } else {
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(FriendTime.FriendlyDate(lastMessTine));
+        }
     }
 }

@@ -604,13 +604,13 @@ public class DBAct {
      */
     public void addOrReplacePriMessPair(PrivateMessPair privateMessPair) {
 
-        if (privateMessPair.ID.compareTo(AppStaticValue.getUserID()) == 0) {
+        if (privateMessPair.getID().compareTo(AppStaticValue.getUserID()) == 0) {
             Log.e(TAG, "添加了自己作为聊天群!");
             return;
         }
 
         ContentValues content = new ContentValues();
-        content.put(DataBaseHelper.privateMessGroupSQLNmae.id, privateMessPair.ID);
+        content.put(DataBaseHelper.privateMessGroupSQLNmae.id, privateMessPair.getID());
         content.put(DataBaseHelper.privateMessGroupSQLNmae.Serializable,
                 SerializedObjectFormat.getSerializedObject(privateMessPair));
         db.replace(DataBaseHelper.privateMessGroupSQLNmae.TableName, null, content);
@@ -626,8 +626,8 @@ public class DBAct {
         }
 
         ContentValues content = new ContentValues();
-        content.put(DataBaseHelper.chatGroupSQLNmae.id, group.ID);
-        content.put(DataBaseHelper.chatGroupSQLNmae.type, group.Type);
+        content.put(DataBaseHelper.chatGroupSQLNmae.id, group.getID());
+        content.put(DataBaseHelper.chatGroupSQLNmae.type, group.getType());
         content.put(DataBaseHelper.chatGroupSQLNmae.Serializable,
                 SerializedObjectFormat.getSerializedObject(group));
         db.replace(DataBaseHelper.chatGroupSQLNmae.TableName, null, content);

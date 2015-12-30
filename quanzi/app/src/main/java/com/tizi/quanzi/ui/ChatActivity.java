@@ -440,7 +440,7 @@ public class ChatActivity extends BaseActivity {
                     intent.putExtra("conversation", CONVERSATION_ID);
                     startActivity(intent);
                     return true;
-                case StaticField.ConvType.twoPerson:
+                case StaticField.ConvType.TWO_PERSON:
                     FindUser.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
                         @Override
                         public void onOK(Object ts) {
@@ -456,7 +456,7 @@ public class ChatActivity extends BaseActivity {
                         }
                     }).findUserByID(PrivateMessPairList.getInstance().getGroupIDByConvID(CONVERSATION_ID));
                     return true;
-                case StaticField.ConvType.BoomGroup:
+                case StaticField.ConvType.BOOM_GROUP:
                     BoomGroupClass boom = BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
                     if (boom == null) {
                         Snackbar.make(view, "出错了", Snackbar.LENGTH_LONG).show();
@@ -487,20 +487,20 @@ public class ChatActivity extends BaseActivity {
                     chatMessageAdapter.chatMessageList.clear();
                     switch (ChatType) {
                         case StaticField.ConvType.GROUP:
-                            GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
-                            GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                            GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMess("");
+                            GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMessTime(0);
                             GroupList.getInstance().removeAllUnread(CONVERSATION_ID);
                             break;
 
-                        case StaticField.ConvType.BoomGroup:
-                            BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
-                            BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                        case StaticField.ConvType.BOOM_GROUP:
+                            BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMess("");
+                            BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMessTime(0);
                             BoomGroupList.getInstance().removeAllUnread(CONVERSATION_ID);
                             break;
 
-                        case StaticField.ConvType.twoPerson:
-                            PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMess = "";
-                            PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).lastMessTime = 0;
+                        case StaticField.ConvType.TWO_PERSON:
+                            PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMess("");
+                            PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMessTime(0);
                             PrivateMessPairList.getInstance().removeAllUnread(CONVERSATION_ID);
                             break;
                     }
@@ -696,7 +696,7 @@ public class ChatActivity extends BaseActivity {
         if (ChatType == StaticField.ConvType.GROUP) {
             attr = SendMessage.setMessAttr(GroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID),
                     ChatType);
-        } else if (ChatType == StaticField.ConvType.BoomGroup) {
+        } else if (ChatType == StaticField.ConvType.BOOM_GROUP) {
             attr = SendMessage.setMessAttr(BoomGroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID),
                     ChatType);
         } else {
@@ -710,21 +710,21 @@ public class ChatActivity extends BaseActivity {
             case StaticField.ConvType.GROUP:
                 GroupClass group = (GroupClass) GroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
                 if (group != null) {
-                    toolbarTitle = group.Name;
+                    toolbarTitle = group.getName();
                 }
                 break;
 
-            case StaticField.ConvType.BoomGroup:
+            case StaticField.ConvType.BOOM_GROUP:
                 BoomGroupClass boom = BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
                 if (boom != null) {
-                    toolbarTitle = boom.Name;
+                    toolbarTitle = boom.getName();
                 }
                 break;
 
-            case StaticField.ConvType.twoPerson:
+            case StaticField.ConvType.TWO_PERSON:
                 PrivateMessPair pair = PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID);
                 if (pair != null) {
-                    toolbarTitle = pair.Name;
+                    toolbarTitle = pair.getName();
                 }
                 break;
         }

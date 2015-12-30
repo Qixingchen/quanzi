@@ -142,12 +142,12 @@ public class ChatListActivity extends BaseActivity {
             for (String filePath : filePathList) {
                 SendMessage.getNewInstance()
                         .setChatViewSendOK(sendOK)
-                        .sendImageMesage(group.convId, filePath, setAttrs(group.Type, group.ID));
+                        .sendImageMesage(group.getConvId(), filePath, setAttrs(group.getType(), group.getID()));
             }
         } else if (messType == StaticField.ChatContantType.TEXT) {
             SendMessage.getNewInstance()
                     .setChatViewSendOK(sendOK)
-                    .sendTextMessage(group.convId, text, setAttrs(group.Type, group.ID));
+                    .sendTextMessage(group.getConvId(), text, setAttrs(group.getType(), group.getID()));
         }
         progressDialog = showDialog();
     }

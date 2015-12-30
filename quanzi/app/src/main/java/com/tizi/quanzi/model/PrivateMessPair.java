@@ -14,13 +14,13 @@ public class PrivateMessPair extends ConvGroupAbs {
 
     public static PrivateMessPair newPrivatePair(ChatMessage chatMessage) {
         PrivateMessPair privateMessPair = new PrivateMessPair();
-        privateMessPair.Name = chatMessage.userName;
-        privateMessPair.Face = chatMessage.chatImage;
-        privateMessPair.ID = chatMessage.sender;
-        privateMessPair.Type = StaticField.PrivateMessOrSysMess.PrivateMess;
-        privateMessPair.convId = chatMessage.ConversationId;
-        privateMessPair.lastMess = ChatMessage.getContentText(chatMessage);
-        privateMessPair.lastMessTime = chatMessage.create_time;
+        privateMessPair.setName(chatMessage.userName);
+        privateMessPair.setFace(chatMessage.chatImage);
+        privateMessPair.setID(chatMessage.sender);
+        privateMessPair.setType(StaticField.PrivateMessOrSysMess.PrivateMess);
+        privateMessPair.setConvId(chatMessage.ConversationId);
+        privateMessPair.setLastMess(ChatMessage.getContentText(chatMessage));
+        privateMessPair.setLastMessTime(chatMessage.create_time);
 
         return privateMessPair;
     }
@@ -35,13 +35,13 @@ public class PrivateMessPair extends ConvGroupAbs {
      */
     public static PrivateMessPair newPrivatePair(OtherUserInfo otherUserInfo, String convID) {
         PrivateMessPair privateMessPair = new PrivateMessPair();
-        privateMessPair.Name = otherUserInfo.userName;
-        privateMessPair.Face = otherUserInfo.icon;
-        privateMessPair.ID = otherUserInfo.id;
-        privateMessPair.Type = StaticField.PrivateMessOrSysMess.PrivateMess;
-        privateMessPair.convId = convID;
-        privateMessPair.lastMess = "";
-        privateMessPair.lastMessTime = 0;
+        privateMessPair.setName(otherUserInfo.userName);
+        privateMessPair.setFace(otherUserInfo.icon);
+        privateMessPair.setID(otherUserInfo.id);
+        privateMessPair.setType(StaticField.PrivateMessOrSysMess.PrivateMess);
+        privateMessPair.setConvId(convID);
+        privateMessPair.setLastMess("");
+        privateMessPair.setLastMessTime(0);
 
         return privateMessPair;
     }

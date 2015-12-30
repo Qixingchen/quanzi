@@ -60,7 +60,7 @@ public class MyChooserTargetService extends ChooserTargetService {
                 new SortedList.Callback<ConvGroupAbs>() {
                     @Override
                     public int compare(ConvGroupAbs o1, ConvGroupAbs o2) {
-                        return (int) (o2.lastMessTime / 1000L - o1.lastMessTime / 1000L);
+                        return (int) (o2.getLastMessTime() / 1000L - o1.getLastMessTime() / 1000L);
                     }
 
                     @Override
@@ -90,10 +90,10 @@ public class MyChooserTargetService extends ChooserTargetService {
 
                     @Override
                     public boolean areItemsTheSame(ConvGroupAbs item1, ConvGroupAbs item2) {
-                        if (item1.ID == null) {
+                        if (item1.getID() == null) {
                             return false;
                         }
-                        return item1.ID.equals(item2.ID);
+                        return item1.getID().equals(item2.getID());
                     }
                 });
         convGroups.addAll(DBAct.getInstance().quaryAllChatGroup());
@@ -103,10 +103,10 @@ public class MyChooserTargetService extends ChooserTargetService {
             Bundle extras = new Bundle();
             extras.putSerializable("group", group);
             Bitmap bitmap = null;
-            String name = group.Name;
-            if (group.Type != StaticField.ConvType.BoomGroup) {
+            String name = group.getName();
+            if (group.getType() != StaticField.ConvType.BOOM_GROUP) {
                 try {
-                    bitmap = Picasso.with(getApplicationContext()).load(group.Face).resize(96, 96).get();
+                    bitmap = Picasso.with(getApplicationContext()).load(group.getFace()).resize(96, 96).get();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

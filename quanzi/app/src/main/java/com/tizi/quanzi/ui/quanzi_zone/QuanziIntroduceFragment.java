@@ -361,7 +361,7 @@ public class QuanziIntroduceFragment extends BaseFragment {
                         //本地群列表更改
                         GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupAllInfo.group.id);
                         if (groupClass != null) {
-                            groupClass.Face = photoUri;
+                            groupClass.setFace(photoUri);
                             GroupList.getInstance().updateGroup(groupClass);
                         }
 

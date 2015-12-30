@@ -120,7 +120,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
         if (SignUPGroupViewHolder.class.isInstance(viewHolder)) {
             final SignUPGroupViewHolder signUpGroupVH = (SignUPGroupViewHolder) viewHolder;
 
-            Picasso.with(mContext).load(group.Face)
+            Picasso.with(mContext).load(group.getFace())
                     .fit()
                     .into(signUpGroupVH.groupFace);
             signUpGroupVH.groupFace.setOnClickListener(
@@ -169,8 +169,8 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
 
                                         }
                                     }).setTimer(1200, 1200).start();
-                                    SendMessage.getNewInstance().sendTextMessage(group.convId, text,
-                                            SendMessage.setMessAttr(group.ID, StaticField.ConvType.GROUP, true));
+                                    SendMessage.getNewInstance().sendTextMessage(group.getConvId(), text,
+                                            SendMessage.setMessAttr(group.getID(), StaticField.ConvType.GROUP, true));
                                 }
 
                                 @Override
@@ -190,21 +190,21 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
 
                                     }).setTimer(1200, 1200).start();
                                 }
-                            }).signUP(act.id, group.ID, isSignedIn.get(position) ? 0 : 1);
+                            }).signUP(act.id, group.getID(), isSignedIn.get(position) ? 0 : 1);
 
                         }
                     }
             );
             signUpGroupVH.setBorder(mContext, isSignedIn.get(position));
-            signUpGroupVH.groupName.setText(group.Name);
+            signUpGroupVH.groupName.setText(group.getName());
         }
 
         if (DynSelectGroup.class.isInstance(viewHolder)) {
             final DynSelectGroup dynSelectGroup = (DynSelectGroup) viewHolder;
-            Picasso.with(mContext).load(group.Face.toString())
+            Picasso.with(mContext).load(group.getFace().toString())
                     .fit()
                     .into(dynSelectGroup.groupFaceImageView);
-            dynSelectGroup.groupNameTextview.setText(group.Name);
+            dynSelectGroup.groupNameTextview.setText(group.getName());
             dynSelectGroup.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -213,7 +213,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
                                 mContext.getResources().getColor(R.color.md_grey_800)
                         );
                     }
-                    onclick.itemClick(group.ID);
+                    onclick.itemClick(group.getID());
                     dynSelectGroup.itemView.setBackgroundColor(mContext.getResources()
                             .getColor(R.color.md_yellow_400));
                     DynSelectGroup.lastPositon = dynSelectGroup;
@@ -235,7 +235,7 @@ public class GroupSelectAdapter extends RecyclerViewAdapterAbs {
      */
     public void setGroupsSignedIn(Map<String, Boolean> signedGroups) {
         for (int i = 0; i < groups.size(); i++) {
-            if (signedGroups.containsKey(groups.get(i).ID)) {
+            if (signedGroups.containsKey(groups.get(i).getID())) {
                 isSignedIn.remove(i);
                 isSignedIn.add(i, true);
             }

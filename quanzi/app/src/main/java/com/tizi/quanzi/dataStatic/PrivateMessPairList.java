@@ -60,13 +60,13 @@ public class PrivateMessPairList extends ConvGroupAbsList<PrivateMessPair> {
     public void getGroupsFromDataBase() {
         List<PrivateMessPair> temp = DBAct.getInstance().quaryAllPrivateMessPair();
         for (PrivateMessPair pair : temp) {
-            if (pair.ID == null || pair.ID.equals("")) {
+            if (pair.getID() == null || pair.getID().equals("")) {
                 return;
             }
-            ChatMessage message = DBAct.getInstance().queryNewestMessage(pair.convId);
+            ChatMessage message = DBAct.getInstance().queryNewestMessage(pair.getConvId());
             if (message != null) {
-                pair.lastMess = ChatMessage.getContentText(message);
-                pair.lastMessTime = message.create_time;
+                pair.setLastMess(ChatMessage.getContentText(message));
+                pair.setLastMessTime(message.create_time);
             }
         }
         setGroupList(temp);

@@ -82,8 +82,8 @@ public class NotifiPagerAdapter extends PagerAdapter {
                     @Override
                     public void priMessClick(PrivateMessPair privateMessPair) {
                         Intent chat = new Intent(mContext, ChatActivity.class);
-                        chat.putExtra("conversation", privateMessPair.convId);
-                        chat.putExtra("chatType", StaticField.ConvType.twoPerson);
+                        chat.putExtra("conversation", privateMessPair.getConvId());
+                        chat.putExtra("chatType", StaticField.ConvType.TWO_PERSON);
                         mContext.startActivity(chat);
                     }
                 });

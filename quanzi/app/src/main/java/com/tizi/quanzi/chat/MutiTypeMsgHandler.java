@@ -74,8 +74,8 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
         if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.group_change_name) {
             GroupClass group = (GroupClass) GroupList.getInstance().getGroup(systemMessage.getGroup_id());
             if (group != null) {
-                Log.i(TAG, group.Name + "更名为" + systemMessage.getContent());
-                group.Name = systemMessage.getContent();
+                Log.i(TAG, group.getName() + "更名为" + systemMessage.getContent());
+                group.setName(systemMessage.getContent());
                 GroupList.getInstance().updateGroup(group);
             }
             //不必加入数据库
@@ -87,7 +87,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             String groupID = systemMessage.getGroup_id();
             GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupID);
             if (groupClass != null) {
-                String ConvID = groupClass.convId;
+                String ConvID = groupClass.getConvId();
                 BusProvider.getInstance().post(new ExitChatActivity(ConvID, 9));
                 GroupList.getInstance().deleteGroup(groupID);
             }
@@ -98,7 +98,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             String groupID = systemMessage.getGroup_id();
             GroupClass groupClass = (GroupClass) GroupList.getInstance().getGroup(groupID);
             if (groupClass != null) {
-                String ConvID = groupClass.convId;
+                String ConvID = groupClass.getConvId();
                 BusProvider.getInstance().post(new ExitChatActivity(ConvID, 9));
                 GroupList.getInstance().deleteGroup(groupID);
             }
@@ -145,7 +145,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                             chatMessage.create_time);
                     break;
 
-                case StaticField.ConvType.twoPerson:
+                case StaticField.ConvType.TWO_PERSON:
 
                     //如果发信人是自己,不处理
                     if (chatMessage.sender.compareTo(AppStaticValue.getUserID()) == 0) {
@@ -166,7 +166,7 @@ public class MutiTypeMsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     PrivateMessPairList.getInstance().addUnreadMess(chatMessage);
 
                     break;
-                case StaticField.ConvType.BoomGroup:
+                case StaticField.ConvType.BOOM_GROUP:
 
                     BoomGroupList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
                             ChatMessage.getContentText(chatMessage), chatMessage.create_time);

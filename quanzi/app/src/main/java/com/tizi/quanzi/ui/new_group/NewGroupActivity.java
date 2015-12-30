@@ -113,12 +113,12 @@ public class NewGroupActivity extends BaseActivity {
                                 getSupportFragmentManager().beginTransaction()
                                         .replace(R.id.fragment, newGroupStep2Fragment).commit();
                                 GroupClass groupClass = new GroupClass();
-                                groupClass.ID = group.getGroupId();
-                                groupClass.Name = ans.groupName;
-                                groupClass.Face = ans.groupFaceUri;
-                                groupClass.Type = StaticField.ConvType.GROUP;
+                                groupClass.setID(group.getGroupId());
+                                groupClass.setName(ans.groupName);
+                                groupClass.setFace(ans.groupFaceUri);
+                                groupClass.setType(StaticField.ConvType.GROUP);
                                 groupClass.Notice = ans.groupSign;
-                                groupClass.convId = convID;
+                                groupClass.setConvId(convID);
                                 groupClass.createUser = AppStaticValue.getUserID();
                                 groupClass.memlist = new ArrayList<>();
                                 GroupList.getInstance().addGroup(groupClass);

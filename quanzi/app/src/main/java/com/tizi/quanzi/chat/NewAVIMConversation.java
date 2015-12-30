@@ -68,7 +68,7 @@ public class NewAVIMConversation {
         clientIds.add(AnotherUser);
 
         Map<String, Object> attr = new HashMap<>();
-        attr.put("type", StaticField.ConvType.twoPerson);
+        attr.put("type", StaticField.ConvType.TWO_PERSON);
         AVIMClient imClient = AppStaticValue.getImClient();
         imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
             @Override

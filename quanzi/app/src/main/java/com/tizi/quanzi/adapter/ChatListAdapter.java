@@ -5,33 +5,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
-import com.tizi.quanzi.model.BoomGroupClass;
-import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.model.PrivateMessPair;
+import com.tizi.quanzi.databinding.ItemChatListBinding;
 import com.tizi.quanzi.otto.BusProvider;
-import com.tizi.quanzi.tool.FriendTime;
-import com.tizi.quanzi.tool.GetThumbnailsUri;
-import com.tizi.quanzi.tool.StaticField;
+
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by qixingchen on 15/12/21.
@@ -41,7 +27,7 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
     private SortedList<ConvGroupAbs> convGroupAbsSortedList = new SortedList<>(ConvGroupAbs.class, new SortedList.Callback<ConvGroupAbs>() {
         @Override
         public int compare(ConvGroupAbs o1, ConvGroupAbs o2) {
-            return (int) (o2.lastMessTime / 1000L - o1.lastMessTime / 1000L);
+            return (int) (o2.getLastMessTime() / 1000L - o1.getLastMessTime() / 1000L);
         }
 
         @Override
@@ -71,10 +57,10 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
 
         @Override
         public boolean areItemsTheSame(ConvGroupAbs item1, ConvGroupAbs item2) {
-            if (item1.ID == null) {
+            if (item1.getID() == null) {
                 return false;
             }
-            return item1.ID.equals(item2.ID);
+            return item1.getID().equals(item2.getID());
         }
     });
     private OnClick onClick;
@@ -118,6 +104,8 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_chat_list, parent, false);
         // set the view's size, margins, paddings and layout parameters
@@ -134,70 +122,8 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final ChatListViewHolder vh = (ChatListViewHolder) holder;
         final ConvGroupAbs group = convGroupAbsSortedList.get(position);
+        vh.bind(group);
 
-        if (group instanceof GroupClass) {
-            vh.groupType.setImageResource(R.drawable.ic_group_black_24dp);
-        } else if (group instanceof PrivateMessPair) {
-            vh.groupType.setImageResource(R.drawable.ic_person_black_24dp);
-        } else if (group instanceof BoomGroupClass) {
-            vh.groupType.setImageResource(R.drawable.ic_whatshot_black_24dp);
-        }
-        if (group.Type != StaticField.ConvType.BoomGroup) {
-            Picasso.with(vh.groupFace.getContext())
-                    .load(GetThumbnailsUri.getUriLink(group.Face, 64, 64, vh.groupFace.getContext()))
-                    .fit().into(vh.groupFace);
-            vh.groupName.setText(group.Name);
-        } else {
-            if (isMyGroup(((BoomGroupClass) group).groupId1)) {
-                Picasso.with(vh.groupFace.getContext())
-                        .load(((BoomGroupClass) group).icon2)
-                        .fit().into(vh.groupFace);
-            } else {
-                Picasso.with(vh.groupFace.getContext())
-                        .load(((BoomGroupClass) group).icon1)
-                        .fit().into(vh.groupFace);
-            }
-            vh.groupName.setText(String.format("%s 与 %s",
-                    ((BoomGroupClass) group).groupName1, ((BoomGroupClass) group).groupName2));
-        }
-
-
-        if (group.lastMessTime == 0) {
-            vh.lastChatTime.setVisibility(View.GONE);
-            vh.LastChatMess.setVisibility(View.GONE);
-        } else {
-            vh.lastChatTime.setVisibility(View.VISIBLE);
-            vh.LastChatMess.setVisibility(View.VISIBLE);
-        }
-        vh.lastChatTime.setText(FriendTime.FriendlyDate(group.lastMessTime));
-        vh.LastChatMess.setText(group.lastMess);
-        if (group.getUnreadCount() == 0) {
-            vh.unreadMessCount.setVisibility(View.GONE);
-        } else {
-            vh.unreadMessCount.setVisibility(View.VISIBLE);
-        }
-        vh.unreadMessCount.setText(String.valueOf(group.getUnreadCount()));
-
-
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                boolean needNotifi = AppStaticValue.getNeedNotifi(group.convId);
-                subscriber.onNext(needNotifi);
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean needNotify) {
-                        if (needNotify) {
-                            vh.disallowNotify.setVisibility(View.GONE);
-                        } else {
-                            vh.disallowNotify.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,23 +167,15 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
 
     class ChatListViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView groupFace;
-        private TextView groupName, lastChatTime, LastChatMess, unreadMessCount;
-        private ImageView groupType, disallowNotify;
+        private ItemChatListBinding binding;
 
         public ChatListViewHolder(View itemView) {
             super(itemView);
-            findViews(itemView);
+            binding = ItemChatListBinding.bind(itemView);
         }
 
-        private void findViews(View v) {
-            groupFace = (CircleImageView) v.findViewById(R.id.group_face_image_view);
-            groupName = (TextView) v.findViewById(R.id.group_name_text_view);
-            lastChatTime = (TextView) v.findViewById(R.id.last_mess_time_text_view);
-            LastChatMess = (TextView) v.findViewById(R.id.last_mess_text_view);
-            unreadMessCount = (TextView) v.findViewById(R.id.unread_count);
-            groupType = (ImageView) v.findViewById(R.id.group_type);
-            disallowNotify = (ImageView) v.findViewById(R.id.disallow_notify);
+        private void bind(@NotNull ConvGroupAbs chat) {
+            binding.setChat(chat);
         }
     }
 }

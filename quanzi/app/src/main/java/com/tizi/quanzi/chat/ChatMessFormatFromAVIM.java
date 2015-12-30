@@ -265,7 +265,7 @@ public class ChatMessFormatFromAVIM {
         if (chatMessage.isSelfSend) {
             //自己发出的
             chatMessage.From = StaticField.ChatFrom.ME;
-        } else if (chatMessage.ChatBothUserType != StaticField.ConvType.BoomGroup) {
+        } else if (chatMessage.ChatBothUserType != StaticField.ConvType.BOOM_GROUP) {
             //非碰撞
             chatMessage.From = StaticField.ChatFrom.OTHER;
         } else {

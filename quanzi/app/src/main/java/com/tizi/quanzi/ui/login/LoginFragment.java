@@ -27,6 +27,7 @@ import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.otto.OttoLoginActivity;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.tool.Tool;
 import com.tizi.quanzi.ui.BaseFragment;
 import com.tizi.quanzi.ui.main.MainActivity;
@@ -43,6 +44,9 @@ public class LoginFragment extends BaseFragment {
     private android.support.design.widget.TextInputLayout phoneNumberInputLayout;
     private android.support.design.widget.TextInputLayout passwordInputLayout;
     private Button newAccount;
+    private View rootView;
+    private Timer timer;
+    private TextView infoText;
 
 
     public LoginFragment() {
@@ -65,10 +69,50 @@ public class LoginFragment extends BaseFragment {
         this.LoginButton = (Button) view.findViewById(R.id.LoginButton);
         this.passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
         this.phoneNumberEditText = (EditText) view.findViewById(R.id.phoneNumberEditText);
+        rootView = view.findViewById(R.id.login_root_view);
+        infoText = (TextView) view.findViewById(R.id.login_info);
     }
 
     @Override
     protected void initViewsAndSetEvent() {
+
+        timer = new Timer().setOnResult(new Timer.OnResult() {
+            @Override
+            public void OK() {
+                rootView.setVisibility(View.VISIBLE);
+                infoText.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void countdown(long remainingS, long goneS) {
+                infoText.setText("登入时间超过预期");
+                infoText.setVisibility(View.VISIBLE);
+            }
+        }).setTimer(10 * 1000, 5000);
+
+        if (!LoginAndUserAccount.getNewInstance().setNetworkListener(new RetrofitNetworkAbs.NetworkListener() {
+            @Override
+            public void onOK(Object ts) {
+                //启动主界面
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                timer.cancel();
+            }
+
+            @Override
+            public void onError(String Message) {
+                rootView.setVisibility(View.VISIBLE);
+                infoText.setVisibility(View.GONE);
+                timer.cancel();
+            }
+        }).loginFromPrefer()) {
+            rootView.setVisibility(View.VISIBLE);
+            infoText.setVisibility(View.GONE);
+            timer.cancel();
+        }
+
+
         phoneNumberInputLayout.setError(getString(R.string.phone_number_error));
         phoneNumberInputLayout.setErrorEnabled(false);
         /*游客登陆*/

@@ -6,12 +6,23 @@
     android:background="@drawable/login"
     tools:context="com.tizi.quanzi.ui.login.LoginFragment">
 
+    <TextView
+        android:id="@+id/login_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/md_white"
+        android:visibility="invisible"
+        tools:text="1233333"/>
+
     <LinearLayout
+        android:id="@+id/login_root_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/phoneNumberInputLayout"

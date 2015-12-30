@@ -15,7 +15,7 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="350dp">
+            android:layout_height="290dp">
 
             <ImageView
                 android:layout_width="fill_parent"

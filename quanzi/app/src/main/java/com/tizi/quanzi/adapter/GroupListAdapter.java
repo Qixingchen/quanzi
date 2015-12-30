@@ -8,26 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
+import com.tizi.quanzi.databinding.ItemGroupBinding;
 import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.otto.BusProvider;
-import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.List;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by qixingchen on 15/7/16.
@@ -92,29 +84,16 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
         if (MyViewHolder.class.isInstance(holder)) {
             final MyViewHolder myViewHolder = (MyViewHolder) holder;
 
-            myViewHolder.unreadCountTextview.setVisibility(View.GONE);
             if (position == groupClasses.size()) {
-                myViewHolder.groupNameTextview.setText("创建圈子");
-                Picasso.with(mContext).load(R.drawable.add_group)
-                        .resizeDimen(R.dimen.group_face, R.dimen.group_face)
-                        .into(myViewHolder.groupFaceImageView);
-                myViewHolder.lastTimeTextview.setText("");
-                myViewHolder.groupNameTextview.setText("");
-                myViewHolder.lastMessTextview.setText("");
+                GroupClass addGroup = new GroupClass();
+                addGroup.setName("创建圈子");
+                myViewHolder.setBinding(addGroup);
+                ((ImageView) myViewHolder.itemView.findViewById(R.id.group_face_image_view))
+                        .setImageResource(R.drawable.add_group);
                 myViewHolder.itemView.setOnLongClickListener(null);
             } else {
                 final GroupClass group = groupClasses.get(position);
-                if (group.getUnreadCount() != 0) {
-                    myViewHolder.unreadCountTextview.setVisibility(View.VISIBLE);
-                    myViewHolder.unreadCountTextview.setText(String.valueOf(group.getUnreadCount()));
-                }
-                myViewHolder.setGroupName(group);
-                myViewHolder.lastMessTextview.setText(group.getLastMess());
-                myViewHolder.lastTimeTextview.setText(FriendTime.FriendlyDate(group.getLastMessTime()));
-                Picasso.with(mContext)
-                        .load(group.getFace())
-                        .resizeDimen(R.dimen.group_face, R.dimen.group_face)
-                        .into(myViewHolder.groupFaceImageView);
+                myViewHolder.setBinding(group);
 
                 /*长按事件*/
                 myViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -137,14 +116,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        AppStaticValue.setNeedNotifi(group.getConvId(), !needNotifi);
-                                        String name = group.getName();
-                                        if (needNotifi) {
-                                            name += mContext.getString(R.string.dis_allow_notice);
-                                        } else {
-                                            name += mContext.getString(R.string.allow_notice);
-                                        }
-                                        myViewHolder.groupNameTextview.setText(name);
+                                        group.setNeedNotify(!needNotifi);
                                         break;
                                     case 1:
                                         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -224,43 +196,20 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView groupFaceImageView;
-        public TextView groupNameTextview, lastMessTextview, unreadCountTextview, lastTimeTextview;
         public View itemView;
+
+        private ItemGroupBinding binding;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            groupFaceImageView = (ImageView) itemView.findViewById(R.id.group_face_image_view);
-            groupNameTextview = (TextView) itemView.findViewById(R.id.group_name_text_view);
-            lastMessTextview = (TextView) itemView.findViewById(R.id.last_mess_text_view);
-            unreadCountTextview = (TextView) itemView.findViewById(R.id.unread_count);
-            lastTimeTextview = (TextView) itemView.findViewById(R.id.last_mess_time_text_view);
+            binding = ItemGroupBinding.bind(itemView);
         }
 
-        private void setGroupName(final GroupClass groupClass) {
-            Observable.create(new Observable.OnSubscribe<String>() {
-                @Override
-                public void call(Subscriber<? super String> subscriber) {
-                    boolean needNotifi = AppStaticValue.getNeedNotifi(groupClass.getConvId());
-                    String name = groupClass.getName();
-                    if (needNotifi) {
-                        name += itemView.getContext().getString(R.string.allow_notice);
-                    } else {
-                        name += itemView.getContext().getString(R.string.dis_allow_notice);
-                    }
-                    subscriber.onNext(name);
-                }
-            })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<String>() {
-                        @Override
-                        public void call(String s) {
-                            groupNameTextview.setText(s);
-                        }
-                    });
+        private void setBinding(GroupClass groupClass) {
+            binding.setChat(groupClass);
         }
+
     }
 
 

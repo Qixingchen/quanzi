@@ -134,6 +134,11 @@ public class ConvGroupAbs implements Serializable, Observable {
         return AppStaticValue.getNeedNotifi(convId);
     }
 
+    public void setNeedNotify(boolean needNotify) {
+        AppStaticValue.setNeedNotifi(convId, needNotify);
+        pcr.notifyChange(this, BR.needNotify);
+    }
+
     public boolean addUnreadMessageID(String messID) {
         return unreadMessageIDSet.add(messID);
     }

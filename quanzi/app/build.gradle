@@ -15,7 +15,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "0.2.20-nightly"
+        versionName "0.2.21-dev"
         multiDexEnabled true
     }
     buildTypes {

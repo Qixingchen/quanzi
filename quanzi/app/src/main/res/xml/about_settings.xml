@@ -39,6 +39,15 @@
                 android:data="@string/user_license"/>
         </Preference>
 
+        <Preference
+            android:summary="@string/feedback_mail"
+            android:title="意见反馈">
+
+            <intent
+                android:action="android.intent.action.SENDTO"
+                android:data="@string/feedback_mail"/>
+        </Preference>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

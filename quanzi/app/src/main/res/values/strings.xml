@@ -40,4 +40,5 @@
 
     <string name="boy">男</string>
     <string name="girl">女</string>
+    <string name="title_activity_notify_settings">NotifySettingsActivity</string>
 </resources>

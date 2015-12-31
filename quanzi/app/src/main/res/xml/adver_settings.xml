@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="高级设置">
+        <Preference
+            android:key="dev_settings"
+            android:summary="改动可能导致应用无响应或崩溃，请在开发者指导下使用"
+            android:title="高级设置">
+
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

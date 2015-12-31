@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory
         android:title="通知">
         <SwitchPreferenceCompat
             android:defaultValue="true"
-            android:icon="@drawable/ic_notifications_24dp"
+            android:icon="@drawable/ic_notifications_black_24dp"
             android:key="notifications"
             android:summary="开启:在收到新消息时发出系统通知"
             android:title="新消息通知"/>
     </PreferenceCategory>
+
     <PreferenceCategory
         android:title="通知方式">
         <SwitchPreferenceCompat
@@ -34,7 +35,7 @@
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:dependency="notifications"
-            android:icon="@drawable/ic_notifications_24dp"
+            android:icon="@drawable/ic_notifications_black_24dp"
             android:key="notifications_in_app"
             android:summary="开启:在应用运行时也会收到其他聊天组的新消息通知"
             android:title="应用内通知"/>
@@ -62,56 +63,6 @@
             android:key="notifications_system"
             android:summary="开启:收系统消息时发出通知"
             android:title="系统消息"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="关于">
-        <Preference
-            android:key="version"
-            android:title="软件版本">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/update_notices"/>
-        </Preference>
-
-        <Preference
-            android:key="flavor"
-            android:title="软件渠道">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/update_notices"/>
-        </Preference>
-
-        <Preference
-            android:summary="@string/open_source_license"
-            android:title="开源协议">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/open_source_license"/>
-        </Preference>
-
-        <Preference
-            android:summary="@string/user_license"
-            android:title="用户协议">
-
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/user_license"/>
-        </Preference>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="高级设置">
-        <Preference
-            android:key="dev_settings"
-            android:summary="改动可能导致应用无响应或崩溃，请在开发者指导下使用"
-            android:title="高级设置">
-
-        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

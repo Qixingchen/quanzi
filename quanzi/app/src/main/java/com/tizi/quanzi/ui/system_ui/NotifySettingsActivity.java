@@ -9,6 +9,9 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.ui.BaseActivity;
 
+/**
+ * 系统通知设置
+ */
 public class NotifySettingsActivity extends BaseActivity {
 
     @Override

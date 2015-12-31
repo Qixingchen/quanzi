@@ -20,6 +20,7 @@ import com.tizi.quanzi.tool.GetMutipieImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.ChatActivity;
+import com.tizi.quanzi.ui.login.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,10 +119,16 @@ public class ChatListActivity extends BaseActivity {
             return;
         }
 
-
-        chatListAdapter = new ChatListAdapter();
-        recyclerView.setAdapter(chatListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        try {
+            chatListAdapter = new ChatListAdapter();
+            recyclerView.setAdapter(chatListAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        } catch (NullPointerException ex) {
+            Toast.makeText(mContext, "需要登陆账号哦~", Toast.LENGTH_LONG).show();
+            Intent log_in = new Intent(mActivity, LoginActivity.class);
+            log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(log_in);
+        }
     }
 
     /**
@@ -129,6 +136,9 @@ public class ChatListActivity extends BaseActivity {
      */
     @Override
     protected void setViewEvent() {
+        if (chatListAdapter == null) {
+            return;
+        }
         chatListAdapter.setOnClick(new ChatListAdapter.OnClick() {
             @Override
             public void onClick(ConvGroupAbs group) {

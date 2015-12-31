@@ -82,6 +82,13 @@ public class AppStaticValue {
     public static void setUserID(String userID) {
         preferences.edit().putString(StaticField.Preferences.USERID, userID).apply();
         UserID = userID;
+        if (userID.equals("")) {
+            db = null;
+            db1 = null;
+        } else {
+            db = new DataBaseHelper(App.getApplication(), userID, null, 2);
+            db1 = db.getWritableDatabase();
+        }
     }
 
     public static String getUserToken() {

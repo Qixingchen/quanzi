@@ -66,16 +66,20 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
     private OnClick onClick;
 
 
-    public ChatListAdapter() {
+    public ChatListAdapter() throws NullPointerException {
         try {
             BusProvider.getInstance().register(this);
         } catch (Exception ignored) {
         }
         convGroupAbsSortedList.clear();
         convGroupAbsSortedList.beginBatchedUpdates();
-        List<ConvGroupAbs> groups = DBAct.getInstance().quaryAllChatGroup();
-        convGroupAbsSortedList.addAll(groups);
-        convGroupAbsSortedList.endBatchedUpdates();
+        try {
+            List<ConvGroupAbs> groups = DBAct.getInstance().quaryAllChatGroup();
+            convGroupAbsSortedList.addAll(groups);
+            convGroupAbsSortedList.endBatchedUpdates();
+        } catch (NullPointerException ex) {
+            throw ex;
+        }
     }
 
     @Override

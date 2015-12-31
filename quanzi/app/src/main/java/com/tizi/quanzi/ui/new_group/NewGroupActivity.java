@@ -146,8 +146,9 @@ public class NewGroupActivity extends BaseActivity {
             newGroupStep1Fragment.setTags(groupTagFragment.OnOK());
             getSupportFragmentManager().popBackStack();
             getSupportFragmentManager().beginTransaction().show(newGroupStep1Fragment).commit();
+            mMenu.clear();
+            getMenuInflater().inflate(R.menu.menu_new_group, mMenu);
             mMenu.findItem(R.id.action_next_step).setVisible(true);
-            mMenu.findItem(R.id.action_tag_complete).setVisible(false);
             mMenu.findItem(R.id.action_complete).setVisible(false);
         }
 
@@ -156,7 +157,6 @@ public class NewGroupActivity extends BaseActivity {
 
     public void CallForTagFragment(ArrayList<AllTags.TagsEntity> tags) {
         mMenu.findItem(R.id.action_next_step).setVisible(false);
-        mMenu.findItem(R.id.action_tag_complete).setVisible(true);
         mMenu.findItem(R.id.action_complete).setVisible(false);
         groupTagFragment = GroupTagFragment.newInstance(tags, true);
         getSupportFragmentManager().beginTransaction().hide(newGroupStep1Fragment)
@@ -166,8 +166,9 @@ public class NewGroupActivity extends BaseActivity {
     @Subscribe
     public void onFragementResumeAndPause(FragmentResume resume) {
         if (!resume.resumeOrPause && resume.FramgentName.equals(GroupTagFragment.class.getSimpleName())) {
+            mMenu.clear();
+            getMenuInflater().inflate(R.menu.menu_new_group, mMenu);
             mMenu.findItem(R.id.action_next_step).setVisible(true);
-            mMenu.findItem(R.id.action_tag_complete).setVisible(false);
             mMenu.findItem(R.id.action_complete).setVisible(false);
         }
     }

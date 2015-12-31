@@ -111,6 +111,9 @@ public class GetMutipieImage {
                     return Observable.create(new Observable.OnSubscribe<String>() {
                         @Override
                         public void call(Subscriber<? super String> subscriber) {
+                            if (s == null) {
+                                subscriber.onError(new Throwable("文件不存在"));
+                            }
                             subscriber.onNext(ZipPic.getNewInstance().compressByWidth(s, StaticField.Limit.IMAGE_WIDTH,
                                     StaticField.Limit.IMAGE_QUALITY));
                         }

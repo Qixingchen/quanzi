@@ -25,6 +25,7 @@ import com.squareup.picasso.Transformation;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
+import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.network.UserInfoSetting;
 import com.tizi.quanzi.otto.ActivityResultAns;
@@ -256,6 +257,8 @@ public class BigWorld extends BaseFragment {
                 }
             }
         });
+        AppStaticValue.setUserID("");
+        DBAct.flushDBID();
         Intent log_in = new Intent(mActivity, LoginActivity.class);
         log_in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(log_in);

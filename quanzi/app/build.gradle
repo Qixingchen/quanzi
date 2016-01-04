@@ -15,7 +15,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "0.2.21-dev"
+        versionName "0.2.21-nightly"
         multiDexEnabled true
     }
     buildTypes {
@@ -58,11 +58,51 @@ android {
     }
 
     productFlavors {
-//        GOOGLE {
-//            buildConfigField "boolean", "AllowUpdate", "false"
-//        }
-        GITHUB {
+        Google {
+            buildConfigField "boolean", "AllowUpdate", "false"
+        }
+        GitHub {
             buildConfigField "boolean", "AllowUpdate", "true"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        LeanCloud {
+            buildConfigField "boolean", "AllowUpdate", "true"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        _360 {
+            buildConfigField "boolean", "AllowUpdate", "false"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        WanDouJia {
+            buildConfigField "boolean", "AllowUpdate", "false"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        AnZhuoMarket {
+            buildConfigField "boolean", "AllowUpdate", "false"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        BaiDU {
+            buildConfigField "boolean", "AllowUpdate", "false"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        _91 {
+            buildConfigField "boolean", "AllowUpdate", "false"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        QQ {
+            buildConfigField "boolean", "AllowUpdate", "false"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        Anzhi {
+            buildConfigField "boolean", "AllowUpdate", "false"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        Coolapk {
+            buildConfigField "boolean", "AllowUpdate", "false"
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
+        }
+        XiaoMi {
+            buildConfigField "boolean", "AllowUpdate", "false"
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
     }

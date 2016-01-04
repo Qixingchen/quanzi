@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GalleryAdapter;
 import com.tizi.quanzi.tool.StaticField;
+import com.tizi.quanzi.ui.BaseActivity;
 import com.tizi.quanzi.ui.BaseFragment;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class GalleryActivityFragment extends BaseFragment {
         pics = intent.getStringArrayListExtra(StaticField.GalleryPara.pics);
         int nowPosition = intent.getIntExtra(StaticField.GalleryPara.nowPosition, 0);
         picsNum.setText(getPicsNum(nowPosition + 1));
-        galleryAdapter = new GalleryAdapter(pics, getActivity());
+        galleryAdapter = new GalleryAdapter(pics, (BaseActivity) getActivity());
         picsViewPager.setAdapter(galleryAdapter);
         picsViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

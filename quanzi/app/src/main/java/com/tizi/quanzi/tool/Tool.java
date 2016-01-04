@@ -61,7 +61,7 @@ public class Tool {
         }
     }
 
-    public static File getCacheCacheDir() {
+    public static File getCacheDir() {
         if (hasSdcard()) {
             return App.getApplication().getExternalCacheDir();
         } else {
@@ -197,10 +197,20 @@ public class Tool {
      *
      * @return 文件名
      */
-    public static String getFileName(String filePath) {
-        int last = filePath.lastIndexOf("/");
+    public static String getFileName(final String filePath) {
+        String file;
+        if (filePath.contains("?")) {
+            file = filePath.substring(0, filePath.indexOf("?"));
+        } else {
+            file = filePath;
+        }
+        int last = file.lastIndexOf("/");
+        file = file.substring(last + 1).replace("%", "_");
 
-        return filePath.substring(last + 1).replace("%", "_");
+        if (filePath.contains("format/webp")) {
+            file = file.substring(0, file.lastIndexOf(".")) + ".webp";
+        }
+        return file;
     }
 
     public static long getBeijinTime() {

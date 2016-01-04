@@ -71,7 +71,7 @@ public class RequreForImage {
         if (uri.getAuthority() != null) {
             try {
                 is = context.getContentResolver().openInputStream(uri);
-                String RootPath = Tool.getCacheCacheDir().getAbsolutePath();
+                String RootPath = Tool.getCacheDir().getAbsolutePath();
                 String FilePath = RootPath + "/image/" + getImageFileName(uri);
                 file = new File(FilePath);
                 if (!file.getParentFile().exists()) {

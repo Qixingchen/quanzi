@@ -102,6 +102,10 @@ public class ShareImage {
         String RootPath = App.getApplication().getCacheDir().getAbsolutePath();
         String filePath = RootPath + "/image/" + Tool.getFileName(srcFilePath);
         File cacheFile = new File(filePath);
+        if (srcFilePath.contains(cacheFile.getParentFile().getAbsolutePath())) {
+            shareSavedImage(activity, srcFilePath);
+            return;
+        }
         if (!cacheFile.getParentFile().exists()) {
             cacheFile.getParentFile().mkdirs();
         }
@@ -140,7 +144,7 @@ public class ShareImage {
 
     public void saveImage(Activity activity, Bitmap bitmap, String fileName) {
 
-        String RootPath = Tool.getCacheCacheDir().getAbsolutePath();
+        String RootPath = Tool.getCacheDir().getAbsolutePath();
         String FilePath = RootPath + "/" + StaticField.AppName.AppEngName + "/" + fileName;
         ZipPic.getNewInstance().saveMyBitmap(FilePath, bitmap, 100);
 
@@ -197,7 +201,7 @@ public class ShareImage {
     }
 
     private void weixinShare(Activity activity, Bitmap bitmap, String fileName) {
-        String RootPath = Tool.getCacheCacheDir().getAbsolutePath();
+        String RootPath = Tool.getCacheDir().getAbsolutePath();
         String filePath = RootPath + "/image/" + fileName;
         ZipPic.getNewInstance().saveMyBitmap(filePath, bitmap, 100);
         weixinShare(activity, filePath);

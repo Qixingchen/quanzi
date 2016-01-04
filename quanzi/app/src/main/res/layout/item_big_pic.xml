@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:id="@+id/pic"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scaleType="centerInside"/>
+        android:layout_height="fill_parent"/>
 
 </RelativeLayout>

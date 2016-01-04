@@ -1,26 +1,25 @@
 package com.tizi.quanzi.adapter;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.ShareImage;
 import com.tizi.quanzi.tool.Tool;
+import com.tizi.quanzi.ui.BaseActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,9 +41,9 @@ import rx.schedulers.Schedulers;
 public class GalleryAdapter extends PagerAdapter {
     private static final String TAG = GalleryAdapter.class.getSimpleName();
     private List<String> pics;
-    private Activity activity;
+    private BaseActivity activity;
 
-    public GalleryAdapter(List<String> pics, Activity activity) {
+    public GalleryAdapter(List<String> pics, BaseActivity activity) {
         this.pics = pics;
         this.activity = activity;
     }
@@ -68,22 +67,36 @@ public class GalleryAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, final int position) {
         final View vRoot = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.item_big_pic, container, false);
-        final ImageView image = (ImageView) vRoot.findViewById(R.id.pic);
-        final String imageUri;
+        final SubsamplingScaleImageView image = (SubsamplingScaleImageView) vRoot.findViewById(R.id.pic);
+        final String[] imageLocalPath = new String[1];
         if (Uri.parse(pics.get(position)).getScheme().equals("file")) {
-            imageUri = pics.get(position);
+            imageLocalPath[0] = pics.get(position).replace("file://", "");
+            image.setImage(ImageSource.uri(imageLocalPath[0]));
+            image.setZoomEnabled(true);
         } else {
-            imageUri = GetThumbnailsUri.getWebPUri(pics.get(position));
+            image.setImage(ImageSource.resource(R.drawable.ic_photo_loading));
+            image.setZoomEnabled(false);
+            Uri imageUrl = Uri.parse(GetThumbnailsUri.getWebPUri(pics.get(position)));
+            downloadFile(imageUrl).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<File>() {
+                        @Override
+                        public void call(File file) {
+                            imageLocalPath[0] = file.getAbsolutePath();
+                            image.setImage(ImageSource.uri(imageLocalPath[0]));
+                            image.setZoomEnabled(true);
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            Snackbar.make(activity.view, throwable.getMessage(), Snackbar.LENGTH_LONG).show();
+                            throwable.printStackTrace();
+                        }
+                    });
         }
-        Picasso.with(activity).load(imageUri)
-                .placeholder(R.drawable.ic_photo_loading)
-                .centerInside()
-                .fit()
-                .into(image);
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(final View v) {
-                callAlertDialog(Uri.parse(pics.get(position)));
+                callAlertDialog(imageLocalPath[0]);
                 return true;
             }
 
@@ -95,7 +108,7 @@ public class GalleryAdapter extends PagerAdapter {
     /**
      * 调起
      */
-    private void callAlertDialog(final Uri imageUri) {
+    private void callAlertDialog(final String imageLocalPath) {
 
         String[] items = {"保存图片", "分享图片"};
         new AlertDialog.Builder(activity)
@@ -105,10 +118,10 @@ public class GalleryAdapter extends PagerAdapter {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        saveImage(imageUri);
+                                        saveImage(imageLocalPath);
                                         break;
                                     case 1:
-                                        shareImage(imageUri);
+                                        shareImage(imageLocalPath);
                                         break;
                                 }
                             }
@@ -116,64 +129,19 @@ public class GalleryAdapter extends PagerAdapter {
                 ).show();
     }
 
-    /**
-     * 进度条
-     */
-    private ProgressDialog showDialog() {
-        ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(true);
-        progressDialog.setMessage("准备中");
-
-        progressDialog.show();
-
-        return progressDialog;
-    }
-
-    private void saveImage(final Uri imageUri) {
-        if (imageUri.getScheme().equals("file")) {
-            ShareImage.getInstance().saveImage(activity,
-                    imageUri.toString().replace("file://", ""));
+    private void saveImage(String imageLocalPath) {
+        if (imageLocalPath != null) {
+            ShareImage.getInstance().saveImage(activity, imageLocalPath);
         } else {
-            downloadFile(imageUri)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<File>() {
-                        @Override
-                        public void call(File file) {
-                            ShareImage.getInstance().saveImage(activity, file.getAbsolutePath());
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            Toast.makeText(activity, throwable.getMessage(), Toast.LENGTH_LONG).show();
-                            throwable.printStackTrace();
-                        }
-                    });
+            Snackbar.make(activity.view, "图片下载失败", Snackbar.LENGTH_LONG).show();
         }
     }
 
-    private void shareImage(Uri imageUri) {
-        if (imageUri.getScheme().equals("file")) {
-            ShareImage.getInstance().shareImage(activity,
-                    imageUri.toString().replace("file://", ""));
+    private void shareImage(String imageLocalPath) {
+        if (imageLocalPath != null) {
+            ShareImage.getInstance().shareImage(activity, imageLocalPath);
         } else {
-            final ProgressDialog progressDialog = showDialog();
-            downloadFile(imageUri).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<File>() {
-                        @Override
-                        public void call(File file) {
-                            ShareImage.getInstance().shareImage(activity, file.getAbsolutePath());
-                            progressDialog.cancel();
-                        }
-                    }, new Action1<Throwable>() {
-                        @Override
-                        public void call(Throwable throwable) {
-                            Toast.makeText(activity, throwable.getMessage(), Toast.LENGTH_LONG).show();
-                            throwable.printStackTrace();
-                            progressDialog.cancel();
-                        }
-                    });
+            Snackbar.make(activity.view, "图片下载失败", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -181,6 +149,12 @@ public class GalleryAdapter extends PagerAdapter {
         return Observable.create(new Observable.OnSubscribe<File>() {
             @Override
             public void call(final Subscriber<? super File> subscriber) {
+                final File outputFile = new File(Tool.getCacheDir(),
+                        Tool.getFileName(imageUri.toString()));
+                if (outputFile.exists()) {
+                    subscriber.onNext(outputFile);
+                    return;
+                }
 
                 Request request = new Request.Builder().url(String.valueOf(imageUri)).build();
                 new OkHttpClient().newCall(request)
@@ -192,11 +166,10 @@ public class GalleryAdapter extends PagerAdapter {
 
                             @Override
                             public void onResponse(Response response) throws IOException {
-                                File outputFile = new File(Tool.getCacheCacheDir(),
-                                        Tool.getFileName(imageUri.toString()));
                                 BufferedSource source = response.body().source();
                                 Sink sink = Okio.sink(outputFile);
                                 source.readAll(sink);
+                                sink.flush();
                                 source.close();
                                 sink.close();
                                 subscriber.onNext(outputFile);

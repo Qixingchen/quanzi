@@ -57,7 +57,7 @@ public class RecodeAudio {
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         FileName = String.valueOf(new Date().getTime() / 1000) + ".aac";
 
-        file = new File(Tool.getCacheCacheDir().getAbsolutePath() + "/audio/" + AppStaticValue.getUserID(),
+        file = new File(Tool.getCacheDir().getAbsolutePath() + "/audio/" + AppStaticValue.getUserID(),
                 FileName);
         Log.d("录音", file.getAbsolutePath());
         try {

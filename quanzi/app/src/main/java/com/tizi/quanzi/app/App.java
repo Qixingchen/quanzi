@@ -62,8 +62,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 "70oc8gv1nlf9nvz0gxokpmb2jyjiuhavdc022isv6zz7nwk2");
 
         //LC 分析
-        AVAnalytics.setAnalyticsEnabled(true);
-        AVAnalytics.enableCrashReport(this, true);
+        if (BuildConfig.DEBUG) {
+            AVAnalytics.setAnalyticsEnabled(false);
+            AVAnalytics.enableCrashReport(this, false);
+        } else {
+            AVAnalytics.setAnalyticsEnabled(true);
+            AVAnalytics.enableCrashReport(this, true);
+        }
 
 
         //LC推送

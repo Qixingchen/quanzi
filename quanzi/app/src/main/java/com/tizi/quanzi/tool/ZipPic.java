@@ -272,7 +272,7 @@ public class ZipPic {
 
     public String saveMyBitmap(Bitmap mBitmap, int quality, String fileName) {
         fileName = fileName.substring(0, fileName.indexOf("."));
-        File file = new File(Tool.getCacheCacheDir().getAbsolutePath()
+        File file = new File(Tool.getCacheDir().getAbsolutePath()
                 + "/image/" + AppStaticValue.getUserID(), fileName + ".jpg");
 
         if (!file.getParentFile().exists()) {

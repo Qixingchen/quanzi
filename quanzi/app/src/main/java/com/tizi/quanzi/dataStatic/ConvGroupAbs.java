@@ -44,7 +44,7 @@ public class ConvGroupAbs implements Serializable, Observable {
 
     public void setName(String name) {
         Name = name;
-        pcr.notifyChange(this, BR.name);
+        notifyChange(BR.name);
     }
 
     @Bindable
@@ -61,7 +61,7 @@ public class ConvGroupAbs implements Serializable, Observable {
 
     public void setFace(String face) {
         Face = face;
-        pcr.notifyChange(this, BR.face);
+        notifyChange(BR.face);
     }
 
     @Bindable
@@ -71,7 +71,7 @@ public class ConvGroupAbs implements Serializable, Observable {
 
     public void setID(String ID) {
         this.ID = ID;
-        pcr.notifyChange(this, BR.iD);
+        notifyChange(BR.iD);
     }
 
     @Bindable
@@ -81,7 +81,7 @@ public class ConvGroupAbs implements Serializable, Observable {
 
     public void setType(int type) {
         Type = type;
-        pcr.notifyChange(this, BR.type);
+        notifyChange(BR.type);
     }
 
     @Bindable
@@ -91,7 +91,7 @@ public class ConvGroupAbs implements Serializable, Observable {
 
     public void setConvId(String convId) {
         this.convId = convId;
-        pcr.notifyChange(this, BR.convId);
+        notifyChange(BR.convId);
     }
 
     @Bindable
@@ -101,7 +101,7 @@ public class ConvGroupAbs implements Serializable, Observable {
 
     public void setLastMess(String lastMess) {
         this.lastMess = lastMess;
-        pcr.notifyChange(this, BR.lastMess);
+        notifyChange(BR.lastMess);
     }
 
     @Bindable
@@ -111,7 +111,7 @@ public class ConvGroupAbs implements Serializable, Observable {
 
     public void setLastMessTime(long lastMessTime) {
         this.lastMessTime = lastMessTime;
-        pcr.notifyChange(this, BR.lastMessTime);
+        notifyChange(BR.lastMessTime);
     }
 
     @Bindable
@@ -136,23 +136,30 @@ public class ConvGroupAbs implements Serializable, Observable {
 
     public void setNeedNotify(boolean needNotify) {
         AppStaticValue.setNeedNotifi(convId, needNotify);
-        pcr.notifyChange(this, BR.needNotify);
+        notifyChange(BR.needNotify);
     }
 
     public boolean addUnreadMessageID(String messID) {
-        return unreadMessageIDSet.add(messID);
+        boolean stat = unreadMessageIDSet.add(messID);
+        notifyChange(BR.unreadCount);
+        return stat;
     }
 
     public boolean addUnreadMessageID(List<String> messID) {
-        return unreadMessageIDSet.addAll(messID);
+        boolean stat = unreadMessageIDSet.addAll(messID);
+        notifyChange(BR.unreadCount);
+        return stat;
     }
 
     public boolean removeUnreadMessad(String messID) {
-        return unreadMessageIDSet.remove(messID);
+        boolean stat = unreadMessageIDSet.remove(messID);
+        notifyChange(BR.unreadCount);
+        return stat;
     }
 
     public void removeAllUnread() {
         unreadMessageIDSet.clear();
+        notifyChange(BR.unreadCount);
     }
 
     @Bindable
@@ -186,6 +193,13 @@ public class ConvGroupAbs implements Serializable, Observable {
         pcr.remove(callback);
     }
 
+    private void notifyChange(int propertyId) {
+        if (pcr == null) {
+            pcr = new PropertyChangeRegistry();
+        }
+        pcr.notifyChange(this, propertyId);
+    }
+
 
     /**
      * 判断是不是自己的群
@@ -195,10 +209,6 @@ public class ConvGroupAbs implements Serializable, Observable {
      * @return true：是自己的圈子
      */
     private boolean isMyGroup(String GroupID) {
-        if (GroupList.getInstance().getGroup(GroupID) != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return GroupList.getInstance().getGroup(GroupID) != null;
     }
 }

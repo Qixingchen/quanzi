@@ -30,6 +30,16 @@ public class BindingHelper {
         Picasso.with(view.getContext()).load(url).fit().into(view);
     }
 
+    @BindingAdapter({"bind:imageUrlOrRes"})
+    public static void loadImageOrRes(ImageView view, String url) {
+        try {
+            int res = Integer.valueOf(url);
+            Picasso.with(view.getContext()).load(res).fit().into(view);
+        } catch (NumberFormatException ignore) {
+            Picasso.with(view.getContext()).load(url).fit().into(view);
+        }
+    }
+
     @BindingAdapter({"bind:lastMessTime"})
     public static void setLastTime(TextView textView, long lastMessTine) {
         if (lastMessTine == 0) {

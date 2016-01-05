@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
@@ -87,9 +86,8 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
             if (position == groupClasses.size()) {
                 GroupClass addGroup = new GroupClass();
                 addGroup.setName("创建圈子");
+                addGroup.setFace(String.valueOf(R.drawable.add_group));
                 myViewHolder.setBinding(addGroup);
-                ((ImageView) myViewHolder.itemView.findViewById(R.id.group_face_image_view))
-                        .setImageResource(R.drawable.add_group);
                 myViewHolder.itemView.setOnLongClickListener(null);
             } else {
                 final GroupClass group = groupClasses.get(position);

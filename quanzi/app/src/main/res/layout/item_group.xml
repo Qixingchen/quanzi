@@ -44,7 +44,7 @@
                     android:layout_marginTop="4dp"
                     app:civ_border_color="#00000000"
                     app:civ_border_width="2dp"
-                    app:imageUrl="@{chat.face}"
+                    app:imageUrlOrRes="@{chat.face}"
                     tools:src="@drawable/face"/>
 
 

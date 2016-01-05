@@ -206,9 +206,14 @@ public class Tool {
         }
         int last = file.lastIndexOf("/");
         file = file.substring(last + 1).replace("%", "_");
-
-        if (filePath.contains("format/webp")) {
-            file = file.substring(0, file.lastIndexOf(".")) + ".webp";
+        final String typeStart = "format/";
+        if (filePath.contains(typeStart)) {
+            int start = filePath.indexOf(typeStart) + typeStart.length();
+            String type = filePath.substring(start);
+            if (type.contains("/")) {
+                type = type.substring(0, type.indexOf("/"));
+            }
+            file = file.substring(0, file.lastIndexOf(".") + 1) + type;
         }
         return file;
     }

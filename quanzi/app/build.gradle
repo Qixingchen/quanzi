@@ -14,15 +14,14 @@ android {
         applicationId "com.tizi.quanzi"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 1
-        versionName "0.2.21-nightly"
+        versionName "0.2.22-dev"
         multiDexEnabled true
     }
     buildTypes {
         release {
             //minifyEnabled false
             minifyEnabled false
-            shrinkResources true
+            //shrinkResources true
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
                 variant.outputs.each { output ->
@@ -58,51 +57,65 @@ android {
     }
 
     productFlavors {
+        def VersionCode = 2
         Google {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
+            manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         GitHub {
             buildConfigField "boolean", "AllowUpdate", "true"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         LeanCloud {
             buildConfigField "boolean", "AllowUpdate", "true"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         _360 {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         WanDouJia {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         AnZhuoMarket {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         BaiDU {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         _91 {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         QQ {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         Anzhi {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         Coolapk {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
         XiaoMi {
             buildConfigField "boolean", "AllowUpdate", "false"
+            versionCode VersionCode
             manifestPlaceholders = [LEANCLOUD_CHANNEL_VALUE: name]
         }
     }

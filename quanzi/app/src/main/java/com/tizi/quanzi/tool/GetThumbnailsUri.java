@@ -155,7 +155,7 @@ public class GetThumbnailsUri {
 
     public static String getWebPUri(String imageSourceUri) {
         if (!imageSourceUri.contains("webp") && !imageSourceUri.contains(addUri)) {
-            return imageSourceUri + "?imageMogr/v2/format/webp";
+            return imageSourceUri + "?imageMogr2/auto-orient/format/webp";
         }
         return imageSourceUri;
     }

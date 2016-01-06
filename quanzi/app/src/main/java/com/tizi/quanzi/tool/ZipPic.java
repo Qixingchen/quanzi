@@ -116,6 +116,30 @@ public class ZipPic {
         return bitmap;
     }
 
+    public Bitmap compressByWidth(Bitmap bitmap, int targetWidth, int quality) {
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;// 不去真的解析图片，只是获取图片的头部信息，包含宽高等；
+        // 得到图片的宽度、高度；
+        int imgWidth = opts.outWidth;
+        int imgHeight = opts.outHeight;
+        // 分别计算图片宽度、高度与目标宽度、高度的比例；取大于等于该比例的最小整数；
+        int widthRatio = (int) Math.ceil(imgWidth / (float) targetWidth);
+        if (widthRatio > 1) {
+            opts.inSampleSize = widthRatio;
+        }
+        if (imgWidth > targetWidth) {
+            imgHeight = (int) (imgHeight * (1.0 * (targetWidth) / imgWidth));
+            imgWidth = targetWidth;
+        }
+        // 设置好缩放比例后，加载图片进内容；
+        opts.inJustDecodeBounds = false;
+        opts.inPreferredConfig = Bitmap.Config.RGB_565;
+        if (widthRatio > 1) {
+            bitmap = Bitmap.createScaledBitmap(bitmap, imgWidth, imgHeight, true);
+        }
+        return bitmap;
+    }
+
     public String compressByWidth(String filepath, int targetWidth, int quality) {
         Bitmap bitmap = compressByWidth(filepath, targetWidth);
         return saveMyBitmap(bitmap, quality, Tool.getFileName(filepath));

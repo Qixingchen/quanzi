@@ -4,6 +4,8 @@ def releaseTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }
 
+def VersionCode = 2
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
@@ -32,7 +34,7 @@ android {
                             return;
                         }
                         String[] name = productFlavorsName.split("-");
-                        def fileName = "${releaseTime()}_v${defaultConfig.versionName}_${name[1]}.apk";
+                        def fileName = "${releaseTime()}_v${defaultConfig.versionName}[code:${versionCode}]_${name[1]}.apk";
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }
@@ -57,7 +59,6 @@ android {
     }
 
     productFlavors {
-        def VersionCode = 2
         Google {
             buildConfigField "boolean", "AllowUpdate", "false"
             versionCode VersionCode
@@ -215,7 +216,7 @@ dependencies {
     compile "com.squareup.retrofit:converter-gson:2.0.0-beta2"
     compile "com.squareup.retrofit:adapter-rxjava:2.0.0-beta2"
     //okHttp
-    compile "com.squareup.okhttp:okhttp:2.5.0"
+    compile "com.squareup.okhttp3:okhttp:3.0.0-RC1"
 
     /*other*/
     //纵向viewpager

@@ -30,7 +30,6 @@ public class DrawGroupFace {
                 Canvas canvas = new Canvas(bitmap);
                 canvas.drawColor(BACKGROUND_COLOR);
                 int halfSize = GROUP_FACE_SIZE / 2;
-                int oneThirdSize = GROUP_FACE_SIZE / 3;
                 int size = getSize(face.length);
                 switch (face.length) {
                     case 1:

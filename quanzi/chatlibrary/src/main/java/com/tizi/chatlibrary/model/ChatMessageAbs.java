@@ -12,34 +12,47 @@ import java.io.Serializable;
  */
 public abstract class ChatMessageAbs extends BaseObservable implements Serializable {
 
+    public static final int MESSAGE_TYPE_TEXT = 0x1;
+    public static final int MESSAGE_TYPE_IMAGE = 0x2;
+    public static final int MESSAGE_TYPE_VOICE = 0x4;
+    public static final int MESSAGE_TYPE_VEDIO = 0x8;
+    public static final int MESSAGE_TYPE_LOCATION = 0x10;
+    public static final int MESSAGE_TYPE_NOTIFI = 0x20;
+    public static final int STATUS_RECEVIED = 3;
+    public static final int STATUS_SENDING = 1;
+    public static final int STATUS_SENT = 2;
+    public static final int STATUS_FAILED = 4;
+    public static final int FROM_ME = 1;
+    public static final int FROM_GROUP_FRIEND = 2;
+    public static final int FROM_OTHER_USER = 3;
+    public static final int FROM_SYSTEM = 4;
+    public static final int CONVERSATION_TYPE_TWO_PERSION = 1;
+    public static final int CONVERSATION_TYPE_FRIEND_GROUP = 2;
+    public static final int CONVERSATION_TYPE_CHAT_ROOM = 3;
     /**
      * 消息的类型
      *
      * @see messageTypeDef
      */
     private int messageType;
-
     /**
      * 消息的状态
      *
      * @see statusDef
      */
     private int status;
-
     /**
      * 消息来源
      *
      * @see messFromDef
      */
     private int from;
-
     /**
      * 对话类型
      *
      * @see conversationTypeDef
      */
     private int conversationType;
-
     private String messID;/*消息ID*/
     private String conversationId;/*会话ID*/
     private String senderID;/*发送者ID*/
@@ -47,52 +60,12 @@ public abstract class ChatMessageAbs extends BaseObservable implements Serializa
     private String senderIcon;/*发送者头像*/
     private long createTime;/*消息产生时间*/
     private long receiptTime;/*消息被接受时间*/
-
     /**
      * 是否已读
      * <p/>
      * 本机发的永远返回已读
      */
     private boolean isRead;
-
-    public static final int MESSAGE_TYPE_TEXT = 0x1;
-    public static final int MESSAGE_TYPE_IMAGE = 0x2;
-    public static final int MESSAGE_TYPE_VOICE = 0x4;
-    public static final int MESSAGE_TYPE_VEDIO = 0x8;
-    public static final int MESSAGE_TYPE_LOCATION = 0x10;
-    public static final int MESSAGE_TYPE_NOTIFI = 0x20;
-
-    @IntDef({MESSAGE_TYPE_TEXT, MESSAGE_TYPE_IMAGE, MESSAGE_TYPE_VOICE, MESSAGE_TYPE_VEDIO,
-            MESSAGE_TYPE_LOCATION, MESSAGE_TYPE_NOTIFI})
-    public @interface messageTypeDef {
-    }
-
-    public static final int STATUS_RECEVIED = 3;
-    public static final int STATUS_SENDING = 1;
-    public static final int STATUS_SENT = 2;
-    public static final int STATUS_FAILED = 4;
-
-    @IntDef({STATUS_SENDING, STATUS_SENT, STATUS_RECEVIED, STATUS_FAILED})
-    public @interface statusDef {
-    }
-
-    public static final int FROM_ME = 1;
-    public static final int FROM_GROUP_FRIEND = 2;
-    public static final int FROM_OTHER_USER = 3;
-    public static final int FROM_SYSTEM = 4;
-
-    @IntDef({FROM_ME, FROM_GROUP_FRIEND, FROM_OTHER_USER, FROM_SYSTEM})
-    public @interface messFromDef {
-    }
-
-    public static final int CONVERSATION_TYPE_TWO_PERSION = 1;
-    public static final int CONVERSATION_TYPE_FRIEND_GROUP = 2;
-    public static final int CONVERSATION_TYPE_CHAT_ROOM = 3;
-
-    @IntDef({CONVERSATION_TYPE_TWO_PERSION, CONVERSATION_TYPE_FRIEND_GROUP, CONVERSATION_TYPE_CHAT_ROOM})
-    public @interface conversationTypeDef {
-    }
-
 
     @Bindable
     public int getMessageType() {
@@ -207,5 +180,22 @@ public abstract class ChatMessageAbs extends BaseObservable implements Serializa
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+
+    @IntDef({MESSAGE_TYPE_TEXT, MESSAGE_TYPE_IMAGE, MESSAGE_TYPE_VOICE, MESSAGE_TYPE_VEDIO,
+            MESSAGE_TYPE_LOCATION, MESSAGE_TYPE_NOTIFI})
+    public @interface messageTypeDef {
+    }
+
+    @IntDef({STATUS_SENDING, STATUS_SENT, STATUS_RECEVIED, STATUS_FAILED})
+    public @interface statusDef {
+    }
+
+    @IntDef({FROM_ME, FROM_GROUP_FRIEND, FROM_OTHER_USER, FROM_SYSTEM})
+    public @interface messFromDef {
+    }
+
+    @IntDef({CONVERSATION_TYPE_TWO_PERSION, CONVERSATION_TYPE_FRIEND_GROUP, CONVERSATION_TYPE_CHAT_ROOM})
+    public @interface conversationTypeDef {
     }
 }

@@ -8,6 +8,9 @@ package com.tizi.chatlibrary.staticData;
 public class UserInfo {
 
     private static UserInfo mInstance;
+    private String userID;
+    private String userName;
+    private String userIcon;
 
     public static UserInfo getInstance() {
         if (mInstance == null) {
@@ -19,10 +22,6 @@ public class UserInfo {
         }
         return mInstance;
     }
-
-    private String userID;
-    private String userName;
-    private String userIcon;
 
     public void setUserInfo(String userID, String userName, String userIcon) {
         this.userID = userID;

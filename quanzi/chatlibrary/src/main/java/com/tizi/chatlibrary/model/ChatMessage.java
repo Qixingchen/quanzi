@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 /**
  * Created by qixingchen on 16/2/23.
- * 消息的抽象类
+ * 基础消息(带文本)
  */
-public abstract class ChatMessageAbs extends BaseObservable implements Serializable {
+public class ChatMessage extends BaseObservable implements Serializable {
 
     public static final int MESSAGE_TYPE_TEXT = 0x1;
     public static final int MESSAGE_TYPE_IMAGE = 0x2;
@@ -58,6 +58,7 @@ public abstract class ChatMessageAbs extends BaseObservable implements Serializa
     private String senderID;/*发送者ID*/
     private String senderName;/*发送者名称*/
     private String senderIcon;/*发送者头像*/
+    private String chatText;/*消息的文本*/
     private long createTime;/*消息产生时间*/
     private long receiptTime;/*消息被接受时间*/
     /**
@@ -137,6 +138,15 @@ public abstract class ChatMessageAbs extends BaseObservable implements Serializa
 
     public void setSenderName(String senderName) {
         this.senderName = senderName;
+    }
+
+    @Bindable
+    public String getChatText() {
+        return chatText;
+    }
+
+    public void setChatText(String chatText) {
+        this.chatText = chatText;
     }
 
     @Bindable

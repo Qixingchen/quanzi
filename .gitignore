@@ -254,3 +254,5 @@ $RECYCLE.BIN/
 **/*.sln.ide
 
 **/.navigation/app/raw/
+
+quanzi/gradle.properties

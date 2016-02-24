@@ -359,7 +359,7 @@ public class DBAct {
     }
 
     /**
-     * 获取未读的系统消息
+     * 获取未读的系统消息的ID
      */
     public List<String> quaryAllUnreadSysMess() {
         Cursor sysMessCursor = db.query(DataBaseHelper.SystemMessSQLName.TableName,//table name

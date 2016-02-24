@@ -12,23 +12,28 @@ import java.io.Serializable;
  */
 public class ChatMessage extends BaseObservable implements Serializable {
 
-    public static final int MESSAGE_TYPE_TEXT = 0x1;
-    public static final int MESSAGE_TYPE_IMAGE = 0x2;
-    public static final int MESSAGE_TYPE_VOICE = 0x4;
-    public static final int MESSAGE_TYPE_VEDIO = 0x8;
-    public static final int MESSAGE_TYPE_LOCATION = 0x10;
-    public static final int MESSAGE_TYPE_NOTIFI = 0x20;
-    public static final int STATUS_RECEVIED = 3;
+    public static final int MESSAGE_TYPE_TEXT = 1;
+    public static final int MESSAGE_TYPE_IMAGE = 2;
+    public static final int MESSAGE_TYPE_VOICE = 3;
+    public static final int MESSAGE_TYPE_VEDIO = 4;
+    public static final int MESSAGE_TYPE_LOCATION = 5;
+    public static final int MESSAGE_TYPE_NOTIFI = 6;
+
     public static final int STATUS_SENDING = 1;
     public static final int STATUS_SENT = 2;
+    public static final int STATUS_RECEVIED = 3;
     public static final int STATUS_FAILED = 4;
+
     public static final int FROM_ME = 1;
     public static final int FROM_GROUP_FRIEND = 2;
     public static final int FROM_OTHER_USER = 3;
     public static final int FROM_SYSTEM = 4;
+
     public static final int CONVERSATION_TYPE_TWO_PERSION = 1;
     public static final int CONVERSATION_TYPE_FRIEND_GROUP = 2;
-    public static final int CONVERSATION_TYPE_CHAT_ROOM = 3;
+    public static final int CONVERSATION_TYPE_TEMP_GROUP = 3;
+    public static final int CONVERSATION_TYPE_CHAT_ROOM = 4;
+    public static final int CONVERSATION_TYPE_SYSTEM = 5;
     /**
      * 消息的类型
      *
@@ -184,6 +189,7 @@ public class ChatMessage extends BaseObservable implements Serializable {
         return status != STATUS_RECEVIED;
     }
 
+    @Bindable
     public boolean isRead() {
         return isRead | getIsSelfSend();
     }
@@ -205,7 +211,8 @@ public class ChatMessage extends BaseObservable implements Serializable {
     public @interface messFromDef {
     }
 
-    @IntDef({CONVERSATION_TYPE_TWO_PERSION, CONVERSATION_TYPE_FRIEND_GROUP, CONVERSATION_TYPE_CHAT_ROOM})
+    @IntDef({CONVERSATION_TYPE_TWO_PERSION, CONVERSATION_TYPE_FRIEND_GROUP,
+            CONVERSATION_TYPE_CHAT_ROOM, CONVERSATION_TYPE_SYSTEM})
     public @interface conversationTypeDef {
     }
 }

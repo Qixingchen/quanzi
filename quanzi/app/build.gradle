@@ -35,7 +35,7 @@ android {
                             return;
                         }
                         String[] name = productFlavorsName.split("-");
-                        def fileName = "${releaseTime()}_v${defaultConfig.versionName}[code:${versionCode}]_${name[1]}.apk";
+                        def fileName = "${releaseTime()}_v${defaultConfig.versionName}[code_${versionCode}]_${name[1]}.apk";
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }

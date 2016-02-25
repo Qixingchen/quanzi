@@ -1,4 +1,4 @@
-package com.tizi.chatlibrary.model;
+package com.tizi.chatlibrary.model.message;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;

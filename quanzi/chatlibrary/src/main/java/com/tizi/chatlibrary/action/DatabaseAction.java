@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.tizi.chatlibrary.model.ChatMessage;
-import com.tizi.chatlibrary.model.ConvGroupAbs;
-import com.tizi.chatlibrary.model.ImageChatMessage;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.model.message.ImageChatMessage;
 import com.tizi.chatlibrary.staticSettings.StaticSettings;
 
 import java.io.File;
@@ -19,10 +19,11 @@ import java.util.Locale;
 
 /**
  * Created by qixingchen on 16/2/24.
+ * 数据库的操作
  */
 public class DatabaseAction {
 
-    private SQLiteDatabase db = Init.db;
+    private static SQLiteDatabase db = Init.db;
 
     /*查询*/
 
@@ -38,7 +39,7 @@ public class DatabaseAction {
      * @see ChatMessage
      */
     @NonNull
-    public List<ChatMessage> queryMessage(String ConversationId) {
+    public static List<ChatMessage> queryMessage(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.conversationId + "=?",//条件
@@ -71,7 +72,7 @@ public class DatabaseAction {
      * @see ChatMessage
      */
     @NonNull
-    public List<ChatMessage> queryMessage(String ConversationId, int start) {
+    public static List<ChatMessage> queryMessage(String ConversationId, int start) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.conversationId + "=?",//条件
@@ -103,7 +104,7 @@ public class DatabaseAction {
      * @see ChatMessage
      */
     @Nullable
-    public ChatMessage queryMessageByID(String messID) {
+    public static ChatMessage queryMessageByID(String messID) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.messID + "=?",//条件
@@ -131,7 +132,7 @@ public class DatabaseAction {
      * @see ChatMessage
      */
     @Nullable
-    public ChatMessage queryOldestMessage(String ConversationId) {
+    public static ChatMessage queryOldestMessage(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.conversationId + "=?",//条件
@@ -161,7 +162,7 @@ public class DatabaseAction {
      * @see ChatMessage
      */
     @Nullable
-    public ChatMessage queryNewestMessage(String ConversationId) {
+    public static ChatMessage queryNewestMessage(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.conversationId + "=?",//条件
@@ -188,7 +189,7 @@ public class DatabaseAction {
      *
      * @return 未读数量
      */
-    public ArrayList<String> quaryUnreadList(String ConversationId) {
+    public static List<String> quaryUnreadList(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.isread + "=? and "
@@ -212,7 +213,7 @@ public class DatabaseAction {
     /**
      * 查询所有的图片消息
      */
-    public List<String> quaryPhotoMess(String ConversationId) {
+    public static List<String> quaryPhotoMess(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.messageType + "=? and "
@@ -246,7 +247,7 @@ public class DatabaseAction {
      *
      * @return 系统消息 List
      */
-    public List<ChatMessage> quaryAllSysMess() {
+    public static List<ChatMessage> quaryAllSysMess() {
         Cursor sysMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.conversationType + "=?",//条件
@@ -271,7 +272,7 @@ public class DatabaseAction {
     /**
      * 获取未读的系统消息的ID
      */
-    public List<String> quaryAllUnreadSysMess() {
+    public static List<String> quaryAllUnreadSysMess() {
         Cursor sysMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.messID},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.isread + "=?",//条件
@@ -298,7 +299,7 @@ public class DatabaseAction {
      * @return 返回的 ChatMessage
      */
     @Nullable
-    private ChatMessage chatMessageFromCursor(Cursor cursor) {
+    private static ChatMessage chatMessageFromCursor(Cursor cursor) {
         ChatMessage chatMessage = null;
         byte[] SerializString = cursor.getBlob(
                 cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.Serializable));
@@ -317,7 +318,7 @@ public class DatabaseAction {
      * @return List of ConvGroupAbs
      */
     @NonNull
-    public List<ConvGroupAbs> quaryAllChatGroup() {
+    public static List<ConvGroupAbs> quaryAllChatGroup() {
         Cursor cursor = db.query(DataBaseHelper.chatGroupSQLNmae.TableName,//table name
                 null,//返回的列,null表示全选
                 null,//条件
@@ -347,7 +348,7 @@ public class DatabaseAction {
      * @return 获得的会话组
      */
     @Nullable
-    public ConvGroupAbs quaryChatGroup(String id) {
+    public static ConvGroupAbs quaryChatGroup(String id) {
         Cursor cursor = db.query(DataBaseHelper.chatGroupSQLNmae.TableName,//table name
                 null,//返回的列,null表示全选
                 DataBaseHelper.chatGroupSQLNmae.id + "=?",//条件
@@ -373,7 +374,7 @@ public class DatabaseAction {
      * @return 返回的 ConvGroupAbs
      */
     @Nullable
-    private ConvGroupAbs ConvGroupAbsFromCursor(Cursor cursor) {
+    private static ConvGroupAbs ConvGroupAbsFromCursor(Cursor cursor) {
         ConvGroupAbs convGroupAbs = null;
         byte[] SerializString = cursor.getBlob(
                 cursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.Serializable));
@@ -391,7 +392,7 @@ public class DatabaseAction {
      *
      * @param chatMessage 需要添加／更新的 ChatMessage {@link ChatMessage}
      */
-    public void addOrReplaceChatMessage(ChatMessage chatMessage) {
+    public static void addOrReplaceChatMessage(ChatMessage chatMessage) {
         ContentValues content = new ContentValues();
 
         content.put(DataBaseHelper.chatHistorySQLName.messID, chatMessage.getMessID());
@@ -411,7 +412,7 @@ public class DatabaseAction {
      *
      * @param convID 需标记为已读的 ConvID
      */
-    public void setAllAsRead(String convID) {
+    public static void setAllAsRead(String convID) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 null,//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.isread + "=? and "
@@ -437,7 +438,7 @@ public class DatabaseAction {
     /**
      * 添加或更新 ChatMessPair
      */
-    public void addOrReplaceChatGroup(ConvGroupAbs group) {
+    public static void addOrReplaceChatGroup(ConvGroupAbs group) {
 
         ContentValues content = new ContentValues();
         content.put(DataBaseHelper.chatGroupSQLNmae.id, group.getID());
@@ -454,7 +455,7 @@ public class DatabaseAction {
      *
      * @param convID 要删除的 convID
      */
-    public void deleteAllMessage(String convID) {
+    public static void deleteAllMessage(String convID) {
         db.delete(DataBaseHelper.chatHistorySQLName.TableName, DataBaseHelper.chatHistorySQLName.conversationId + "=?",
                 new String[]{convID});
     }
@@ -464,7 +465,7 @@ public class DatabaseAction {
      *
      * @param MessID 要删除的 MessID
      */
-    public void deleteMessage(String MessID) {
+    public static void deleteMessage(String MessID) {
         db.delete(DataBaseHelper.chatHistorySQLName.TableName, DataBaseHelper.chatHistorySQLName.messID + "=?",
                 new String[]{MessID});
     }
@@ -472,7 +473,7 @@ public class DatabaseAction {
     /**
      * 删除所有的系统消息
      */
-    public void deleteAllSystemMessage() {
+    public static void deleteAllSystemMessage() {
         db.delete(DataBaseHelper.chatHistorySQLName.TableName, DataBaseHelper.chatHistorySQLName.conversationType + "=?",
                 new String[]{String.valueOf(ChatMessage.CONVERSATION_TYPE_SYSTEM)});
     }
@@ -482,7 +483,7 @@ public class DatabaseAction {
      *
      * @param ID 要删除的组的ID
      */
-    public void deletePriMessPair(String ID) {
+    public static void deletePriMessPair(String ID) {
         db.delete(DataBaseHelper.chatGroupSQLNmae.TableName, DataBaseHelper.chatGroupSQLNmae.id + "=?",
                 new String[]{ID});
     }

@@ -154,6 +154,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    compile project(':chatlibrary')
     /*Android基础 与 Google*/
     compile "com.android.support:support-v4:${supportLibraryVersion}"
     compile "com.android.support:preference-v7:${supportLibraryVersion}"

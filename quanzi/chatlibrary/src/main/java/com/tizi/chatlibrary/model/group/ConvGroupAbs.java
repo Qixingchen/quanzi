@@ -1,4 +1,4 @@
-package com.tizi.chatlibrary.model;
+package com.tizi.chatlibrary.model.group;
 
 
 import android.databinding.Bindable;
@@ -6,6 +6,7 @@ import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
 import com.tizi.chatlibrary.BR;
+import com.tizi.chatlibrary.model.message.ChatMessage;
 
 import java.io.Serializable;
 import java.util.HashSet;

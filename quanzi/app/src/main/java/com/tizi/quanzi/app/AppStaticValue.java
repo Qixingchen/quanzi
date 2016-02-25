@@ -10,6 +10,7 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMClientStatusCallback;
+import com.tizi.chatlibrary.action.Init;
 import com.tizi.quanzi.database.DataBaseHelper;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
@@ -60,6 +61,7 @@ public class AppStaticValue {
     public static void setDataBaseHelper(String userID) {
         db = new DataBaseHelper(App.getApplication(), userID, null, 2);
         db1 = db.getWritableDatabase();
+        Init.init(userID);
     }
 
     public static SQLiteDatabase getDatabase() {
@@ -88,6 +90,7 @@ public class AppStaticValue {
         } else {
             db = new DataBaseHelper(App.getApplication(), userID, null, 2);
             db1 = db.getWritableDatabase();
+            Init.init(userID);
         }
     }
 

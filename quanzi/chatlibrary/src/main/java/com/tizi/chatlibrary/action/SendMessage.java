@@ -1,6 +1,6 @@
 package com.tizi.chatlibrary.action;
 
-import com.tizi.chatlibrary.model.ChatMessage;
+import com.tizi.chatlibrary.model.message.ChatMessage;
 
 /**
  * Created by qixingchen on 16/2/24.
@@ -19,7 +19,8 @@ public class SendMessage {
      * 消息发送成功
      */
     public void onMessageSendOK(String tempID, ChatMessage chatMessage, String CONVERSATION_ID) {
-
+        DatabaseAction.deleteMessage(tempID);
+        DatabaseAction.addOrReplaceChatMessage(chatMessage);
     }
 
     /**
@@ -27,7 +28,7 @@ public class SendMessage {
      */
     public void onMessageSendError(String errorMessage, String CONVERSATION_ID,
                                    String tempID, ChatMessage chatMessage) {
-
+        DatabaseAction.addOrReplaceChatMessage(chatMessage);
     }
 
     /**
@@ -35,7 +36,7 @@ public class SendMessage {
      */
     public void onMessagePreSend(String CONVERSATION_ID,
                                  String tempID, ChatMessage chatMessage) {
-
+        DatabaseAction.addOrReplaceChatMessage(chatMessage);
     }
 
     public void SendMessage(ChatMessage chatMessage) {

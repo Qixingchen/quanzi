@@ -1,4 +1,4 @@
-package com.tizi.chatlibrary.model;
+package com.tizi.chatlibrary.model.group;
 
 /**
  * Created by qixingchen on 15/10/10.

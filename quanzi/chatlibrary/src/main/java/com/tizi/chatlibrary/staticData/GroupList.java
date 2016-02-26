@@ -18,7 +18,19 @@ import java.util.List;
  */
 public class GroupList<T extends ConvGroupAbs> {
 
+    private static GroupList mInstance;
     private final ArrayList<T> groupList = new ArrayList<>();
+
+    public static GroupList getInstance() {
+        if (mInstance == null) {
+            synchronized (GroupList.class) {
+                if (mInstance == null) {
+                    mInstance = new GroupList();
+                }
+            }
+        }
+        return mInstance;
+    }
 
     /**
      * 初始化设置指定群的未读消息

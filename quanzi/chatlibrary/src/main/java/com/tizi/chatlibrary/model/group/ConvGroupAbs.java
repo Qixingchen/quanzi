@@ -7,6 +7,7 @@ import android.databinding.PropertyChangeRegistry;
 
 import com.tizi.chatlibrary.BR;
 import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.staticData.GroupList;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -177,10 +178,9 @@ public class ConvGroupAbs implements Serializable, Observable {
      *
      * @param GroupID 群号
      *
-     * @return true：是自己的圈子
-     * todo:进行判断
+     * @return true：是自己的圈子 false:不是自己的圈子
      */
     private boolean isMyGroup(String GroupID) {
-        return true;
+        return GroupList.getInstance().getGroup(GroupID) != null;
     }
 }

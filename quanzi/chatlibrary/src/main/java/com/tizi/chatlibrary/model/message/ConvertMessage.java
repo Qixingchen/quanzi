@@ -9,18 +9,19 @@ public class ConvertMessage<T extends Object> {
     private static ConvertMessage mInstance;
     private Convert mConvert;
 
-    public ConvertMessage(Class<T> klass) {
-    }
-
-    public static ConvertMessage getInstance(Object t) {
+    public static ConvertMessage getInstance() {
         if (mInstance == null) {
             synchronized (ConvertMessage.class) {
                 if (mInstance == null) {
-                    mInstance = new ConvertMessage(t.getClass());
+                    mInstance = new ConvertMessage();
                 }
             }
         }
         return mInstance;
+    }
+
+    public void setConvert(Convert mConvert) {
+        this.mConvert = mConvert;
     }
 
     public ChatMessage convert(T t) {

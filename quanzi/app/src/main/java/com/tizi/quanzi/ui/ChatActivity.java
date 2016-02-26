@@ -24,25 +24,24 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.squareup.otto.Subscribe;
+import com.tizi.chatlibrary.action.MessageManage;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.model.group.TempGroupClass;
+import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.model.message.ImageChatMessage;
+import com.tizi.chatlibrary.model.message.VoiceChatMessage;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatMessageAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.SendMessage;
-import com.tizi.quanzi.dataStatic.BoomGroupList;
-import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.model.BoomGroupClass;
-import com.tizi.quanzi.model.ChatMessage;
-import com.tizi.quanzi.model.GroupClass;
-import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.notification.AddNotification;
@@ -128,7 +127,6 @@ public class ChatActivity extends BaseActivity {
         @Override
         public void sendError(String errorMessage, String convID, String tempID, ChatMessage chatMessage) {
             Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
-            chatMessage.status = AVIMMessage.AVIMMessageStatus.AVIMMessageStatusFailed.getStatusCode();
             chatMessageAdapter.updateTempMess(tempID, chatMessage);
         }
 
@@ -137,18 +135,19 @@ public class ChatActivity extends BaseActivity {
     private ChatMessageAdapter.OnResend onResend = new ChatMessageAdapter.OnResend() {
         @Override
         public boolean onResend(ChatMessage chatMessage) {
-            switch (chatMessage.type) {
-                case StaticField.ChatContantType.TEXT:
+            String groupID = getGroupID();
+            switch (chatMessage.getMessageType()) {
+                case ChatMessage.MESSAGE_TYPE_TEXT:
                     SendMessage.getNewInstance().setChatViewSendOK(sendOK)
-                            .sendTextMessage(CONVERSATION_ID, chatMessage.text, setAttrs());
+                            .sendTextMessage(CONVERSATION_ID, chatMessage.getChatText(), setAttrs(), groupID);
                     break;
-                case StaticField.ChatContantType.IMAGE:
+                case ChatMessage.MESSAGE_TYPE_IMAGE:
                     SendMessage.getNewInstance().setChatViewSendOK(sendOK)
-                            .sendImageMesage(CONVERSATION_ID, chatMessage.local_path, setAttrs());
+                            .sendImageMesage(CONVERSATION_ID, ((ImageChatMessage) chatMessage).getLocalPath(), setAttrs(), groupID);
                     break;
-                case StaticField.ChatContantType.VOICE:
+                case ChatMessage.MESSAGE_TYPE_VOICE:
                     SendMessage.getNewInstance().setChatViewSendOK(sendOK)
-                            .sendAudioMessage(CONVERSATION_ID, chatMessage.local_path, setAttrs());
+                            .sendAudioMessage(CONVERSATION_ID, ((VoiceChatMessage) chatMessage).getLocalPath(), setAttrs(), groupID);
                     break;
                 default:
                     return false;
@@ -242,7 +241,7 @@ public class ChatActivity extends BaseActivity {
                                     v.vibrate(200);
                                     SendMessage.getNewInstance().setChatViewSendOK(sendOK)
                                             .sendAudioMessage(CONVERSATION_ID, Filepath,
-                                                    setAttrs());
+                                                    setAttrs(), getGroupID());
                                 }
                             }
 
@@ -272,7 +271,7 @@ public class ChatActivity extends BaseActivity {
                         v.vibrate(200);
                         SendMessage.getNewInstance().setChatViewSendOK(sendOK)
                                 .sendAudioMessage(CONVERSATION_ID, Filepath,
-                                        setAttrs());
+                                        setAttrs(), getGroupID());
                     } else if (recodeAudio.AllPermissionGrant() && Filepath != null
                             && Filepath.compareTo("less") == 0) {
                         Toast.makeText(context, "按住录音,放开发送", Toast.LENGTH_SHORT).show();
@@ -365,7 +364,7 @@ public class ChatActivity extends BaseActivity {
             public void onRefresh() {
 
                 List<ChatMessage> chatMessageList =
-                        DBAct.getInstance().queryMessage(CONVERSATION_ID, chatMessageAdapter.getItemCount());
+                        MessageManage.queryMess(CONVERSATION_ID, chatMessageAdapter.getItemCount());
 
                 chatMessageAdapter.addOrUpdateMessages(chatMessageList);
                 ChatSwipeToRefresh.setRefreshing(false);
@@ -398,7 +397,7 @@ public class ChatActivity extends BaseActivity {
                         }
 
                         SendMessage.getNewInstance().setChatViewSendOK(sendOK)
-                                .sendTextMessage(CONVERSATION_ID, text, setAttrs());
+                                .sendTextMessage(CONVERSATION_ID, text, setAttrs(), getGroupID());
                         InputMessage.setText("");
 
                     }
@@ -454,19 +453,19 @@ public class ChatActivity extends BaseActivity {
                         public void onError(String Message) {
                             Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
                         }
-                    }).findUserByID(PrivateMessPairList.getInstance().getGroupIDByConvID(CONVERSATION_ID));
+                    }).findUserByID(GroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID));
                     return true;
                 case StaticField.ConvType.BOOM_GROUP:
-                    BoomGroupClass boom = BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
+                    TempGroupClass boom = (TempGroupClass) GroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
                     if (boom == null) {
                         Snackbar.make(view, "出错了", Snackbar.LENGTH_LONG).show();
                         return true;
                     }
-                    String groupID;
-                    if (GroupList.getInstance().getGroup(boom.groupId1) == null) {
-                        groupID = boom.groupId1;
+                    String groupID = null;
+                    if (boom.isGroup1MyGroup()) {
+                        groupID = boom.getGroupId2();
                     } else {
-                        groupID = boom.groupId2;
+                        boom.getGroupId1();
                     }
                     Intent boomIntent = new Intent(this, QuanziZoneActivity.class);
                     boomIntent.putExtra("groupID", groupID);
@@ -483,27 +482,9 @@ public class ChatActivity extends BaseActivity {
             builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    MessageManage.deleteAllMess(CONVERSATION_ID);
                     DBAct.getInstance().deleteAllMessage(CONVERSATION_ID);
                     chatMessageAdapter.chatMessageList.clear();
-                    switch (ChatType) {
-                        case StaticField.ConvType.GROUP:
-                            GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMess("");
-                            GroupList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMessTime(0);
-                            GroupList.getInstance().removeAllUnread(CONVERSATION_ID);
-                            break;
-
-                        case StaticField.ConvType.BOOM_GROUP:
-                            BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMess("");
-                            BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMessTime(0);
-                            BoomGroupList.getInstance().removeAllUnread(CONVERSATION_ID);
-                            break;
-
-                        case StaticField.ConvType.TWO_PERSON:
-                            PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMess("");
-                            PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID).setLastMessTime(0);
-                            PrivateMessPairList.getInstance().removeAllUnread(CONVERSATION_ID);
-                            break;
-                    }
                 }
             });
             builder.setNegativeButton("取消", null);
@@ -547,7 +528,7 @@ public class ChatActivity extends BaseActivity {
         ChatType = getIntent().getIntExtra("chatType", 9);
         //adapt
         List<ChatMessage> chatMessageList =
-                DBAct.getInstance().queryMessage(CONVERSATION_ID, 0);
+                MessageManage.queryMess(CONVERSATION_ID, 0);
         chatMessageAdapter = new ChatMessageAdapter(chatMessageList, this);
         chatMessageAdapter.setOnResend(onResend);
         chatmessagerecyclerView.setAdapter(chatMessageAdapter);
@@ -652,7 +633,7 @@ public class ChatActivity extends BaseActivity {
     private void sendImageMessage(String filePath) {
         SendMessage.getNewInstance()
                 .setChatViewSendOK(sendOK)
-                .sendImageMesage(CONVERSATION_ID, filePath, setAttrs());
+                .sendImageMesage(CONVERSATION_ID, filePath, setAttrs(), getGroupID());
     }
 
     /*聊天消息回调接口*/
@@ -692,41 +673,20 @@ public class ChatActivity extends BaseActivity {
      * 设置attrs
      */
     private Map<String, Object> setAttrs() {
-        Map<String, Object> attr;
-        if (ChatType == StaticField.ConvType.GROUP) {
-            attr = SendMessage.setMessAttr(GroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID),
-                    ChatType);
-        } else if (ChatType == StaticField.ConvType.BOOM_GROUP) {
-            attr = SendMessage.setMessAttr(BoomGroupList.getInstance().getGroupIDByConvID(CONVERSATION_ID),
-                    ChatType);
-        } else {
-            attr = SendMessage.setMessAttr(PrivateMessPairList.getInstance().getGroupIDByConvID(CONVERSATION_ID), ChatType);
+        Map<String, Object> attr = null;
+        ConvGroupAbs group = GroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
+        if (group != null) {
+            attr = SendMessage.setMessAttr(group.getID(), ChatType);
         }
         return attr;
     }
 
     private void setTitle() {
-        switch (ChatType) {
-            case StaticField.ConvType.GROUP:
-                GroupClass group = (GroupClass) GroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
-                if (group != null) {
-                    toolbarTitle = group.getName();
-                }
-                break;
 
-            case StaticField.ConvType.BOOM_GROUP:
-                BoomGroupClass boom = BoomGroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
-                if (boom != null) {
-                    toolbarTitle = boom.getName();
-                }
-                break;
+        ConvGroupAbs group = GroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
 
-            case StaticField.ConvType.TWO_PERSON:
-                PrivateMessPair pair = PrivateMessPairList.getInstance().getGroupByConvID(CONVERSATION_ID);
-                if (pair != null) {
-                    toolbarTitle = pair.getName();
-                }
-                break;
+        if (group != null) {
+            toolbarTitle = group.getName();
         }
         Observable.create(new Observable.OnSubscribe<String>() {
             @Override
@@ -750,5 +710,21 @@ public class ChatActivity extends BaseActivity {
                         toolbar.setTitle(MyAVIMClientEventHandler.getInstance().isNetworkAvailable ? toolbarTitle : "等待网络");
                     }
                 });
+    }
+
+    private String getGroupID() {
+        ConvGroupAbs group = GroupList.getInstance().getGroupByConvID(CONVERSATION_ID);
+        if (group == null) {
+            return "";
+        }
+        String groupID = group.getID();
+        if (group instanceof TempGroupClass) {
+            if (((TempGroupClass) group).isGroup1MyGroup()) {
+                groupID = ((TempGroupClass) group).getGroupId1();
+            } else {
+                groupID = ((TempGroupClass) group).getGroupId2();
+            }
+        }
+        return groupID;
     }
 }

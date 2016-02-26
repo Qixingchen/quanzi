@@ -13,6 +13,19 @@ public class ImageChatMessage extends ChatMessage {
     private int imageWeight;/*图片宽*/
     private String localPath;/*图片本地地址*/
 
+    public ImageChatMessage() {
+    }
+
+    public ImageChatMessage(String localPath) {
+        this.localPath = localPath;
+    }
+
+    public ImageChatMessage(int imageHeight, int imageWeight, String localPath) {
+        this.imageHeight = imageHeight;
+        this.imageWeight = imageWeight;
+        this.localPath = localPath;
+    }
+
     @Bindable
     public String getImageUrl() {
         return imageUrl;

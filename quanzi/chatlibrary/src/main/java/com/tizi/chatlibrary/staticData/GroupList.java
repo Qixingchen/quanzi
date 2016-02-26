@@ -156,7 +156,7 @@ public class GroupList<T extends ConvGroupAbs> {
             for (T groupclass : groupList) {
                 if (groupclass.getID().compareTo(groupID) == 0) {
                     groupList.remove(groupclass);
-
+                    DatabaseAction.deleteGroup(groupID);
                     return true;
                 }
             }
@@ -227,22 +227,30 @@ public class GroupList<T extends ConvGroupAbs> {
     /**
      * 添加未读消息
      *
-     * @param convID convID
-     * @param messID 未读的messID
+     * @param message 要添加的未读消息
      *
      * @return 是否被添加了
      */
-    public boolean addUnreadMessIDByConvID(String convID, String messID) {
-        T group = getGroupByConvID(convID);
-        if (group != null && group.addUnreadMessageID(messID)) {
-
-            return true;
-        }
-        return false;
-    }
-
     public boolean addUnreadMess(ChatMessage message) {
-        return addUnreadMessIDByConvID(message.getConversationId(), message.getMessID());
+        String convID = message.getConversationId();
+        T group = getGroupByConvID(convID);
+        if (group == null) {
+            switch (message.getConversationType()) {
+                case ChatMessage.CONVERSATION_TYPE_TWO_PERSION:
+                    ConvGroupAbs groupAbs = new ConvGroupAbs(message.getSenderName(), message.getSenderIcon(),
+                            message.getSenderID(), ChatMessage.CONVERSATION_TYPE_TWO_PERSION, message.getConversationId());
+                    groupList.add((T) groupAbs);
+                    group = (T) groupAbs;
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        group.setLastMess(message.getChatText());
+        group.setLastMessTime(message.getCreateTime());
+
+        return group.addUnreadMessageID(message.getMessID());
     }
 
     /**

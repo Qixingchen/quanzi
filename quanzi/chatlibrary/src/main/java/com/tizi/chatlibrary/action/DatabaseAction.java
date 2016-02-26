@@ -39,7 +39,7 @@ public class DatabaseAction {
      * @see ChatMessage
      */
     @NonNull
-    public static List<ChatMessage> queryMessage(String ConversationId) {
+    public static List<ChatMessage> queryAllMessage(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.conversationId + "=?",//条件
@@ -483,7 +483,7 @@ public class DatabaseAction {
      *
      * @param ID 要删除的组的ID
      */
-    public static void deletePriMessPair(String ID) {
+    public static void deleteGroup(String ID) {
         db.delete(DataBaseHelper.chatGroupSQLNmae.TableName, DataBaseHelper.chatGroupSQLNmae.id + "=?",
                 new String[]{ID});
     }

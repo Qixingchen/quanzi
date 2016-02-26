@@ -15,13 +15,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
 
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.model.message.CommentNotifyMessage;
+import com.tizi.chatlibrary.model.message.SystemMessage;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.dataStatic.BoomGroupList;
-import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.model.ChatMessage;
-import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.util.ArrayList;
@@ -188,30 +189,32 @@ public class AddNotification {
         if (App.isAppForeground && !needInAppNotifi) {
             return;
         }
-        if (!AppStaticValue.getNeedNotifi(chatMessage.ConversationId)) {
+        if (!AppStaticValue.getNeedNotifi(chatMessage.getConversationId())) {
             return;
         }
         addMessage(NotifiContact.fromMessage(chatMessage));
     }
 
     public void addMessage(SystemMessage systemMessage) {
-        if (!needNotifi) {
+        if (!needNotifi || !needSysNotifi) {
             return;
         }
-        int flag = systemMessage.sys_msg_flag;
+        int flag = systemMessage.getSys_msg_Type();
         if (flag == StaticField.SystemMessAttrName.systemFlag.notice ||
                 flag == StaticField.SystemMessAttrName.systemFlag.invitation ||
                 flag == StaticField.SystemMessAttrName.systemFlag.kicked ||
                 flag == StaticField.SystemMessAttrName.systemFlag.group_delete) {
-            if (needSysNotifi) {
-                addMessage(NotifiContact.sysMessage(systemMessage.content, systemMessage.create_time, "系统消息"));
-            }
-            return;
-        }
-        if (needZanNotifi) {
-            addMessage(NotifiContact.sysMessage(systemMessage.reply_comment, systemMessage.create_time, systemMessage.content));
-        }
 
+            addMessage(NotifiContact.sysMessage(systemMessage.getContent(), systemMessage.getCreateTime(), "系统消息"));
+
+        }
+    }
+
+    public void addMessage(CommentNotifyMessage commentMess) {
+        if (!needNotifi || !needZanNotifi) {
+            addMessage(NotifiContact.sysMessage(commentMess.getReply_comment(), commentMess.getCreateTime(),
+                    commentMess.getDyn_content()));
+        }
     }
 
     private void addMessage(NotifiContact notifiContact) {
@@ -270,16 +273,8 @@ public class AddNotification {
             this.messFrom = messFrom;
         }
 
-        public static NotifiContact groupMessage(String convID, String contact, String groupID, long createTime, String messFrom) {
+        public static NotifiContact chatMessage(String convID, String contact, String groupID, long createTime, String messFrom) {
             return new NotifiContact(NotifiContact.GROUP, convID, contact, groupID, createTime, messFrom);
-        }
-
-        public static NotifiContact boomGroupMessage(String convID, String contact, String groupID, long createTime, String messFrom) {
-            return new NotifiContact(NotifiContact.BOOM_GROUP, convID, contact, groupID, createTime, messFrom);
-        }
-
-        public static NotifiContact priMessage(String convID, String contact, String userID, long createTime, String messFrom) {
-            return new NotifiContact(NotifiContact.PRI_MESS, convID, contact, userID, createTime, messFrom);
         }
 
         public static NotifiContact sysMessage(String contact, long createTime, String messFrom) {
@@ -289,31 +284,13 @@ public class AddNotification {
         @Nullable
         public static NotifiContact fromMessage(ChatMessage chatMessage) {
             String groupID;
-            switch (chatMessage.ChatBothUserType) {
 
-                case StaticField.ConvType.GROUP:
-                    groupID = GroupList.getInstance().getGroupIDByConvID(chatMessage.ConversationId);
-                    if (groupID.equals("")) {
-                        return null;
-                    }
-                    return groupMessage(chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
-                            groupID, chatMessage.create_time, chatMessage.userName);
-
-                case StaticField.ConvType.TWO_PERSON:
-                    return priMessage(chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
-                            chatMessage.sender, chatMessage.create_time, chatMessage.userName);
-
-                case StaticField.ConvType.BOOM_GROUP:
-                    groupID = BoomGroupList.getInstance().getGroupIDByConvID(chatMessage.ConversationId);
-                    if (groupID.equals("")) {
-                        return null;
-                    }
-                    return groupMessage(chatMessage.ConversationId, ChatMessage.getContentText(chatMessage),
-                            groupID, chatMessage.create_time, chatMessage.userName);
-
-                default:
-                    return null;
+            groupID = chatMessage.getSenderGroupID();
+            ConvGroupAbs group = GroupList.getInstance().getGroup(groupID);
+            if (group != null) {
+                return chatMessage(chatMessage.getConversationId(), chatMessage.getChatText(), chatMessage.getSenderGroupID(), chatMessage.getCreateTime(), group.getName());
             }
+            return null;
         }
 
         @IntDef({GROUP, PRI_MESS, SYSTEM, BOOM_GROUP})

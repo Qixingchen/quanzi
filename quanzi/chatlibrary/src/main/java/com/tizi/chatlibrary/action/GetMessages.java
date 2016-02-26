@@ -32,7 +32,7 @@ public class GetMessages {
      * @param convID 群的convID
      */
     public static List<ChatMessage> getGroupMessageByConvID(String convID) {
-        return DatabaseAction.queryMessage(convID);
+        return DatabaseAction.queryAllMessage(convID);
 
     }
 

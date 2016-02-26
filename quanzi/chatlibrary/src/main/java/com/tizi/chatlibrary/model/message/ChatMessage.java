@@ -29,11 +29,11 @@ public class ChatMessage extends BaseObservable implements Serializable {
     public static final int FROM_OTHER_USER = 3;
     public static final int FROM_SYSTEM = 4;
 
-    public static final int CONVERSATION_TYPE_TWO_PERSION = 1;
-    public static final int CONVERSATION_TYPE_FRIEND_GROUP = 2;
-    public static final int CONVERSATION_TYPE_TEMP_GROUP = 3;
-    public static final int CONVERSATION_TYPE_CHAT_ROOM = 4;
-    public static final int CONVERSATION_TYPE_SYSTEM = 5;
+    public static final int CONVERSATION_TYPE_TWO_PERSION = 0;
+    public static final int CONVERSATION_TYPE_FRIEND_GROUP = 1;
+    public static final int CONVERSATION_TYPE_TEMP_GROUP = 2;
+    public static final int CONVERSATION_TYPE_CHAT_ROOM = 3;
+    public static final int CONVERSATION_TYPE_SYSTEM = 4;
     /**
      * 消息的类型
      *
@@ -63,6 +63,7 @@ public class ChatMessage extends BaseObservable implements Serializable {
     private String senderID;/*发送者ID*/
     private String senderName;/*发送者名称*/
     private String senderIcon;/*发送者头像*/
+    private String senderGroupID;/*发送者以哪个群为名义发的*/
     private String chatText;/*消息的文本*/
     private long createTime;/*消息产生时间*/
     private long receiptTime;/*消息被接受时间*/
@@ -72,6 +73,64 @@ public class ChatMessage extends BaseObservable implements Serializable {
      * 本机发的永远返回已读
      */
     private boolean isRead;
+
+    /**
+     * 获取新的聊天消息,用于发送前的临时消息
+     */
+    public static void setChatMessage(ChatMessage chatMessage, String userID, int type, int ChatBothUserType,
+                                      String text, String conversationId, String messID,
+                                      long createTime, String senderName, String senderIcon,
+                                      String groupID) {
+        chatMessage.senderID = userID;
+        chatMessage.isRead = true;
+        chatMessage.messageType = type;
+        chatMessage.conversationType = ChatBothUserType;
+        chatMessage.chatText = text;
+        chatMessage.conversationId = conversationId;
+        chatMessage.messID = messID;
+        chatMessage.createTime = createTime;
+        chatMessage.status = STATUS_SENDING;
+        chatMessage.from = FROM_ME;
+        chatMessage.senderName = senderName;
+        chatMessage.senderIcon = senderIcon;
+        chatMessage.senderGroupID = groupID;
+    }
+
+    public static
+    @ChatMessage.statusDef
+    int getMessageStatusType(int avimType) {
+        switch (avimType) {
+            case STATUS_SENDING:
+                return STATUS_SENDING;
+            case STATUS_SENT:
+                return STATUS_SENT;
+            case STATUS_RECEVIED:
+                return STATUS_RECEVIED;
+            case STATUS_FAILED:
+                return STATUS_FAILED;
+            default:
+                return STATUS_FAILED;
+        }
+    }
+
+    public static
+    @ChatMessage.conversationTypeDef
+    int getMessageConversationType(int avimType) {
+        switch (avimType) {
+            case CONVERSATION_TYPE_TWO_PERSION:
+                return CONVERSATION_TYPE_TWO_PERSION;
+            case CONVERSATION_TYPE_FRIEND_GROUP:
+                return CONVERSATION_TYPE_FRIEND_GROUP;
+            case CONVERSATION_TYPE_CHAT_ROOM:
+                return CONVERSATION_TYPE_CHAT_ROOM;
+            case CONVERSATION_TYPE_SYSTEM:
+                return CONVERSATION_TYPE_SYSTEM;
+            case CONVERSATION_TYPE_TEMP_GROUP:
+                return CONVERSATION_TYPE_TEMP_GROUP;
+            default:
+                return CONVERSATION_TYPE_TWO_PERSION;
+        }
+    }
 
     @Bindable
     public int getMessageType() {
@@ -87,7 +146,7 @@ public class ChatMessage extends BaseObservable implements Serializable {
         return status;
     }
 
-    public void setStatus(@statusDef int status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -164,6 +223,15 @@ public class ChatMessage extends BaseObservable implements Serializable {
     }
 
     @Bindable
+    public String getSenderGroupID() {
+        return senderGroupID;
+    }
+
+    public void setSenderGroupID(String senderGroupID) {
+        this.senderGroupID = senderGroupID;
+    }
+
+    @Bindable
     public long getCreateTime() {
         return createTime;
     }
@@ -211,7 +279,7 @@ public class ChatMessage extends BaseObservable implements Serializable {
     public @interface messFromDef {
     }
 
-    @IntDef({CONVERSATION_TYPE_TWO_PERSION, CONVERSATION_TYPE_FRIEND_GROUP,
+    @IntDef({CONVERSATION_TYPE_TWO_PERSION, CONVERSATION_TYPE_FRIEND_GROUP, CONVERSATION_TYPE_TEMP_GROUP,
             CONVERSATION_TYPE_CHAT_ROOM, CONVERSATION_TYPE_SYSTEM})
     public @interface conversationTypeDef {
     }

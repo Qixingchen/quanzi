@@ -17,15 +17,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.squareup.picasso.Picasso;
+import com.tizi.chatlibrary.action.MessageManage;
+import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.model.message.ImageChatMessage;
+import com.tizi.chatlibrary.model.message.VoiceChatMessage;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.OtherUserInfo;
-import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.tool.FriendTime;
@@ -37,6 +38,7 @@ import com.tizi.quanzi.ui.user_zone.UserZoneActivity;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by qixingchen on 15/7/20.
@@ -60,7 +62,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
         this.chatMessageList = new SortedList<>(ChatMessage.class, new SortedList.Callback<ChatMessage>() {
             @Override
             public int compare(ChatMessage o1, ChatMessage o2) {
-                return (int) (o1.create_time - o2.create_time);
+                return (int) (o1.getCreateTime() - o2.getCreateTime());
             }
 
             @Override
@@ -85,12 +87,12 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
 
             @Override
             public boolean areContentsTheSame(ChatMessage oldItem, ChatMessage newItem) {
-                return oldItem.status == newItem.status && oldItem.equals(newItem);
+                return oldItem.getStatus() == newItem.getStatus() && oldItem.equals(newItem);
             }
 
             @Override
             public boolean areItemsTheSame(ChatMessage item1, ChatMessage item2) {
-                return item1.messID.compareTo(item2.messID) == 0;
+                return item1.getMessID().compareTo(item2.getMessID()) == 0;
             }
         });
         if (chatMessageList != null) {
@@ -110,10 +112,10 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemViewType(int position) {
-        if (chatMessageList.get(position).type == StaticField.ChatContantType.Notifi) {
+        if (chatMessageList.get(position).getMessageType() == ChatMessage.MESSAGE_TYPE_NOTIFI) {
             return StaticField.ChatFrom.NOTIFI;
         }
-        return chatMessageList.get(position).From;
+        return chatMessageList.get(position).getFrom();
     }
 
     /**
@@ -177,20 +179,17 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
 
         /*设置已读*/
         ChatMessage chatMessage = chatMessageList.get(position);
-        if (!chatMessage.isread) {
-            chatMessage.isread = true;
-            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
-            GroupList.getInstance().removeUnreadMessFromAbs(chatMessage);
+        if (!chatMessage.isRead()) {
+            MessageManage.setMessageRead(chatMessage, true);
         }
         if (position == chatMessageList.size() - 1) {
-            DBAct.getInstance().setAllAsRead(chatMessage.ConversationId);
-            GroupList.getInstance().removeAllUnreadFromAbs(chatMessage.ConversationId);
+            MessageManage.setAllMessageASRead(chatMessage.getConversationId());
         }
     }
 
     private void onBindNotifiViewHolder(NotifiViewHolder holder, int position) {
-        holder.notifiTextView.setText(chatMessageList.get(position).text);
-        String time = FriendTime.FriendlyDate(chatMessageList.get(position).create_time);
+        holder.notifiTextView.setText(chatMessageList.get(position).getChatText());
+        String time = FriendTime.FriendlyDate(chatMessageList.get(position).getCreateTime());
         holder.chatTime.setText(time);
     }
 
@@ -211,7 +210,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
             @Override
             public boolean onLongClick(View v) {
                 String[] items;
-                switch (chatMessage.type) {
+                switch (chatMessage.getMessageType()) {
                     case StaticField.ChatContantType.TEXT:
                         items = new String[]{"删除", "复制"};
                         break;
@@ -225,23 +224,13 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
                                             case 0:
-                                                DBAct.getInstance().deleteMessage(chatMessage.messID);
+                                                MessageManage.deleteMessage(chatMessage);
                                                 chatMessageList.remove(chatMessage);
-                                                notifyDataSetChanged();
-                                                if (chatMessageList.size() > 0) {
-                                                    ChatMessage last = chatMessageList.get(chatMessageList.size() - 1);
-                                                    GroupList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
-                                                            ChatMessage.getContentText(last), last.create_time);
-                                                } else {
-                                                    GroupList.getInstance().updateGroupLastMess(chatMessage.ConversationId,
-                                                            "", 0);
-                                                }
-
                                                 break;
                                             case 1:
 
                                                 android.content.ClipboardManager clipboard = (android.content.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", chatMessage.text);
+                                                android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", chatMessage.getChatText());
                                                 clipboard.setPrimaryClip(clip);
                                                 break;
                                         }
@@ -252,26 +241,29 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 return false;
             }
         });
+
+        if (!TextUtils.isEmpty(chatMessage.getChatText())) {
+            holder.chatMessTextView.setText(chatMessage.getChatText());
+            holder.chatMessTextView.setVisibility(View.VISIBLE);
+        }
         /*根据不同消息类型确定元素是否显示*/
-        switch (chatMessage.type) {
-            case StaticField.ChatContantType.TEXT:
-                holder.chatMessTextView.setText(chatMessage.text);
-                holder.chatMessTextView.setVisibility(View.VISIBLE);
-                break;
-            case StaticField.ChatContantType.IMAGE:
+        switch (chatMessage.getMessageType()) {
+            case ChatMessage.MESSAGE_TYPE_IMAGE:
+                final ImageChatMessage imageChatMessage = (ImageChatMessage) chatMessage;
                 int[] imagePix = Tool.getImagePixel(mContext,
-                        chatMessage.imageHeight, chatMessage.imageWeight);
+                        imageChatMessage.getImageHeight(), imageChatMessage.getImageWeight());
                 holder.contantImageView.getLayoutParams().height = imagePix[0];
                 holder.contantImageView.getLayoutParams().width = imagePix[1];
-                if (TextUtils.isEmpty(chatMessage.local_path) || !new File(chatMessage.local_path).exists()) {
+                if (TextUtils.isEmpty(imageChatMessage.getLocalPath()) ||
+                        !new File(imageChatMessage.getLocalPath()).exists()) {
                     Picasso.with(mContext)
-                            .load(GetThumbnailsUri.getUriLink(chatMessage.url, imagePix[0], imagePix[1]))
+                            .load(GetThumbnailsUri.getUriLink(imageChatMessage.getImageUrl(), imagePix[0], imagePix[1]))
                             .placeholder(R.drawable.ic_photo_loading)
                             .resize(imagePix[1], imagePix[0])
                             .into(holder.contantImageView);
                 } else {
                     Picasso.with(mContext)
-                            .load("file://" + chatMessage.local_path)
+                            .load("file://" + imageChatMessage.getLocalPath())
                             .placeholder(R.drawable.ic_photo_loading)
                             .resize(imagePix[1], imagePix[0])
                             .into(holder.contantImageView);
@@ -282,48 +274,46 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                     @Override
                     public void onClick(View v) {
                         ArrayList<String> image = new ArrayList<>(
-                                DBAct.getInstance().quaryPhotoMess(chatMessage.ConversationId));
-                        int index = image.indexOf(chatMessage.url);
+                                DBAct.getInstance().quaryPhotoMess(chatMessage.getConversationId()));
+                        int index = image.indexOf(imageChatMessage.getImageUrl());
                         if (index == -1) {
-                            index = image.indexOf("file://" + chatMessage.local_path);
+                            index = image.indexOf("file://" + imageChatMessage.getLocalPath());
                         }
                         StartGalleryActivity.startByStringList(image, index, mContext);
                     }
                 });
                 break;
-            case StaticField.ChatContantType.VOICE:
+            case ChatMessage.MESSAGE_TYPE_VOICE:
                 holder.videoPlayButton.setVisibility(View.VISIBLE);
                 holder.audioProgressBar.setVisibility(View.VISIBLE);
                 holder.voiceDuration.setVisibility(View.VISIBLE);
+                if (((VoiceChatMessage) chatMessage).getVoiceDuration() == 0) {
+                    holder.voiceDuration.setVisibility(View.GONE);
+                }
+                holder.voiceDuration.setText(String.format(Locale.getDefault(), "%d s", (int)
+                        ((VoiceChatMessage) chatMessage).getVoiceDuration() + 1));
                 break;
-            case StaticField.ChatContantType.VEDIO:
+            case ChatMessage.MESSAGE_TYPE_VEDIO:
                 holder.videoPlayButton.setVisibility(View.VISIBLE);
                 holder.audioProgressBar.setVisibility(View.VISIBLE);
                 holder.voiceDuration.setVisibility(View.VISIBLE);
                 break;
             default:
-                holder.chatMessTextView.setText(chatMessage.text);
-                holder.chatMessTextView.setVisibility(View.VISIBLE);
                 break;
         }
 
         /*设置头像*/
         Picasso.with(mContext).load(GetThumbnailsUri.maxDPHeiAndWei(
-                chatMessage.chatImage, 48, 48, mContext)).fit().into(holder.userFaceImageView);
+                chatMessage.getSenderIcon(), 48, 48, mContext)).fit().into(holder.userFaceImageView);
 
-        String time = FriendTime.FriendlyDate(chatMessage.create_time);
+        String time = FriendTime.FriendlyDate(chatMessage.getCreateTime());
         holder.chatTime.setText(time);
         if (holder.chatUserName != null) {
-            holder.chatUserName.setText(chatMessage.userName);
+            holder.chatUserName.setText(chatMessage.getSenderName());
         }
-        if (!chatMessage.isread) {
-            chatMessage.isread = true;
-            DBAct.getInstance().addOrReplaceChatMessage(chatMessage);
+        if (!chatMessage.isRead()) {
+            MessageManage.setMessageRead(chatMessage, true);
         }
-        if (chatMessage.voice_duration == 0) {
-            holder.voiceDuration.setVisibility(View.GONE);
-        }
-        holder.voiceDuration.setText(String.format("%d s", (int) chatMessage.voice_duration + 1));
 
         /*播放按钮*/
         holder.videoPlayButton.setOnClickListener(new View.OnClickListener() {
@@ -338,7 +328,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 }
 
                 voicePlayAsync.setContext(mContext)
-                        .setChatMessage(chatMessage)
+                        .setChatMessage((VoiceChatMessage) chatMessage)
                         .setHolder(holder)
                         .execute(0);
             }
@@ -361,7 +351,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                     public void onError(String Message) {
                         Toast.makeText(mContext, "此用户已不存在", Toast.LENGTH_LONG).show();
                     }
-                }).findUserByID(chatMessage.sender);
+                }).findUserByID(chatMessage.getSenderID());
             }
         });
 
@@ -369,9 +359,9 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
         if (holder instanceof MyMessViewHolder) {
             ((MyMessViewHolder) holder).reSendButton.setVisibility(View.GONE);
             ((MyMessViewHolder) holder).progressBar.setVisibility(View.GONE);
-            if (chatMessage.status == AVIMMessage.AVIMMessageStatus.AVIMMessageStatusSending.getStatusCode()) {
+            if (chatMessage.getStatus() == ChatMessage.STATUS_SENDING) {
                 ((MyMessViewHolder) holder).progressBar.setVisibility(View.VISIBLE);
-            } else if (chatMessage.status == AVIMMessage.AVIMMessageStatus.AVIMMessageStatusFailed.getStatusCode()) {
+            } else if (chatMessage.getStatus() == ChatMessage.STATUS_FAILED) {
                 ((MyMessViewHolder) holder).reSendButton.setVisibility(View.VISIBLE);
                 ((MyMessViewHolder) holder).reSendButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -379,7 +369,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                         if (onResend != null) {
                             if (onResend.onResend(chatMessage)) {
                                 chatMessageList.remove(chatMessage);
-                                DBAct.getInstance().deleteMessage(chatMessage.messID);
+                                MessageManage.deleteMessage(chatMessage);
                             }
                         }
                     }
@@ -423,7 +413,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
 
     public void updateTempMess(String messID, ChatMessage chatMessage) {
         for (int i = chatMessageList.size() - 1; i >= 0; i--) {
-            if (chatMessageList.get(i).messID.equals(messID)) {
+            if (chatMessageList.get(i).getMessID().equals(messID)) {
                 chatMessageList.updateItemAt(i, chatMessage);
                 break;
             }
@@ -437,7 +427,7 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
         int length = chatMessageList.size();
         int position = 0;
         for (int i = length - 1; i >= 0; i--) {
-            if (chatMessageList.get(i).isread) {
+            if (chatMessageList.get(i).isRead()) {
                 position = i;
                 break;
             }

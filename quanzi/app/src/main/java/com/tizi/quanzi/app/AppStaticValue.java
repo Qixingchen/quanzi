@@ -3,7 +3,6 @@ package com.tizi.quanzi.app;
 import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.preference.PreferenceManager;
 
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -11,7 +10,6 @@ import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMClientStatusCallback;
 import com.tizi.chatlibrary.action.Init;
-import com.tizi.quanzi.database.DataBaseHelper;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -39,8 +37,8 @@ public class AppStaticValue {
     private static String UserID = "";
     private static String UserPhone = "";
     //数据库
-    private static DataBaseHelper db;
-    private static SQLiteDatabase db1;
+    //    private static DataBaseHelper db;
+    //    private static SQLiteDatabase db1;
 
     public AppStaticValue() {
         application = App.getApplication();
@@ -59,14 +57,14 @@ public class AppStaticValue {
 
     /* 设置数据库*/
     public static void setDataBaseHelper(String userID) {
-        db = new DataBaseHelper(App.getApplication(), userID, null, 2);
-        db1 = db.getWritableDatabase();
-        Init.init(userID);
+        //        db = new DataBaseHelper(App.getApplication(), userID, null, 2);
+        //        db1 = db.getWritableDatabase();
+        Init.init(userID, application);
     }
 
-    public static SQLiteDatabase getDatabase() {
-        return db1;
-    }
+    //    public static SQLiteDatabase getDatabase() {
+    //        return db1;
+    //    }
 
     public static String getUserPhone() {
         return UserPhone;
@@ -85,12 +83,13 @@ public class AppStaticValue {
         preferences.edit().putString(StaticField.Preferences.USERID, userID).apply();
         UserID = userID;
         if (userID.equals("")) {
-            db = null;
-            db1 = null;
+            //            db = null;
+            //            db1 = null;
+            Init.init("", application);
         } else {
-            db = new DataBaseHelper(App.getApplication(), userID, null, 2);
-            db1 = db.getWritableDatabase();
-            Init.init(userID);
+            //            db = new DataBaseHelper(App.getApplication(), userID, null, 2);
+            //            db1 = db.getWritableDatabase();
+            Init.init(userID, application);
         }
     }
 

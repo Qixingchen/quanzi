@@ -7,8 +7,8 @@ import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
+import com.tizi.chatlibrary.model.message.VoiceChatMessage;
 import com.tizi.quanzi.adapter.ChatMessAbsViewHolder;
-import com.tizi.quanzi.model.ChatMessage;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
 
     public ChatMessAbsViewHolder holder;
-    private ChatMessage chatMessage;
+    private VoiceChatMessage chatMessage;
     private int voiceSecondMuL10;
     private VoicePlayAsync mInstance = this;
     private Context context;
@@ -34,19 +34,19 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        voiceSecondMuL10 = (int) (chatMessage.voice_duration * 10);
+        voiceSecondMuL10 = (int) (chatMessage.getVoiceDuration() * 10);
         holder.audioProgressBar.setMax(voiceSecondMuL10);
         holder.audioProgressBar.setProgress(0);
         player = new MediaPlayer();
         try {
-            if (TextUtils.isEmpty(chatMessage.local_path)) {
-                player.setDataSource(chatMessage.url);
+            if (TextUtils.isEmpty(chatMessage.getLocalPath())) {
+                player.setDataSource(chatMessage.getVoiceUrl());
             } else {
-                File file = new File(chatMessage.local_path);
+                File file = new File(chatMessage.getLocalPath());
                 if (file.exists()) {
-                    player.setDataSource(chatMessage.local_path);
-                } else if (!TextUtils.isEmpty(chatMessage.url)) {
-                    player.setDataSource(chatMessage.url);
+                    player.setDataSource(chatMessage.getLocalPath());
+                } else if (!TextUtils.isEmpty(chatMessage.getVoiceUrl())) {
+                    player.setDataSource(chatMessage.getVoiceUrl());
                 }
             }
         } catch (IOException e) {
@@ -125,7 +125,7 @@ public class VoicePlayAsync extends AsyncTask<Integer, Integer, Integer> {
      *
      * @return 本class实例
      */
-    public VoicePlayAsync setChatMessage(ChatMessage chatMessage) {
+    public VoicePlayAsync setChatMessage(VoiceChatMessage chatMessage) {
         this.chatMessage = chatMessage;
         return mInstance;
     }

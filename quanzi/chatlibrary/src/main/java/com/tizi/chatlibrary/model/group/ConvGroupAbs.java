@@ -6,6 +6,7 @@ import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 
 import com.tizi.chatlibrary.BR;
+import com.tizi.chatlibrary.action.DatabaseAction;
 import com.tizi.chatlibrary.model.message.ChatMessage;
 import com.tizi.chatlibrary.staticData.GroupList;
 
@@ -27,8 +28,19 @@ public class ConvGroupAbs implements Serializable, Observable {
     //不要重置的项目
     private String lastMess;
     private long lastMessTime;
-    private HashSet<String> unreadMessageIDSet = new HashSet<>();
+    private transient HashSet<String> unreadMessageIDSet = new HashSet<>();
     private transient PropertyChangeRegistry pcr = new PropertyChangeRegistry();
+
+    public ConvGroupAbs() {
+    }
+
+    public ConvGroupAbs(String name, String face, String ID, int type, String convId) {
+        Name = name;
+        Face = face;
+        this.ID = ID;
+        Type = type;
+        this.convId = convId;
+    }
 
     @Bindable
     public String getName() {
@@ -36,7 +48,7 @@ public class ConvGroupAbs implements Serializable, Observable {
             return Name;
         }
         return String.format("%s 与 %s",
-                ((TempGroupClass) this).groupName1, ((TempGroupClass) this).groupName2);
+                ((TempGroupClass) this).getGroupName1(), ((TempGroupClass) this).getGroupName2());
     }
 
     public void setName(String name) {
@@ -49,10 +61,10 @@ public class ConvGroupAbs implements Serializable, Observable {
         if (Type != ChatMessage.CONVERSATION_TYPE_TEMP_GROUP) {
             return Face;
         }
-        if (isMyGroup(((TempGroupClass) this).groupId1)) {
-            return ((TempGroupClass) this).icon2;
+        if (isMyGroup(((TempGroupClass) this).getGroupId1())) {
+            return ((TempGroupClass) this).getIcon2();
         } else {
-            return ((TempGroupClass) this).icon1;
+            return ((TempGroupClass) this).getIcon1();
         }
     }
 
@@ -172,6 +184,17 @@ public class ConvGroupAbs implements Serializable, Observable {
         pcr.notifyChange(this, propertyId);
     }
 
+    public void updateLastMess() {
+        ChatMessage chatMessage = DatabaseAction.queryNewestMessage(convId);
+        if (chatMessage != null) {
+            setLastMessTime(chatMessage.getCreateTime());
+            setLastMess(chatMessage.getChatText());
+        } else {
+            setLastMess("");
+            setLastMessTime(0);
+        }
+    }
+
 
     /**
      * 判断是不是自己的群
@@ -180,7 +203,7 @@ public class ConvGroupAbs implements Serializable, Observable {
      *
      * @return true：是自己的圈子 false:不是自己的圈子
      */
-    private boolean isMyGroup(String GroupID) {
+    protected boolean isMyGroup(String GroupID) {
         return GroupList.getInstance().getGroup(GroupID) != null;
     }
 }

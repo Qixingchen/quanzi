@@ -10,6 +10,13 @@ public class VoiceChatMessage extends ChatMessage {
     private String localPath;/*本地地址*/
     private double voiceDuration;/*音频时长*/
 
+    public VoiceChatMessage() {
+    }
+
+    public VoiceChatMessage(String localPath) {
+        this.localPath = localPath;
+    }
+
     @Bindable
     public String getVoiceUrl() {
         return voiceUrl;

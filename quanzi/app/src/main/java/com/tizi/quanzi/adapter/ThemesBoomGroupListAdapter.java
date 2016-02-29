@@ -11,12 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.dataStatic.BoomGroupList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.model.BoomGroupClass;
-import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;
 import com.tizi.quanzi.tool.FriendTime;
@@ -24,8 +21,6 @@ import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Timer;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.widget.AutoLinearLayoutManager;
-
-import java.util.List;
 
 /**
  * Created by Yulan on 2015/11/28.
@@ -148,19 +143,6 @@ public class ThemesBoomGroupListAdapter extends RecyclerViewAdapterAbs {
                     BoomGroup boomGroup = (BoomGroup) ts;
                     groupNums.setText(String.format("共有%d个圈子配对成功,点击和小伙伴们开始热聊吧!",
                             boomGroup.groupmatch.size()));
-
-                    List<BoomGroupClass> booms = BoomGroupClass.getBoomGroupListFromBoomGroupGson(boomGroup.groupmatch, themeID);
-
-                    for (BoomGroupClass boom : booms) {
-                        ChatMessage chatMessage = DBAct.getInstance().queryNewestMessage(boom.getConvId());
-                        if (chatMessage != null) {
-                            boom.setLastMessTime(chatMessage.create_time);
-                            boom.setLastMess(ChatMessage.getContentText(chatMessage));
-                        }
-                        if (BoomGroupList.getInstance().getGroup(boom.getID()) == null) {
-                            BoomGroupList.getInstance().addGroup(boom);
-                        }
-                    }
 
                     boomGroupListAdapter = new BoomGroupListAdapter(mActivity, themeID, true);
                     boomGroupListAdapter.setOnClick(new BoomGroupListAdapter.OnClick() {

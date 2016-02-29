@@ -5,14 +5,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.tizi.chatlibrary.model.group.ConvGroupAbs;
 import com.tizi.chatlibrary.model.message.ChatMessage;
-import com.tizi.chatlibrary.model.message.ImageChatMessage;
+import com.tizi.chatlibrary.model.message.CommentNotifyMessage;
+import com.tizi.chatlibrary.model.message.SystemMessage;
 import com.tizi.chatlibrary.staticSettings.StaticSettings;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -213,7 +212,7 @@ public class DatabaseAction {
     /**
      * 查询所有的图片消息
      */
-    public static List<String> quaryPhotoMess(String ConversationId) {
+    public static List<ChatMessage> quaryPhotoMess(String ConversationId) {
         Cursor chatMessageCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
                 DataBaseHelper.chatHistorySQLName.messageType + "=? and "
@@ -225,17 +224,11 @@ public class DatabaseAction {
                 null //limit
         );
         chatMessageCursor.moveToFirst();
-        List<String> ans = new ArrayList<>();
+        List<ChatMessage> ans = new ArrayList<>();
         while (!chatMessageCursor.isAfterLast()) {
             ChatMessage chatMessage = chatMessageFromCursor(chatMessageCursor);
-            if (chatMessage instanceof ImageChatMessage) {
-                String localPath = ((ImageChatMessage) chatMessage).getLocalPath();
-                if (TextUtils.isEmpty(localPath) || !new File(localPath).exists()) {
-                    ans.add(((ImageChatMessage) chatMessage).getImageUrl());
-                } else {
-                    ans.add("file://" + localPath);
-                }
-            }
+            ans.add(chatMessage);
+
             chatMessageCursor.moveToNext();
         }
         chatMessageCursor.close();
@@ -247,19 +240,19 @@ public class DatabaseAction {
      *
      * @return 系统消息 List
      */
-    public static List<ChatMessage> quaryAllSysMess() {
+    public static List<SystemMessage> quaryAllSysMess() {
         Cursor sysMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
-                DataBaseHelper.chatHistorySQLName.conversationType + "=?",//条件
-                new String[]{String.valueOf(ChatMessage.CONVERSATION_TYPE_CHAT_ROOM)},//条件的参数
+                DataBaseHelper.chatHistorySQLName.messageType + "=?",//条件
+                new String[]{String.valueOf(ChatMessage.CONVERSATION_TYPE_SYSTEM)},//条件的参数
                 null,//groupBy
                 null,//having
                 null //+ " DESC"//orderBy
         );
-        ArrayList<ChatMessage> systemMessageArrayList = new ArrayList<>();
+        ArrayList<SystemMessage> systemMessageArrayList = new ArrayList<>();
         sysMessCursor.moveToFirst();
         while (!sysMessCursor.isAfterLast()) {
-            ChatMessage temp = chatMessageFromCursor(sysMessCursor);
+            SystemMessage temp = (SystemMessage) chatMessageFromCursor(sysMessCursor);
             if (temp != null) {
                 systemMessageArrayList.add(temp);
             }
@@ -270,23 +263,68 @@ public class DatabaseAction {
     }
 
     /**
-     * 获取未读的系统消息的ID
+     * 获取未读系统消息数量
+     *
+     * @return 系统消息 List
      */
-    public static List<String> quaryAllUnreadSysMess() {
+    public static int quaryUnreadSysMess() {
         Cursor sysMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
                 new String[]{DataBaseHelper.chatHistorySQLName.messID},//返回的列,null表示全选
-                DataBaseHelper.chatHistorySQLName.isread + "=?",//条件
-                new String[]{"0"},//条件的参数
+                DataBaseHelper.chatHistorySQLName.messageType + "=?and "
+                        + DataBaseHelper.chatHistorySQLName.isread + "=?",
+                new String[]{String.valueOf(ChatMessage.CONVERSATION_TYPE_SYSTEM), "N"},//条件的参数
                 null,//groupBy
                 null,//having
                 null //+ " DESC"//orderBy
         );
-        ArrayList<String> ans = new ArrayList<>();
+        int ans = sysMessCursor.getCount();
+        sysMessCursor.close();
+        return ans;
+    }
+
+    /**
+     * 获取所有动态消息
+     *
+     * @return 动态消息 List
+     */
+    public static List<CommentNotifyMessage> quaryAllComment() {
+        Cursor sysMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
+                new String[]{DataBaseHelper.chatHistorySQLName.Serializable},//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.messageType + "=?",//条件
+                new String[]{String.valueOf(ChatMessage.CONVERSATION_TYPE_DYN_COMMENT)},//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        ArrayList<CommentNotifyMessage> commentNotifyMessages = new ArrayList<>();
         sysMessCursor.moveToFirst();
         while (!sysMessCursor.isAfterLast()) {
-            ans.add(sysMessCursor.getString(sysMessCursor.getColumnIndex(DataBaseHelper.chatHistorySQLName.messID)));
+            CommentNotifyMessage temp = (CommentNotifyMessage) chatMessageFromCursor(sysMessCursor);
+            if (temp != null) {
+                commentNotifyMessages.add(temp);
+            }
             sysMessCursor.moveToNext();
         }
+        sysMessCursor.close();
+        return commentNotifyMessages;
+    }
+
+    /**
+     * 获取未读动态消息数量
+     *
+     * @return 系统消息 List
+     */
+    public static int quaryUnreadComment() {
+        Cursor sysMessCursor = db.query(DataBaseHelper.chatHistorySQLName.TableName,//table name
+                new String[]{DataBaseHelper.chatHistorySQLName.messID},//返回的列,null表示全选
+                DataBaseHelper.chatHistorySQLName.messageType + "=?and "
+                        + DataBaseHelper.chatHistorySQLName.isread + "=?",
+                new String[]{String.valueOf(ChatMessage.CONVERSATION_TYPE_DYN_COMMENT), "N"},//条件的参数
+                null,//groupBy
+                null,//having
+                null //+ " DESC"//orderBy
+        );
+        int ans = sysMessCursor.getCount();
         sysMessCursor.close();
         return ans;
     }
@@ -400,7 +438,7 @@ public class DatabaseAction {
         content.put(DataBaseHelper.chatHistorySQLName.conversationType, chatMessage.getConversationType());
         content.put(DataBaseHelper.chatHistorySQLName.createTime, chatMessage.getCreateTime());
         content.put(DataBaseHelper.chatHistorySQLName.messageType, chatMessage.getMessageType());
-        content.put(DataBaseHelper.chatHistorySQLName.isread, chatMessage.isRead());
+        content.put(DataBaseHelper.chatHistorySQLName.isread, chatMessage.isRead() ? "Y" : "N");
         content.put(DataBaseHelper.chatHistorySQLName.Serializable,
                 SerializedObjectFormat.getSerializedObject(chatMessage));
 

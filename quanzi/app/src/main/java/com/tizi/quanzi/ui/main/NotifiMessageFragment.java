@@ -8,11 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tizi.chatlibrary.action.MessageManage;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.NotifiPagerAdapter;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
-import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.ui.BaseFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,8 +56,21 @@ public class NotifiMessageFragment extends BaseFragment {
         notifiPagerAdapter = new NotifiPagerAdapter(mContext);
         notifiViewPager.setAdapter(notifiPagerAdapter);
         //如果没有未读私信,但有未读通知,跳转到通知页
-        if (PrivateMessPairList.getInstance().getAllUnreadCount() == 0
-                && SystemMessageList.getInstance().getAllUnreadCount() != 0) {
+        List<ConvGroupAbs> groups = GroupList.getInstance().getGroupList();
+        List<ConvGroupAbs> PrivateMessList = new ArrayList<>();
+        List<ConvGroupAbs> systemMessageList = new ArrayList<>();
+
+        int unread = 0;
+
+        for (ConvGroupAbs groupAbs : groups) {
+            if (groupAbs.getType() == ChatMessage.CONVERSATION_TYPE_TWO_PERSION) {
+                PrivateMessList.add(groupAbs);
+                unread += groupAbs.getUnreadCount();
+            }
+        }
+
+        if (unread == 0
+                && MessageManage.queryUnreadCommentCount() + MessageManage.queryUnreadCommentCount() != 0) {
             notifiViewPager.setCurrentItem(1);
         }
 
@@ -61,7 +79,5 @@ public class NotifiMessageFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        PrivateMessPairList.getInstance().callUpdate();
-        SystemMessageList.getInstance().callUpdate();
     }
 }

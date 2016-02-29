@@ -18,7 +18,6 @@ import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.StartPrivateChat;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.OtherUserInfo;

@@ -10,12 +10,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.ChatListAdapter;
 import com.tizi.quanzi.chat.SendMessage;
-import com.tizi.quanzi.dataStatic.ConvGroupAbs;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.model.ChatMessage;
 import com.tizi.quanzi.tool.GetMutipieImage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.BaseActivity;
@@ -44,19 +43,19 @@ public class ChatListActivity extends BaseActivity {
          * @param tempID          此消息对应的临时ID
          */
         @Override
-        public void sendOK(ChatMessage Message, String CONVERSATION_ID, String tempID) {
+        public void sendOK(com.tizi.chatlibrary.model.message.ChatMessage Message, String CONVERSATION_ID, String tempID) {
             Toast.makeText(mContext, "发送成功", Toast.LENGTH_LONG).show();
             progressDialog.cancel();
             finish();
         }
 
         @Override
-        public void preSend(ChatMessage Message, String CONVERSATION_ID) {
+        public void preSend(com.tizi.chatlibrary.model.message.ChatMessage Message, String CONVERSATION_ID) {
 
         }
 
         @Override
-        public void sendError(String errorMessage, final String CONVERSATION_ID, String tempID, ChatMessage Message) {
+        public void sendError(String errorMessage, final String CONVERSATION_ID, String tempID, com.tizi.chatlibrary.model.message.ChatMessage Message) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("发送失败").setMessage(errorMessage)
                     .setPositiveButton("去重试", new DialogInterface.OnClickListener() {
@@ -152,12 +151,12 @@ public class ChatListActivity extends BaseActivity {
             for (String filePath : filePathList) {
                 SendMessage.getNewInstance()
                         .setChatViewSendOK(sendOK)
-                        .sendImageMesage(group.getConvId(), filePath, setAttrs(group.getType(), group.getID()));
+                        .sendImageMesage(group.getConvId(), filePath, setAttrs(group.getType(), group.getID()), group.getID());
             }
         } else if (messType == StaticField.ChatContantType.TEXT) {
             SendMessage.getNewInstance()
                     .setChatViewSendOK(sendOK)
-                    .sendTextMessage(group.getConvId(), text, setAttrs(group.getType(), group.getID()));
+                    .sendTextMessage(group.getConvId(), text, setAttrs(group.getType(), group.getID()), group.getID());
         }
         progressDialog = showDialog();
     }

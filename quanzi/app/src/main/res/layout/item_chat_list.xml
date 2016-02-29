@@ -10,7 +10,7 @@
 
         <variable
             name="chat"
-            type="com.tizi.quanzi.dataStatic.ConvGroupAbs"/>
+            type="com.tizi.chatlibrary.model.group.ConvGroupAbs"/>
 
     </data>
 

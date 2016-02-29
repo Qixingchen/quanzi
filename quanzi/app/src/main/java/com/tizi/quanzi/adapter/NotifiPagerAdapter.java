@@ -9,14 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tizi.chatlibrary.action.MessageManage;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
-import com.tizi.quanzi.dataStatic.SystemMessageList;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.PrivateMessPair;
-import com.tizi.quanzi.model.SystemMessage;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.ChatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by qixingchen on 15/10/22.
@@ -77,10 +81,23 @@ public class NotifiPagerAdapter extends PagerAdapter {
             case 0:
                 privateMessRecyclerView = (RecyclerView) Views[0].findViewById(R.id.item_recycler_view);
                 privateMessRecyclerView.setHasFixedSize(true);
-                privateMessageAdapter = new PrivateMessageAdapter(PrivateMessPairList.getInstance().getGroupList(),
+                ArrayList privateMessPairList = GroupList.getInstance().getGroupList();
+                List<PrivateMessPair> pairs = new ArrayList<>();
+                for (Object group : privateMessPairList) {
+                    if (((ConvGroupAbs) group).getType() == ChatMessage.CONVERSATION_TYPE_TWO_PERSION) {
+                        pairs.add((PrivateMessPair) group);
+                    }
+                }
+
+                privateMessageAdapter = new PrivateMessageAdapter(pairs,
                         mContext, new PrivateMessageAdapter.Onclick() {
+                    /**
+                     * 项目被点击
+                     *
+                     * @param privateMessPair 被点击的私聊消息组
+                     */
                     @Override
-                    public void priMessClick(PrivateMessPair privateMessPair) {
+                    public void priMessClick(ConvGroupAbs privateMessPair) {
                         Intent chat = new Intent(mContext, ChatActivity.class);
                         chat.putExtra("conversation", privateMessPair.getConvId());
                         chat.putExtra("chatType", StaticField.ConvType.TWO_PERSON);
@@ -95,10 +112,19 @@ public class NotifiPagerAdapter extends PagerAdapter {
             case 1:
                 systemMessRecyclerView = (RecyclerView) Views[1].findViewById(R.id.item_recycler_view);
                 systemMessRecyclerView.setHasFixedSize(true);
-                systemMessageAdapter = new SystemMessageAdapter(SystemMessageList.getInstance().getGroupList(),
+                List<ChatMessage> chatMessages = new ArrayList<>();
+                chatMessages.addAll(MessageManage.queryAllSystemMess());
+                chatMessages.addAll(MessageManage.queryAllCommentNotifyMessage());
+
+                systemMessageAdapter = new SystemMessageAdapter(chatMessages,
                         mContext, new SystemMessageAdapter.Onclick() {
+                    /**
+                     * 项目被点击
+                     *
+                     * @param chatMessage 被点击的消息
+                     */
                     @Override
-                    public void systemMessClick(SystemMessage systemMessage) {
+                    public void messClick(ChatMessage chatMessage) {
                         //ignore
                     }
                 });

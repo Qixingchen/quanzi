@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.ui.ChatActivity;
 import com.tizi.quanzi.ui.main.MainActivity;

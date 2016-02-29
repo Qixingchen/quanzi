@@ -13,12 +13,11 @@ import android.view.MenuItem;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.squareup.otto.Subscribe;
+import com.tizi.chatlibrary.action.MessageManage;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.PrivateMessPairList;
-import com.tizi.quanzi.dataStatic.SystemMessageList;
-import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.otto.AVIMNetworkEvents;
 import com.tizi.quanzi.otto.ActivityResultAns;
 import com.tizi.quanzi.otto.FragmentResume;
@@ -81,15 +80,15 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
-    @Subscribe
-    public void onChanged(SystemMessageList ignore) {
-        onChanged();
-    }
-
-    @Subscribe
-    public void onChanged(PrivateMessPairList ignore) {
-        onChanged();
-    }
+    //    @Subscribe
+    //    public void onChanged(SystemMessageList ignore) {
+    //        onChanged();
+    //    }
+    //
+    //    @Subscribe
+    //    public void onChanged(PrivateMessPairList ignore) {
+    //        onChanged();
+    //    }
 
     private void onChanged() {
         if (menu == null) {
@@ -97,7 +96,7 @@ public class MainActivity extends BaseActivity {
         }
         MenuItem item = menu.findItem(R.id.action_notifi_message);
         int num = PrivateMessPairList.getInstance().getAllUnreadCount()
-                + SystemMessageList.getInstance().getAllUnreadCount();
+                + MessageManage.queryUnreadSystemMessCount();
         if (num != 0) {
             item.setIcon(R.drawable.ic_notifications_24dp);
             item.setTitle("消息(" + num + ")条");
@@ -274,13 +273,7 @@ public class MainActivity extends BaseActivity {
                     }
                     int last = contents.lastIndexOf("=");
                     String groupID = contents.substring(last + 1);
-                    boolean forjoin = true;
-                    for (Object group : GroupList.getInstance().getGroupList()) {
-                        if (((GroupClass) group).getID().equals(groupID)) {
-                            forjoin = false;
-                            break;
-                        }
-                    }
+                    boolean forjoin = GroupList.getInstance().getGroup(groupID) == null;
                     Intent groupZone = new Intent(mContext, QuanziZoneActivity.class);
                     groupZone.putExtra("groupID", groupID);
                     groupZone.putExtra("forJoin", forjoin);

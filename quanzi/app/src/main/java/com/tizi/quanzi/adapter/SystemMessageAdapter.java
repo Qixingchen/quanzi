@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,13 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+import com.tizi.chatlibrary.action.MessageManage;
+import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.model.message.CommentNotifyMessage;
+import com.tizi.chatlibrary.model.message.SystemMessage;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.GroupUserAdmin;
-import com.tizi.quanzi.dataStatic.SystemMessageList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
-import com.tizi.quanzi.model.SystemMessage;
-import com.tizi.quanzi.model.SystemMessagePair;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.tool.FriendTime;
 import com.tizi.quanzi.tool.StaticField;
@@ -40,19 +41,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
 
     public final static int DELETE_ALL = -1;
-    private SortedList<SystemMessagePair> systemMessagePairs = new SortedList<>(SystemMessagePair.class, new SortedList.Callback<SystemMessagePair>() {
+    private SortedList<ChatMessage> messageList = new SortedList<>(ChatMessage.class, new SortedList.Callback<ChatMessage>() {
         @Override
-        public int compare(SystemMessagePair o1, SystemMessagePair o2) {
-            if (!o1.systemMessage.isread && !o2.systemMessage.isread) {
-                return (int) (o2.getLastMessTime() / 1000L - o1.getLastMessTime() / 1000L);
+        public int compare(ChatMessage o1, ChatMessage o2) {
+            if (!o1.isRead() && !o2.isRead()) {
+                return (int) (o2.getCreateTime() / 1000L - o1.getCreateTime() / 1000L);
             }
-            if (!o1.systemMessage.isread) {
+            if (!o1.isRead()) {
                 return -1;
             }
-            if (!o2.systemMessage.isread) {
+            if (!o2.isRead()) {
                 return 1;
             }
-            return (int) (o2.getLastMessTime() / 1000L - o1.getLastMessTime() / 1000L);
+            return (int) (o2.getCreateTime() / 1000L - o1.getCreateTime() / 1000L);
         }
 
         @Override
@@ -76,25 +77,27 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         }
 
         @Override
-        public boolean areContentsTheSame(SystemMessagePair oldItem, SystemMessagePair newItem) {
-            return oldItem.systemMessage.equals(newItem.systemMessage);
+        public boolean areContentsTheSame(ChatMessage oldItem, ChatMessage newItem) {
+            return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areItemsTheSame(SystemMessagePair item1, SystemMessagePair item2) {
-            if (item1.getID() == null) {
+        public boolean areItemsTheSame(ChatMessage item1, ChatMessage item2) {
+            if (item1.getMessID() == null) {
                 return false;
             }
-            return item1.getID().equals(item2.getID());
+            return item1.getMessID().equals(item2.getMessID());
         }
     });
     private Context mContext;
     private Onclick onclick;
 
-    public SystemMessageAdapter(List<SystemMessagePair> systemMessagePairs, Context mContext, Onclick onclick) {
-        this.systemMessagePairs.beginBatchedUpdates();
-        this.systemMessagePairs.addAll(systemMessagePairs);
-        this.systemMessagePairs.endBatchedUpdates();
+    public SystemMessageAdapter(List<ChatMessage> chatMessages, Context mContext, Onclick onclick) {
+        this.messageList.beginBatchedUpdates();
+        for (ChatMessage chatMessage : chatMessages) {
+            this.messageList.add(chatMessage);
+        }
+        this.messageList.endBatchedUpdates();
         this.mContext = mContext;
         this.onclick = onclick;
         try {
@@ -113,10 +116,12 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
     }
 
     @Subscribe
-    public void onChanged(SystemMessageList list) {
-        this.systemMessagePairs.beginBatchedUpdates();
-        this.systemMessagePairs.addAll(SystemMessageList.getInstance().getGroupList());
-        this.systemMessagePairs.endBatchedUpdates();
+    public void onChanged(List<SystemMessage> list) {
+        this.messageList.beginBatchedUpdates();
+        for (ChatMessage chatMessage : list) {
+            this.messageList.add(chatMessage);
+        }
+        this.messageList.endBatchedUpdates();
     }
 
     /**
@@ -131,7 +136,12 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         if (position == 0) {
             return DELETE_ALL;
         }
-        return systemMessagePairs.get(position - 1).systemMessage.sys_msg_flag;
+        ChatMessage chatMessage = messageList.get(position - 1);
+        if (chatMessage instanceof SystemMessage) {
+            return ((SystemMessage) chatMessage).getSys_msg_Type();
+        } else {
+            return SystemMessage.dyn_comment;
+        }
     }
 
     /**
@@ -192,9 +202,8 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                             .setPositiveButton("清空", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    DBAct.getInstance().deleteAllSystemMessage();
-                                    SystemMessageList.getInstance().removeAllUnreadMess();
-                                    systemMessagePairs.clear();
+                                    MessageManage.deleteAllSystemMess();
+                                    messageList.clear();
                                     notifyDataSetChanged();
                                 }
                             }).setNegativeButton("取消", null).show();
@@ -203,27 +212,22 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
             return;
         }
 
-        SystemMessagePair systemMessagePair = systemMessagePairs.get(position - 1);
-        final SystemMessage systemMessage = systemMessagePair.systemMessage;
-        if (!systemMessage.isread) {
-            systemMessage.isread = true;
-            SystemMessageList.getInstance().removeUnreadMess(systemMessage.id);
-            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
-        }
+        final ChatMessage message = messageList.get(position - 1);
 
         /*系统消息*/
         if (GroupInviteViewHolder.class.isInstance(holder)) {
             GroupInviteViewHolder systemHolder = (GroupInviteViewHolder) holder;
 
             systemHolder.setAllAdditionVisibilityGone();
+            final SystemMessage systemMessage = (SystemMessage) message;
 
-            if (systemMessage.sys_msg_flag == StaticField.SystemMessAttrName.systemFlag.invitation) {
+            if (systemMessage.getSys_msg_Type() == SystemMessage.invitation) {
                 systemHolder.titleTextview.setVisibility(View.VISIBLE);
                 systemHolder.MessTextview.setVisibility(View.VISIBLE);
                 systemHolder.titleTextview.setText("邀请您加入圈子");
                 systemHolder.MessTextview.setText(systemMessage.getContent());
 
-                if (systemMessage.status == StaticField.SystemMessAttrName.statueCode.notComplete) {
+                if (systemMessage.getCompleteStatue() == SystemMessage.notComplete) {
 
                     systemHolder.acceptButton.setVisibility(View.VISIBLE);
                     systemHolder.refuseButton.setVisibility(View.VISIBLE);
@@ -234,11 +238,9 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                             GroupUserAdmin.getInstance(mContext).setOnResult(new GroupUserAdmin.OnResult() {
                                 @Override
                                 public void OK() {
-                                    systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
-                                    systemMessage.setIsread(true);
-                                    DBAct.getInstance().addOrReplaceSysMess(systemMessage);
-                                    SystemMessageList.getInstance().updateGroup(
-                                            SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
+                                    systemMessage.setCompleteStatue(SystemMessage.complete);
+                                    systemMessage.setRead(true);
+                                    MessageManage.updateMess(systemMessage);
                                     notifyItemChanged(position);
                                 }
 
@@ -246,7 +248,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                                 public void error(String errorMessage) {
                                     Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
                                 }
-                            }).acceptToJoinGroup(true, systemMessage.getConvid(), systemMessage.getGroup_id());
+                            }).acceptToJoinGroup(true, systemMessage.getJoinConvid(), systemMessage.getJoinGroupID());
                         }
                     });
 
@@ -254,12 +256,11 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                         @Override
                         public void onClick(View v) {
                             GroupUserAdmin.getInstance(mContext).
-                                    acceptToJoinGroup(false, systemMessage.getConvid(), systemMessage.getGroup_id());
-                            systemMessage.setStatus(StaticField.SystemMessAttrName.statueCode.complete);
-                            systemMessage.setIsread(true);
-                            DBAct.getInstance().addOrReplaceSysMess(systemMessage);
-                            SystemMessageList.getInstance().updateGroup(
-                                    SystemMessagePair.SysMessPairFromSystemMess(systemMessage));
+                                    acceptToJoinGroup(false, systemMessage.getJoinConvid(),
+                                            systemMessage.getJoinGroupID());
+                            systemMessage.setCompleteStatue(SystemMessage.complete);
+                            systemMessage.setRead(true);
+                            MessageManage.updateMess(systemMessage);
                             notifyItemChanged(position);
                         }
                     });
@@ -272,13 +273,13 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                 @Override
                 public void onClick(View v) {
                     if (onclick != null) {
-                        onclick.systemMessClick(systemMessage);
+                        onclick.messClick(systemMessage);
                     } else {
                         Log.w(TAG, "系统消息被点击,但是没有 onclick 回调");
                     }
                 }
             });
-            if (systemMessagePair.getUnreadCount() != 0) {
+            if (!systemMessage.isRead()) {
                 systemHolder.MessTextview.setTypeface(Typeface.DEFAULT_BOLD);
                 systemHolder.MessTextview.setTextColor(mContext.getResources().getColor(R.color.md_black));
                 systemHolder.titleTextview.setTypeface(Typeface.DEFAULT_BOLD);
@@ -293,28 +294,29 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
 
         /*动态评论*/
         if (DynNotifyViewHolder.class.isInstance(holder)) {
+            final CommentNotifyMessage comments = (CommentNotifyMessage) message;
             DynNotifyViewHolder dynNotifyViewHolder = (DynNotifyViewHolder) holder;
-            dynNotifyViewHolder.old_weibo_name.setText(systemMessage.dyn_create_username);
-            dynNotifyViewHolder.weiboName.setText(systemMessage.user_name);
-            dynNotifyViewHolder.weibo_content.setText(systemMessage.content);
-            dynNotifyViewHolder.weibo_date.setText(FriendTime.FriendlyDate(systemMessage.create_time));
-            dynNotifyViewHolder.old_weibo_content.setText(systemMessage.dyn_content);
-            if (systemMessage.reply_comment == null || systemMessage.reply_comment.compareTo("") == 0) {
+            dynNotifyViewHolder.old_weibo_name.setText(comments.getDyn_create_username());
+            dynNotifyViewHolder.weiboName.setText(comments.getSenderName());
+            dynNotifyViewHolder.weibo_content.setText(comments.getDyn_content());
+            dynNotifyViewHolder.weibo_date.setText(FriendTime.FriendlyDate(comments.getCreateTime()));
+            dynNotifyViewHolder.old_weibo_content.setText(comments.getDyn_content());
+            if (TextUtils.isEmpty(comments.getReply_comment())) {
                 dynNotifyViewHolder.reply_content.setVisibility(View.GONE);
             } else {
-                dynNotifyViewHolder.reply_content.setText(systemMessage.reply_comment);
+                dynNotifyViewHolder.reply_content.setText(comments.getReply_comment());
                 dynNotifyViewHolder.reply_content.setVisibility(View.VISIBLE);
             }
 
-            Picasso.with(mContext).load(systemMessage.user_icon)
+            Picasso.with(mContext).load(comments.getSenderIcon())
                     .fit()
                     .into(dynNotifyViewHolder.weiboUser);
 
-            Picasso.with(mContext).load(systemMessage.dyn_icon)
+            Picasso.with(mContext).load(comments.getDyn_icon())
                     .fit()
                     .into(dynNotifyViewHolder.oldWeiboUser);
 
-            if (systemMessagePair.getUnreadCount() != 0) {
+            if (!message.isRead()) {
                 dynNotifyViewHolder.weiboName.setTypeface(Typeface.DEFAULT_BOLD);
                 dynNotifyViewHolder.weiboName.setTextColor(mContext.getResources().getColor(R.color.md_black));
                 dynNotifyViewHolder.weibo_content.setTypeface(Typeface.DEFAULT_BOLD);
@@ -329,11 +331,15 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                 @Override
                 public void onClick(View v) {
                     Intent dyn = new Intent(mContext, DynsActivity.class);
-                    dyn.putExtra("dynID", systemMessage.dynid);
-                    dyn.putExtra("isUser", !systemMessage.dyn_create_userid.equals(""));
+                    dyn.putExtra("dynID", comments.getDynid());
+                    dyn.putExtra("isUser", !comments.getDyn_create_userid().equals(""));
                     mContext.startActivity(dyn);
                 }
             });
+        }
+        if (!message.isRead()) {
+            message.setRead(true);
+            MessageManage.setMessageRead(message, true);
         }
     }
 
@@ -342,10 +348,10 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
      */
     @Override
     public int getItemCount() {
-        if (systemMessagePairs == null) {
+        if (messageList == null) {
             return 0;
         }
-        return systemMessagePairs.size() == 0 ? 0 : systemMessagePairs.size() + 1;
+        return messageList.size() == 0 ? 0 : messageList.size() + 1;
     }
 
 
@@ -356,9 +362,9 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
         /**
          * 项目被点击
          *
-         * @param systemMessage 被点击的系统消息
+         * @param chatMessage 被点击的消息
          */
-        void systemMessClick(SystemMessage systemMessage);
+        void messClick(ChatMessage chatMessage);
     }
 
     static class GroupInviteViewHolder extends RecyclerView.ViewHolder {
@@ -460,8 +466,7 @@ public class SystemMessageAdapter extends RecyclerViewAdapterAbs {
                             .setPositiveButton("清空", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    DBAct.getInstance().deleteAllSystemMessage();
-                                    SystemMessageList.getInstance().removeAllUnreadMess();
+                                    MessageManage.deleteAllSystemMess();
                                 }
                             }).setNegativeButton("取消", null).show();
                 }

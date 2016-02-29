@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
+import com.tizi.chatlibrary.action.MessageManage;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.databinding.ItemGroupBinding;
-import com.tizi.quanzi.model.GroupClass;
 import com.tizi.quanzi.otto.BusProvider;
 import com.tizi.quanzi.tool.StaticField;
 
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class GroupListAdapter extends RecyclerViewAdapterAbs {
 
-    private List<GroupClass> groupClasses;
+    private List<ConvGroupAbs> groupClasses;
     private Context mContext;
     private Onclick onclick;
 
@@ -35,7 +35,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
      * @param mContext      上下文
      * @param onclick       群组被点击时的回调
      */
-    public GroupListAdapter(final List<GroupClass> kGroupClasses, Context mContext, Onclick onclick) {
+    public GroupListAdapter(final List<ConvGroupAbs> kGroupClasses, Context mContext, Onclick onclick) {
         this.groupClasses = kGroupClasses;
         this.mContext = mContext;
         this.onclick = onclick;
@@ -84,13 +84,13 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
             final MyViewHolder myViewHolder = (MyViewHolder) holder;
 
             if (position == groupClasses.size()) {
-                GroupClass addGroup = new GroupClass();
+                ConvGroupAbs addGroup = new ConvGroupAbs();
                 addGroup.setName("创建圈子");
                 addGroup.setFace(String.valueOf(R.drawable.add_group));
                 myViewHolder.setBinding(addGroup);
                 myViewHolder.itemView.setOnLongClickListener(null);
             } else {
-                final GroupClass group = groupClasses.get(position);
+                final ConvGroupAbs group = groupClasses.get(position);
                 myViewHolder.setBinding(group);
 
                 /*长按事件*/
@@ -122,7 +122,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
                                         builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                DBAct.getInstance().deleteAllMessage(group.getConvId());
+                                                MessageManage.deleteAllMess(group.getConvId());
                                                 group.setLastMess("");
                                                 group.setLastMessTime(0);
                                                 notifyItemChanged(position);
@@ -163,7 +163,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
      *
      * @param group 需要添加的群
      */
-    public void addGroup(GroupClass group) {
+    public void addGroup(ConvGroupAbs group) {
         groupClasses.add(group);
         notifyDataSetChanged();
     }
@@ -173,8 +173,8 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
      *
      * @param groups 需要添加的群
      */
-    public void addGroup(List<GroupClass> groups) {
-        for (GroupClass group : groups) {
+    public void addGroup(List<ConvGroupAbs> groups) {
+        for (ConvGroupAbs group : groups) {
             groupClasses.add(group);
         }
         notifyDataSetChanged();
@@ -204,7 +204,7 @@ public class GroupListAdapter extends RecyclerViewAdapterAbs {
             binding = ItemGroupBinding.bind(itemView);
         }
 
-        private void setBinding(GroupClass groupClass) {
+        private void setBinding(ConvGroupAbs groupClass) {
             binding.setChat(groupClass);
         }
 

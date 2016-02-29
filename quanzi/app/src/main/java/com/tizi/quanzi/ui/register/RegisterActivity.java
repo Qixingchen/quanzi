@@ -10,9 +10,7 @@ import android.view.MenuItem;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.LoginAndUserAccount;
@@ -133,10 +131,8 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
                     LoginAndUserAccount.setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(),
                             login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
-                    PrivateMessPairList.getInstance().getGroupsFromDataBase();
                     List<Login.GroupEntity> groups = new ArrayList<>();
                     groups.addAll(login.group);
-                    ((GroupList) GroupList.getInstance()).setGroupListByLoginGroup(groups);
                     //start intent
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

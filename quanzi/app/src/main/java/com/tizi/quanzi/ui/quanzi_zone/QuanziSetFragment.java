@@ -19,7 +19,6 @@ import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.GroupUserAdmin;
 import com.tizi.quanzi.chat.SendMessage;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.log.Log;

@@ -39,7 +39,6 @@ import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.MutiTypeMsgHandler;
 import com.tizi.quanzi.chat.MyAVIMClientEventHandler;
 import com.tizi.quanzi.chat.SendMessage;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;
@@ -483,7 +482,6 @@ public class ChatActivity extends BaseActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     MessageManage.deleteAllMess(CONVERSATION_ID);
-                    DBAct.getInstance().deleteAllMessage(CONVERSATION_ID);
                     chatMessageAdapter.chatMessageList.clear();
                 }
             });

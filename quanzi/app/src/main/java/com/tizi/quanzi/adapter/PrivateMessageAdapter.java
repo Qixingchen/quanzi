@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.model.PrivateMessPair;
 import com.tizi.quanzi.otto.BusProvider;
@@ -55,7 +55,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Subscribe
-    public void onChanged(PrivateMessPairList list) {
+    public void onChanged(PrivateMessPair list) {
         notifyDataSetChanged();
     }
 
@@ -93,7 +93,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         /*私信*/
         if (PrivateViewHolder.class.isInstance(holder)) {
             final PrivateViewHolder privateVH = (PrivateViewHolder) holder;
-            final PrivateMessPair privateMessPair = privateMessPairs.get(position);
+            final ConvGroupAbs privateMessPair = privateMessPairs.get(position);
             Picasso.with(mContext).load(privateMessPair.getFace()).fit().into(privateVH.mUserFaceImage);
             privateVH.mUserNameText.setText(privateMessPair.getName());
             privateVH.mMessTextView.setText(privateMessPair.getLastMess());
@@ -127,7 +127,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                             .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    DBAct.getInstance().deletePriMessPair(privateMessPair.getID());
+                                    GroupList.getInstance().deleteGroup(privateMessPair.getID());
                                     privateMessPairs.remove(privateMessPair);
                                     notifyItemRemoved(position);
                                 }
@@ -157,7 +157,7 @@ public class PrivateMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vie
          *
          * @param privateMessPair 被点击的私聊消息组
          */
-        void priMessClick(PrivateMessPair privateMessPair);
+        void priMessClick(ConvGroupAbs privateMessPair);
     }
 
     public static class PrivateViewHolder extends RecyclerView.ViewHolder {

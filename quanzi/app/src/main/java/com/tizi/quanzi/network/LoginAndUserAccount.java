@@ -3,13 +3,10 @@ package com.tizi.quanzi.network;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.tizi.chatlibrary.action.Init;
 import com.tizi.quanzi.app.App;
 import com.tizi.quanzi.app.AppStaticValue;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.dataStatic.MyUserInfo;
-import com.tizi.quanzi.dataStatic.PrivateMessPairList;
-import com.tizi.quanzi.dataStatic.SystemMessageList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.Login;
 import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.notification.AddNotification;
@@ -53,7 +50,7 @@ public class LoginAndUserAccount extends RetrofitNetworkAbs {
         AppStaticValue.setUserPhone(phone);
         AppStaticValue.setDataBaseHelper(ID);
         AppStaticValue.getNewImClient(ID);
-        DBAct.flushDBID();
+        Init.init(ID, App.getApplication());
         AddNotification.getInstance().setSharedPreferences();
     }
 
@@ -110,9 +107,7 @@ public class LoginAndUserAccount extends RetrofitNetworkAbs {
                     Login login = response.body();
                     setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
-                    PrivateMessPairList.getInstance().getGroupsFromDataBase();
-                    SystemMessageList.getInstance().getGroupsFromDataBase();
-                    ((GroupList) (GroupList.getInstance())).setGroupListByLoginGroup(login.getGroup());
+                    //todo init group
                 }
                 myOnResponse(response);
             }

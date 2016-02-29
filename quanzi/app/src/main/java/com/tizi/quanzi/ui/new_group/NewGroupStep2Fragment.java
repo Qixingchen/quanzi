@@ -20,7 +20,6 @@ import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.InviteListAdapter;
 import com.tizi.quanzi.chat.GroupUserAdmin;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.ContantUsers;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.FindUser;

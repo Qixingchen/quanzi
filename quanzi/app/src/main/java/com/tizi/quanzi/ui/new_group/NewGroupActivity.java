@@ -10,7 +10,6 @@ import com.squareup.otto.Subscribe;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.chat.NewAVIMConversation;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.Group;
 import com.tizi.quanzi.model.GroupClass;

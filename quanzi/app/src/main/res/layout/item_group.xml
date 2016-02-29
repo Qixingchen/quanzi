@@ -11,7 +11,7 @@
 
         <variable
             name="chat"
-            type="com.tizi.quanzi.model.GroupClass"/>
+            type="com.tizi.chatlibrary.model.group.ConvGroupAbs"/>
     </data>
 
     <android.support.v7.widget.CardView

@@ -1,8 +1,7 @@
 package com.tizi.quanzi.model;
 
-import com.tizi.quanzi.dataStatic.ConvGroupAbs;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
 import com.tizi.quanzi.gson.OtherUserInfo;
-import com.tizi.quanzi.tool.StaticField;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -10,14 +9,13 @@ import com.tizi.quanzi.tool.StaticField;
  */
 public class PrivateMessPair extends ConvGroupAbs {
     //如果是系统消息
-    public SystemMessage systemMessage;
 
     public static PrivateMessPair newPrivatePair(ChatMessage chatMessage) {
         PrivateMessPair privateMessPair = new PrivateMessPair();
         privateMessPair.setName(chatMessage.userName);
         privateMessPair.setFace(chatMessage.chatImage);
         privateMessPair.setID(chatMessage.sender);
-        privateMessPair.setType(StaticField.PrivateMessOrSysMess.PrivateMess);
+        privateMessPair.setType(com.tizi.chatlibrary.model.message.ChatMessage.CONVERSATION_TYPE_TWO_PERSION);
         privateMessPair.setConvId(chatMessage.ConversationId);
         privateMessPair.setLastMess(ChatMessage.getContentText(chatMessage));
         privateMessPair.setLastMessTime(chatMessage.create_time);
@@ -38,7 +36,7 @@ public class PrivateMessPair extends ConvGroupAbs {
         privateMessPair.setName(otherUserInfo.userName);
         privateMessPair.setFace(otherUserInfo.icon);
         privateMessPair.setID(otherUserInfo.id);
-        privateMessPair.setType(StaticField.PrivateMessOrSysMess.PrivateMess);
+        privateMessPair.setType(com.tizi.chatlibrary.model.message.ChatMessage.CONVERSATION_TYPE_TWO_PERSION);
         privateMessPair.setConvId(convID);
         privateMessPair.setLastMess("");
         privateMessPair.setLastMessTime(0);

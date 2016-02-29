@@ -23,7 +23,6 @@ import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupSelectAdapter;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.Pics;
 import com.tizi.quanzi.network.DynamicAct;
 import com.tizi.quanzi.otto.ActivityResultAns;

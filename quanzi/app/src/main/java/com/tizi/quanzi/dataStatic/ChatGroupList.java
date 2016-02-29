@@ -3,35 +3,34 @@ package com.tizi.quanzi.dataStatic;
 import com.tizi.chatlibrary.model.group.ConvGroupAbs;
 import com.tizi.chatlibrary.model.message.ChatMessage;
 import com.tizi.chatlibrary.staticData.GroupList;
+import com.tizi.quanzi.model.GroupClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by qixingchen on 16/2/29.
- * 私信消息组
  */
-public class PrivateMessPairList {
+public class ChatGroupList {
+    private static ChatGroupList mInstance;
 
-    private static PrivateMessPairList mInstance;
+    private List<GroupClass> privateList = new ArrayList<>();
 
-    private List<ConvGroupAbs> privateList = new ArrayList<>();
-
-    public PrivateMessPairList() {
+    public ChatGroupList() {
         ArrayList groups = GroupList.getInstance().getGroupList();
         for (Object group : groups) {
-            if (((ConvGroupAbs) group).getType() == ChatMessage.CONVERSATION_TYPE_TWO_PERSION) {
+            if (((ConvGroupAbs) group).getType() == ChatMessage.CONVERSATION_TYPE_FRIEND_GROUP) {
                 privateList.add((ConvGroupAbs) group);
             }
         }
 
     }
 
-    public static PrivateMessPairList getInstance() {
+    public static ChatGroupList getInstance() {
         if (mInstance == null) {
-            synchronized (PrivateMessPairList.class) {
+            synchronized (ChatGroupList.class) {
                 if (mInstance == null) {
-                    mInstance = new PrivateMessPairList();
+                    mInstance = new ChatGroupList();
                 }
             }
         }

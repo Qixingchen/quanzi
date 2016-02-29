@@ -34,6 +34,7 @@ public class ChatMessage extends BaseObservable implements Serializable {
     public static final int CONVERSATION_TYPE_TEMP_GROUP = 2;
     public static final int CONVERSATION_TYPE_CHAT_ROOM = 3;
     public static final int CONVERSATION_TYPE_SYSTEM = 4;
+    public static final int CONVERSATION_TYPE_DYN_COMMENT = 5;
     /**
      * 消息的类型
      *

@@ -4,8 +4,10 @@ package com.tizi.chatlibrary.model.group;
 import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
+import android.support.annotation.DrawableRes;
 
 import com.tizi.chatlibrary.BR;
+import com.tizi.chatlibrary.R;
 import com.tizi.chatlibrary.action.DatabaseAction;
 import com.tizi.chatlibrary.model.message.ChatMessage;
 import com.tizi.chatlibrary.staticData.GroupList;
@@ -28,6 +30,7 @@ public class ConvGroupAbs implements Serializable, Observable {
     //不要重置的项目
     private String lastMess;
     private long lastMessTime;
+    private boolean needNotify;
     private transient HashSet<String> unreadMessageIDSet = new HashSet<>();
     private transient PropertyChangeRegistry pcr = new PropertyChangeRegistry();
 
@@ -40,6 +43,17 @@ public class ConvGroupAbs implements Serializable, Observable {
         this.ID = ID;
         Type = type;
         this.convId = convId;
+    }
+
+    /**
+     * 判断是不是自己的群
+     *
+     * @param GroupID 群号
+     *
+     * @return true：是自己的圈子 false:不是自己的圈子
+     */
+    protected static boolean isMyGroup(String GroupID) {
+        return GroupList.getInstance().getGroup(GroupID) != null;
     }
 
     @Bindable
@@ -88,7 +102,7 @@ public class ConvGroupAbs implements Serializable, Observable {
         return Type;
     }
 
-    public void setType(int type) {
+    public void setType(@ChatMessage.conversationTypeDef int type) {
         Type = type;
         notifyChange(BR.type);
     }
@@ -121,6 +135,29 @@ public class ConvGroupAbs implements Serializable, Observable {
     public void setLastMessTime(long lastMessTime) {
         this.lastMessTime = lastMessTime;
         notifyChange(BR.lastMessTime);
+    }
+
+    public boolean isNeedNotify() {
+        return needNotify;
+    }
+
+    @Bindable
+    public void setNeedNotify(boolean needNotify) {
+        this.needNotify = needNotify;
+    }
+
+    @DrawableRes
+    public int getChatTypeIcon() {
+        switch (Type) {
+            case ChatMessage.CONVERSATION_TYPE_TWO_PERSION:
+                return R.drawable.ic_person_black_24dp;
+            case ChatMessage.CONVERSATION_TYPE_FRIEND_GROUP:
+                return R.drawable.ic_group_black_24dp;
+            case ChatMessage.CONVERSATION_TYPE_TEMP_GROUP:
+                return R.drawable.ic_whatshot_black_24dp;
+            default:
+                return R.drawable.ic_person_black_24dp;
+        }
     }
 
     public boolean addUnreadMessageID(String messID) {
@@ -193,17 +230,5 @@ public class ConvGroupAbs implements Serializable, Observable {
             setLastMess("");
             setLastMessTime(0);
         }
-    }
-
-
-    /**
-     * 判断是不是自己的群
-     *
-     * @param GroupID 群号
-     *
-     * @return true：是自己的圈子 false:不是自己的圈子
-     */
-    protected boolean isMyGroup(String GroupID) {
-        return GroupList.getInstance().getGroup(GroupID) != null;
     }
 }

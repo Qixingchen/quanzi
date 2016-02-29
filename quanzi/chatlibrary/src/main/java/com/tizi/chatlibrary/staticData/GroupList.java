@@ -157,6 +157,7 @@ public class GroupList<T extends ConvGroupAbs> {
                 if (groupclass.getID().compareTo(groupID) == 0) {
                     groupList.remove(groupclass);
                     DatabaseAction.deleteGroup(groupID);
+                    DatabaseAction.deleteAllMessage(groupclass.getConvId());
                     return true;
                 }
             }

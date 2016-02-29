@@ -25,7 +25,6 @@ import com.tizi.chatlibrary.model.message.VoiceChatMessage;
 import com.tizi.quanzi.Intent.StartGalleryActivity;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.chat.VoicePlayAsync;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.network.FindUser;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
@@ -273,9 +272,21 @@ public class ChatMessageAdapter extends RecyclerViewAdapterAbs {
                 holder.contantImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ArrayList<String> image = new ArrayList<>(
-                                DBAct.getInstance().quaryPhotoMess(chatMessage.getConversationId()));
-                        int index = image.indexOf(imageChatMessage.getImageUrl());
+                        List<ChatMessage> imageMessList =
+                                MessageManage.queryAllPhotoMess(chatMessage.getConversationId());
+
+                        ArrayList<String> image = new ArrayList<>();
+
+                        for (ChatMessage chatMessage : imageMessList) {
+
+                            String localPath = ((ImageChatMessage) chatMessage).getLocalPath();
+                            if (TextUtils.isEmpty(localPath) || !new File(localPath).exists()) {
+                                image.add(((ImageChatMessage) chatMessage).getImageUrl());
+                            } else {
+                                image.add("file://" + localPath);
+                            }
+                        }
+                        int index = imageMessList.indexOf(chatMessage);
                         if (index == -1) {
                             index = image.indexOf("file://" + imageChatMessage.getLocalPath());
                         }

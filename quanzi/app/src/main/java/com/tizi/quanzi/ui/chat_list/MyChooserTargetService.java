@@ -12,9 +12,9 @@ import android.service.chooser.ChooserTargetService;
 import android.support.v7.util.SortedList;
 
 import com.squareup.picasso.Picasso;
-import com.tizi.quanzi.dataStatic.ConvGroupAbs;
-import com.tizi.quanzi.database.DBAct;
-import com.tizi.quanzi.model.BoomGroupClass;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.model.group.TempGroupClass;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.tool.StaticField;
 
 import java.io.IOException;
@@ -96,7 +96,7 @@ public class MyChooserTargetService extends ChooserTargetService {
                         return item1.getID().equals(item2.getID());
                     }
                 });
-        convGroups.addAll(DBAct.getInstance().quaryAllChatGroup());
+        convGroups.addAll(GroupList.getInstance().getGroupList());
 
         for (int i = 0; i < convGroups.size(); ++i) {
             ConvGroupAbs group = convGroups.get(i);
@@ -112,17 +112,17 @@ public class MyChooserTargetService extends ChooserTargetService {
                 }
             } else {
                 name = String.format("%s 与 %s",
-                        ((BoomGroupClass) group).groupName1, ((BoomGroupClass) group).groupName2);
-                if (isMyGroup(((BoomGroupClass) group).groupId1)) {
+                        ((TempGroupClass) group).getGroupName1(), ((TempGroupClass) group).getGroupName2());
+                if (((TempGroupClass) group).isGroup1MyGroup()) {
                     try {
-                        bitmap = Picasso.with(getApplicationContext()).load(((BoomGroupClass) group).icon2)
+                        bitmap = Picasso.with(getApplicationContext()).load(((TempGroupClass) group).getIcon2())
                                 .resize(96, 96).get();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
                     try {
-                        bitmap = Picasso.with(getApplicationContext()).load(((BoomGroupClass) group).icon1)
+                        bitmap = Picasso.with(getApplicationContext()).load(((TempGroupClass) group).getIcon1())
                                 .resize(96, 96).get();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -144,17 +144,6 @@ public class MyChooserTargetService extends ChooserTargetService {
                     extras));
         }
         return targets;
-    }
-
-    /**
-     * 判断是不是自己的群
-     *
-     * @param GroupID 群号
-     *
-     * @return true：是自己的圈子
-     */
-    private boolean isMyGroup(String GroupID) {
-        return DBAct.getInstance().quaryChatGroup(GroupID) != null;
     }
 
 }

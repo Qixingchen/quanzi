@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.adapter.GroupSelectAdapter;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.GroupIDs;
 import com.tizi.quanzi.network.RetrofitNetworkAbs;
 import com.tizi.quanzi.network.ThemeActs;

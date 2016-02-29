@@ -7,16 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.squareup.otto.Subscribe;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.R;
-import com.tizi.quanzi.dataStatic.ConvGroupAbs;
-import com.tizi.quanzi.dataStatic.ConvGroupAbsList;
-import com.tizi.quanzi.dataStatic.GroupList;
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.databinding.ItemChatListBinding;
 import com.tizi.quanzi.otto.BusProvider;
 
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,7 +73,7 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
         convGroupAbsSortedList.clear();
         convGroupAbsSortedList.beginBatchedUpdates();
         try {
-            List<ConvGroupAbs> groups = DBAct.getInstance().quaryAllChatGroup();
+            ArrayList groups = GroupList.getInstance().getGroupList();
             convGroupAbsSortedList.addAll(groups);
             convGroupAbsSortedList.endBatchedUpdates();
         } catch (NullPointerException ex) {
@@ -92,9 +91,9 @@ public class ChatListAdapter extends RecyclerViewAdapterAbs {
     }
 
     @Subscribe
-    public void onGroupChange(ConvGroupAbsList list) {
+    public void onGroupChange(List<ConvGroupAbs> list) {
         convGroupAbsSortedList.beginBatchedUpdates();
-        convGroupAbsSortedList.addAll(list.getGroupList());
+        convGroupAbsSortedList.addAll(list);
         convGroupAbsSortedList.endBatchedUpdates();
     }
 

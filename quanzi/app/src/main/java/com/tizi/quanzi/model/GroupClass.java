@@ -1,13 +1,12 @@
 package com.tizi.quanzi.model;
 
-import com.tizi.quanzi.dataStatic.ConvGroupAbs;
-import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.chatlibrary.model.group.ConvGroupAbs;
+import com.tizi.chatlibrary.model.message.ChatMessage;
+import com.tizi.chatlibrary.staticData.GroupList;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.Login;
-import com.tizi.quanzi.tool.StaticField;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * 组群
  * 对应 Gson {@link com.tizi.quanzi.gson.Group}
  */
-public class GroupClass extends ConvGroupAbs implements Serializable {
+public class GroupClass extends ConvGroupAbs {
     public String Notice;
     public String background;
     public boolean validation;
@@ -54,7 +53,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         groupClass.setID(groupEntity.id);
         groupClass.setName(groupEntity.groupName);
         groupClass.setFace(groupEntity.icon);
-        groupClass.setType(StaticField.ConvType.GROUP);
+        groupClass.setType(ChatMessage.CONVERSATION_TYPE_FRIEND_GROUP);
         groupClass.Notice = groupEntity.notice;
         groupClass.setConvId(groupEntity.convId);
         groupClass.background = groupEntity.bg;
@@ -84,7 +83,7 @@ public class GroupClass extends ConvGroupAbs implements Serializable {
         groupClass.setID(groupans.id);
         groupClass.setName(groupans.groupName);
         groupClass.setFace(groupans.icon);
-        groupClass.setType(StaticField.ConvType.GROUP);
+        groupClass.setType(ChatMessage.CONVERSATION_TYPE_FRIEND_GROUP);
         groupClass.Notice = groupans.notice;
         groupClass.setConvId(groupans.convId);
         groupClass.validation = true;

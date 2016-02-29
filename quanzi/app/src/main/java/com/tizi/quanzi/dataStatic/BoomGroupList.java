@@ -1,6 +1,5 @@
 package com.tizi.quanzi.dataStatic;
 
-import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.model.BoomGroupClass;
 import com.tizi.quanzi.otto.BusProvider;
 
@@ -11,9 +10,11 @@ import java.util.List;
  * Created by qixingchen on 15/10/10.
  * 全局变量组，碰撞群列表
  */
-public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
+public class BoomGroupList {
 
     private static BoomGroupList mInstance;
+
+    private List<BoomGroupClass> groupList;
 
     public static BoomGroupList getInstance() {
         if (mInstance == null) {
@@ -31,7 +32,7 @@ public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
      */
     public List<BoomGroupClass> getThemeBoomGroup(String themeID) {
         List<BoomGroupClass> ans = new ArrayList<>();
-        for (BoomGroupClass boom : getGroupList()) {
+        for (BoomGroupClass boom : groupList) {
             if (boom.themeID.equals(themeID)) {
                 ans.add(boom);
             }
@@ -51,23 +52,8 @@ public class BoomGroupList extends ConvGroupAbsList<BoomGroupClass> {
     }
 
     /**
-     * 设置未读消息
-     *
-     * @param convID  需查询的组的ID
-     * @param GroupID 需要查询的groupID
-     */
-    @Override
-    public void setUnreadMessage(String convID, String GroupID) {
-        BoomGroupClass boom = getGroup(GroupID);
-        if (boom != null) {
-            boom.addUnreadMessageID(DBAct.getInstance().quaryUnreadList(convID));
-        }
-    }
-
-    /**
      * 通知所有回调
      */
-    @Override
     protected void noticeAllCallBack() {
         BusProvider.getInstance().post(this);
     }

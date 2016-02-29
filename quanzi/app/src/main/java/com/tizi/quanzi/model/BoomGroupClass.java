@@ -1,7 +1,6 @@
 package com.tizi.quanzi.model;
 
-import com.tizi.quanzi.dataStatic.ConvGroupAbs;
-import com.tizi.quanzi.dataStatic.GroupList;
+import com.tizi.chatlibrary.model.group.TempGroupClass;
 import com.tizi.quanzi.gson.BoomGroup;
 import com.tizi.quanzi.gson.GroupAllInfo;
 import com.tizi.quanzi.tool.StaticField;
@@ -14,14 +13,8 @@ import java.util.List;
  * 碰撞群
  * 对应 Gson {@link BoomGroup}
  */
-public class BoomGroupClass extends ConvGroupAbs {
+public class BoomGroupClass extends TempGroupClass {
 
-    public String groupId1;
-    public String groupId2;
-    public String groupName1;
-    public String groupName2;
-    public String icon1;
-    public String icon2;
     public List<GroupAllInfo.MemberEntity> groupMenber1;
     public List<GroupAllInfo.MemberEntity> groupMenber2;
     public boolean isGroup1MyGroup;
@@ -44,28 +37,17 @@ public class BoomGroupClass extends ConvGroupAbs {
         temp.setID(boomGroup.id);
         temp.setLastMess("");
         temp.setLastMessTime(0);
-        temp.groupId1 = boomGroup.groupId1;
-        temp.groupId2 = boomGroup.groupId2;
-        temp.groupName1 = boomGroup.groupName1;
-        temp.groupName2 = boomGroup.groupName2;
-        temp.icon1 = boomGroup.icon1;
-        temp.icon2 = boomGroup.icon2;
+        temp.setGroupId1(boomGroup.groupId1);
+        temp.setGroupId2(boomGroup.groupId2);
+        temp.setGroupName1(boomGroup.groupName1);
+        temp.setGroupName2(boomGroup.groupName2);
+        temp.setIcon1(boomGroup.icon1);
+        temp.setIcon2(boomGroup.icon2);
         temp.groupMenber1 = boomGroup.groupMenber1;
         temp.groupMenber2 = boomGroup.groupMenber2;
-        temp.isGroup1MyGroup = isMyGroup(temp.groupId1);
+        temp.isGroup1MyGroup = isMyGroup(temp.getGroupId1());
         temp.themeID = themeID;
         return temp;
-    }
-
-    /**
-     * 判断是不是自己的群
-     *
-     * @param GroupID 群号
-     *
-     * @return true：是自己的圈子
-     */
-    private static boolean isMyGroup(String GroupID) {
-        return GroupList.getInstance().getGroup(GroupID) != null;
     }
 
 }

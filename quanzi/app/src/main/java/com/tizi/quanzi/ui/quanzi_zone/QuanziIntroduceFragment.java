@@ -25,7 +25,6 @@ import com.tizi.quanzi.adapter.DynsAdapter;
 import com.tizi.quanzi.adapter.GroupUserAdapter;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.dataStatic.BoomGroupList;
-import com.tizi.quanzi.dataStatic.GroupList;
 import com.tizi.quanzi.gson.AllTags;
 import com.tizi.quanzi.gson.Dyns;
 import com.tizi.quanzi.gson.GroupAllInfo;

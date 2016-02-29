@@ -4,8 +4,8 @@ def releaseTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }
 
-def VersionCode = 3
-def VersionName = "0.2.23-alpha"
+def VersionCode = 4
+def VersionName = "0.2.24-nightly"
 
 android {
     compileSdkVersion 23

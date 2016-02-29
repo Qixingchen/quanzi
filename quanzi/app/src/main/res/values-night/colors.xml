@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="card_view_background">@color/md_grey_800</color>
+    <color name="textColorPrimary">@color/md_grey_300</color>
+    <color name="color_fragment_background">@color/md_black</color>
+    <color name="color_fragment_background_dark">@color/md_grey_800</color>
+    <color name="icon_color">@color/md_grey_200</color>
+</resources>

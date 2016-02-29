@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVException;
@@ -25,7 +26,6 @@ import com.tizi.quanzi.chat.MyAVIMConversationEventHandler;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.network.LoginAndUserAccount;
 import com.tizi.quanzi.ui.login.LoginActivity;
-
 
 /**
  * Created by qixingchen on 15/7/13.
@@ -50,6 +50,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         super.onCreate();
         application = this;
         appStaticValue = new AppStaticValue();
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.M)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         //泄露监视器
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //LeakCanary.install(this);

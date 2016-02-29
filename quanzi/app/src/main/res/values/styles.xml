@@ -3,12 +3,10 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme.Base">
         <!-- Customize your theme here. -->
-        <item name="android:colorBackground">@color/color_fragment_background</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/Theme.WtfPreference</item>
-        <item name="android:colorForeground">@color/color_fragment_background_dark</item>
         <!--<item name="android:textColor">@color/md_black</item>-->
         <!--<item name="android:textColorPrimary">@color/primary_text_material</item>-->
         <!--<item name="android:textColorSecondary">@color/secondary_text_material</item>-->
@@ -17,7 +15,7 @@
         <item name="android:buttonStyle">@style/ButtonStyle</item>
     </style>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.DayNight.NoActionBar">
     </style>
 
     <style name="ButtonStyle" parent="android:Widget.Button">
@@ -38,7 +36,7 @@
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList</item>
     </style>
 
-    <style name="Theme.Toolbar.LightOverflow" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.Toolbar.LightOverflow" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- android:textColorPrimary is the  color of the title text
              in the Toolbar, in the Theme.AppCompat theme:  -->
         <!--<item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>-->

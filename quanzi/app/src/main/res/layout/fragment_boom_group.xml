@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_grey_400"
     tools:context="com.tizi.quanzi.ui.main.BoomGroupFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/themes_boom_group_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
 </FrameLayout>

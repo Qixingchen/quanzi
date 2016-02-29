@@ -10,7 +10,7 @@ buildscript {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-beta5'
+        classpath 'com.android.tools.build:gradle:2.0.0-beta6'
     }
 
 }
@@ -26,5 +26,6 @@ allprojects {
 }
 
 ext {
-    supportLibraryVersion = '23.1.1'
+    supportLibraryVersion = '23.2.0'
+    leanCloudVersion = 'v3.13.4'
 }

@@ -5,7 +5,7 @@ def releaseTime() {
 }
 
 def VersionCode = 4
-def VersionName = "0.2.24-nightly"
+def VersionName = "0.2.25-nightly"
 
 android {
     compileSdkVersion 23

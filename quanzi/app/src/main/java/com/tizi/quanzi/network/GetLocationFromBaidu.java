@@ -1,18 +1,19 @@
 package com.tizi.quanzi.network;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.tizi.quanzi.gson.BaiduLocation;
 import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.DevSettings;
 
 import java.io.IOException;
 
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by qixingchen on 15/11/14.
@@ -51,18 +52,19 @@ public class GetLocationFromBaidu {
         retrofit.create(RetrofitAPI.BaiduLocation.class).getLocation("CPuqLrXjjpwuSoZFBl8qHFPb", "bd09ll")
                 .enqueue(new Callback<BaiduLocation>() {
                     @Override
-                    public void onResponse(Response<BaiduLocation> response, Retrofit retrofit) {
-                        if (response.isSuccess() && response.body().status == 0) {
+                    public void onResponse(Call<BaiduLocation> call, Response<BaiduLocation> response) {
+                        if (response.isSuccessful() && response.body().status == 0) {
                             BaiduLocation.ContentEntity content = response.body().content;
                             onResult.ok(content.addressDetail.province + content.addressDetail.city,
                                     content.point.x, content.point.y);
                         } else {
                             onResult.error(response.message());
                         }
+
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
+                    public void onFailure(Call<BaiduLocation> call, Throwable t) {
                         onResult.error(t.getMessage());
                     }
                 });
@@ -79,14 +81,14 @@ public class GetLocationFromBaidu {
      */
     private static class LoggingInterceptor implements Interceptor {
         @Override
-        public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+        public okhttp3.Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
 
             long t1 = System.nanoTime();
             //Log.i(TAG, String.format("Sending request %s on %s%n%s",
             //request.url(), chain.connection(), "request.headers()"));
 
-            com.squareup.okhttp.Response response = chain.proceed(request);
+            okhttp3.Response response = chain.proceed(request);
 
             long t2 = System.nanoTime();
             // TODO: 15/9/25 disable signed url

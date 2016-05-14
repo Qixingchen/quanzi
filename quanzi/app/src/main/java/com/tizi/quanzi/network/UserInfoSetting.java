@@ -7,8 +7,9 @@ import com.tizi.quanzi.tool.Tool;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by qixingchen on 15/9/10.
@@ -36,12 +37,12 @@ public class UserInfoSetting extends RetrofitNetworkAbs {
         userAccountSer.changeUserInfo(field, value, AppStaticValue.getUserID())
                 .enqueue(new Callback<OnlySuccess>() {
                     @Override
-                    public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
+                    public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                         myOnResponse(response);
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
+                    public void onFailure(Call<OnlySuccess> call, Throwable t) {
                         myOnFailure(t);
                     }
                 });

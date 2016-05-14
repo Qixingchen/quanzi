@@ -26,9 +26,9 @@ import com.tizi.quanzi.ui.main.MainActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class RegisterActivity extends BaseActivity implements Register1stepFragment.NextStep,
@@ -126,9 +126,9 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
                 String.valueOf(Build.VERSION.SDK_INT) + " GMS:" + GetGMSStatue.haveGMS(this)
                 , Build.MODEL + "  " + Build.DEVICE).enqueue(new Callback<Login>() {
             @Override
-            public void onResponse(Response<Login> response, Retrofit retrofit) {
+            public void onResponse(Call<Login> call, Response<Login> response) {
                 isRegistering = false;
-                if (response.isSuccess() && response.body().success) {
+                if (response.isSuccessful() && response.body().success) {
                     Login login = response.body();
                     LoginAndUserAccount.setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(),
                             login.getUser().getToken());
@@ -142,14 +142,14 @@ public class RegisterActivity extends BaseActivity implements Register1stepFragm
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
                 } else {
-                    String mess = response.isSuccess() ? response.body().msg : response.message();
+                    String mess = response.isSuccessful() ? response.body().msg : response.message();
                     Log.w(TAG, mess);
                     Snackbar.make(view, mess, Snackbar.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Login> call, Throwable t) {
                 isRegistering = false;
                 Log.w(TAG, t.getMessage());
                 Snackbar.make(view, t.getMessage(), Snackbar.LENGTH_LONG).show();

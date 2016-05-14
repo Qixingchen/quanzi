@@ -12,9 +12,9 @@ import com.tizi.quanzi.tool.Tool;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by qixingchen on 15/9/3.
@@ -35,13 +35,14 @@ public class FindUser extends RetrofitNetworkAbs {
      */
     public void finduserByAccount(String account) {
         findUserService.getUserByAccount(account).enqueue(new Callback<OtherUserInfo>() {
+
             @Override
-            public void onResponse(retrofit.Response<OtherUserInfo> response, Retrofit retrofit) {
+            public void onResponse(Call<OtherUserInfo> call, Response<OtherUserInfo> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OtherUserInfo> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -51,12 +52,12 @@ public class FindUser extends RetrofitNetworkAbs {
     public void findUserByID(String ID) {
         findUserService.getUserByID(ID).enqueue(new Callback<OtherUserInfo>() {
             @Override
-            public void onResponse(retrofit.Response<OtherUserInfo> response, Retrofit retrofit) {
+            public void onResponse(Call<OtherUserInfo> call, Response<OtherUserInfo> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OtherUserInfo> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -79,8 +80,8 @@ public class FindUser extends RetrofitNetworkAbs {
             findUserService.findContactUser(Tool.getUTF_8String(mobileString[i]))
                     .enqueue(new Callback<ContantUsers>() {
                         @Override
-                        public void onResponse(Response<ContantUsers> response, Retrofit retrofit) {
-                            if (response.isSuccess() && response.body().success) {
+                        public void onResponse(Call<ContantUsers> call, Response<ContantUsers> response) {
+                            if (response.isSuccessful() && response.body().success) {
                                 Log.i(TAG, "success");
                                 ansTimes[0]++;
                                 mobiles.addAll(response.body().mobiles);
@@ -89,7 +90,7 @@ public class FindUser extends RetrofitNetworkAbs {
                                     findContactUsersComplete(response);
                                 }
                             } else {
-                                String mess = response.isSuccess() ? response.body().msg : response.message();
+                                String mess = response.isSuccessful() ? response.body().msg : response.message();
                                 Log.w(TAG, mess);
                                 if (networkListener != null) {
                                     networkListener.onError(mess);
@@ -98,7 +99,7 @@ public class FindUser extends RetrofitNetworkAbs {
                         }
 
                         @Override
-                        public void onFailure(Throwable t) {
+                        public void onFailure(Call<ContantUsers> call, Throwable t) {
                             myOnFailure(t);
                         }
                     });

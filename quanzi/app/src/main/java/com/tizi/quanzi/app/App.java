@@ -2,7 +2,6 @@ package com.tizi.quanzi.app;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.UiModeManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,11 +50,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
         super.onCreate();
         application = this;
         appStaticValue = new AppStaticValue();
-
+        //day night mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-            ((UiModeManager) getSystemService(Context.UI_MODE_SERVICE)).setNightMode(UiModeManager.MODE_NIGHT_AUTO);
-        }
+        //        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+        //            ((UiModeManager) getSystemService(Context.UI_MODE_SERVICE)).setNightMode(UiModeManager.MODE_NIGHT_AUTO);
+        //        }
         //泄露监视器
         if (BuildConfig.DEBUG && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //LeakCanary.install(this);

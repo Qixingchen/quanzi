@@ -1,10 +1,6 @@
 package com.tizi.quanzi.network;
 
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.tizi.quanzi.app.AppStaticValue;
 import com.tizi.quanzi.log.Log;
 
@@ -17,9 +13,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.TreeMap;
 
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by qixingchen on 15/9/15.
@@ -39,10 +40,9 @@ public class RetrofitNetwork {
             .build();
 
     private static OkHttpClient getclient() {
-        OkHttpClient client = new OkHttpClient();
-        client.networkInterceptors().add(new LoggingInterceptor());
-        client.networkInterceptors().add(new SignInterceptor());
-        return client;
+        return new OkHttpClient.Builder()
+                .addNetworkInterceptor(new LoggingInterceptor())
+                .addNetworkInterceptor(new SignInterceptor()).build();
     }
 
     /**
@@ -52,9 +52,9 @@ public class RetrofitNetwork {
      *
      * @return 参数MAP
      */
-    private static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
+    private static Map<String, String> splitQuery(HttpUrl url) throws UnsupportedEncodingException {
         Map<String, String> query_pairs = new TreeMap<>();
-        String query = url.getQuery();
+        String query = url.query();
         if (query == null) {
             return query_pairs;
         }
@@ -134,8 +134,8 @@ public class RetrofitNetwork {
 
             Request request = chain.request();
 
-            java.net.URL requestURL = request.url();
-            if (requestURL.getHost().compareTo(new URL(URL).getHost()) != 0) {
+            HttpUrl requestURL = request.url();
+            if (requestURL.host().compareTo(new URL(URL).getHost()) != 0) {
                 return chain.proceed(request);
             }
 

@@ -8,10 +8,9 @@ import com.tizi.quanzi.gson.OnlySuccess;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.tool.Tool;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by qixingchen on 15/9/11.
@@ -43,12 +42,12 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
         themeCall.enqueue(new Callback<Theme>() {
             @Override
-            public void onResponse(retrofit.Response<Theme> response, Retrofit retrofit) {
+            public void onResponse(Call<Theme> call, Response<Theme> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Theme> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -66,12 +65,12 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
         hotDynsCall.enqueue(new Callback<HotDyns>() {
             @Override
-            public void onResponse(Response<HotDyns> response, Retrofit retrofit) {
+            public void onResponse(Call<HotDyns> call, Response<HotDyns> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<HotDyns> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -86,12 +85,12 @@ public class ThemeActs extends RetrofitNetworkAbs {
         themeService.querySignedGroup(themeID)
                 .enqueue(new Callback<GroupIDs>() {
                     @Override
-                    public void onResponse(Response<GroupIDs> response, Retrofit retrofit) {
+                    public void onResponse(Call<GroupIDs> call, Response<GroupIDs> response) {
                         myOnResponse(response);
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
+                    public void onFailure(Call<GroupIDs> call, Throwable t) {
                         myOnFailure(t);
                     }
                 });
@@ -107,12 +106,12 @@ public class ThemeActs extends RetrofitNetworkAbs {
     public void signUP(String actID, String groupID, int flag) {
         themeService.signUp(actID, groupID, flag).enqueue(new Callback<GroupSignUPThemeAns>() {
             @Override
-            public void onResponse(retrofit.Response<GroupSignUPThemeAns> response, Retrofit retrofit) {
+            public void onResponse(Call<GroupSignUPThemeAns> call, Response<GroupSignUPThemeAns> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<GroupSignUPThemeAns> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -129,12 +128,12 @@ public class ThemeActs extends RetrofitNetworkAbs {
 
         themeCall.enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OnlySuccess> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -149,12 +148,12 @@ public class ThemeActs extends RetrofitNetworkAbs {
     public void getBoomGroup(String themeID) {
         themeService.getBoomGroup(themeID).enqueue(new Callback<BoomGroup>() {
             @Override
-            public void onResponse(Response<BoomGroup> response, Retrofit retrofit) {
+            public void onResponse(Call<BoomGroup> call, Response<BoomGroup> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<BoomGroup> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -169,12 +168,12 @@ public class ThemeActs extends RetrofitNetworkAbs {
     public void getBoomGroup(String themeID, String groupID) {
         themeService.getBoomGroup(themeID, groupID).enqueue(new Callback<BoomGroup>() {
             @Override
-            public void onResponse(Response<BoomGroup> response, Retrofit retrofit) {
+            public void onResponse(Call<BoomGroup> call, Response<BoomGroup> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<BoomGroup> call, Throwable t) {
                 myOnFailure(t);
             }
         });

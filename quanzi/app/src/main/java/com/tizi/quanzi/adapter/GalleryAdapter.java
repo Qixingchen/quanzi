@@ -11,10 +11,6 @@ import android.view.ViewGroup;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.tizi.quanzi.R;
 import com.tizi.quanzi.tool.GetThumbnailsUri;
 import com.tizi.quanzi.tool.ShareImage;
@@ -25,6 +21,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;
@@ -160,12 +161,11 @@ public class GalleryAdapter extends PagerAdapter {
                 new OkHttpClient().newCall(request)
                         .enqueue(new Callback() {
                             @Override
-                            public void onFailure(Request request, IOException e) {
+                            public void onFailure(Call call, IOException e) {
                                 subscriber.onError(e);
                             }
-
                             @Override
-                            public void onResponse(Response response) throws IOException {
+                            public void onResponse(Call call, Response response) throws IOException {
                                 BufferedSource source = response.body().source();
                                 Sink sink = Okio.sink(outputFile);
                                 source.readAll(sink);

@@ -14,23 +14,23 @@ import com.squareup.picasso.Picasso;
  */
 public class BindingHelper {
 
-    @BindingAdapter({"bind:imageUrl", "bind:error"})
+    @BindingAdapter({"imageUrl", "error"})
     public static void loadImage(ImageView view, String url, Drawable error) {
         Picasso.with(view.getContext()).load(url).error(error).fit().into(view);
     }
 
-    @BindingAdapter({"bind:imageUrl", "bind:holder"})
+    @BindingAdapter({"imageUrl", "holder"})
     public static void loadImage(ImageView view, String url, @DrawableRes int holder) {
         url = GetThumbnailsUri.getUriLink(url, view.getHeight(), view.getWidth());
         Picasso.with(view.getContext()).load(url).placeholder(holder).fit().into(view);
     }
 
-    @BindingAdapter({"bind:imageUrl"})
+    @BindingAdapter({"imageUrl"})
     public static void loadImage(ImageView view, String url) {
         Picasso.with(view.getContext()).load(url).fit().into(view);
     }
 
-    @BindingAdapter({"bind:imageUrlOrRes"})
+    @BindingAdapter({"imageUrlOrRes"})
     public static void loadImageOrRes(ImageView view, String url) {
         try {
             int res = Integer.valueOf(url);
@@ -40,7 +40,7 @@ public class BindingHelper {
         }
     }
 
-    @BindingAdapter({"bind:lastMessTime"})
+    @BindingAdapter({"lastMessTime"})
     public static void setLastTime(TextView textView, long lastMessTine) {
         if (lastMessTine == 0) {
             textView.setVisibility(View.GONE);

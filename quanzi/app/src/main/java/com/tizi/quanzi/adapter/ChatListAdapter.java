@@ -15,7 +15,7 @@ import com.tizi.quanzi.database.DBAct;
 import com.tizi.quanzi.databinding.ItemChatListBinding;
 import com.tizi.quanzi.otto.BusProvider;
 
-import org.antlr.v4.runtime.misc.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 

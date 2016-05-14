@@ -2,9 +2,9 @@ package com.tizi.quanzi.network;
 
 import com.tizi.quanzi.gson.ApiInfoGson;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by qixingchen on 15/9/18.
@@ -26,12 +26,12 @@ public class ApiInfo extends RetrofitNetworkAbs {
     public void getAPiinfo() {
         apiInfoSer.getApiVer().enqueue(new Callback<ApiInfoGson>() {
             @Override
-            public void onResponse(Response<ApiInfoGson> response, Retrofit retrofit) {
+            public void onResponse(Call<ApiInfoGson> call, Response<ApiInfoGson> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ApiInfoGson> call, Throwable t) {
                 myOnFailure(t);
             }
         });

@@ -10,10 +10,9 @@ import com.tizi.quanzi.log.Log;
 import com.tizi.quanzi.tool.StaticField;
 import com.tizi.quanzi.tool.Tool;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by qixingchen on 15/11/30.
@@ -35,12 +34,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
         dynsSer.findDyns(themeID, groupID, start, StaticField.Limit.DynamicLimit)
                 .enqueue(new Callback<Dyns>() {
                     @Override
-                    public void onResponse(retrofit.Response<Dyns> response, Retrofit retrofit) {
+                    public void onResponse(Call<Dyns> call, Response<Dyns> response) {
                         myOnResponse(response);
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
+                    public void onFailure(Call<Dyns> call, Throwable t) {
                         myOnFailure(t);
                     }
                 });
@@ -65,12 +64,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
 
         dynsCall.enqueue(new Callback<Dyns>() {
             @Override
-            public void onResponse(retrofit.Response<Dyns> response, Retrofit retrofit) {
+            public void onResponse(Call<Dyns> call, Response<Dyns> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Dyns> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -84,12 +83,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
     public void getDynamicByID(String dynID) {
         dynsSer.findDynByID(dynID).enqueue(new Callback<Dyns>() {
             @Override
-            public void onResponse(Response<Dyns> response, Retrofit retrofit) {
+            public void onResponse(Call<Dyns> call, Response<Dyns> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Dyns> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -99,12 +98,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
     public void addZan(String dynID, boolean isZan) {
         dynsSer.zan(dynID, isZan ? 1 : -1).enqueue(new Callback<AddZan>() {
             @Override
-            public void onResponse(Response<AddZan> response, Retrofit retrofit) {
+            public void onResponse(Call<AddZan> call, Response<AddZan> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AddZan> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -113,12 +112,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
     public void isZan(String dynID) {
         dynsSer.isZan(dynID).enqueue(new Callback<IsZan>() {
             @Override
-            public void onResponse(Response<IsZan> response, Retrofit retrofit) {
+            public void onResponse(Call<IsZan> call, Response<IsZan> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<IsZan> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -129,12 +128,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
     public void getComment(String dynID, int start, int limit) {
         dynsSer.findComment(dynID, start, limit).enqueue(new Callback<Comments>() {
             @Override
-            public void onResponse(Response<Comments> response, Retrofit retrofit) {
+            public void onResponse(Call<Comments> call, Response<Comments> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Comments> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -144,12 +143,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
     public void addComment(String dynID, String comment) {
         dynsSer.addComent(dynID, Tool.getUTF_8String(comment)).enqueue(new Callback<AddComment>() {
             @Override
-            public void onResponse(Response<AddComment> response, Retrofit retrofit) {
+            public void onResponse(Call<AddComment> call, Response<AddComment> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AddComment> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -160,12 +159,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
     public void addComment(String dynID, String comment, String replyID, String atUserID) {
         dynsSer.addComent(dynID, Tool.getUTF_8String(comment), replyID, atUserID).enqueue(new Callback<AddComment>() {
             @Override
-            public void onResponse(Response<AddComment> response, Retrofit retrofit) {
+            public void onResponse(Call<AddComment> call, Response<AddComment> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AddComment> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -185,12 +184,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
 
         addDynCall.enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OnlySuccess> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -204,12 +203,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
     public void deleteComment(String commentID) {
         dynsSer.deleteComment(commentID).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OnlySuccess> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -219,12 +218,12 @@ public class GroupDynamicAct extends RetrofitNetworkAbs {
     public void deleteDyn(String dynID) {
         dynsSer.deleteDyn(dynID).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OnlySuccess> call, Throwable t) {
                 myOnFailure(t);
             }
         });

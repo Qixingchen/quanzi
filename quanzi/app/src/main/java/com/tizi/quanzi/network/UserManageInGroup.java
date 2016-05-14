@@ -3,9 +3,9 @@ package com.tizi.quanzi.network;
 import com.tizi.quanzi.gson.GroupInviteAns;
 import com.tizi.quanzi.gson.OnlySuccess;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by qixingchen on 15/9/2.
@@ -29,12 +29,12 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
 
         groupMemberSer.exitOrDeleteMember(GroupID, UserID).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OnlySuccess> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -47,12 +47,12 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
 
         groupMemberSer.acceptGroupInvite(GroupID, UserID, convID).enqueue(new Callback<GroupInviteAns>() {
             @Override
-            public void onResponse(retrofit.Response<GroupInviteAns> response, Retrofit retrofit) {
+            public void onResponse(Call<GroupInviteAns> call, Response<GroupInviteAns> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<GroupInviteAns> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -65,12 +65,12 @@ public class UserManageInGroup extends RetrofitNetworkAbs {
 
         groupMemberSer.dropGroup(GroupID).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OnlySuccess> call, Throwable t) {
                 myOnFailure(t);
             }
         });

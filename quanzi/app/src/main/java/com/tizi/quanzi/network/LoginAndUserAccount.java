@@ -16,9 +16,9 @@ import com.tizi.quanzi.notification.AddNotification;
 import com.tizi.quanzi.tool.GetPassword;
 import com.tizi.quanzi.tool.StaticField;
 
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by qixingchen on 15/7/23.
@@ -105,8 +105,8 @@ public class LoginAndUserAccount extends RetrofitNetworkAbs {
 
         userAccountService.login(account, password).enqueue(new Callback<Login>() {
             @Override
-            public void onResponse(retrofit.Response<Login> response, Retrofit retrofit) {
-                if (response.isSuccess() && response.body().success) {
+            public void onResponse(Call<Login> call, Response<Login> response) {
+                if (response.isSuccessful() && response.body().success) {
                     Login login = response.body();
                     setUserInfo(AppStaticValue.getUserPhone(), login.getUser().getId(), login.getUser().getToken());
                     MyUserInfo.getInstance().setUserInfo(login.getUser());
@@ -118,7 +118,7 @@ public class LoginAndUserAccount extends RetrofitNetworkAbs {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Login> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -134,12 +134,12 @@ public class LoginAndUserAccount extends RetrofitNetworkAbs {
         password = GetPassword.fullHash(password);
         userAccountService.changePassword(account, password).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OnlySuccess> call, Throwable t) {
                 myOnFailure(t);
             }
         });

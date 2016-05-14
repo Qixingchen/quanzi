@@ -81,7 +81,7 @@
                         android:layout_marginBottom="3dp"
                         android:text="@{user.userName}"
                         android:textSize="18sp"
-                        tools:text="123"/>
+                        tools:text="sample"/>
 
                 </RelativeLayout>
 
@@ -113,7 +113,7 @@
                         android:layout_marginBottom="3dp"
                         android:text="@{user.sex==0?@string/boy:@string/girl}"
                         android:textSize="18sp"
-                        tools:text="123"/>
+                        tools:text="sample"/>
 
                 </RelativeLayout>
 
@@ -144,7 +144,7 @@
                         android:layout_marginBottom="3dp"
                         android:text="@{user.birthday}"
                         android:textSize="18sp"
-                        tools:text="123"/>
+                        tools:text="sample"/>
 
                 </RelativeLayout>
 
@@ -186,7 +186,7 @@
                         android:layout_toStartOf="@+id/userLocation"
                         android:text="@{user.area}"
                         android:textSize="18sp"
-                        tools:text="123"/>
+                        tools:text="sample"/>
 
                     <Button
                         android:id="@id/userLocation"
@@ -225,7 +225,7 @@
                         android:layout_centerVertical="true"
                         android:text="@{user.signature}"
                         android:textSize="18sp"
-                        tools:text="123"/>
+                        tools:text="sample"/>
 
                 </RelativeLayout>
 

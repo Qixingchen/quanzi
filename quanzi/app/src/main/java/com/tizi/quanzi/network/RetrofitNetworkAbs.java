@@ -34,9 +34,9 @@ public abstract class RetrofitNetworkAbs {
      *
      * @return 是否成功
      */
-    protected boolean myOnResponse(retrofit.Response<? extends OnlySuccess> response) {
+    protected boolean myOnResponse(retrofit2.Response<? extends OnlySuccess> response) {
         try {
-            if (response.isSuccess() && response.body().success) {
+            if (response.isSuccessful() && response.body().success) {
                 Log.i(TAG, "success");
                 if (networkListener != null) {
                     networkListener.onOK(response.body());
@@ -45,9 +45,9 @@ public abstract class RetrofitNetworkAbs {
             } else {
                 String mess;
                 if (BuildConfig.BUILD_TYPE.equals("debug")) {
-                    mess = response.isSuccess() ? response.body().msg : response.message();
+                    mess = response.isSuccessful() ? response.body().msg : response.message();
                 } else {
-                    mess = response.isSuccess() ? response.body().msg : "网络错误";
+                    mess = response.isSuccessful() ? response.body().msg : "网络错误";
                 }
                 Log.w(TAG, mess);
                 if (networkListener != null) {

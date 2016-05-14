@@ -19,10 +19,10 @@ import com.tizi.quanzi.gson.OtherUserInfo;
 import com.tizi.quanzi.gson.Theme;
 import com.tizi.quanzi.gson.UserTags;
 
-import retrofit.Call;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**

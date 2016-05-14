@@ -10,10 +10,9 @@ import com.tizi.quanzi.tool.Tool;
 
 import java.util.ArrayList;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by qixingchen on 15/9/9.
@@ -41,12 +40,12 @@ public class GroupSetting extends RetrofitNetworkAbs {
 
         groupSer.changeGroupInfo(groupID, field, Tool.getUTF_8String(value)).enqueue(new Callback<OnlySuccess>() {
             @Override
-            public void onResponse(retrofit.Response<OnlySuccess> response, Retrofit retrofit) {
+            public void onResponse(Call<OnlySuccess> call, Response<OnlySuccess> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<OnlySuccess> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -98,12 +97,12 @@ public class GroupSetting extends RetrofitNetworkAbs {
     public void findAllTags(boolean isGroup) {
         groupSer.queryAllAvailableTag(isGroup ? 0 : 1).enqueue(new Callback<AllTags>() {
             @Override
-            public void onResponse(Response<AllTags> response, Retrofit retrofit) {
+            public void onResponse(Call<AllTags> call, Response<AllTags> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AllTags> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -117,12 +116,12 @@ public class GroupSetting extends RetrofitNetworkAbs {
     public void findUserTags(String userID) {
         groupSer.queryUserTag(userID).enqueue(new Callback<UserTags>() {
             @Override
-            public void onResponse(Response<UserTags> response, Retrofit retrofit) {
+            public void onResponse(Call<UserTags> call, Response<UserTags> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<UserTags> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -150,12 +149,12 @@ public class GroupSetting extends RetrofitNetworkAbs {
 
         groupCall.enqueue(new Callback<Group>() {
             @Override
-            public void onResponse(Response<Group> response, Retrofit retrofit) {
+            public void onResponse(Call<Group> call, Response<Group> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Group> call, Throwable t) {
                 myOnFailure(t);
             }
         });
@@ -171,12 +170,12 @@ public class GroupSetting extends RetrofitNetworkAbs {
     public void queryGroup(String GroupID) {
         groupSer.queryGroup(GroupID).enqueue(new Callback<GroupAllInfo>() {
             @Override
-            public void onResponse(Response<GroupAllInfo> response, Retrofit retrofit) {
+            public void onResponse(Call<GroupAllInfo> call, Response<GroupAllInfo> response) {
                 myOnResponse(response);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<GroupAllInfo> call, Throwable t) {
                 myOnFailure(t);
             }
         });
